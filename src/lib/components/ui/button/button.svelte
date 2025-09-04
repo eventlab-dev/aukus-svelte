@@ -4,21 +4,24 @@
 	import { type VariantProps, tv } from 'tailwind-variants';
 
 	export const buttonVariants = tv({
-		base: "aria-invalid:ring-destructive/20 aria-invalid:border-destructive inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-all disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer",
+		base: "aria-invalid:ring-destructive/20 aria-invalid:border-destructive inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium outline-none transition-all disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer",
 		variants: {
 			variant: {
 				default: 'bg-primary text-primary-foreground hover:bg-primary/90',
 				destructive: 'bg-destructive hover:bg-destructive/90',
-				outline: 'bg-background hover:bg-accent hover:text-accent-foreground border',
-				secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-				ghost: 'hover:bg-accent hover:text-accent-foreground',
-				link: 'text-primary underline-offset-4 hover:underline'
+				outline: 'bg-background hover:bg-hover border',
+				secondary: 'bg-muted hover:bg-muted/80',
+				ghost: 'hover:bg-hover',
+				link: 'text-primary underline-offset-4 hover:text-primary underline decoration-2 decoration-primary justify-start',
+				social: ''
 			},
 			size: {
 				default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-				sm: 'h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5',
+				tiny: "h-6 rounded-[5px] px-2.5 py-[5px] !leading-3.5 text-xs font-bold [&_svg:not([class*='size-'])]:!size-3.5",
+				sm: 'h-[27px] rounded-[5px] text-sm leading-[17px] font-semibold px-2 py-[5px] has-[>svg]:px-2.5',
 				lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-				icon: 'size-9'
+				icon: 'size-9',
+				social: 'h-[34px] w-[122px] py-1.5'
 			}
 		},
 		defaultVariants: {

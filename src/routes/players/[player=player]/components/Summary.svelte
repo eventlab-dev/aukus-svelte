@@ -1,0 +1,37 @@
+<script lang="ts">
+	import ImageLoader from '$lib/components/ImageLoader.svelte';
+	import { formatMs } from '$lib/utils';
+
+	type Props = {
+		totalScore: number;
+		gamesCompleted: number;
+		gameName: string;
+		gameImage: string;
+		gameDuration: number;
+	};
+
+	const { totalScore, gamesCompleted, gameName, gameImage, gameDuration }: Props = $props();
+</script>
+
+<div class="flex gap-3">
+	<div class="flex w-[150px] flex-col gap-3 rounded-xl bg-card p-3">
+		<div class="text-sm leading-[17px] font-semibold text-muted-foreground">Игр пройдено</div>
+		<div class="text-5xl leading-[58px] font-bold">{gamesCompleted}</div>
+	</div>
+	<div class="flex w-[150px] flex-col gap-3 rounded-xl bg-card p-3">
+		<div class="text-sm leading-[17px] font-semibold text-muted-foreground">Очков получено</div>
+		<div class="text-5xl leading-[58px] font-bold">{totalScore}</div>
+	</div>
+	<div class="flex w-[476px] flex-col gap-3 rounded-xl bg-card p-3">
+		<div class="flex justify-between text-sm leading-[17px] font-semibold text-muted-foreground">
+			<div>Стримит на Твич</div>
+			<div>{formatMs(gameDuration)}</div>
+		</div>
+		<div class="flex gap-2">
+			<ImageLoader src={gameImage} alt={gameName} class="h-[58px] w-[43px] overflow-hidden" />
+			<div class="text-2xl leading-[29px] font-bold">
+				{gameName}
+			</div>
+		</div>
+	</div>
+</div>
