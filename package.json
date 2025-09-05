@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
+		"build:prod": "cross-env VITE_BASE_URL=/ vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -26,6 +27,7 @@
 		"@tailwindcss/vite": "^4.0.0",
 		"bits-ui": "^2.9.4",
 		"clsx": "^2.1.1",
+		"cross-env": "^7.0.3",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
