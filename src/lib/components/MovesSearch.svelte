@@ -28,7 +28,7 @@
 	<SearchIcon class="absolute top-1/2 left-3 size-[19px] -translate-y-1/2 text-muted-foreground" />
 	<Input
 		id="moves-search"
-		class="w-full border-none bg-card pl-[43px]"
+		class="w-full pl-[43px]"
 		type="text"
 		placeholder="Поиск среди игр всех аукусов"
 		bind:value

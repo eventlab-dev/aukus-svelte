@@ -29,7 +29,7 @@
 	bind:this={contentRef}
 	style="height: {height}px;"
 	class={[
-		'z-[-1] mx-auto flex w-full flex-col justify-end space-y-1.5 overflow-hidden transition-[opacity,scale,height] duration-300 group-data-[collapsed=true]:pointer-events-none group-data-[collapsed=true]:scale-x-95 group-data-[collapsed=true]:opacity-50',
+		'z-[-1] mx-auto flex w-full flex-col justify-end space-y-[3px] overflow-hidden transition-[opacity,scale,height] duration-300 group-data-[collapsed=true]:pointer-events-none group-data-[collapsed=true]:scale-x-95 group-data-[collapsed=true]:opacity-50',
 		className
 	]}
 >

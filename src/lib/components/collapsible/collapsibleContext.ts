@@ -3,6 +3,8 @@ import { getContext, setContext } from 'svelte';
 type CollapsibleContextType = {
 	isCollapsed: boolean;
 	toggleCollapse: () => void;
+	close: () => void;
+	open: () => void;
 }
 
 const appKey = Symbol('collapsible');

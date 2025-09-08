@@ -24,7 +24,7 @@
 		bind:this={ref}
 		data-slot="input"
 		class={cn(
-			'flex h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 pt-1.5 font-medium ring-offset-background transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+			'flex h-9 w-full min-w-0 rounded-md border border-none border-input bg-card px-3 pt-1.5 font-medium ring-offset-background transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
 			'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
 			'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
 			className
@@ -39,7 +39,7 @@
 		bind:this={ref}
 		data-slot="input"
 		class={cn(
-			'flex h-[39px] w-full min-w-0 rounded-lg border-2 border-input bg-transparent px-3 py-1 leading-[19px] font-medium ring-offset-background transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+			'flex h-[40px] w-full min-w-0 rounded-lg border-2 border-none border-input bg-card px-3 py-1 font-medium ring-offset-background transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
 			'focus-visible:ring-[3px] focus-visible:ring-primary',
 			'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
 			className

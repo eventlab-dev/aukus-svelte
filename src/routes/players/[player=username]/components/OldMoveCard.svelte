@@ -43,7 +43,7 @@
 	<div class="mt-3 flex gap-3">
 		<div class="space-y-3">
 			<div class="text-2xl leading-[29px] font-bold">{move.title}</div>
-			<div class="leading-[19px] font-medium text-muted-foreground">
+			<div class="font-medium text-muted-foreground">
 				{move.review}
 			</div>
 		</div>

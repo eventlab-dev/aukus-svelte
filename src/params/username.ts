@@ -1,6 +1,6 @@
 import type { ParamMatcher } from '@sveltejs/kit';
 
-export type PlayerUrl =
+export type Username =
 	| 'lasqa'
 	| 'segall'
 	| 'praden'
@@ -15,7 +15,7 @@ export type PlayerUrl =
 	| 'keliq_q'
 	| 'unclebjorn'
 
-const playerUrlsSet = new Set<PlayerUrl>([
+const usernameUrlsSet = new Set<Username>([
 	'lasqa',
 	'segall',
 	'praden',
@@ -31,6 +31,6 @@ const playerUrlsSet = new Set<PlayerUrl>([
 	'unclebjorn'
 ]);
 
-export const match = ((param: string): param is PlayerUrl => {
-	return playerUrlsSet.has(param as PlayerUrl);
+export const match = ((param: string): param is Username => {
+	return usernameUrlsSet.has(param as Username);
 }) satisfies ParamMatcher;

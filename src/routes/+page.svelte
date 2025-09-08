@@ -8,6 +8,15 @@
 	import QuickMenu from '$lib/components/quickMenu/QuickMenu.svelte';
 	import TotalViewerCounter from '$lib/components/TotalViewerCounter.svelte';
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
+	import {
+		Dialog,
+		DialogContent,
+		DialogHeader,
+		DialogTitle,
+		DialogTrigger
+	} from '$lib/components/ui/dialog';
+	import MoveForm from '$lib/components/moveForm/MoveForm.svelte';
+	import { Button } from '$lib/components/ui/button';
 
 	const { playersStore, playersMovesStore } = getAppManagerContext();
 	const { moves } = playersMovesStore;
@@ -70,6 +79,8 @@
 	</div>
 
 	<div class="mx-auto mt-[30px] flex max-w-[800px] flex-col space-y-3">
+		<MoveForm />
+
 		<div class="flex gap-3">
 			<MovesSearch {moves} bind:filteredMoves />
 			<TotalViewerCounter />

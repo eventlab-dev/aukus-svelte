@@ -1,70 +1,33 @@
-import { browser } from '$app/environment';
-
 export class LocalStore<T> {
-  public value = $state<T>() as T;
-  private _key = '';
+	private _value = $state<T>() as T;
+	private _key = '';
+	private _isFirst = true;
 
-  constructor(value: T, key: string) {
-    this._key = key;
-    this.value = value;
+	constructor(key: string, value: T) {
+		this._value = value;
+		this._key = key;
+	}
 
-    if (browser) {
-      this._initializeValue();
+	get value() {
+		if (this._isFirst) {
+			const savedValue = localStorage.getItem(this._key);
 
-      $effect.root(() => {
-        $effect(() => {
-          this._updateLocalStorage();
-        });
-      });
-    }
-  }
+			if (savedValue) this._value = JSON.parse(savedValue);
 
-  private _initializeValue() {
-    // modifying deeply nested objects will result in error
-    // where the modified field is undefined.
-    // so make it flat to avoid this error
-    const item = localStorage.getItem(this._key);
+			this._isFirst = false;
+		}
 
-    if (item) {
-      const deserializedValue = this._deserialize(item);
+		return this._value;
+	}
 
-      if (deserializedValue) {
-        if (Array.isArray(deserializedValue)) {
-          this.value = [...deserializedValue] as T;
-        } else if (typeof deserializedValue === 'object') {
-          // make sure that the stored value is not missing any properties
-          this.value = { ...this.value, ...deserializedValue };
-        } else {
-          this.value = deserializedValue as T;
-        }
-      }
-    } else {
-      localStorage.setItem(this._key, this._serialize(this.value));
-    }
-  }
-
-  private _updateLocalStorage() {
-    const currentSerializedValue = this._serialize(this.value);
-    const existingItem = localStorage.getItem(this._key);
-
-    if (existingItem !== currentSerializedValue) {
-      localStorage.setItem(this._key, currentSerializedValue);
-    }
-  }
-
-  private _serialize(value: T): string {
-    return JSON.stringify(value);
-  }
-
-  private _deserialize(item: string): T | undefined {
-    try {
-      return JSON.parse(item);
-    } catch {
-      return undefined;
-    }
-  }
+	set value(val: T) {
+		localStorage.setItem(this._key, JSON.stringify(val));
+		this._value = val;
+	}
 }
 
-export default function storable<T>(value: T, key: string) {
-  return new LocalStore(value, key);
+function storable<T>(key: string, value: T) {
+	return new LocalStore(key, value);
 }
+
+export default storable;

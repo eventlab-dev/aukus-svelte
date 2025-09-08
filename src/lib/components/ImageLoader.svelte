@@ -34,7 +34,7 @@
 		<img
 			data-slot="loader-image"
 			src={loadedSrc}
-			class="w-full rounded-md object-cover"
+			class="w-full object-cover"
 			{alt}
 			draggable={false}
 			in:scale={{ start: 0.9, opacity: 0 }}

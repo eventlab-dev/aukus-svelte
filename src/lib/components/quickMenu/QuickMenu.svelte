@@ -9,22 +9,39 @@
 	import CrownIcon from '../icons/CrownIcon.svelte';
 	import GalleryAddIcon from '../icons/GalleryAddIcon.svelte';
 	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte';
-	import HeartIcon from '../icons/HeartIcon.svelte';
 	import LifebuoyIcon from '../icons/LifebuoyIcon.svelte';
-	import MathIcon from '../icons/MathIcon.svelte';
 	import MoonIcon from '../icons/MoonIcon.svelte';
-	import ProfileIcon from '../icons/ProfileIcon.svelte';
-	import ScrollIcon from '../icons/ScrollIcon.svelte';
 	import TwitchIcon from '../icons/TwitchIcon.svelte';
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 	import { Button } from '../ui/button';
+	import PointaucDialog from './options/PointaucDialog.svelte';
+	import PunishmentCalculator from './options/PunishmentCalculator.svelte';
+	import Timelapse from './options/timelapse/Timelapse.svelte';
 
 	const { userStore } = getAppManagerContext();
 
 	const isPlayer = $derived(userStore.user?.role === 'player');
 	const isModerator = $derived(userStore.user?.role === 'moder');
 
-	const collapsed = storable(false, 'quickMenuCollapsed');
+	const collapsed = storable('quickMenuCollapsed', false);
+
+	let isTimelapseShown = $state(false);
+
+	$effect(() => {
+		if (!collapsed.value) {
+			isTimelapseShown = false;
+		}
+	});
+
+	function closeTimelapse() {
+		isTimelapseShown = false;
+		collapsed.value = false;
+	}
+
+	function openTimelapse() {
+		isTimelapseShown = true;
+		collapsed.value = true;
+	}
 </script>
 
 <Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
@@ -47,29 +64,21 @@
 		{/if}
 
 		<CollapsibleGroup>
-			<Button href="/players">
-				<ProfileIcon /> Участники
-			</Button>
+			{#if isPlayer}
+				<div><GrammerlyIcon /> Кастомизация</div>
+			{/if}
 			<div><CrownIcon /> Достижения</div>
 			{#if isPlayer}
-				<div><HeartIcon /> Привязать поинтаук</div>
+				<PointaucDialog />
 			{/if}
 		</CollapsibleGroup>
 
 		{#if isPlayer}
 			<CollapsibleGroup>
-				<div><GrammerlyIcon /> Кастомизация</div>
-			</CollapsibleGroup>
-
-			<CollapsibleGroup>
-				<div><MathIcon /> Калкулятор наказаний</div>
+				<PunishmentCalculator />
 				<div><LifebuoyIcon /> Колёса вариантов</div>
 			</CollapsibleGroup>
 		{/if}
-
-		<CollapsibleGroup>
-			<div><MoonIcon /> Затемнить карту</div>
-		</CollapsibleGroup>
 
 		{#if isPlayer}
 			<CollapsibleGroup>
@@ -79,11 +88,17 @@
 
 		<CollapsibleGroup>
 			<div><TwitchIcon /> Мультитрансляция</div>
-			<div><ScrollIcon /> Создатели</div>
+			<div><MoonIcon /> Затемнить карту</div>
 		</CollapsibleGroup>
 
 		<CollapsibleGroup>
-			<div><CalendarIcon /> Таймлапс</div>
+			<Button onclick={openTimelapse}>
+				<CalendarIcon /> Таймлапс
+			</Button>
 		</CollapsibleGroup>
 	</CollapsibleContent>
+
+	{#if isTimelapseShown}
+		<Timelapse close={closeTimelapse} />
+	{/if}
 </Collapsible>

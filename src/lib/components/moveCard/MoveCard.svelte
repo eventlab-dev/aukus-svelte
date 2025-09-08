@@ -6,14 +6,13 @@
 	import TickCircleIcon from '$lib/components/icons/TickCircleIcon.svelte';
 	import ImageLoader from '$lib/components/ImageLoader.svelte';
 	import { Badge } from '$lib/components/ui/badge';
-	import { Button } from '$lib/components/ui/button';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { Toggle } from '$lib/components/ui/toggle';
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
 	import { formatDateTime, formatMs, getMoveTypeStyles } from '$lib/utils';
 	import { fade, slide } from 'svelte/transition';
-	import { diceRollTextMap } from '$lib/constants';
+	import { gameLengthRanges } from '$lib/constants';
 	import PopoverMoveCard from './PopoverMoveCard.svelte';
 	import { getPlayerColor } from '$lib/types';
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
@@ -27,10 +26,12 @@
 	const { move, isCurrentMove = false, withUsername = false }: Props = $props();
 
 	const { userStore, playersStore, playersMovesStore } = getAppManagerContext();
-	const { playersById } = playersStore;
 	const { user } = userStore;
 	const { moves } = playersMovesStore;
 
+	const player = $derived.by(() =>
+		move.player_id ? playersStore.getPlayer(move.player_id) : null
+	);
 	const isPlayersMove = $derived(user && user.user_id === move.player_id);
 	const isValidModerator = $derived(userStore.isModerator && user?.moder_for === move.player_id);
 	const canEdit = $derived(isPlayersMove || isValidModerator);
@@ -45,6 +46,7 @@
 	let vodLinks = $state(move.vod_link || '');
 	let isExtended = $state(false);
 	let isEditMode = $state(false);
+	let isVodsShown = $state(false);
 
 	function getPlayedBy() {
 		return moves.filter((m) => {
@@ -75,12 +77,9 @@
 	<div class="flex justify-between">
 		<div class="flex">
 			<div class="flex gap-1.5">
-				{#if withUsername && move.player_id}
-					<Badge
-						variant="secondary"
-						style="background-color: {getPlayerColor(playersById[move.player_id].url_handle)}"
-					>
-						{playersById[move.player_id].name}
+				{#if withUsername && player}
+					<Badge variant="secondary" style="background-color: {getPlayerColor(player.url_handle)}">
+						{player.name}
 					</Badge>
 				{/if}
 				{#if isCurrentMove}
@@ -112,7 +111,7 @@
 					</Tooltip>
 					{#if move.item_length}
 						<Badge variant="secondary">
-							{diceRollTextMap[move.item_length]} HLTB
+							{gameLengthRanges[move.item_length]} HLTB
 						</Badge>
 					{/if}
 				</div>
@@ -163,22 +162,33 @@
 		<div class="w-full space-y-3">
 			{#if isEditMode}
 				<div in:fade>
-					<Input id="game-title" type="text" class="w-full" bind:value={gameTitle} />
+					<Input
+						id="game-title"
+						type="text"
+						class="w-full border-none bg-muted"
+						bind:value={gameTitle}
+					/>
 				</div>
 			{:else}
 				<div class="text-2xl leading-[29px] font-bold" in:fade>{move.item_title}</div>
 			{/if}
 
-			{#if isEditMode}
-				<div in:fade>
-					<Textarea class="w-full resize-none" bind:value={vodLinks} />
+			{#if isEditMode || isVodsShown}
+				<div class="mt-5 space-y-3" in:fade>
+					<div class="font-medium">Ссылки на записи</div>
+					<Textarea
+						id="vod-links"
+						class="w-full resize-none"
+						readonly={isVodsShown}
+						bind:value={vodLinks}
+					/>
 				</div>
 			{:else if !isCurrentMove}
-				<div class="leading-[19px] font-medium text-muted-foreground" in:fade>
+				<div class="font-medium text-muted-foreground" in:fade>
 					{move.item_rating}/10 — {move.item_review}
 				</div>
 			{:else}
-				<div class="leading-[19px] font-medium" in:fade>
+				<div class="font-medium" in:fade>
 					Время в игре — {categoryDuration}
 				</div>
 			{/if}
@@ -187,7 +197,14 @@
 
 	{#if isExtended}
 		<div class="mt-3 flex justify-between" transition:slide>
-			<Button variant="secondary" size="sm" class="w-[105px]">Записи</Button>
+			<Toggle
+				variant={isVodsShown ? 'primary' : 'secondary'}
+				size="sm"
+				class="w-[105px]"
+				bind:pressed={isVodsShown}
+			>
+				Записи
+			</Toggle>
 			<div>
 				{#each playedBy as move}
 					<PopoverMoveCard {move} />

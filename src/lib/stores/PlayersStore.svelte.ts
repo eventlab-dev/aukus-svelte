@@ -6,6 +6,10 @@ class PlayersStore {
 	readonly playersByUrlHandle = $derived.by(this._getPlayersByUrlHandle.bind(this));
 	readonly playersById = $derived.by(this._getPlayersById.bind(this));
 
+	public getPlayer(id: number) {
+		return this._players.find((player) => player.id === id);
+	}
+
 	private _getPlayersByUrlHandle() {
 		return playersMock.reduce((acc, player) => {
 			acc[player.url_handle] = player;

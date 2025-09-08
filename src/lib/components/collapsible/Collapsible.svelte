@@ -3,33 +3,35 @@
 	import { setCollapsibleContext } from './collapsibleContext';
 
 	type Props = {
-		collapsed?: boolean | null;
+		collapsed?: boolean;
 		class?: string;
 		children: Snippet;
 	};
 
-	let { collapsed = $bindable(null), class: className, children }: Props = $props();
+	let { collapsed = $bindable(false), class: className, children }: Props = $props();
 
-	const context = $state({ isCollapsed: false, toggleCollapse });
-
-	setCollapsibleContext(context);
-
-	$effect(() => {
-		if (collapsed !== null) {
-			context.isCollapsed = collapsed;
-		}
+	setCollapsibleContext({
+		get isCollapsed() {
+			return collapsed;
+		},
+		toggleCollapse,
+		open,
+		close
 	});
 
-	function toggleCollapse() {
-		if (collapsed !== null) {
-			collapsed = !collapsed;
-			return;
-		}
+	function open() {
+		collapsed = false;
+	}
 
-		context.isCollapsed = !context.isCollapsed;
+	function close() {
+		collapsed = true;
+	}
+
+	function toggleCollapse() {
+		collapsed = !collapsed;
 	}
 </script>
 
-<div class={['group relative', className]} data-collapsed={context.isCollapsed}>
+<div class={['group relative', className]} data-collapsed={collapsed}>
 	{@render children()}
 </div>

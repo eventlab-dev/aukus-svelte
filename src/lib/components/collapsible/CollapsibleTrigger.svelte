@@ -18,7 +18,7 @@
 <Button
 	variant="outline"
 	class={[
-		'relative h-[39px] flex-row justify-start rounded-lg border-none bg-card px-2.5 py-1.5 leading-[19px] font-bold',
+		'relative flex-row justify-start rounded-lg border-none bg-card px-2.5 py-1.5 font-bold',
 		className
 	]}
 	onclick={() => collapsible.toggleCollapse()}

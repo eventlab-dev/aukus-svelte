@@ -1,5 +1,3 @@
-import type { ItemLength } from "./api/aukus/types";
-
 export const EMOTES_SEARCH_API_URL = 'https://api4.rhhhhhhh.live/search_emotes';
 export const SEVENTV_EMOTE_BASE_URL = 'https://starege.rhhhhhhh.live/https://cdn.7tv.app/emote';
 export const FALLBACK_GAME_POSTER =
@@ -73,9 +71,9 @@ export const transliterationMap: { [key: string]: string[] } = {
 	я: ['ya', 'ia'],
 }
 
-export const diceRollTextMap: { [k in ItemLength]: string } = {
-	tiny: '0-3ч',
-	short: '3-15ч',
+export const gameLengthRanges = {
+	tiny: '0-5ч',
+	short: '5-15ч',
 	medium: '15-30ч',
 	long: '30+ч'
-};
+} as const;

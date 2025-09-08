@@ -111,7 +111,7 @@ export const playerMovesData: PlayerMove[] = [
   {
     player_move_id: 1,
     player_id: 1,
-    created_at: '2024-12-04',
+    created_at: '2025-09-06 12:14:15',
     id: 1,
     item_title: 'NieR: Automata (2017)',
     type: 'completed',
@@ -135,7 +135,7 @@ export const playerMovesData: PlayerMove[] = [
   {
     player_move_id: 1,
     player_id: 2,
-    created_at: '2024-12-06',
+    created_at: '2025-09-06 10:10:10',
     id: 2,
     item_title: 'NieR: Automata (2017)',
     type: 'drop',
@@ -158,7 +158,7 @@ export const playerMovesData: PlayerMove[] = [
   {
     player_move_id: 1,
     player_id: 3,
-    created_at: '2024-12-06',
+    created_at: '2025-09-06 09:09:09',
     id: 3,
     item_title: 'NieR: Automata (2017)',
     type: 'reroll',
@@ -182,7 +182,7 @@ export const playerMovesData: PlayerMove[] = [
   {
     player_move_id: 2,
     player_id: 2,
-    created_at: '2024-12-04',
+    created_at: '2025-09-05 10:05:10',
     id: 4,
     item_title: 'Соник',
     type: 'completed',
@@ -207,7 +207,7 @@ export const playerMovesData: PlayerMove[] = [
   {
     player_move_id: 3,
     player_id: 1,
-    created_at: '2024-12-04',
+    created_at: '2025-09-04 23:11:11',
     id: 5,
     item_title: 'Witcher 3: Wild Hunt',
     type: 'completed',
@@ -231,7 +231,7 @@ export const playerMovesData: PlayerMove[] = [
   {
     player_move_id: 4,
     player_id: 2,
-    created_at: '2024-12-04',
+    created_at: '2025-09-02 12:12:12',
     id: 6,
     item_title: 'Соник',
     type: 'completed',
@@ -255,7 +255,7 @@ export const playerMovesData: PlayerMove[] = [
   {
     player_move_id: 4,
     player_id: 4,
-    created_at: '2025-09-03',
+    created_at: '2025-09-03 13:13:13',
     id: 7,
     item_title: 'Соник',
     type: 'completed',
@@ -279,13 +279,37 @@ export const playerMovesData: PlayerMove[] = [
   {
     player_move_id: 4,
     player_id: 4,
-    created_at: '2025-07-15',
+    created_at: '2025-09-01 14:14:14',
     id: 8,
     item_title: 'Соник',
     type: 'completed',
     dice_roll: 10,
     cell_to: 3,
     cell_from: 11,
+    item_review:
+      'Фильм «Вася не в себе» (2023). Добрая комедия про важность таджиков с Павлом Прилучным. 5/10 ))) ',
+    item_rating: 5,
+    stair_from: null,
+    stair_to: null,
+    snake_from: null,
+    snake_to: null,
+    item_length: 'medium',
+    stream_title_category_duration: '11285',
+    item_image:
+      'https://static-cdn.jtvnw.net/ttv-boxart/Valheim-{width}x{height}.jpg',
+    vod_link:
+      'test link 1\nДень 1 https://twitch.com/lasqa\nЧасть 2 https://youtube.com/test\ntest link 2\ntest field',
+  },
+  {
+    player_move_id: 4,
+    player_id: 4,
+    created_at: '2025-09-06 18:24:14',
+    id: 9,
+    item_title: 'Fallout 4',
+    type: 'drop',
+    dice_roll: 5,
+    cell_to: 13,
+    cell_from: 18,
     item_review:
       'Фильм «Вася не в себе» (2023). Добрая комедия про важность таджиков с Павлом Прилучным. 5/10 ))) ',
     item_rating: 5,

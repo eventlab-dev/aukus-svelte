@@ -83,22 +83,25 @@ export function transliterateRussianToEnglishVariants(russianText: string): stri
 	return results
 }
 
-export function formatDateTime(dateString: string): string {
+export function formatDateTime(dateString: string, options: { onlyHourMinute?: boolean } = {}) {
 	const date = new Date(dateString);
 	const today = new Date();
 	const isToday = date.toDateString() === today.toDateString();
-	const timeZone = 'Europe/Moscow';
 
-	const day = date.toLocaleString('ru-RU', { timeZone, day: 'numeric' });
-	const month = date.toLocaleString('ru-RU', { timeZone, month: 'long' });
+	const day = date.toLocaleString('ru-RU', { day: 'numeric' });
+	const month = date.toLocaleString('ru-RU', { month: 'long' });
 	const monthFixed = month.slice(0, -1) + 'я';
 
 	const hourMinute = date.toLocaleString('ru-RU', {
-		timeZone,
+
 		hour: '2-digit',
 		hour12: false,
 		minute: '2-digit',
 	});
+
+	if (options.onlyHourMinute) {
+		return hourMinute;
+	}
 
 	return isToday ? `Сегодня ${hourMinute}` : `${day} ${monthFixed} ${hourMinute}`;
 }
@@ -129,4 +132,23 @@ export function getMoveTypeStyles(type?: MoveType): MoveTypeStyles {
 			return { text: 'Ошибка', variant: 'default' };
 		}
 	}
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function debounce<T extends (...args: any[]) => any>(
+	callback: T,
+	delayMs: number
+): (...args: Parameters<T>) => void {
+	let timeoutId: number | null = null;
+
+	return (...args: Parameters<T>) => {
+		if (timeoutId) {
+			clearTimeout(timeoutId);
+		}
+
+		timeoutId = window.setTimeout(() => {
+			callback(...args);
+			timeoutId = null;
+		}, delayMs);
+	};
 }

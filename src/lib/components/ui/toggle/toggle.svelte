@@ -6,7 +6,8 @@
 		variants: {
 			variant: {
 				default: 'bg-transparent',
-				secondary: 'bg-muted text-muted-foreground hover:text-foreground',
+				secondary:
+					'bg-muted text-muted-foreground hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground',
 				outline: 'border-input hover:bg-accent hover:text-accent-foreground border bg-transparent',
 				white: 'bg-foreground text-primary',
 				primary: 'bg-primary text-primary-foreground hover:bg-primary/90'
@@ -14,7 +15,7 @@
 			size: {
 				default: 'h-9 min-w-9 px-2',
 				tiny: "rounded-[5px] px-2.5 py-[5px] !leading-3.5 text-xs font-bold [&_svg:not([class*='size-'])]:!size-3.5",
-				sm: 'h-8 min-w-8 px-1.5',
+				sm: 'h-7 rounded-[5px] text-sm px-2 py-[5px] has-[>svg]:px-2.5',
 				lg: 'h-10 min-w-10 px-2.5'
 			}
 		},

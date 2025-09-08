@@ -34,11 +34,13 @@
 }
 
 @theme inline {
-  --leading-normal: 1.2;
+  --leading-normal: 1.25;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 4px);
+  --radius-3xl: calc(var(--radius) + 6px);
 
   --color-custom-green: var(--green);
   --color-custom-red: var(--red);
@@ -91,10 +93,28 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-hidden;
   }
 
   ::selection {
     @apply bg-primary text-primary-foreground;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  .thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-muted-foreground) var(--color-card);
+    scrollbar-gutter: stable;
+  }
+
+  @-moz-document url-prefix() {
+    input[type="number"] {
+      appearance: textfield;
+    }
   }
 }

@@ -14,7 +14,7 @@
 	bind:this={ref}
 	data-slot="table-cell"
 	class={cn(
-		'bg-card bg-clip-padding p-2.5 align-middle leading-[19px] font-semibold whitespace-nowrap text-muted-foreground transition-colors [&:has([role=checkbox])]:pr-0',
+		'bg-card bg-clip-padding p-2.5 align-middle font-semibold whitespace-nowrap text-muted-foreground transition-colors [&:has([role=checkbox])]:pr-0',
 		className
 	)}
 	{...restProps}

@@ -63,11 +63,7 @@
 			<div class="text-xl leading-[24px] font-bold">{title}</div>
 			<div class="mt-4 flex flex-col gap-[15px]">
 				{#each items as { label, href }}
-					<Button
-						{href}
-						variant="link"
-						class="h-auto p-0 text-sm leading-[19px] font-medium text-foreground "
-					>
+					<Button {href} variant="link" class="h-auto p-0 text-sm font-medium text-foreground ">
 						{label}
 					</Button>
 				{/each}

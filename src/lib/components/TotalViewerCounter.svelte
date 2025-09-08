@@ -9,6 +9,6 @@
 	}
 </script>
 
-<div class="shrink-0 rounded-lg bg-card p-2.5 leading-[19px] font-medium text-muted-foreground">
+<div class="shrink-0 rounded-lg bg-card p-2.5 font-medium text-muted-foreground">
 	Общий онлайн: {totalViewerCounter}
 </div>
