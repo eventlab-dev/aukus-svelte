@@ -8,12 +8,16 @@
 	import { fade, slide } from 'svelte/transition';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import { onMount } from 'svelte';
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
 
 	type Props = {
 		value: string;
 	};
 
 	let { value = $bindable('') }: Props = $props();
+
+	const { myPlayer } = getAppManagerContext();
 
 	const searchResults = $derived(
 		value === ''
@@ -30,6 +34,12 @@
 	let isSearching = $state(false);
 	let isFocused = $state(false);
 	let inputRef: HTMLInputElement | null = $state(null);
+
+	onMount(() => {
+		if (myPlayer) {
+			value = myPlayer.current_game || '';
+		}
+	});
 
 	const debouncedInput = debounce((val: string) => {
 		value = val;

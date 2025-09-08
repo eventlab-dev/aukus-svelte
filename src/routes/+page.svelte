@@ -8,15 +8,7 @@
 	import QuickMenu from '$lib/components/quickMenu/QuickMenu.svelte';
 	import TotalViewerCounter from '$lib/components/TotalViewerCounter.svelte';
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import {
-		Dialog,
-		DialogContent,
-		DialogHeader,
-		DialogTitle,
-		DialogTrigger
-	} from '$lib/components/ui/dialog';
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte';
-	import { Button } from '$lib/components/ui/button';
 
 	const { playersStore, playersMovesStore } = getAppManagerContext();
 	const { moves } = playersMovesStore;
@@ -26,26 +18,33 @@
 	const sortedPlayers = $derived(
 		playersStore.players.toSorted((a, b) => b.total_score - a.total_score)
 	);
-	const sortedMovesByDate = $derived.by(getMovesByDate);
+	const sortedMovesByDate = $derived.by(getSortedMovesByDate);
 
-	function getMovesByDate() {
-		const movesByDate = filteredMoves.reduce(
-			(acc, move) => {
-				const date = move.created_at;
-				acc[date] = [...(acc[date] || []), move];
+	function getSortedMovesByDate() {
+		// Helper function to extract date portion from timestamp
+		const getDateKey = (timestamp: string) => new Date(timestamp).toISOString().slice(0, 10);
 
-				return acc;
-			},
-			{} as Record<string, PlayerMove[]>
+		// Sort from newest to oldest
+		const sortedMoves = filteredMoves.toSorted(
+			(a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 		);
 
-		return Object.fromEntries(
-			Object.entries(movesByDate).toSorted((a, b) => {
-				const dateA = new Date(a[0]).getTime();
-				const dateB = new Date(b[0]).getTime();
+		// Group moves by date
+		const movesByDate: Record<string, PlayerMove[]> = {};
 
-				return dateB - dateA;
-			})
+		for (const move of sortedMoves) {
+			const dateKey = getDateKey(move.created_at);
+
+			if (!movesByDate[dateKey]) {
+				movesByDate[dateKey] = [];
+			}
+
+			movesByDate[dateKey].push(move);
+		}
+
+		// Sort dates from newest to oldest
+		return Object.entries(movesByDate).toSorted(
+			([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime()
 		);
 	}
 
@@ -86,7 +85,7 @@
 			<TotalViewerCounter />
 		</div>
 		<div class="space-y-[30px]">
-			{#each Object.entries(sortedMovesByDate) as [date, moves] (date)}
+			{#each sortedMovesByDate as [date, moves] (date)}
 				{@const today = new Date()}
 				{@const isToday =
 					today.getFullYear() === new Date(date).getFullYear() &&

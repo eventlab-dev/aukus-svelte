@@ -13,7 +13,6 @@
 	import GameTitle from './components/GameTitle.svelte';
 	import EmotesPopover from './components/EmotesPopover.svelte';
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import { onMount } from 'svelte';
 	import {
 		Dialog,
 		DialogClose,
@@ -49,12 +48,6 @@
 	const isFormFilled = $derived(
 		form.title && form.status && form.hltbTime && form.rating !== null && form.review
 	);
-
-	onMount(() => {
-		if (myPlayer) {
-			form.title = myPlayer.current_game || '';
-		}
-	});
 
 	function saveReview() {
 		// POST form
