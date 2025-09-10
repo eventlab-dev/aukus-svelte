@@ -1,22 +1,20 @@
+import { browser } from "$app/environment";
+
 export class LocalStore<T> {
 	private _value = $state<T>() as T;
 	private _key = '';
-	private _isFirst = true;
 
 	constructor(key: string, value: T) {
 		this._value = value;
 		this._key = key;
+
+		if (browser) {
+			const savedValue = localStorage.getItem(this._key);
+			if (savedValue) this._value = JSON.parse(savedValue);
+		}
 	}
 
 	get value() {
-		if (this._isFirst) {
-			const savedValue = localStorage.getItem(this._key);
-
-			if (savedValue) this._value = JSON.parse(savedValue);
-
-			this._isFirst = false;
-		}
-
 		return this._value;
 	}
 

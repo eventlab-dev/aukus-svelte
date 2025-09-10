@@ -3,7 +3,11 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Dialog, DialogClose, DialogContent, DialogTrigger } from '$lib/components/ui/dialog';
 	import Wheel, { type WheelEntry } from '$lib/components/wheel/Wheel.svelte';
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
 	import X from '@lucide/svelte/icons/x';
+	import Volume1 from '@lucide/svelte/icons/volume-1';
+	import VolumeX from '@lucide/svelte/icons/volume-x';
+	import Volume from '$lib/components/Volume.svelte';
 
 	type EntriesType = 'moment' | 'difficulty';
 
@@ -18,17 +22,41 @@
 		{ id: 2, label: 'Не дроп', color: '#34C759', weight: 0.5 }
 	];
 
+	const { soundManager } = getAppManagerContext();
+
 	let currentType: EntriesType = $state('difficulty');
 
 	const isMomentType = $derived((currentType as EntriesType) === 'moment');
 	const currentEntries = $derived(isMomentType ? moment : difficulty);
 
+	$effect(() => {
+		currentType;
+
+		soundManager.stop();
+	});
+
 	function changeEntries(type: EntriesType) {
 		currentType = type;
 	}
+
+	function onSpinStart(delay: number) {
+		setTimeout(() => {
+			soundManager.playRandom({ fadeIn: 1, loop: true });
+		}, delay);
+	}
+
+	function onSpinEnd(entry: WheelEntry) {
+		soundManager.stop();
+	}
+
+	function onOpenChange(open: boolean) {
+		if (!open) {
+			soundManager.stop();
+		}
+	}
 </script>
 
-<Dialog>
+<Dialog {onOpenChange}>
 	<DialogTrigger>
 		<LifebuoyIcon /> Колёса вариантов
 	</DialogTrigger>
@@ -40,18 +68,28 @@
 			<Button
 				variant={!isMomentType ? 'default' : 'secondary'}
 				class="w-[232px] shrink"
-				onclick={() => changeEntries('difficulty')}>Колесо сложности</Button
+				onclick={() => changeEntries('difficulty')}
 			>
+				Колесо сложности
+			</Button>
 			<Button
 				variant={isMomentType ? 'default' : 'secondary'}
 				class="w-[258px] shrink"
-				onclick={() => changeEntries('moment')}>Колесо шейх-момента</Button
+				onclick={() => changeEntries('moment')}
 			>
+				Колесо шейх-момента
+			</Button>
 		</div>
 
-		{#key currentType}
-			<Wheel entries={currentEntries} size={564} />
-		{/key}
+		<div class="relative">
+			{#key currentType}
+				<Wheel entries={currentEntries} size={564} {onSpinStart} {onSpinEnd} />
+			{/key}
+
+			<div class="absolute bottom-0 left-[calc(100%_+_2.5rem)] z-50">
+				<Volume />
+			</div>
+		</div>
 
 		<DialogClose
 			class="absolute top-3.5 right-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"

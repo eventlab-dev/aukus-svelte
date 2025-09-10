@@ -3,7 +3,7 @@
 	height="510"
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 510 510"
-	class="size-12 drop-shadow-[0px_2px_0px_black]"
+	class="size-12"
 	{...$$props}
 >
 	<g transform="translate(-1)">

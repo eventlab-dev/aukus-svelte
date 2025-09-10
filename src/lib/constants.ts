@@ -77,3 +77,19 @@ export const gameLengthRanges = {
 	medium: '15-30ч',
 	long: '30+ч'
 } as const;
+
+import ARMY_SOUND_URL from "$lib/assets/sounds/army-roll.mp3";
+import INDIAN_ROLL_URL from "$lib/assets/sounds/indian-roll.mp3";
+import DRUM_SOUND_URL from "$lib/assets/sounds/baraban.mp3";
+import MAX_SOUND_URL from "$lib/assets/sounds/max-roll2.mp3";
+import DASBOOT_SOUND_URL from "$lib/assets/sounds/dasboot-roll.mp3";
+import DVAR_SOUND_URL from "$lib/assets/sounds/dvar-roll.mp3";
+
+export const SOUNDS = [
+	{ key: 'army', url: ARMY_SOUND_URL },
+	{ key: 'indian', url: INDIAN_ROLL_URL },
+	{ key: 'drum', url: DRUM_SOUND_URL },
+	{ key: 'max', url: MAX_SOUND_URL },
+	{ key: 'dasboot', url: DASBOOT_SOUND_URL },
+	{ key: 'dvar', url: DVAR_SOUND_URL },
+];

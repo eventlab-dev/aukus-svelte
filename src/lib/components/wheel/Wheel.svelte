@@ -22,7 +22,7 @@
 		entries: WheelEntry[];
 		size?: number;
 		spinTimeSeconds?: number;
-		onSpinStart?: () => void | boolean | Promise<void | boolean>;
+		onSpinStart?: (spinDelayMs: number) => void | boolean | Promise<void | boolean>;
 		onSpinEnd?: (entry: EntryWithAngles) => void;
 	};
 
@@ -229,7 +229,7 @@
 		winner = null;
 		isSpinning = true;
 		animationStartTime = performance.now();
-		onSpinStart?.();
+		onSpinStart?.(BACKSWING_DURATION);
 
 		animationId = requestAnimationFrame(backswing);
 	}
