@@ -32,7 +32,10 @@
 	<DialogTrigger>
 		<LifebuoyIcon /> Колёса вариантов
 	</DialogTrigger>
-	<DialogContent class="bg-unset h-full w-full items-center px-[90px]" showCloseButton={false}>
+	<DialogContent
+		class="bg-unset top-0 bottom-0 h-full w-full -translate-x-1/2 translate-y-0 items-center px-[90px]"
+		showCloseButton={false}
+	>
 		<div class="absolute top-2.5 left-1/2 flex -translate-x-1/2 gap-3">
 			<Button
 				variant={!isMomentType ? 'default' : 'secondary'}
