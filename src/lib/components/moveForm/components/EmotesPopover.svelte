@@ -47,7 +47,7 @@
 <Popover>
 	<PopoverTrigger>
 		{#snippet child({ props })}
-			<Button {...props} variant="ghost" size="icon" class="absolute right-3 bottom-1.5">
+			<Button {...props} variant="ghost" size="icon">
 				<EmojiIcon class="size-6" />
 			</Button>
 		{/snippet}

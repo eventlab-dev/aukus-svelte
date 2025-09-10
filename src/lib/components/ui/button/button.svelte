@@ -9,10 +9,10 @@
 		variants: {
 			variant: {
 				default:
-					'bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground aria-disabled:bg-muted aria-disabled:text-muted-foreground',
+					'bg-primary text-primary-foreground hover:bg-primary-hover disabled:bg-muted disabled:text-muted-foreground aria-disabled:bg-muted aria-disabled:text-muted-foreground',
 				destructive: 'bg-destructive hover:bg-destructive/90',
 				outline: 'bg-background hover:bg-hover border',
-				secondary: 'bg-muted hover:bg-muted/80',
+				secondary: 'bg-muted hover:bg-hover',
 				ghost: 'hover:bg-hover',
 				link: 'text-primary underline-offset-4 hover:text-primary underline decoration-2 decoration-primary justify-start',
 				social: ''

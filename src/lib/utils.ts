@@ -3,6 +3,9 @@ import { twMerge } from "tailwind-merge";
 import { transliterationMap } from "./constants";
 import type { BadgeVariant } from "./components/ui/badge";
 import type { MoveType } from "./api/aukus/types";
+import { renderToHTMLString } from '@tiptap/static-renderer';
+import enabledExtensions from "./tiptapExtensions/enabledExtensions";
+import dompurify from "dompurify";
 
 export function randomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -151,4 +154,22 @@ export function debounce<T extends (...args: any[]) => any>(
 			timeoutId = null;
 		}, delayMs);
 	};
+}
+
+export function renderToHTML(content: string) {
+	if (!content) return '';
+
+	return dompurify.sanitize(
+		renderToHTMLString({
+			content: JSON.parse(content),
+			extensions: enabledExtensions,
+		}),
+		{ ALLOWED_TAGS: ['p', 'img', 'span'] }
+	);
+}
+
+export function doubleSineEaseOut(t: number) {
+	// Apply sine easing twice for extra smooth deceleration
+	const firstPass = Math.sin((t * Math.PI) / 2);
+	return Math.sin((firstPass * Math.PI) / 2);
 }

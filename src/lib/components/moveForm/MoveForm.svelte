@@ -22,6 +22,7 @@
 		DialogTrigger
 	} from '../ui/dialog';
 	import X from '@lucide/svelte/icons/x';
+	import WandIcon from '../icons/WandIcon.svelte';
 
 	type FormType = {
 		title: string;
@@ -38,8 +39,7 @@
 		status: undefined,
 		hltbTime: undefined,
 		rating: null,
-		review:
-			'{"type":"doc","content":[{"type":"heading","attrs":{"level":1},"content":[{"type":"text","text":"Hello Svelte! 🌍️"}]},{"type":"paragraph","content":[{"type":"text","text":"This editor is running in Svelte."}]},{"type":"paragraph","content":[{"type":"text","text":"Select some text to see"},{"type":"image","attrs":{"src":"https://cdn.7tv.app/emote/01F6MQ33FG000FFJ97ZB8MWV52/1x.avif","alt":null,"title":null,"width":null,"height":null}},{"type":"text","text":" the bubble menu"},{"type":"image","attrs":{"src":"https://cdn.7tv.app/emote/01F6N31ETR0004P7N4A9PKS5X9/1x.avif","alt":null,"title":null,"width":null,"height":null}},{"type":"text","text":" popping up."}]}]}'
+		review: ''
 	});
 
 	let isDialogOpen = $state(false);
@@ -68,6 +68,10 @@
 
 	function handleEmoteClick(emote: string) {
 		editorState.editor?.chain().focus().setImage({ src: emote }).run();
+	}
+
+	function toggleSpoiler() {
+		editorState.editor?.chain().focus().toggleSpoilerMark().setTextSelection(0).run();
 	}
 </script>
 
@@ -112,7 +116,12 @@
 						bind:editorState
 						bind:value={form.review}
 					/>
-					<EmotesPopover onEmoteClick={handleEmoteClick} />
+					<div class="absolute right-1.5 bottom-1.5 flex flex-col">
+						<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
+							<WandIcon class="size-6" />
+						</Button>
+						<EmotesPopover onEmoteClick={handleEmoteClick} />
+					</div>
 				</div>
 
 				<Button class="ml-auto w-[264px]" disabled={!isFormFilled} onclick={saveReview}>

@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { Editor } from '@tiptap/core';
-	import { StarterKit } from '@tiptap/starter-kit';
-	import { Placeholder } from '@tiptap/extensions';
-	import { Image } from '@tiptap/extension-image';
 	import { onMount } from 'svelte';
 	import { cn } from '$lib/utils';
+	import enabledExtensions from '$lib/tiptapExtensions/enabledExtensions';
 
 	type Props = {
 		content: string;
@@ -33,19 +31,14 @@
 		const editor = new Editor({
 			element,
 			content: content ? JSON.parse(content) : '',
+			enablePasteRules: false,
 			editable,
 			editorProps: {
 				attributes: {
 					class: cn(editorStyles, className)
 				}
 			},
-			extensions: [
-				StarterKit,
-				Placeholder.configure({
-					placeholder: 'Ваш комментарий'
-				}),
-				Image.configure({ inline: true, HTMLAttributes: { class: 'emote' } })
-			],
+			extensions: enabledExtensions,
 			onTransaction: ({ editor }) => {
 				// force re-render so `editor.isActive` works as expected
 				editorState = { editor };
@@ -76,6 +69,8 @@
 		margin: 0 4px;
 		height: 24px;
 		vertical-align: middle;
+		user-select: all;
+		transition: all 0.3s ease;
 	}
 
 	:global(.tiptap p.is-editor-empty:first-child::before) {
@@ -85,5 +80,27 @@
 		float: left;
 		height: 0;
 		pointer-events: none;
+	}
+
+	:global(.spoiler) {
+		position: relative;
+		display: inline;
+		background-color: var(--color-muted);
+		color: var(--color-muted);
+		transition: all 0.3s ease;
+		border-radius: var(--radius-xs);
+
+		& > img {
+			opacity: 0;
+		}
+
+		&:hover {
+			background-color: inherit;
+			color: inherit;
+		}
+
+		&:hover > img {
+			opacity: 1;
+		}
 	}
 </style>

@@ -10,7 +10,7 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { Toggle } from '$lib/components/ui/toggle';
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
-	import { formatDateTime, formatMs, getMoveTypeStyles } from '$lib/utils';
+	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils';
 	import { fade, slide } from 'svelte/transition';
 	import { gameLengthRanges } from '$lib/constants';
 	import PopoverMoveCard from './PopoverMoveCard.svelte';
@@ -41,6 +41,7 @@
 	);
 	const playedBy = $derived.by(getPlayedBy);
 	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type));
+	const parsedReview = $derived.by(() => renderToHTML(move.item_review || ''));
 
 	let gameTitle = $state(move.item_title);
 	let vodLinks = $state(move.vod_link || '');
@@ -184,8 +185,9 @@
 					/>
 				</div>
 			{:else if !isCurrentMove}
-				<div class="font-medium text-muted-foreground" in:fade>
-					{move.item_rating}/10 — {move.item_review}
+				<div class="font-medium text-muted-foreground [&>*]:inline" in:fade>
+					<span>{move.item_rating}/10 — </span>
+					{@html parsedReview}
 				</div>
 			{:else}
 				<div class="font-medium" in:fade>

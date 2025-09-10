@@ -1,0 +1,46 @@
+<script lang="ts">
+	import Profile2Icon from './icons/Profile2Icon.svelte';
+	import TwitchIcon from './icons/TwitchIcon.svelte';
+	import { Button } from './ui/button';
+	import { Input } from './ui/input';
+
+	let email = $state('');
+	let password = $state('');
+
+	const isValid = $derived(!!email && !!password);
+
+	function login() {
+		console.log('login', email, password);
+	}
+</script>
+
+<div class="w-[390px] space-y-[50px] rounded-xl bg-card p-3">
+	<div class="mx-auto w-fit space-y-2">
+		<Profile2Icon class="mx-auto" />
+		<div class="text-xl leading-6 font-bold">Войти в аккаунт</div>
+	</div>
+	<div class="space-y-1.5">
+		<Input
+			id="email"
+			type="email"
+			autocomplete="email"
+			placeholder="Почта"
+			class="rounded-b-[4px] bg-muted"
+			bind:value={email}
+		/>
+		<Input
+			id="password"
+			type="password"
+			placeholder="Пароль"
+			class="rounded-t-[4px] bg-muted"
+			bind:value={password}
+		/>
+	</div>
+	<div class="flex flex-col items-center justify-center gap-1.5">
+		<Button class="w-full rounded-b-[4px]" disabled={!isValid} onclick={login}>Войти</Button>
+		<Button class="w-full rounded-t-[4px] bg-[#9146FF] hover:bg-[#9146FF]/80" onclick={login}>
+			<TwitchIcon />
+			Войти через Twitch
+		</Button>
+	</div>
+</div>

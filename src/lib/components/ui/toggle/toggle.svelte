@@ -6,8 +6,7 @@
 		variants: {
 			variant: {
 				default: 'bg-transparent',
-				secondary:
-					'bg-muted text-muted-foreground hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground',
+				secondary: 'bg-muted text-muted-foreground hover:text-foreground',
 				outline: 'border-input hover:bg-accent hover:text-accent-foreground border bg-transparent',
 				white: 'bg-foreground text-primary',
 				primary: 'bg-primary text-primary-foreground hover:bg-primary/90'

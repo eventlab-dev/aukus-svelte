@@ -17,6 +17,7 @@
 	import PointaucDialog from './options/PointaucDialog.svelte';
 	import PunishmentCalculator from './options/PunishmentCalculator.svelte';
 	import Timelapse from './options/timelapse/Timelapse.svelte';
+	import WheelDialog from './options/WheelDialog.svelte';
 
 	const { userStore } = getAppManagerContext();
 
@@ -76,7 +77,7 @@
 		{#if isPlayer}
 			<CollapsibleGroup>
 				<PunishmentCalculator />
-				<div><LifebuoyIcon /> Колёса вариантов</div>
+				<WheelDialog />
 			</CollapsibleGroup>
 		{/if}
 
