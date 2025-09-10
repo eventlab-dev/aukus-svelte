@@ -16,8 +16,8 @@
 </script>
 
 <TooltipProvider disableHoverableContent delayDuration={300}>
-	<ScrollArea class="h-screen px-2.5" type="always">
-		<div class="py-2.5">
+	<ScrollArea class="h-screen px-3" type="always">
+		<div class="py-3">
 			<Navigation />
 			{@render children?.()}
 			<Footer />

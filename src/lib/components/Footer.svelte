@@ -57,7 +57,7 @@
 	];
 </script>
 
-<footer class="mt-[500px] flex justify-between rounded-xl bg-black px-[120px] py-[50px]">
+<footer class="mt-[500px] flex justify-between rounded-xl bg-card px-[120px] py-[50px]">
 	{#each sections as { title, items }}
 		<div class="space-y-[25px]">
 			<div class="text-xl leading-[24px] font-bold">{title}</div>

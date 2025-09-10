@@ -64,17 +64,19 @@
 		class="bg-unset top-0 bottom-0 h-full w-full -translate-x-1/2 translate-y-0 items-center px-[90px]"
 		showCloseButton={false}
 	>
-		<div class="absolute top-2.5 left-1/2 flex -translate-x-1/2 gap-3">
+		<div class="absolute top-3 left-1/2 flex -translate-x-1/2 gap-3">
 			<Button
 				variant={!isMomentType ? 'default' : 'secondary'}
-				class="w-[232px] shrink"
+				size="sm"
+				class="shrink rounded-lg py-2 text-sm font-bold"
 				onclick={() => changeEntries('difficulty')}
 			>
 				Колесо сложности
 			</Button>
 			<Button
 				variant={isMomentType ? 'default' : 'secondary'}
-				class="w-[258px] shrink"
+				size="sm"
+				class="shrink rounded-lg py-2 text-sm font-bold"
 				onclick={() => changeEntries('moment')}
 			>
 				Колесо шейх-момента
@@ -92,7 +94,7 @@
 		</div>
 
 		<DialogClose
-			class="absolute top-3.5 right-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"
+			class="absolute top-3 right-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"
 		>
 			<X class="size-8 stroke-4" />
 		</DialogClose>

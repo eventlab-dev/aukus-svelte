@@ -65,11 +65,11 @@
 </svelte:head>
 
 <div in:fade>
-	<div class="absolute top-2.5 left-2.5 z-10">
+	<div class="absolute top-3 left-3 z-10">
 		<QuickMenu />
 	</div>
 
-	<div class="absolute top-2.5 right-2.5 z-10 flex flex-col gap-1.5">
+	<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
 		{#each sortedPlayers as player (player.id)}
 			<div animate:flip>
 				<PlayerCard {player} />

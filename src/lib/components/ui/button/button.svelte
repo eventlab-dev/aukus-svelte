@@ -20,7 +20,7 @@
 			size: {
 				default: 'h-10 px-4 py-2 has-[>svg]:px-3',
 				tiny: "h-6 rounded-[5px] px-2.5 py-[5px] !leading-3.5 text-xs font-bold [&_svg:not([class*='size-'])]:!size-3.5",
-				sm: 'h-7 rounded-[5px] text-sm px-2 py-[5px] has-[>svg]:px-2.5',
+				sm: 'h-8 rounded-[5px] text-sm px-[50px] py-2 has-[>svg]:px-2.5',
 				lg: 'h-11 rounded-md px-6 has-[>svg]:px-4',
 				icon: 'size-9',
 				social: 'h-[34px] w-[122px] py-1.5'
