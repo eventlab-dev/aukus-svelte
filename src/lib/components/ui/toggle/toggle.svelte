@@ -2,14 +2,16 @@
 	import { type VariantProps, tv } from 'tailwind-variants';
 
 	export const toggleVariants = tv({
-		base: "aria-invalid:ring-destructive/20 aria-invalid:border-destructive inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-colors disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer",
+		base: "aria-invalid:ring-destructive/20 aria-invalid:border-destructive inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg outline-none transition-colors disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer font-semibold",
 		variants: {
 			variant: {
-				default: 'bg-transparent',
+				default:
+					'bg-transparent text-muted-foreground hover:text-foreground data-[state=on]:text-foreground',
 				secondary: 'bg-muted text-muted-foreground hover:text-foreground',
 				outline: 'border-input hover:bg-accent hover:text-accent-foreground border bg-transparent',
 				white: 'bg-foreground text-primary',
-				primary: 'bg-primary text-primary-foreground hover:bg-primary/90'
+				primary:
+					'bg-muted text-primary-foreground hover:bg-hover hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground'
 			},
 			size: {
 				default: 'h-9 min-w-9 px-2',

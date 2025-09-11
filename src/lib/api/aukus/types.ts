@@ -195,3 +195,11 @@ export type GamesItem = {
 	games: PreviousGame[];
 	link: string;
 }
+
+export type Achievement = {
+	name: string;
+	image: string;
+	description: string;
+	reward: string;
+	players_ids: number[];
+};

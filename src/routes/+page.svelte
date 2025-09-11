@@ -1,23 +1,17 @@
 <script lang="ts">
-	import PlayerCard from '$lib/components/player/PlayerCard.svelte';
-	import { flip } from 'svelte/animate';
 	import type { PlayerMove } from '$lib/api/aukus/types';
 	import { fade } from 'svelte/transition';
 	import MovesSearch from '$lib/components/MovesSearch.svelte';
 	import MoveCard from '$lib/components/moveCard/MoveCard.svelte';
-	import QuickMenu from '$lib/components/quickMenu/QuickMenu.svelte';
 	import TotalViewerCounter from '$lib/components/TotalViewerCounter.svelte';
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte';
 
-	const { playersStore, playersMovesStore } = getAppManagerContext();
+	const { playersMovesStore } = getAppManagerContext();
 	const { moves } = playersMovesStore;
 
 	let filteredMoves: PlayerMove[] = $state([]);
 
-	const sortedPlayers = $derived(
-		playersStore.players.toSorted((a, b) => b.total_score - a.total_score)
-	);
 	const sortedMovesByDate = $derived.by(getSortedMovesByDate);
 
 	function getSortedMovesByDate() {
@@ -65,18 +59,6 @@
 </svelte:head>
 
 <div in:fade>
-	<div class="absolute top-3 left-3 z-10">
-		<QuickMenu />
-	</div>
-
-	<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
-		{#each sortedPlayers as player (player.id)}
-			<div animate:flip>
-				<PlayerCard {player} />
-			</div>
-		{/each}
-	</div>
-
 	<div class="mx-auto mt-[30px] flex max-w-[800px] flex-col space-y-3">
 		<MoveForm />
 

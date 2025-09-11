@@ -6,7 +6,7 @@
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover';
 	import { gameLengthRanges } from '$lib/constants';
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import { getMoveTypeStyles } from '$lib/utils';
+	import { getMoveTypeStyles, renderToHTML } from '$lib/utils';
 
 	type Props = {
 		move: PlayerMove;
@@ -16,6 +16,7 @@
 
 	const { playersStore } = getAppManagerContext();
 
+	const parsedReview = $derived.by(() => renderToHTML(move.item_review || ''));
 	const player = $derived.by(() => playersStore.getPlayer(move.player_id));
 	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type));
 </script>
@@ -29,7 +30,7 @@
 	<PopoverContent class="w-[346px] space-y-3">
 		<div class="font-bold">{move.item_title}</div>
 		<div class="text-sm leading-[18px] font-medium text-muted-foreground">
-			{move.item_review}
+			{@html parsedReview}
 		</div>
 		<div class="flex gap-1.5">
 			<Badge variant="blue">Aukus 3</Badge>

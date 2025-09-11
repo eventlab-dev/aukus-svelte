@@ -68,7 +68,7 @@
 			<Button
 				variant={!isMomentType ? 'default' : 'secondary'}
 				size="sm"
-				class="shrink rounded-lg py-2 text-sm font-bold"
+				class="h-8 shrink rounded-lg px-[50px] py-2 text-sm font-bold"
 				onclick={() => changeEntries('difficulty')}
 			>
 				Колесо сложности
@@ -76,7 +76,7 @@
 			<Button
 				variant={isMomentType ? 'default' : 'secondary'}
 				size="sm"
-				class="shrink rounded-lg py-2 text-sm font-bold"
+				class="h-8 shrink rounded-lg px-[50px] py-2 text-sm font-bold"
 				onclick={() => changeEntries('moment')}
 			>
 				Колесо шейх-момента

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
 	import storable from '$lib/stores/LocalStore.svelte';
 	import Collapsible from '../collapsible/Collapsible.svelte';
@@ -9,7 +11,6 @@
 	import CrownIcon from '../icons/CrownIcon.svelte';
 	import GalleryAddIcon from '../icons/GalleryAddIcon.svelte';
 	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte';
-	import LifebuoyIcon from '../icons/LifebuoyIcon.svelte';
 	import MoonIcon from '../icons/MoonIcon.svelte';
 	import TwitchIcon from '../icons/TwitchIcon.svelte';
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -68,7 +69,13 @@
 			{#if isPlayer}
 				<div><GrammerlyIcon /> Кастомизация</div>
 			{/if}
-			<div><CrownIcon /> Достижения</div>
+			<Button
+				class="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground data-[active=true]:hover:bg-primary"
+				data-active={$page.route.id === '/achievements'}
+				onclick={() => goto('/achievements')}
+			>
+				<CrownIcon /> Достижения
+			</Button>
 			{#if isPlayer}
 				<PointaucDialog />
 			{/if}

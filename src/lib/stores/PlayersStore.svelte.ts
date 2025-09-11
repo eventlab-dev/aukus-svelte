@@ -5,6 +5,7 @@ class PlayersStore {
 	private _players: Player[] = $state(playersMock);
 	readonly playersByUrlHandle = $derived.by(this._getPlayersByUrlHandle.bind(this));
 	readonly playersById = $derived.by(this._getPlayersById.bind(this));
+	readonly totalPlayers = $derived(this._players.length);
 
 	public getPlayer(id: number) {
 		return this._players.find((player) => player.id === id);

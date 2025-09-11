@@ -58,7 +58,7 @@
 	{/if}
 
 	<Toggle
-		class={['opacity-70 transition-opacity hover:opacity-100', className]}
+		class={className}
 		onmouseenter={show}
 		onmouseleave={hide}
 		onPressedChange={() => soundManager.toggleMute()}
