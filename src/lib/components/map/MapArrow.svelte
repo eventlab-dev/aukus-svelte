@@ -11,8 +11,8 @@
 		hide?: boolean;
 	}>();
 
-	const cellFromPos = getCellPosition(from);
-	const cellToPos = getCellPosition(to);
+	const cellFromPos = $derived(getCellPosition(from));
+	const cellToPos = $derived(getCellPosition(to));
 
 	// Derived values
 	const topPoint = $derived(Math.min(cellToPos.y, cellFromPos.y));
@@ -41,7 +41,7 @@
 
 <svg
 	id="map-arrow-{from}-{to}"
-	class="z-50"
+	class=""
 	{width}
 	height={height + 0}
 	style="

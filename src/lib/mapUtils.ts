@@ -118,7 +118,7 @@ export const snakesByCell = snakes.reduce(
 	{} as Record<number, Snake>
 );
 
-export const CellSize = 105;
+export const CellSize = 121;
 
 export type CellPosition = {
 	x: number;
@@ -127,8 +127,8 @@ export type CellPosition = {
 	y1: number;
 };
 
-const Cell100X = 216;
-const Cell100Y = 464;
+const Cell100X = 245;
+const Cell100Y = 533;
 
 const Cell100Coords: CellPosition = {
 	x: Cell100X,
