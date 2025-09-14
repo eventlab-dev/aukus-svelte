@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { ladders, MapContainerId, snakes } from '$lib/mapUtils';
+	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils';
+	import CellNumber from './CellNumber.svelte';
 	import MapArrow from './MapArrow.svelte';
 	import MapArrowMarkers from './MapArrowMarkers.svelte';
 </script>
@@ -18,5 +19,8 @@
 	{#each snakes as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
 		<!-- Using index as key because there can be multiple identical snakes -->
 		<MapArrow {from} {to} />
+	{/each}
+	{#each mapCellsSorted as cell (cell.id)}
+		<CellNumber cellId={cell.id} />
 	{/each}
 </div>

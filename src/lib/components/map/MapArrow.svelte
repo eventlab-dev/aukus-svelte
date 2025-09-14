@@ -34,7 +34,7 @@
 	const fromY = $derived(isSnake ? CellSize / 2 : height - CellSize / 2);
 
 	const toX = $derived(
-		arrowGoesStraight || !arrowGoesToRight ? CellSize / 2 : width - CellSize / 2
+		arrowGoesStraight ? CellSize / 2 : arrowGoesToRight ? width - CellSize + 10 : CellSize - 10
 	);
 	const toY = $derived(isSnake ? height - CellSize - 10 : CellSize - 10);
 </script>
