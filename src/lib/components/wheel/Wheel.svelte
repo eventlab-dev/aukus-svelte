@@ -1,13 +1,3 @@
-<script module>
-	export type WheelEntry = {
-		id: number;
-		label: string;
-		weight?: number;
-		imageUrl?: string;
-		color?: string;
-	};
-</script>
-
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { circIn } from 'svelte/easing';
@@ -15,6 +5,14 @@
 	import StartButton from './components/StartButton.svelte';
 	import Pointer from './components/Pointer.svelte';
 	import { doubleSineEaseOut } from '$lib/utils';
+
+	export type WheelEntry = {
+		id: number;
+		label: string;
+		weight?: number;
+		imageUrl?: string;
+		color?: string;
+	};
 
 	type EntryWithAngles = WheelEntry & { startAngle: number; endAngle: number };
 
