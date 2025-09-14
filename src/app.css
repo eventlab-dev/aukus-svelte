@@ -13,7 +13,7 @@
   --card-foreground: oklch(0.96 0 0);
   --popover: oklch(0.25 0 0);
   --popover-foreground: oklch(0.96 0 0);
-  --primary: oklch(0.53 0.19 278.34);
+  --primary: oklch(0.56 0.23 279.32);
   --primary-foreground: oklch(0.96 0 0);
   --primary-hover: oklch(0.48 0.18 278.04);
   --secondary: oklch(0.38 0 0);
@@ -27,10 +27,10 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.552 0.016 285.938);
   --green: oklch(0.73 0.19 147.44);
-  --red: oklch(0.65 0.23 28.66);
+  --red: oklch(0.65 0.23 25.74);
   --blue: oklch(0.6 0.22 257.43);
-  --orange: oklch(0.71 0.16 62.98);
-  --violet: oklch(0.53 0.19 278.34);
+  --orange: oklch(0.74 0.18 54.54);
+  --violet: oklch(0.56 0.23 279.32);
   --purple: oklch(0.61 0.21 312.42);
 }
 

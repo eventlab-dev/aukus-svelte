@@ -3,14 +3,12 @@
 	import { Button } from '$lib/components/ui/button';
 	import {
 		Dialog,
-		DialogClose,
 		DialogContent,
 		DialogDescription,
 		DialogHeader,
 		DialogTitle,
 		DialogTrigger
 	} from '$lib/components/ui/dialog';
-	import X from '@lucide/svelte/icons/x';
 </script>
 
 <Dialog>
@@ -18,8 +16,7 @@
 		<HeartIcon /> Привязать поинтаук
 	</DialogTrigger>
 	<DialogContent
-		class="w-[550px] rounded-[15px] bg-primary p-3 text-primary-foreground selection:bg-foreground selection:text-background"
-		showCloseButton={false}
+		class="w-[550px] bg-primary text-primary-foreground selection:bg-foreground selection:text-background"
 	>
 		<DialogHeader class="mb-[74px] gap-3">
 			<DialogTitle class="text-2xl font-bold">Привязка PointAuk</DialogTitle>
@@ -34,11 +31,5 @@
 		>
 			Перейти на проинтаук
 		</Button>
-
-		<DialogClose
-			class="absolute top-4.5 right-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"
-		>
-			<X class="size-5 stroke-4" />
-		</DialogClose>
 	</DialogContent>
 </Dialog>

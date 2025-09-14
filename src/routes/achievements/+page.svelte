@@ -7,6 +7,7 @@
 	import AchievementCard from './components/AchievementCard.svelte';
 	import { sineInOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
+	import X from '@lucide/svelte/icons/x';
 
 	const achievements: Achievement[] = Array.from({ length: 10 }, (_, idx) => ({
 		name: `Достижение ${idx + 1}`,
@@ -52,6 +53,11 @@
 					bind:pressed={() => getPressed(player.id), (v) => setPressed(v, player.id)}
 				>
 					{player.name}
+					{#if selectedPlayerId === player.id}
+						<span class="rounded bg-white/20 p-0.5">
+							<X class="stroke-4" />
+						</span>
+					{/if}
 				</Toggle>
 			{/each}
 		</div>
