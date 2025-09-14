@@ -16,7 +16,7 @@
 </script>
 
 <div class="flex justify-center">
-	<div class="overflow-x-auto" id="map-scroll-container">
+	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
 		<div id={MapContainerId} class="relative h-[2146px] w-[1715px]">
 			<img
 				class="h-[2146px] w-[1715px] bg-center bg-no-repeat"
