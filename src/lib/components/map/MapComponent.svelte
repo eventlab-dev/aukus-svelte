@@ -25,11 +25,9 @@
 			/>
 			<MapArrowMarkers />
 			{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
-				<!-- Using index as key because there can be multiple identical ladders -->
 				<MapArrow {from} {to} />
 			{/each}
 			{#each snakes as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
-				<!-- Using index as key because there can be multiple identical snakes -->
 				<MapArrow {from} {to} />
 			{/each}
 			{#each mapCellsSorted as cell (cell.id)}
