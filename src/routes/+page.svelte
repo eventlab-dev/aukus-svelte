@@ -6,6 +6,7 @@
 	import TotalViewerCounter from '$lib/components/TotalViewerCounter.svelte';
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte';
+	import MapComponent from '$lib/components/map/MapComponent.svelte';
 
 	const { playersMovesStore } = getAppManagerContext();
 	const { moves } = playersMovesStore;
@@ -58,6 +59,10 @@
 	<title>Aukus</title>
 </svelte:head>
 
+<div class="mt-[100px]">
+	<MapComponent />
+</div>
+
 <div in:fade>
 	<div class="mx-auto mt-[30px] flex max-w-[800px] flex-col space-y-3">
 		<MoveForm />
@@ -79,7 +84,7 @@
 						<div class="text-center text-2xl font-semibold">{formatDate(date)}</div>
 					{/if}
 					<div class="space-y-3">
-						{#each moves as move}
+						{#each moves as move (move.id)}
 							<MoveCard {move} withUsername />
 						{/each}
 					</div>
