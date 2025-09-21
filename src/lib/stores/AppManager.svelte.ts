@@ -1,5 +1,4 @@
 import { SOUNDS } from '$lib/constants'
-import { QueryClient } from '@tanstack/svelte-query'
 import PlayersMovesStore from './PlayersMovesStore.svelte'
 import PlayersStore from './PlayersStore.svelte'
 import SoundManager from './SoundManager.svelte'
@@ -12,8 +11,6 @@ export class AppManager {
 	readonly soundManager = new SoundManager()
 
 	readonly myUser = $derived(this.usersStore.myUser)
-
-	readonly queryClient = new QueryClient()
 
 	constructor() {
 		this.soundManager.preloadSounds(SOUNDS)

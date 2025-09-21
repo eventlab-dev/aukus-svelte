@@ -1,4 +1,3 @@
-import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 import type { UserItem } from '$lib/heyapi'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
@@ -6,7 +5,7 @@ import {
 	getUsersApiUsersGetOptions,
 	getUsersApiUsersGetQueryKey
 } from '$lib/heyapi/@tanstack/svelte-query.gen'
-import { createQuery } from '@tanstack/svelte-query'
+import { createQuery, useQueryClient } from '@tanstack/svelte-query'
 
 class UsersStore {
 	private _my_user = $state<UserItem | null>(null)
@@ -28,8 +27,11 @@ class UsersStore {
 	// 	this._user = user
 	// }
 
-	private _users_query = createQuery(getUsersApiUsersGetOptions())
-	private _current_user_query = createQuery(fetchCurrentUserApiUsersCurrentGetOptions())
+	private _users_query = createQuery({ ...getUsersApiUsersGetOptions(), refetchInterval: 60000 })
+	private _current_user_query = createQuery({
+		...fetchCurrentUserApiUsersCurrentGetOptions(),
+		retry: false
+	})
 
 	constructor() {
 		this._current_user_query.subscribe((data) => {
@@ -41,11 +43,11 @@ class UsersStore {
 	}
 
 	refetchUsers() {
-		getAppManagerContext().queryClient.refetchQueries({ queryKey: getUsersApiUsersGetQueryKey() })
+		useQueryClient().refetchQueries({ queryKey: getUsersApiUsersGetQueryKey() })
 	}
 
 	refetchMyUser() {
-		getAppManagerContext().queryClient.refetchQueries({
+		useQueryClient().refetchQueries({
 			queryKey: fetchCurrentUserApiUsersCurrentGetQueryKey()
 		})
 	}
