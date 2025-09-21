@@ -1,5 +1,5 @@
 import { goto } from '$app/navigation'
-import { queryClient } from '$lib/client'
+import { EventlabBaseUrl, queryClient } from '$lib/client'
 import type { UserItem } from '$lib/heyapi'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
@@ -15,15 +15,19 @@ class UsersStore {
 	private _my_user = $state<UserItem | null>(null)
 	private _users = $state<UserItem[]>([])
 
-	private _users_query = createQuery({ ...getUsersApiUsersGetOptions(), refetchInterval: 60000 })
+	private _users_query = createQuery({
+		...getUsersApiUsersGetOptions({ baseUrl: EventlabBaseUrl }),
+		refetchInterval: 60000
+	})
 	private _current_user_query = createQuery({
 		...fetchCurrentUserApiUsersCurrentGetOptions({
+			baseUrl: EventlabBaseUrl,
 			auth: () => localStorage.getItem('auth_token') ?? undefined
 		}),
 		retry: false
 	})
 	private _login_mutation = createMutation({
-		...loginApiLoginPostMutation()
+		...loginApiLoginPostMutation({ baseUrl: EventlabBaseUrl })
 	})
 
 	constructor() {
