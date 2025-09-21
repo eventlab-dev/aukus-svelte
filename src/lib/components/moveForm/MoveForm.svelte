@@ -1,18 +1,18 @@
 <script lang="ts">
-	import ImageLoader from '../ImageLoader.svelte';
-	import fallbackPoster from '$lib/assets/images/GameFallbackPoster.png';
-	import GameStatusSelector from './components/GameStatusSelector.svelte';
-	import HltbTimeSelector from './components/HLTBTimeSelector.svelte';
-	import HltbLink from './components/HLTBLink.svelte';
-	import type { ItemLength, MoveType } from '$lib/api/aukus/types';
-	import Rating from './components/Rating.svelte';
-	import { Button } from '../ui/button';
-	import BoxIcon from '../icons/BoxIcon.svelte';
-	import TiptapEditor from '../TiptapEditor.svelte';
-	import { Editor } from '@tiptap/core';
-	import GameTitle from './components/GameTitle.svelte';
-	import EmotesPopover from './components/EmotesPopover.svelte';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
+	import ImageLoader from '../ImageLoader.svelte'
+	import fallbackPoster from '$lib/assets/images/GameFallbackPoster.png'
+	import GameStatusSelector from './components/GameStatusSelector.svelte'
+	import HltbTimeSelector from './components/HLTBTimeSelector.svelte'
+	import HltbLink from './components/HLTBLink.svelte'
+	import type { ItemLength, MoveType } from '$lib/api/aukus/types'
+	import Rating from './components/Rating.svelte'
+	import { Button } from '../ui/button'
+	import BoxIcon from '../icons/BoxIcon.svelte'
+	import TiptapEditor from '../TiptapEditor.svelte'
+	import { Editor } from '@tiptap/core'
+	import GameTitle from './components/GameTitle.svelte'
+	import EmotesPopover from './components/EmotesPopover.svelte'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import {
 		Dialog,
 		DialogClose,
@@ -20,19 +20,19 @@
 		DialogHeader,
 		DialogTitle,
 		DialogTrigger
-	} from '../ui/dialog';
-	import X from '@lucide/svelte/icons/x';
-	import WandIcon from '../icons/WandIcon.svelte';
+	} from '../ui/dialog'
+	import X from '@lucide/svelte/icons/x'
+	import WandIcon from '../icons/WandIcon.svelte'
 
 	type FormType = {
-		title: string;
-		status?: MoveType;
-		hltbTime?: ItemLength;
-		rating: number | null;
-		review: string;
-	};
+		title: string
+		status?: MoveType
+		hltbTime?: ItemLength
+		rating: number | null
+		review: string
+	}
 
-	const { myPlayer } = getAppManagerContext();
+	const { myUser } = getAppManagerContext()
 
 	let form: FormType = $state({
 		title: '',
@@ -40,20 +40,20 @@
 		hltbTime: undefined,
 		rating: null,
 		review: ''
-	});
+	})
 
-	let isDialogOpen = $state(false);
-	let editorState: { editor: Editor | null } = $state({ editor: null });
+	let isDialogOpen = $state(false)
+	let editorState: { editor: Editor | null } = $state({ editor: null })
 
 	const isFormFilled = $derived(
 		form.title && form.status && form.hltbTime && form.rating !== null && form.review
-	);
+	)
 
 	function saveReview() {
 		// POST form
-		console.log($state.snapshot(form));
+		console.log($state.snapshot(form))
 
-		isDialogOpen = false;
+		isDialogOpen = false
 
 		setTimeout(() => {
 			form = {
@@ -62,16 +62,16 @@
 				hltbTime: undefined,
 				rating: null,
 				review: ''
-			};
-		}, 500);
+			}
+		}, 500)
 	}
 
 	function handleEmoteClick(emote: string) {
-		editorState.editor?.chain().focus().setImage({ src: emote }).run();
+		editorState.editor?.chain().focus().setImage({ src: emote }).run()
 	}
 
 	function toggleSpoiler() {
-		editorState.editor?.chain().focus().toggleSpoilerMark().setTextSelection(0).run();
+		editorState.editor?.chain().focus().toggleSpoilerMark().setTextSelection(0).run()
 	}
 </script>
 
@@ -84,7 +84,7 @@
 	<DialogContent class="gap-3 overflow-hidden p-3 sm:max-w-[800px]" showCloseButton={false}>
 		<DialogHeader>
 			<DialogTitle aria-describedby="move form">
-				Новый ход — {myPlayer?.current_game}
+				Новый ход — {myUser?.current_game}
 			</DialogTitle>
 		</DialogHeader>
 
@@ -95,7 +95,7 @@
 
 				<div class="flex gap-3">
 					<GameStatusSelector
-						gameDuration={myPlayer?.current_game_duration}
+						gameDuration={myUser?.current_game_duration}
 						bind:value={form.status}
 					/>
 					<HltbTimeSelector bind:value={form.hltbTime} />

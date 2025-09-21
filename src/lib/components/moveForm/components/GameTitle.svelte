@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import ImageLoader from '$lib/components/ImageLoader.svelte';
-	import { Input } from '$lib/components/ui/input';
-	import { FALLBACK_GAME_POSTER } from '$lib/constants';
-	import { debounce } from '$lib/utils';
-	import X from '@lucide/svelte/icons/x';
-	import { fade, slide } from 'svelte/transition';
-	import { ScrollArea } from '$lib/components/ui/scroll-area';
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
-	import { onMount } from 'svelte';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
+	import { Button } from '$lib/components/ui/button'
+	import ImageLoader from '$lib/components/ImageLoader.svelte'
+	import { Input } from '$lib/components/ui/input'
+	import { FALLBACK_GAME_POSTER } from '$lib/constants'
+	import { debounce } from '$lib/utils'
+	import X from '@lucide/svelte/icons/x'
+	import { fade, slide } from 'svelte/transition'
+	import { ScrollArea } from '$lib/components/ui/scroll-area'
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
+	import { onMount } from 'svelte'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type Props = {
-		value: string;
-	};
+		value: string
+	}
 
-	let { value = $bindable('') }: Props = $props();
+	let { value = $bindable('') }: Props = $props()
 
-	const { myPlayer } = getAppManagerContext();
+	const { myUser: myPlayer } = getAppManagerContext()
 
 	const searchResults = $derived(
 		value === ''
@@ -29,32 +29,32 @@
 					{ id: '4', name: 'Game 4', release_year: 1, cover: FALLBACK_GAME_POSTER },
 					{ id: '5', name: 'Game 5', release_year: 1, cover: FALLBACK_GAME_POSTER }
 				].filter((game) => game.name.toLowerCase().includes(value.toLowerCase()))
-	);
+	)
 
-	let isSearching = $state(false);
-	let isFocused = $state(false);
-	let inputRef: HTMLInputElement | null = $state(null);
+	let isSearching = $state(false)
+	let isFocused = $state(false)
+	let inputRef: HTMLInputElement | null = $state(null)
 
 	onMount(() => {
 		if (myPlayer) {
-			value = myPlayer.current_game || '';
+			value = myPlayer.current_game || ''
 		}
-	});
+	})
 
 	const debouncedInput = debounce((val: string) => {
-		value = val;
-	}, 400);
+		value = val
+	}, 400)
 
 	function onGameClick(gameTitle: string) {
-		value = gameTitle;
+		value = gameTitle
 	}
 
 	function onblur() {
-		isFocused = false;
+		isFocused = false
 	}
 
 	function onfocus() {
-		isFocused = true;
+		isFocused = true
 	}
 </script>
 
@@ -84,11 +84,11 @@
 			{:else if searchResults.length > 0}
 				<ScrollArea class="h-auto flex-1 overflow-hidden">
 					<div>
-						{#each searchResults as game}
+						{#each searchResults as game (game.id)}
 							<Button
 								variant="secondary"
 								class="bg-unset h-auto w-full justify-start gap-3 rounded-none p-2 text-start hover:bg-hover"
-								onmousedown={(e) => onGameClick(game.name)}
+								onmousedown={() => onGameClick(game.name)}
 							>
 								<ImageLoader
 									src={game.cover || FALLBACK_GAME_POSTER}

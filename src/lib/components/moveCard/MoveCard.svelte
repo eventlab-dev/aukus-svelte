@@ -1,73 +1,71 @@
 <script lang="ts">
-	import type { PlayerMove } from '$lib/api/aukus/types';
-	import AddSquareIcon from '$lib/components/icons/AddSquareIcon.svelte';
-	import EditIcon from '$lib/components/icons/EditIcon.svelte';
-	import MinusSquareIcon from '$lib/components/icons/MinusSquareIcon.svelte';
-	import TickCircleIcon from '$lib/components/icons/TickCircleIcon.svelte';
-	import ImageLoader from '$lib/components/ImageLoader.svelte';
-	import { Badge } from '$lib/components/ui/badge';
-	import Input from '$lib/components/ui/input/input.svelte';
-	import { Textarea } from '$lib/components/ui/textarea';
-	import { Toggle } from '$lib/components/ui/toggle';
-	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
-	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils';
-	import { fade, slide } from 'svelte/transition';
-	import { gameLengthRanges } from '$lib/constants';
-	import PopoverMoveCard from './PopoverMoveCard.svelte';
-	import { getPlayerColor } from '$lib/types';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
+	import type { PlayerMove } from '$lib/api/aukus/types'
+	import AddSquareIcon from '$lib/components/icons/AddSquareIcon.svelte'
+	import EditIcon from '$lib/components/icons/EditIcon.svelte'
+	import MinusSquareIcon from '$lib/components/icons/MinusSquareIcon.svelte'
+	import TickCircleIcon from '$lib/components/icons/TickCircleIcon.svelte'
+	import ImageLoader from '$lib/components/ImageLoader.svelte'
+	import { Badge } from '$lib/components/ui/badge'
+	import Input from '$lib/components/ui/input/input.svelte'
+	import { Textarea } from '$lib/components/ui/textarea'
+	import { Toggle } from '$lib/components/ui/toggle'
+	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
+	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
+	import { fade, slide } from 'svelte/transition'
+	import { gameLengthRanges } from '$lib/constants'
+	import PopoverMoveCard from './PopoverMoveCard.svelte'
+	import { getPlayerColor } from '$lib/types'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type Props = {
-		move: Partial<PlayerMove>;
-		isCurrentMove?: boolean;
-		withUsername?: boolean;
-	};
+		move: Partial<PlayerMove>
+		isCurrentMove?: boolean
+		withUsername?: boolean
+	}
 
-	const { move, isCurrentMove = false, withUsername = false }: Props = $props();
+	const { move, isCurrentMove = false, withUsername = false }: Props = $props()
 
-	const { userStore, playersStore, playersMovesStore } = getAppManagerContext();
-	const { user } = userStore;
-	const { moves } = playersMovesStore;
+	const { usersStore, playersStore, playersMovesStore } = getAppManagerContext()
+	const { myUser } = usersStore
+	const { moves } = playersMovesStore
 
-	const player = $derived.by(() =>
-		move.player_id ? playersStore.getPlayer(move.player_id) : null
-	);
-	const isPlayersMove = $derived(user && user.user_id === move.player_id);
-	const isValidModerator = $derived(userStore.isModerator && user?.moder_for === move.player_id);
-	const canEdit = $derived(isPlayersMove || isValidModerator);
+	const player = $derived.by(() => (move.player_id ? playersStore.getPlayer(move.player_id) : null))
+	const isPlayersMove = true // $derived(myUser && myUser.slug === move.player_slug)
+	const isValidModerator = true // $derived(usersStore.isModerator && myUser?.moder_for === move.player_id)
+	const canEdit = $derived(isPlayersMove || isValidModerator)
 
 	const categoryDuration = $derived(
 		formatMs(parseInt((move.stream_title_category_duration || 0).toString()) * 1000)
-	);
-	const playedBy = $derived.by(getPlayedBy);
-	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type));
-	const parsedReview = $derived.by(() => renderToHTML(move.item_review || ''));
+	)
+	const playedBy = $derived.by(getPlayedBy)
+	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type))
+	const parsedReview = $derived.by(() => renderToHTML(move.item_review || ''))
 
-	let gameTitle = $state(move.item_title);
-	let vodLinks = $state(move.vod_link || '');
-	let isExtended = $state(false);
-	let isEditMode = $state(false);
-	let isVodsShown = $state(false);
+	let gameTitle = $state(move.item_title)
+	let vodLinks = $state(move.vod_link || '')
+	let isExtended = $state(false)
+	let isEditMode = $state(false)
+	let isVodsShown = $state(false)
 
 	function getPlayedBy() {
 		return moves.filter((m) => {
-			const isMyMove = m.player_id === move.player_id;
-			const isSameItem = m.item_title === move.item_title;
+			const isMyMove = m.player_id === move.player_id
+			const isSameItem = m.item_title === move.item_title
 
-			return !isMyMove && isSameItem;
-		});
+			return !isMyMove && isSameItem
+		})
 	}
 
 	function setEditMode(pressed: boolean) {
 		if (!pressed) {
-			console.log('Changes saved');
+			console.log('Changes saved')
 		}
 
-		isEditMode = pressed;
+		isEditMode = pressed
 	}
 
 	function getEditMode() {
-		return isEditMode;
+		return isEditMode
 	}
 </script>
 
@@ -208,7 +206,7 @@
 				Записи
 			</Toggle>
 			<div>
-				{#each playedBy as move}
+				{#each playedBy as move (move.id)}
 					<PopoverMoveCard {move} />
 				{/each}
 			</div>

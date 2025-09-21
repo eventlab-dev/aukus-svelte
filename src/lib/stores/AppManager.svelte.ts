@@ -1,26 +1,23 @@
-import { SOUNDS } from "$lib/constants";
-import PlayersMovesStore from "./PlayersMovesStore.svelte";
-import PlayersStore from "./PlayersStore.svelte";
-import SoundManager from "./SoundManager.svelte";
-import UserStore from "./UserStore.svelte";
+import { SOUNDS } from '$lib/constants'
+import { QueryClient } from '@tanstack/svelte-query'
+import PlayersMovesStore from './PlayersMovesStore.svelte'
+import PlayersStore from './PlayersStore.svelte'
+import SoundManager from './SoundManager.svelte'
+import UsersStore from './UsersStore.svelte'
 
 export class AppManager {
-	readonly userStore = new UserStore();
-	readonly playersStore = new PlayersStore();
-	readonly playersMovesStore = new PlayersMovesStore();
-	readonly soundManager = new SoundManager();
+	readonly usersStore = new UsersStore()
+	readonly playersStore = new PlayersStore()
+	readonly playersMovesStore = new PlayersMovesStore()
+	readonly soundManager = new SoundManager()
 
-	readonly myPlayer = $derived.by(this._getMyPlayer.bind(this));
+	readonly myUser = $derived(this.usersStore.myUser)
+
+	readonly queryClient = new QueryClient()
 
 	constructor() {
-		this.soundManager.preloadSounds(SOUNDS);
-	}
-
-	private _getMyPlayer() {
-		if (!this.userStore.user) return null;
-
-		return this.playersStore.playersById[this.userStore.user.user_id];
+		this.soundManager.preloadSounds(SOUNDS)
 	}
 }
 
-export default AppManager;
+export default AppManager

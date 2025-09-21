@@ -1,59 +1,59 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import storable from '$lib/stores/LocalStore.svelte';
-	import Collapsible from '../collapsible/Collapsible.svelte';
-	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte';
-	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte';
-	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte';
-	import CalendarIcon from '../icons/CalendarIcon.svelte';
-	import CrownIcon from '../icons/CrownIcon.svelte';
-	import GalleryAddIcon from '../icons/GalleryAddIcon.svelte';
-	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte';
-	import MoonIcon from '../icons/MoonIcon.svelte';
-	import TwitchIcon from '../icons/TwitchIcon.svelte';
-	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-	import { Button } from '../ui/button';
-	import PointaucDialog from './options/PointaucDialog.svelte';
-	import PunishmentCalculator from './options/PunishmentCalculator.svelte';
-	import Timelapse from './options/timelapse/Timelapse.svelte';
-	import WheelDialog from './options/WheelDialog.svelte';
+	import { goto } from '$app/navigation'
+	import { page } from '$app/stores'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import storable from '$lib/stores/LocalStore.svelte'
+	import Collapsible from '../collapsible/Collapsible.svelte'
+	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte'
+	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte'
+	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte'
+	import CalendarIcon from '../icons/CalendarIcon.svelte'
+	import CrownIcon from '../icons/CrownIcon.svelte'
+	import GalleryAddIcon from '../icons/GalleryAddIcon.svelte'
+	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte'
+	import MoonIcon from '../icons/MoonIcon.svelte'
+	import TwitchIcon from '../icons/TwitchIcon.svelte'
+	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+	import { Button } from '../ui/button'
+	import PointaucDialog from './options/PointaucDialog.svelte'
+	import PunishmentCalculator from './options/PunishmentCalculator.svelte'
+	import Timelapse from './options/timelapse/Timelapse.svelte'
+	import WheelDialog from './options/WheelDialog.svelte'
 
-	const { userStore } = getAppManagerContext();
+	const { usersStore } = getAppManagerContext()
 
-	const isPlayer = $derived(userStore.user?.role === 'player');
-	const isModerator = $derived(userStore.user?.role === 'moder');
+	const isPlayer = $derived(usersStore.isPlayer)
+	const isModerator = $derived(usersStore.isModerator)
 
-	const collapsed = storable('quickMenuCollapsed', false);
+	const collapsed = storable('quickMenuCollapsed', false)
 
-	let isTimelapseShown = $state(false);
+	let isTimelapseShown = $state(false)
 
 	$effect(() => {
 		if (!collapsed.value) {
-			isTimelapseShown = false;
+			isTimelapseShown = false
 		}
-	});
+	})
 
 	function closeTimelapse() {
-		isTimelapseShown = false;
-		collapsed.value = false;
+		isTimelapseShown = false
+		collapsed.value = false
 	}
 
 	function openTimelapse() {
-		isTimelapseShown = true;
-		collapsed.value = true;
+		isTimelapseShown = true
+		collapsed.value = true
 	}
 </script>
 
 <Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
 	<CollapsibleTrigger class="w-full">
-		{#if userStore.user}
+		{#if usersStore.myUser}
 			<Avatar class="size-[27px]">
 				<AvatarImage src="https://github.com/shadcn.png" />
-				<AvatarFallback class="uppercase">{userStore.user.name.slice(0, 2)}</AvatarFallback>
+				<AvatarFallback class="uppercase">{usersStore.myUser.username.slice(0, 2)}</AvatarFallback>
 			</Avatar>
-			{userStore.user.name}
+			{usersStore.myUser.username}
 		{:else}
 			Быстрый доступ
 		{/if}
