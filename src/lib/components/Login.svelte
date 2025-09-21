@@ -1,16 +1,19 @@
 <script lang="ts">
-	import Profile2Icon from './icons/Profile2Icon.svelte';
-	import TwitchIcon from './icons/TwitchIcon.svelte';
-	import { Button } from './ui/button';
-	import { Input } from './ui/input';
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import Profile2Icon from './icons/Profile2Icon.svelte'
+	import TwitchIcon from './icons/TwitchIcon.svelte'
+	import { Button } from './ui/button'
+	import { Input } from './ui/input'
 
-	let email = $state('');
-	let password = $state('');
+	const { usersStore } = getAppManagerContext()
 
-	const isValid = $derived(!!email && !!password);
+	let name = $state('')
+	let password = $state('')
+
+	const isValid = $derived(!!name && !!password)
 
 	function login() {
-		console.log('login', email, password);
+		usersStore.login(name, password)
 	}
 </script>
 
@@ -21,12 +24,12 @@
 	</div>
 	<div class="space-y-1.5">
 		<Input
-			id="email"
-			type="email"
-			autocomplete="email"
-			placeholder="Почта"
+			id="name"
+			type="text"
+			autocomplete="name"
+			placeholder="name"
 			class="rounded-b-[4px] bg-muted"
-			bind:value={email}
+			bind:value={name}
 		/>
 		<Input
 			id="password"

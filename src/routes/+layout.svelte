@@ -2,11 +2,11 @@
 	import '../app.css'
 
 	import { TooltipProvider } from '$lib/components/ui/tooltip'
-	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query'
+	import { QueryClientProvider } from '@tanstack/svelte-query'
 	import CommonWrapper from '$lib/components/CommonWrapper.svelte'
+	import { queryClient } from '$lib/client'
 
 	let { children } = $props()
-	const queryClient = new QueryClient()
 </script>
 
 <QueryClientProvider client={queryClient}>

@@ -1,55 +1,75 @@
+import { goto } from '$app/navigation'
+import { queryClient } from '$lib/client'
 import type { UserItem } from '$lib/heyapi'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
 	fetchCurrentUserApiUsersCurrentGetQueryKey,
 	getUsersApiUsersGetOptions,
-	getUsersApiUsersGetQueryKey
+	getUsersApiUsersGetQueryKey,
+	loginApiLoginPostMutation
 } from '$lib/heyapi/@tanstack/svelte-query.gen'
-import { createQuery, useQueryClient } from '@tanstack/svelte-query'
+import { createMutation, createQuery } from '@tanstack/svelte-query'
+import { get } from 'svelte/store'
 
 class UsersStore {
 	private _my_user = $state<UserItem | null>(null)
 	private _users = $state<UserItem[]>([])
-	// private _user = $state<CurrentUser | null>({
-	// 	name: 'Lasqa',
-	// 	role: 'player',
-	// 	user_id: 1,
-	// });
-	// private _user = $state<CurrentUser | null>({
-	// 	name: 'qwe',
-	// 	role: 'moder',
-	// 	user_id: 33,
-	// 	moder_for: 2
-	// });
-	// private _user = $state<CurrentUser | null>(null);
-
-	// setUser(user: CurrentUser) {
-	// 	this._user = user
-	// }
 
 	private _users_query = createQuery({ ...getUsersApiUsersGetOptions(), refetchInterval: 60000 })
 	private _current_user_query = createQuery({
-		...fetchCurrentUserApiUsersCurrentGetOptions(),
+		...fetchCurrentUserApiUsersCurrentGetOptions({
+			auth: () => localStorage.getItem('auth_token') ?? undefined
+		}),
 		retry: false
+	})
+	private _login_mutation = createMutation({
+		...loginApiLoginPostMutation()
 	})
 
 	constructor() {
-		this._current_user_query.subscribe((data) => {
-			this._my_user = data.data ?? null
+		this._current_user_query.subscribe((query) => {
+			console.log('current user data', query)
+			if (query.data) {
+				this._my_user = query.data
+			} else {
+				this._my_user = null
+			}
+			console.log('this._my_user', this._my_user)
 		})
-		this._users_query.subscribe((data) => {
-			this._users = data.data?.users ?? []
+		this._users_query.subscribe((query) => {
+			this._users = query.data?.users ?? []
 		})
 	}
 
 	refetchUsers() {
-		useQueryClient().refetchQueries({ queryKey: getUsersApiUsersGetQueryKey() })
+		return queryClient.refetchQueries({ queryKey: getUsersApiUsersGetQueryKey() })
 	}
 
 	refetchMyUser() {
-		useQueryClient().refetchQueries({
+		return queryClient.refetchQueries({
 			queryKey: fetchCurrentUserApiUsersCurrentGetQueryKey()
 		})
+	}
+
+	login(name: string, pass: string) {
+		get(this._login_mutation)
+			.mutateAsync({ body: { username: name, password: pass } })
+			.then((response) => {
+				console.log('after login')
+				if (response.token) {
+					localStorage.setItem('auth_token', response.token)
+				}
+				console.log('refetching')
+				this.refetchMyUser().then(() => {
+					console.log('redirecting')
+					goto('/')
+				})
+			})
+	}
+
+	logout() {
+		localStorage.removeItem('auth_token')
+		this._my_user = null
 	}
 
 	get myUser() {

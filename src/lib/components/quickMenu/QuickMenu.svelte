@@ -51,73 +51,81 @@
 	}
 </script>
 
-<Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
-	<CollapsibleTrigger class="w-full">
-		{#if usersStore.myUser}
-			<Avatar class="size-[27px]">
-				<AvatarImage src="https://github.com/shadcn.png" />
-				<AvatarFallback class="uppercase">{usersStore.myUser.username.slice(0, 2)}</AvatarFallback>
-			</Avatar>
-			{usersStore.myUser.username}
-		{:else}
-			Быстрый доступ
-		{/if}
-	</CollapsibleTrigger>
-	<CollapsibleContent>
-		{#if isModerator}
-			<CollapsibleGroup>
-				<div><GalleryAddIcon /> Добавить картинку</div>
-			</CollapsibleGroup>
-		{/if}
-
-		<CollapsibleGroup>
-			{#if isPlayer}
-				<div><GrammerlyIcon /> Кастомизация</div>
+{#key usersStore.myUser?.slug}
+	<Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
+		<CollapsibleTrigger class="w-full">
+			{#if usersStore.myUser}
+				<Avatar class="size-[27px]">
+					<AvatarImage src="https://github.com/shadcn.png" />
+					<AvatarFallback class="uppercase">{usersStore.myUser.username.slice(0, 2)}</AvatarFallback
+					>
+				</Avatar>
+				{usersStore.myUser.username}
+			{:else}
+				Быстрый доступ
 			{/if}
-			<Button
-				class="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground data-[active=true]:hover:bg-primary"
-				data-active={page.route.id === '/achievements'}
-				onclick={() => goto('/achievements')}
-			>
-				<CrownIcon /> Достижения
-			</Button>
-			{#if isPlayer}
-				<PointaucDialog />
+		</CollapsibleTrigger>
+
+		<CollapsibleContent>
+			{#if isModerator}
+				<CollapsibleGroup>
+					<div><GalleryAddIcon /> Добавить картинку</div>
+				</CollapsibleGroup>
 			{/if}
-		</CollapsibleGroup>
 
-		{#if isPlayer}
 			<CollapsibleGroup>
-				<PunishmentCalculator />
-				<WheelDialog />
+				{#if isPlayer}
+					<div><GrammerlyIcon /> Кастомизация</div>
+				{/if}
+				<Button
+					class="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground data-[active=true]:hover:bg-primary"
+					data-active={page.route.id === '/achievements'}
+					onclick={() => goto('/achievements')}
+				>
+					<CrownIcon /> Достижения
+				</Button>
+				{#if isPlayer}
+					<PointaucDialog />
+				{/if}
 			</CollapsibleGroup>
-		{/if}
 
-		{#if isPlayer}
+			{#if isPlayer}
+				<CollapsibleGroup>
+					<PunishmentCalculator />
+					<WheelDialog />
+				</CollapsibleGroup>
+			{/if}
+
+			{#if isPlayer}
+				<CollapsibleGroup>
+					<div><GalleryAddIcon /> Добавить картинку</div>
+				</CollapsibleGroup>
+			{/if}
+
 			<CollapsibleGroup>
-				<div><GalleryAddIcon /> Добавить картинку</div>
+				<div><TwitchIcon /> Мультитрансляция</div>
+				<div><MoonIcon /> Затемнить карту</div>
 			</CollapsibleGroup>
-		{/if}
 
-		<CollapsibleGroup>
-			<div><TwitchIcon /> Мультитрансляция</div>
-			<div><MoonIcon /> Затемнить карту</div>
-		</CollapsibleGroup>
-
-		<CollapsibleGroup>
-			<Button onclick={openTimelapse}>
-				<CalendarIcon /> Таймлапс
-			</Button>
-		</CollapsibleGroup>
-
-		{#if !usersStore.myUser}
 			<CollapsibleGroup>
-				<Button onclick={openLogin}><ProfileIcon />Логин</Button>
+				<Button onclick={openTimelapse}>
+					<CalendarIcon /> Таймлапс
+				</Button>
 			</CollapsibleGroup>
-		{/if}
-	</CollapsibleContent>
 
-	{#if isTimelapseShown}
-		<Timelapse close={closeTimelapse} />
-	{/if}
-</Collapsible>
+			{#if usersStore.myUser}
+				<CollapsibleGroup>
+					<Button onclick={() => usersStore.logout()}><ProfileIcon />Выйти</Button>
+				</CollapsibleGroup>
+			{:else}
+				<CollapsibleGroup>
+					<Button onclick={openLogin}><ProfileIcon />Логин</Button>
+				</CollapsibleGroup>
+			{/if}
+		</CollapsibleContent>
+
+		{#if isTimelapseShown}
+			<Timelapse close={closeTimelapse} />
+		{/if}
+	</Collapsible>
+{/key}
