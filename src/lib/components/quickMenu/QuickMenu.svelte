@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import storable from '$lib/stores/LocalStore.svelte'
 	import Collapsible from '../collapsible/Collapsible.svelte'
@@ -12,6 +12,7 @@
 	import GalleryAddIcon from '../icons/GalleryAddIcon.svelte'
 	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte'
 	import MoonIcon from '../icons/MoonIcon.svelte'
+	import ProfileIcon from '../icons/ProfileIcon.svelte'
 	import TwitchIcon from '../icons/TwitchIcon.svelte'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import { Button } from '../ui/button'
@@ -44,6 +45,10 @@
 		isTimelapseShown = true
 		collapsed.value = true
 	}
+
+	function openLogin() {
+		goto('/login')
+	}
 </script>
 
 <Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
@@ -71,7 +76,7 @@
 			{/if}
 			<Button
 				class="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground data-[active=true]:hover:bg-primary"
-				data-active={$page.route.id === '/achievements'}
+				data-active={page.route.id === '/achievements'}
 				onclick={() => goto('/achievements')}
 			>
 				<CrownIcon /> Достижения
@@ -104,6 +109,12 @@
 				<CalendarIcon /> Таймлапс
 			</Button>
 		</CollapsibleGroup>
+
+		{#if !usersStore.myUser}
+			<CollapsibleGroup>
+				<Button onclick={openLogin}><ProfileIcon />Логин</Button>
+			</CollapsibleGroup>
+		{/if}
 	</CollapsibleContent>
 
 	{#if isTimelapseShown}
