@@ -27,7 +27,7 @@
 			id="name"
 			type="text"
 			autocomplete="name"
-			placeholder="name"
+			placeholder="Имя"
 			class="rounded-b-[4px] bg-muted"
 			bind:value={name}
 		/>
