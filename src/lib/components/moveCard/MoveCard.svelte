@@ -185,6 +185,7 @@
 			{:else if !isCurrentMove}
 				<div class="font-medium text-muted-foreground [&>*]:inline" in:fade>
 					<span>{move.item_rating}/10 — </span>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html parsedReview}
 				</div>
 			{:else}
