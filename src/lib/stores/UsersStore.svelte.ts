@@ -39,12 +39,12 @@ export function createUsersStore() {
 			.then((response) => {
 				if (response.token) {
 					localStorage.setItem('auth_token', response.token)
+					get(myUserQuery)
+						.refetch()
+						.then(() => {
+							goto('/')
+						})
 				}
-				get(myUserQuery)
-					.refetch()
-					.then(() => {
-						goto('/')
-					})
 			})
 	}
 
