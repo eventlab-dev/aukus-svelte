@@ -6,6 +6,7 @@
 	import { Input } from './ui/input'
 
 	const { usersStore } = getAppManagerContext()
+	const { myUserQuery } = usersStore
 
 	let name = $state('')
 	let password = $state('')
@@ -30,6 +31,7 @@
 			placeholder="Имя"
 			class="rounded-b-[4px] bg-muted"
 			bind:value={name}
+			onkeypress={(e) => e.key === 'Enter' && isValid && login()}
 		/>
 		<Input
 			id="password"
@@ -37,11 +39,21 @@
 			placeholder="Пароль"
 			class="rounded-t-[4px] bg-muted"
 			bind:value={password}
+			onkeypress={(e) => e.key === 'Enter' && isValid && login()}
 		/>
 	</div>
 	<div class="flex flex-col items-center justify-center gap-1.5">
-		<Button class="w-full rounded-b-[4px]" disabled={!isValid} onclick={login}>Войти</Button>
-		<Button class="w-full rounded-t-[4px] bg-[#9146FF] hover:bg-[#9146FF]/80" onclick={login}>
+		<Button
+			class="w-full rounded-b-[4px]"
+			disabled={!isValid}
+			onclick={login}
+			loading={$myUserQuery.isLoading}>Войти</Button
+		>
+		<Button
+			class="w-full rounded-t-[4px] bg-[#9146FF] hover:bg-[#9146FF]/80"
+			onclick={login}
+			loading={$myUserQuery.isLoading}
+		>
 			<TwitchIcon />
 			Войти через Twitch
 		</Button>
