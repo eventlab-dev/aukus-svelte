@@ -7,7 +7,6 @@
 	import { ScrollArea } from './ui/scroll-area'
 	import AppManager from '$lib/stores/AppManager.svelte'
 	import { setAppManagerContext } from '$lib/contexts/appManagerContext'
-	import QueryHelper from './QueryHelper.svelte'
 
 	let { children } = $props()
 
@@ -21,7 +20,6 @@
 	)
 </script>
 
-<QueryHelper />
 <ScrollArea class="h-screen px-3" type="always">
 	<div class="py-3">
 		<div class="absolute top-3 left-3 z-10">

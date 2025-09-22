@@ -2,15 +2,13 @@ import { SOUNDS } from '$lib/constants'
 import PlayersMovesStore from './PlayersMovesStore.svelte'
 import PlayersStore from './PlayersStore.svelte'
 import SoundManager from './SoundManager.svelte'
-import UsersStore from './UsersStore.svelte'
+import { createMyUserStore } from './MyUserStore.svelte'
 
 export class AppManager {
-	readonly usersStore = new UsersStore()
+	readonly myUserStore = createMyUserStore()
 	readonly playersStore = new PlayersStore()
 	readonly playersMovesStore = new PlayersMovesStore()
 	readonly soundManager = new SoundManager()
-
-	readonly myUser = $derived(this.usersStore.myUser)
 
 	constructor() {
 		this.soundManager.preloadSounds(SOUNDS)

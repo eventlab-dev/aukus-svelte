@@ -21,10 +21,9 @@
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
 
-	const { usersStore } = getAppManagerContext()
+	const { myUserStore } = getAppManagerContext()
 
-	const isPlayer = $derived(usersStore.isPlayer)
-	const isModerator = $derived(usersStore.isModerator)
+	const { isModerator, isPlayer, myUser } = myUserStore
 
 	const collapsed = storable('quickMenuCollapsed', false)
 
@@ -51,30 +50,29 @@
 	}
 </script>
 
-{#key usersStore.myUser?.slug}
+{#key $myUser?.slug}
 	<Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
 		<CollapsibleTrigger class="w-full">
-			{#if usersStore.myUser}
+			{#if $myUser}
 				<Avatar class="size-[27px]">
 					<AvatarImage src="https://github.com/shadcn.png" />
-					<AvatarFallback class="uppercase">{usersStore.myUser.username.slice(0, 2)}</AvatarFallback
-					>
+					<AvatarFallback class="uppercase">{$myUser.username.slice(0, 2)}</AvatarFallback>
 				</Avatar>
-				{usersStore.myUser.username}
+				{$myUser.username}
 			{:else}
 				Быстрый доступ
 			{/if}
 		</CollapsibleTrigger>
 
 		<CollapsibleContent>
-			{#if isModerator}
+			{#if $isModerator}
 				<CollapsibleGroup>
 					<div><GalleryAddIcon /> Добавить картинку</div>
 				</CollapsibleGroup>
 			{/if}
 
 			<CollapsibleGroup>
-				{#if isPlayer}
+				{#if $isPlayer}
 					<div><GrammerlyIcon /> Кастомизация</div>
 				{/if}
 				<Button
@@ -84,19 +82,19 @@
 				>
 					<CrownIcon /> Достижения
 				</Button>
-				{#if isPlayer}
+				{#if $isPlayer}
 					<PointaucDialog />
 				{/if}
 			</CollapsibleGroup>
 
-			{#if isPlayer}
+			{#if $isPlayer}
 				<CollapsibleGroup>
 					<PunishmentCalculator />
 					<WheelDialog />
 				</CollapsibleGroup>
 			{/if}
 
-			{#if isPlayer}
+			{#if $isPlayer}
 				<CollapsibleGroup>
 					<div><GalleryAddIcon /> Добавить картинку</div>
 				</CollapsibleGroup>
@@ -113,9 +111,9 @@
 				</Button>
 			</CollapsibleGroup>
 
-			{#if usersStore.myUser}
+			{#if $myUser}
 				<CollapsibleGroup>
-					<Button onclick={() => usersStore.logout()}><ProfileIcon />Выйти</Button>
+					<Button onclick={() => myUserStore.logout()}><ProfileIcon />Выйти</Button>
 				</CollapsibleGroup>
 			{:else}
 				<CollapsibleGroup>
