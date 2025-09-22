@@ -16,7 +16,7 @@
 	import TwitchIcon from '../icons/TwitchIcon.svelte'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import { Button } from '../ui/button'
-	import PointaucDialog from './options/PointaucDialog.svelte'
+	import GamesHistoryDialog from './options/GamesHistoryDialog.svelte'
 	import PunishmentCalculator from './options/PunishmentCalculator.svelte'
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
@@ -82,9 +82,7 @@
 				>
 					<CrownIcon /> Достижения
 				</Button>
-				{#if $isPlayer}
-					<PointaucDialog />
-				{/if}
+				<GamesHistoryDialog />
 			</CollapsibleGroup>
 
 			{#if $isPlayer}
