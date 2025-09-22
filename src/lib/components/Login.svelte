@@ -5,7 +5,7 @@
 	import { Button } from './ui/button'
 	import { Input } from './ui/input'
 
-	const { myUserStore } = getAppManagerContext()
+	const { usersStore } = getAppManagerContext()
 
 	let name = $state('')
 	let password = $state('')
@@ -13,7 +13,7 @@
 	const isValid = $derived(!!name && !!password)
 
 	function login() {
-		myUserStore.login(name, password)
+		usersStore.login(name, password)
 	}
 </script>
 

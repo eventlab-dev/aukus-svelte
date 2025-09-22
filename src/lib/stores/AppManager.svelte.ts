@@ -2,10 +2,10 @@ import { SOUNDS } from '$lib/constants'
 import PlayersMovesStore from './PlayersMovesStore.svelte'
 import PlayersStore from './PlayersStore.svelte'
 import SoundManager from './SoundManager.svelte'
-import { createMyUserStore } from './MyUserStore.svelte'
+import { createUsersStore } from './UsersStore.svelte'
 
 export class AppManager {
-	readonly myUserStore = createMyUserStore()
+	readonly usersStore = createUsersStore()
 	readonly playersStore = new PlayersStore()
 	readonly playersMovesStore = new PlayersMovesStore()
 	readonly soundManager = new SoundManager()

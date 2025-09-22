@@ -2,12 +2,13 @@ import { goto } from '$app/navigation'
 import { EventlabBaseUrl } from '$lib/client'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
+	getUsersApiUsersGetOptions,
 	loginApiLoginPostMutation
 } from '$lib/heyapi/@tanstack/svelte-query.gen'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { derived, get } from 'svelte/store'
 
-export function createMyUserStore() {
+export function createUsersStore() {
 	const myUserQuery = createQuery({
 		...fetchCurrentUserApiUsersCurrentGetOptions({
 			baseUrl: EventlabBaseUrl,
@@ -26,7 +27,6 @@ export function createMyUserStore() {
 		}
 		return null
 	})
-	const isLoading = derived(myUserQuery, ($query) => $query.isLoading)
 
 	const isAdmin = derived(myUser, ($myUser) => $myUser?.role === 'admin')
 	const isPlayer = derived(myUser, ($myUser) => $myUser?.role === 'streamer')
@@ -52,13 +52,29 @@ export function createMyUserStore() {
 		get(myUserQuery).refetch()
 	}
 
+	const usersQuery = createQuery({
+		...getUsersApiUsersGetOptions({
+			baseUrl: EventlabBaseUrl
+		}),
+		refetchInterval: 60 * 1000
+	})
+
+	const users = derived(usersQuery, ($query) => {
+		if ($query.isSuccess) {
+			return $query.data.users
+		}
+		return []
+	})
+
 	return {
+		myUserQuery,
 		myUser,
-		isLoading,
 		isAdmin,
 		isPlayer,
 		isModerator,
 		login,
-		logout
+		logout,
+		users,
+		usersQuery
 	}
 }

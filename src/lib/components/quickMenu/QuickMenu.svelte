@@ -21,9 +21,9 @@
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
 
-	const { myUserStore } = getAppManagerContext()
+	const { usersStore } = getAppManagerContext()
 
-	const { isModerator, isPlayer, myUser } = myUserStore
+	const { isModerator, isPlayer, myUser } = usersStore
 
 	const collapsed = storable('quickMenuCollapsed', false)
 
@@ -113,7 +113,7 @@
 
 			{#if $myUser}
 				<CollapsibleGroup>
-					<Button onclick={() => myUserStore.logout()}><ProfileIcon />Выйти</Button>
+					<Button onclick={() => usersStore.logout()}><ProfileIcon />Выйти</Button>
 				</CollapsibleGroup>
 			{:else}
 				<CollapsibleGroup>
