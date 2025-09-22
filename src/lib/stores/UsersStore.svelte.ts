@@ -6,6 +6,7 @@ import {
 	loginApiLoginPostMutation
 } from '$lib/heyapi/@tanstack/svelte-query.gen'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
+import { SvelteMap } from 'svelte/reactivity'
 import { derived, get } from 'svelte/store'
 
 export function createUsersStore() {
@@ -54,7 +55,8 @@ export function createUsersStore() {
 
 	const usersQuery = createQuery({
 		...getUsersApiUsersGetOptions({
-			baseUrl: EventlabBaseUrl
+			baseUrl: EventlabBaseUrl,
+			query: { is_active: 1 }
 		}),
 		refetchInterval: 60 * 1000
 	})
@@ -66,6 +68,14 @@ export function createUsersStore() {
 		return []
 	})
 
+	const usersBySlug = derived(users, ($users) => {
+		const map = new SvelteMap<string, (typeof $users)[number]>()
+		$users.forEach((user) => {
+			map.set(user.slug, user)
+		})
+		return map
+	})
+
 	return {
 		myUserQuery,
 		myUser,
@@ -75,6 +85,7 @@ export function createUsersStore() {
 		login,
 		logout,
 		users,
-		usersQuery
+		usersQuery,
+		usersBySlug
 	}
 }
