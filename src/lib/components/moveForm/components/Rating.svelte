@@ -1,87 +1,87 @@
 <script lang="ts">
-	import { quadOut } from 'svelte/easing';
-	import { Tween } from 'svelte/motion';
+	import { quadOut } from 'svelte/easing'
+	import { Tween } from 'svelte/motion'
 
 	type Props = {
-		value?: number | null;
-	};
+		value?: number | null
+	}
 
-	let { value: lockedItemIndex = $bindable(0) }: Props = $props();
+	let { value: lockedItemIndex = $bindable(0) }: Props = $props()
 
-	const ITEM_WIDTH = 44;
-	const ITEM_HEIGHT = 26;
-	const HALF_ITEM_WIDTH = ITEM_WIDTH / 2;
-	const GAP = 6;
-	const ITEM_SPACING = ITEM_WIDTH + GAP;
-	const ROUNDED = 12;
-	const items = Array.from({ length: 11 }, (_, i) => i);
+	const ITEM_WIDTH = 44
+	const ITEM_HEIGHT = 26
+	const HALF_ITEM_WIDTH = ITEM_WIDTH / 2
+	const GAP = 6
+	const ITEM_SPACING = ITEM_WIDTH + GAP
+	const ROUNDED = 12
+	const items = Array.from({ length: 11 }, (_, i) => i)
 
 	let hoveredProgressWidth = new Tween(calculateWidth(lockedItemIndex), {
 		duration: 200,
 		easing: quadOut
-	});
-	let hoveredItemIndex = $state(lockedItemIndex);
-	let isHovered = $state(false);
+	})
+	let hoveredItemIndex = $state(lockedItemIndex)
+	let isHovered = $state(false)
 
-	const lockedProgressWidth = $derived.by(() => calculateWidth(lockedItemIndex));
-	const progressWidth = $derived(isHovered ? hoveredProgressWidth.current : lockedProgressWidth);
-	const itemIndex = $derived(isHovered ? hoveredItemIndex : lockedItemIndex);
-	const color = $derived.by(getColor);
+	const lockedProgressWidth = $derived.by(() => calculateWidth(lockedItemIndex))
+	const progressWidth = $derived(isHovered ? hoveredProgressWidth.current : lockedProgressWidth)
+	const itemIndex = $derived(isHovered ? hoveredItemIndex : lockedItemIndex)
+	const color = $derived.by(getColor)
 
-	let timeoutId: number;
+	let timeoutId: number
 
 	function getColor() {
-		if (itemIndex === null || itemIndex <= 2) return 'bg-red-500';
-		if (itemIndex <= 5) return 'bg-amber-500';
-		if (itemIndex <= 9) return 'bg-green-500';
-		return 'bg-purple-500';
+		if (itemIndex === null || itemIndex <= 3) return 'bg-red-500'
+		if (itemIndex <= 6) return 'bg-amber-500'
+		if (itemIndex <= 9) return 'bg-green-500'
+		return 'bg-purple-500'
 	}
 
 	function calculateWidth(index: number | null) {
-		if (index === null) return 0;
+		if (index === null) return 0
 
-		const isInteger = Number.isInteger(index);
-		const secondHalfOffset = isInteger ? ITEM_WIDTH : ITEM_WIDTH + GAP / 2;
+		const isInteger = Number.isInteger(index)
+		const secondHalfOffset = isInteger ? ITEM_WIDTH : ITEM_WIDTH + GAP / 2
 
-		return index * ITEM_WIDTH + index * GAP + secondHalfOffset;
+		return index * ITEM_WIDTH + index * GAP + secondHalfOffset
 	}
 
 	function onclick() {
-		lockedItemIndex = hoveredItemIndex;
+		lockedItemIndex = hoveredItemIndex
 	}
 
 	function onmouseleave() {
-		clearInterval(timeoutId);
-		isHovered = false;
-		hoveredProgressWidth.target = lockedProgressWidth;
+		clearInterval(timeoutId)
+		isHovered = false
+		hoveredProgressWidth.target = lockedProgressWidth
 	}
 
 	function onmouseenter() {
 		timeoutId = setTimeout(() => {
-			isHovered = true;
-		}, 100); // может быть стоит уменьшить, хз
+			isHovered = true
+		}, 100) // может быть стоит уменьшить, хз
 	}
 
 	function onmousemove(event: MouseEvent & { currentTarget: HTMLButtonElement }) {
-		if (!isHovered) return;
+		if (!isHovered) return
 
-		const { left } = event.currentTarget.getBoundingClientRect();
-		const relativeX = event.clientX - left;
-		const itemIndex = Math.floor(relativeX / ITEM_SPACING);
+		const { left } = event.currentTarget.getBoundingClientRect()
+		const relativeX = event.clientX - left
+		const itemIndex = Math.floor(relativeX / ITEM_SPACING)
 
 		if (itemIndex === 0) {
-			hoveredProgressWidth.target = ITEM_WIDTH;
-			hoveredItemIndex = itemIndex;
-			return;
+			hoveredProgressWidth.target = ITEM_WIDTH
+			hoveredItemIndex = itemIndex
+			return
 		}
 
-		const positionInItem = relativeX % ITEM_SPACING;
-		const isSecondHalf = positionInItem > HALF_ITEM_WIDTH;
-		const finalIndex = itemIndex - (isSecondHalf ? 0 : 0.5);
-		const width = calculateWidth(finalIndex);
+		const positionInItem = relativeX % ITEM_SPACING
+		const isSecondHalf = positionInItem > HALF_ITEM_WIDTH
+		const finalIndex = itemIndex - (isSecondHalf ? 0 : 0.5)
+		const width = calculateWidth(finalIndex)
 
-		hoveredProgressWidth.target = width;
-		hoveredItemIndex = finalIndex;
+		hoveredProgressWidth.target = width
+		hoveredItemIndex = finalIndex
 	}
 </script>
 

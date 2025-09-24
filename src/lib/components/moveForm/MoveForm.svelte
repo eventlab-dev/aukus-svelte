@@ -47,9 +47,16 @@
 	let isDialogOpen = $state(false)
 	let editorState: { editor: Editor | null } = $state({ editor: null })
 
-	const isFormFilled = $derived(
-		form.title && form.status && form.hltbTime && form.rating !== null && form.review
-	)
+	const isFormFilled = $derived.by(() => {
+		if (!form.title) return false
+		if (!form.status) return false
+		if (!form.review) return false
+		if (form.status === 'reroll') return true
+		if (form.rating === null) return false
+		if (form.status === 'drop' || form.status === 'movie' || form.status === 'sheikh') return true
+		if (!form.hltbTime) return false
+		return true
+	})
 
 	function saveReview() {
 		// POST form
@@ -102,7 +109,7 @@
 						gameDuration={$myUser?.current_game_duration}
 						bind:value={form.status}
 					/>
-					<HltbTimeSelector bind:value={form.hltbTime} />
+					<HltbTimeSelector bind:value={form.hltbTime} disabled={form.status !== 'completed'} />
 					<HltbLink gameTitle={form.title} />
 				</div>
 
@@ -129,7 +136,7 @@
 				</div>
 
 				<Button class="ml-auto w-[264px]" disabled={!isFormFilled} onclick={saveReview}>
-					<BoxIcon /> Кинуть кубики
+					<BoxIcon /> Перейти к броску кубиков
 				</Button>
 			</div>
 		</div>
