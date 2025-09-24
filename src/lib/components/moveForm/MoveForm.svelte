@@ -32,7 +32,9 @@
 		review: string
 	}
 
-	const { myUser } = getAppManagerContext()
+	const { usersStore } = getAppManagerContext()
+
+	const { myUser } = usersStore
 
 	let form: FormType = $state({
 		title: '',
@@ -78,13 +80,13 @@
 <Dialog bind:open={isDialogOpen}>
 	<DialogTrigger>
 		{#snippet child({ props })}
-			<Button {...props}>Сделать ход</Button>
+			<Button {...props} class="w-80">Сделать ход</Button>
 		{/snippet}
 	</DialogTrigger>
 	<DialogContent class="gap-3 overflow-hidden p-3 sm:max-w-[800px]" showCloseButton={false}>
 		<DialogHeader>
 			<DialogTitle aria-describedby="move form">
-				Новый ход — {myUser?.current_game}
+				Новый ход — {$myUser?.current_game}
 			</DialogTitle>
 		</DialogHeader>
 
@@ -95,7 +97,7 @@
 
 				<div class="flex gap-3">
 					<GameStatusSelector
-						gameDuration={myUser?.current_game_duration}
+						gameDuration={$myUser?.current_game_duration}
 						bind:value={form.status}
 					/>
 					<HltbTimeSelector bind:value={form.hltbTime} />

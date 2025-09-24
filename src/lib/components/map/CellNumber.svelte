@@ -35,6 +35,6 @@
 	class="absolute flex h-[35px] w-[35px] items-center justify-center text-black"
 	style="top: {cellPosition.y + 1}px; left: {cellPosition.x + 3}px"
 >
-	<img src={markerUrl} alt="marker" class="absolute" />
-	<p class="z-10">{cellId}</p>
+	<img src={markerUrl} alt="marker" class="absolute inset-0" />
+	<p class="relative">{cellId}</p>
 </div>

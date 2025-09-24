@@ -63,10 +63,12 @@
 	<MapComponent />
 </div>
 
+<div class="sticky bottom-10 mt-10 flex justify-center">
+	<MoveForm />
+</div>
+
 <div in:fade>
 	<div class="mx-auto mt-[30px] flex max-w-[800px] flex-col space-y-3">
-		<MoveForm />
-
 		<div class="flex gap-3">
 			<MovesSearch {moves} bind:filteredMoves />
 			<TotalViewerCounter />
