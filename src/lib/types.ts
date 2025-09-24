@@ -19,7 +19,7 @@ export const Color = {
 	white: '#FFFFFF',
 	blueTg: '#27a7e7',
 	biege: '#AF99DF',
-	yellow: '#F2C200',
+	yellow: '#F2C200'
 }
 
 type CustomColorNames = `custom${Capitalize<keyof typeof Color>}`
@@ -56,7 +56,7 @@ export const ColorByUrlHandle: { [key in PlayerUrl]: string } = {
 	vovapain: Color.red,
 	timofey: Color.greenLight,
 	keliq_q: Color.biege,
-	unclebjorn: Color.pinkLight,
+	unclebjorn: Color.pinkLight
 }
 
 export const ColorNameByUrlHandle: {
@@ -74,18 +74,20 @@ export const ColorNameByUrlHandle: {
 	vovapain: 'customRed',
 	timofey: 'customGreenLight',
 	keliq_q: 'customBiege',
-	unclebjorn: 'customPinkLight',
+	unclebjorn: 'customPinkLight'
 }
 
 export type TableHeaderType<T> = {
-	key: keyof T;
-	name: string;
-	width: number;
-};
+	key: keyof T
+	name: string
+	width: number
+}
 
 export function getPlayerColor(urlHandle: PlayerUrl): string {
 	return ColorByUrlHandle[urlHandle] || Color.blueLight
 }
+
+export type TurnState = 'filling-form' | 'rolling-dice' | 'animation'
 
 // export function getPlayerColorName(player: Player): CustomColorNames {
 // 	return ColorNameByUrlHandle[player.url_handle] || 'customBlueLight'

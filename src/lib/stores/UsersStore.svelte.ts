@@ -5,9 +5,10 @@ import {
 	getUsersApiUsersGetOptions,
 	loginApiLoginPostMutation
 } from '$lib/heyapi/@tanstack/svelte-query.gen'
+import { type TurnState } from '$lib/types'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
-import { derived, get } from 'svelte/store'
+import { derived, get, writable } from 'svelte/store'
 
 export function createUsersStore() {
 	const myUserQuery = createQuery({
@@ -76,6 +77,8 @@ export function createUsersStore() {
 		return map
 	})
 
+	const turnState = writable<TurnState>('filling-form')
+
 	return {
 		myUserQuery,
 		myUser,
@@ -86,6 +89,7 @@ export function createUsersStore() {
 		logout,
 		users,
 		usersQuery,
-		usersBySlug
+		usersBySlug,
+		turnState
 	}
 }

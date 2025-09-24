@@ -34,7 +34,7 @@
 
 	const { usersStore } = getAppManagerContext()
 
-	const { myUser } = usersStore
+	const { myUser, turnState } = usersStore
 
 	let form: FormType = $state({
 		title: '',
@@ -54,6 +54,8 @@
 	function saveReview() {
 		// POST form
 		console.log($state.snapshot(form))
+
+		turnState.set('rolling-dice')
 
 		isDialogOpen = false
 

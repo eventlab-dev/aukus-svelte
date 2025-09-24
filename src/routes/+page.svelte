@@ -7,10 +7,11 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte'
 	import MapComponent from '$lib/components/map/MapComponent.svelte'
+	import DiceRoller from '$lib/components/moveForm/DiceRoller.svelte'
 
 	const { playersMovesStore, usersStore } = getAppManagerContext()
 	const { moves } = playersMovesStore
-	const { myUser } = usersStore
+	const { myUser, turnState } = usersStore
 
 	let filteredMoves: PlayerMove[] = $state([])
 
@@ -64,9 +65,15 @@
 	<MapComponent />
 </div>
 
-{#if $myUser}
+{#if $myUser && $turnState === 'filling-form'}
 	<div class="sticky bottom-10 mt-10 flex justify-center">
 		<MoveForm />
+	</div>
+{/if}
+
+{#if $myUser && $turnState === 'rolling-dice'}
+	<div class="sticky bottom-10 mt-10 flex justify-center">
+		<DiceRoller />
 	</div>
 {/if}
 
