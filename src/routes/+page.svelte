@@ -8,8 +8,9 @@
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte'
 	import MapComponent from '$lib/components/map/MapComponent.svelte'
 
-	const { playersMovesStore } = getAppManagerContext()
+	const { playersMovesStore, usersStore } = getAppManagerContext()
 	const { moves } = playersMovesStore
+	const { myUser } = usersStore
 
 	let filteredMoves: PlayerMove[] = $state([])
 
@@ -63,9 +64,11 @@
 	<MapComponent />
 </div>
 
-<div class="sticky bottom-10 mt-10 flex justify-center">
-	<MoveForm />
-</div>
+{#if $myUser}
+	<div class="sticky bottom-10 mt-10 flex justify-center">
+		<MoveForm />
+	</div>
+{/if}
 
 <div in:fade>
 	<div class="mx-auto mt-[30px] flex max-w-[800px] flex-col space-y-3">
