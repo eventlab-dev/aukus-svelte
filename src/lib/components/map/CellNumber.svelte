@@ -1,14 +1,40 @@
 <script lang="ts">
-	import { getCellPosition } from '$lib/mapUtils';
+	import {
+		MapDungeonMarker,
+		MapFireMarker,
+		MapForestMarker,
+		MapIceMarker,
+		MapSwampMarker
+	} from '$lib/constants'
+	import { getCellPosition } from '$lib/mapUtils'
 
-	const { cellId } = $props<{ cellId: number }>();
+	const { cellId } = $props<{ cellId: number }>()
 
-	const cellPosition = getCellPosition(cellId);
+	const cellPosition = getCellPosition(cellId)
+
+	function getMarkerUrl(cellId: number): string {
+		if (cellId <= 20) {
+			return MapForestMarker
+		}
+		if (cellId <= 40) {
+			return MapSwampMarker
+		}
+		if (cellId <= 70) {
+			return MapDungeonMarker
+		}
+		if (cellId <= 90) {
+			return MapFireMarker
+		}
+		return MapIceMarker
+	}
+
+	const markerUrl = getMarkerUrl(cellId)
 </script>
 
 <div
-	class="absolute flex h-[25px] w-[25px] items-center justify-center rounded-xl bg-black text-white"
-	style="top: {cellPosition.y + 10}px; left: {cellPosition.x + 10}px"
+	class="absolute flex h-[30px] w-[30px] items-center justify-center text-white"
+	style="top: {cellPosition.y + 1}px; left: {cellPosition.x + 3}px"
 >
-	{cellId}
+	<img src={markerUrl} alt="marker" class="absolute" />
+	<p class="z-10">{cellId}</p>
 </div>

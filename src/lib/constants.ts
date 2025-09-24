@@ -1,7 +1,7 @@
-export const EMOTES_SEARCH_API_URL = 'https://api4.rhhhhhhh.live/search_emotes';
-export const SEVENTV_EMOTE_BASE_URL = 'https://starege.rhhhhhhh.live/https://cdn.7tv.app/emote';
+export const EMOTES_SEARCH_API_URL = 'https://api4.rhhhhhhh.live/search_emotes'
+export const SEVENTV_EMOTE_BASE_URL = 'https://starege.rhhhhhhh.live/https://cdn.7tv.app/emote'
 export const FALLBACK_GAME_POSTER =
-	'https://www.igdb.com/assets/no_cover_show-ef1e36c00e101c2fb23d15bb80edd9667bbf604a12fc0267a66033afea320c65.png';
+	'https://www.igdb.com/assets/no_cover_show-ef1e36c00e101c2fb23d15bb80edd9667bbf604a12fc0267a66033afea320c65.png'
 
 export const routes = [
 	{
@@ -20,7 +20,7 @@ export const routes = [
 		title: 'Создатели',
 		url: '/developers'
 	}
-];
+]
 
 export const playerColors = {
 	blue: '#007AFF',
@@ -33,8 +33,8 @@ export const playerColors = {
 	brown: '#AC7F5E',
 	yellow: '#F2C200',
 	lightBlue: '#32ADE6',
-	brightPink: '#FF2D55',
-} as const;
+	brightPink: '#FF2D55'
+} as const
 
 // Mapping of Russian characters to arrays of phonetically similar English characters (lowercase only)
 export const transliterationMap: { [key: string]: string[] } = {
@@ -68,7 +68,7 @@ export const transliterationMap: { [key: string]: string[] } = {
 	ы: ['y', 'i'],
 	э: ['e', 'a'],
 	ю: ['yu', 'iu'],
-	я: ['ya', 'ia'],
+	я: ['ya', 'ia']
 }
 
 export const gameLengthRanges = {
@@ -76,14 +76,14 @@ export const gameLengthRanges = {
 	short: '5-15ч',
 	medium: '15-30ч',
 	long: '30+ч'
-} as const;
+} as const
 
-import ARMY_SOUND_URL from "$lib/assets/sounds/army-roll.mp3";
-import INDIAN_ROLL_URL from "$lib/assets/sounds/indian-roll.mp3";
-import DRUM_SOUND_URL from "$lib/assets/sounds/baraban.mp3";
-import MAX_SOUND_URL from "$lib/assets/sounds/max-roll2.mp3";
-import DASBOOT_SOUND_URL from "$lib/assets/sounds/dasboot-roll.mp3";
-import DVAR_SOUND_URL from "$lib/assets/sounds/dvar-roll.mp3";
+import ARMY_SOUND_URL from '$lib/assets/sounds/army-roll.mp3'
+import INDIAN_ROLL_URL from '$lib/assets/sounds/indian-roll.mp3'
+import DRUM_SOUND_URL from '$lib/assets/sounds/baraban.mp3'
+import MAX_SOUND_URL from '$lib/assets/sounds/max-roll2.mp3'
+import DASBOOT_SOUND_URL from '$lib/assets/sounds/dasboot-roll.mp3'
+import DVAR_SOUND_URL from '$lib/assets/sounds/dvar-roll.mp3'
 
 export const SOUNDS = [
 	{ key: 'army', url: ARMY_SOUND_URL },
@@ -91,5 +91,13 @@ export const SOUNDS = [
 	{ key: 'drum', url: DRUM_SOUND_URL },
 	{ key: 'max', url: MAX_SOUND_URL },
 	{ key: 'dasboot', url: DASBOOT_SOUND_URL },
-	{ key: 'dvar', url: DVAR_SOUND_URL },
-];
+	{ key: 'dvar', url: DVAR_SOUND_URL }
+]
+
+export const CDN_URL_BASE = 'https://storage.yandexcloud.net/eventlab/assets/aukus4'
+
+export const MapIceMarker = `${CDN_URL_BASE}/map/marker_ice.png`
+export const MapFireMarker = `${CDN_URL_BASE}/map/marker_fire.png`
+export const MapSwampMarker = `${CDN_URL_BASE}/map/marker_swamp.png`
+export const MapDungeonMarker = `${CDN_URL_BASE}/map/marker_dungeon.png`
+export const MapForestMarker = `${CDN_URL_BASE}/map/marker_forest.png`
