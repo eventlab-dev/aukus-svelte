@@ -32,7 +32,7 @@
 </script>
 
 <div
-	class="absolute flex h-[30px] w-[30px] items-center justify-center text-white"
+	class="absolute flex h-[35px] w-[35px] items-center justify-center text-black"
 	style="top: {cellPosition.y + 1}px; left: {cellPosition.x + 3}px"
 >
 	<img src={markerUrl} alt="marker" class="absolute" />
