@@ -15,9 +15,9 @@
 
 <div class="w-100 rounded-2xl bg-card p-5">
 	<ToggleGroup type="single" value="3d6" variant="outline" class="w-full">
-		<ToggleGroupItem value="1d6">1d6</ToggleGroupItem>
-		<ToggleGroupItem value="2d6">2d6</ToggleGroupItem>
-		<ToggleGroupItem value="3d6">3d6</ToggleGroupItem>
+		<ToggleGroupItem value="1d6" class="data-[state=on]:bg-primary">1d6</ToggleGroupItem>
+		<ToggleGroupItem value="2d6" class="data-[state=on]:bg-primary">2d6</ToggleGroupItem>
+		<ToggleGroupItem value="3d6" class="data-[state=on]:bg-primary">3d6</ToggleGroupItem>
 	</ToggleGroup>
 	<div class="py-5">
 		<p>Шанс лестницы: 5%</p>
