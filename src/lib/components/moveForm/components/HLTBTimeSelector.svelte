@@ -1,24 +1,24 @@
 <script lang="ts">
-	import type { ItemLength } from '$lib/api/aukus/types'
 	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select'
+	import type { GameLength } from '$lib/heyapi/aukus/types.gen'
 
 	type ItemType = {
-		value: ItemLength
+		value: GameLength
 		label: string
 	}
 
 	type Props = {
-		value?: ItemLength
+		value?: GameLength
 		disabled?: boolean
 	}
 
 	let { value = $bindable(), disabled }: Props = $props()
 
 	const items: ItemType[] = [
-		{ value: 'tiny', label: '0 — 5 часов' },
-		{ value: 'short', label: '5 — 15 часов' },
-		{ value: 'medium', label: '15 — 30 часов' },
-		{ value: 'long', label: '30+ часов' }
+		{ value: '0-5', label: '0 — 5 часов' },
+		{ value: '5-15', label: '5 — 15 часов' },
+		{ value: '15-30', label: '15 — 30 часов' },
+		{ value: '30+', label: '30+ часов' }
 	]
 
 	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Время по HLTB')

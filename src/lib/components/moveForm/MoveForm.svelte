@@ -4,7 +4,6 @@
 	import GameStatusSelector from './components/GameStatusSelector.svelte'
 	import HltbTimeSelector from './components/HLTBTimeSelector.svelte'
 	import HltbLink from './components/HLTBLink.svelte'
-	import type { ItemLength, MoveType } from '$lib/api/aukus/types'
 	import Rating from './components/Rating.svelte'
 	import { Button } from '../ui/button'
 	import BoxIcon from '../icons/BoxIcon.svelte'
@@ -24,18 +23,19 @@
 	import X from '@lucide/svelte/icons/x'
 	import WandIcon from '../icons/WandIcon.svelte'
 	import { get } from 'svelte/store'
+	import type { GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
 
 	type FormType = {
 		title: string
-		status?: MoveType
-		hltbTime?: ItemLength
+		status?: PlayerMoveType
+		hltbTime?: GameLength
 		rating: number | null
 		review: string
 	}
 
 	const { usersStore, eventDataStore } = getAppManagerContext()
 
-	const { myUser } = usersStore
+	const { myUser, makeMove } = usersStore
 	const { eventDataQuery } = eventDataStore
 
 	let form: FormType = $state({
@@ -55,14 +55,29 @@
 		if (!form.review) return false
 		if (form.status === 'reroll') return true
 		if (form.rating === null) return false
-		if (form.status === 'drop' || form.status === 'movie' || form.status === 'sheikh') return true
+		if (form.status === 'drop' || form.status === 'movie' || form.status === 'sheikh_moment')
+			return true
 		if (!form.hltbTime) return false
 		return true
 	})
 
-	function saveReview() {
+	async function saveReview() {
 		// POST form
 		console.log($state.snapshot(form))
+
+		await get(makeMove).mutateAsync({
+			body: {
+				type: form.status!,
+				item_review: form.review,
+				item_rating: form.rating,
+				item_length: form.hltbTime ?? null,
+				item_title: form.title,
+				// TODO: fill these fields
+				game_id: null,
+				difficulty: 0,
+				dice_roll_id: null
+			}
+		})
 
 		get(eventDataQuery).refetch()
 

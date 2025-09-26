@@ -1,40 +1,39 @@
 <script lang="ts">
-	import type { MoveType } from '$lib/api/aukus/types';
-	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select';
-	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
-	import { formatMs } from '$lib/utils';
-	import { onMount } from 'svelte';
+	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select'
+	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
+	import type { PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
+	import { formatMs } from '$lib/utils'
 
 	type ItemType = {
-		value: MoveType;
-		label: string;
-	};
+		value: PlayerMoveType
+		label: string
+	}
 
 	type Props = {
-		value?: MoveType;
-		gameDuration?: number;
-	};
+		value?: PlayerMoveType
+		gameDuration?: number
+	}
 
-	let { value = $bindable(), gameDuration }: Props = $props();
+	let { value = $bindable(), gameDuration }: Props = $props()
 
 	const completedLabel = $derived(
 		gameDuration ? `Прошёл за — ${formatMs(gameDuration * 1000)}` : 'Прошёл'
-	);
+	)
 	const items: ItemType[] = $derived([
 		{ value: 'completed', label: completedLabel },
 		{ value: 'drop', label: 'Дроп' },
 		{ value: 'reroll', label: 'Рерол' },
 		{ value: 'movie', label: 'Просмотровый' },
-		{ value: 'sheikh', label: 'Шейх-момент' }
-	]);
+		{ value: 'sheikh_moment', label: 'Шейх-момент' }
+	])
 
-	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Выберите игру');
+	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Выберите игру')
 </script>
 
 <Select type="single" bind:value>
 	<SelectTrigger class="w-full">{triggerContent}</SelectTrigger>
 	<SelectContent>
-		{#each items as { value, label }}
+		{#each items as { value, label } (value)}
 			{#if value === 'completed' && gameDuration}
 				<Tooltip disableHoverableContent>
 					<TooltipTrigger>

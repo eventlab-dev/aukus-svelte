@@ -139,7 +139,7 @@ export type GameDifficulty = -1 | 0 | 1 | 2;
 /**
  * GameLength
  */
-export type GameLength = '0-3' | '3-5' | '5-10' | '10-20' | '20-25' | '25+';
+export type GameLength = '0-5' | '5-15' | '15-30' | '30+';
 
 /**
  * HTTPValidationError
