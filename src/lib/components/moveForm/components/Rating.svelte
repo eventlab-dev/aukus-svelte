@@ -88,7 +88,7 @@
 <div class="flex flex-col gap-4">
 	<svg width="0" height="0" style="position: absolute;">
 		<mask id="mask">
-			{#each items as _, idx}
+			{#each items as n, idx (n)}
 				<rect
 					x={idx * (ITEM_WIDTH + GAP)}
 					width={ITEM_WIDTH}
@@ -120,7 +120,7 @@
 		></div>
 
 		<div class="relative z-30 flex gap-1.5">
-			{#each items as num}
+			{#each items as num (num)}
 				<div
 					class="flex items-center justify-center text-sm font-bold transition-all select-none data-[disabled=true]:opacity-50"
 					data-disabled={lockedProgressWidth > 0 &&

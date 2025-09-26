@@ -4,7 +4,7 @@ import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
 	getUsersApiUsersGetOptions,
 	loginApiLoginPostMutation
-} from '$lib/heyapi/@tanstack/svelte-query.gen'
+} from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { type TurnState } from '$lib/types'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'

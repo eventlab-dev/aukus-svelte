@@ -1,0 +1,9 @@
+{
+	"extends": "./tsconfig.json",
+	"include": ["gen-api-clients.ts"],
+	"compilerOptions": {
+		"outDir": "dist/scripts",
+		"noEmit": false,
+		"noEmitOnError": true
+	}
+}

@@ -117,7 +117,7 @@
 			{/if}
 
 			{#if !isCurrentMove}
-				<Toggle class="ml-1.5" variant="secondary" size="tiny" bind:pressed={isExtended}>
+				<Toggle class="ml-1.5" variant="outline" size="sm" bind:pressed={isExtended}>
 					{#if isExtended}
 						<MinusSquareIcon />
 						Свернуть
@@ -130,10 +130,14 @@
 
 			{#if !isExtended && canEdit}
 				<Toggle
-					variant={isCurrentMove ? 'white' : isEditMode ? 'primary' : 'secondary'}
-					size="tiny"
+					size="sm"
 					class="ml-1.5"
 					bind:pressed={getEditMode, setEditMode}
+					style={isCurrentMove
+						? 'background-color: var(--white); color: var(--white-foreground);'
+						: isEditMode
+							? 'background-color: var(--primary); color: var(--primary-foreground);'
+							: ''}
 				>
 					{#if isEditMode}
 						<TickCircleIcon />
@@ -199,10 +203,12 @@
 	{#if isExtended}
 		<div class="mt-3 flex justify-between" transition:slide>
 			<Toggle
-				variant={isVodsShown ? 'primary' : 'secondary'}
 				size="sm"
 				class="w-[105px]"
 				bind:pressed={isVodsShown}
+				style={isVodsShown
+					? 'background-color: var(--primary); color: var(--primary-foreground);'
+					: 'background-color: var(--secondary); color: var(--secondary-foreground);'}
 			>
 				Записи
 			</Toggle>

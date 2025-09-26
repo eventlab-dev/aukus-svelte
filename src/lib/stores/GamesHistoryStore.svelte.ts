@@ -1,5 +1,5 @@
 import { EventlabBaseUrl } from '$lib/client'
-import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/@tanstack/svelte-query.gen'
+import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { derived, writable } from 'svelte/store'
 
