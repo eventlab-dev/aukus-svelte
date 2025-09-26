@@ -3,12 +3,14 @@ import { type TurnState } from '$lib/types'
 import { createQuery } from '@tanstack/svelte-query'
 import { derived, type Readable } from 'svelte/store'
 import { getEventDataApiEventDataGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+import type { SkinItem } from '$lib/heyapi/aukus/types.gen'
+import { SvelteMap } from 'svelte/reactivity'
 
 export function createEventDataStore() {
 	const eventDataQuery = createQuery({
 		...{
 			...getEventDataApiEventDataGetOptions(),
-			baseUrl: EventlabBaseUrl,
+			// baseUrl: EventlabBaseUrl,
 			auth: () => localStorage.getItem('auth_token') ?? undefined
 		},
 		retry: false
@@ -34,10 +36,19 @@ export function createEventDataStore() {
 		return 'filling-form'
 	})
 
+	const skinsById = derived(skins, ($skins) => {
+		const map = new SvelteMap<number, SkinItem>()
+		$skins.forEach((skin) => {
+			map.set(skin.id, skin)
+		})
+		return map
+	})
+
 	return {
 		eventDataQuery,
 		players,
 		skins,
+		skinsById,
 		achievements,
 		eventSettings,
 		turnState
