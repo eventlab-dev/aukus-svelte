@@ -1,31 +1,31 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { fade, scale } from 'svelte/transition';
-	import { Skeleton } from './ui/skeleton';
-	import type { HTMLAttributes } from 'svelte/elements';
+	import { onMount } from 'svelte'
+	import { scale } from 'svelte/transition'
+	import { Skeleton } from './ui/skeleton'
+	import type { HTMLAttributes } from 'svelte/elements'
 
 	type Props = HTMLAttributes<HTMLDivElement> & {
-		src: string;
-		alt: string;
-	};
+		src: string
+		alt: string
+	}
 
-	const { src, alt, class: className, ...props }: Props = $props();
+	const { src, alt, class: className, ...props }: Props = $props()
 
-	let loadedSrc: string | undefined = $state();
+	let loadedSrc: string | undefined = $state()
 
 	onMount(() => {
 		loadImage(src)
 			.then((img) => (loadedSrc = img.src))
-			.catch((error) => console.error(error));
-	});
+			.catch((error) => console.error(error))
+	})
 
 	function loadImage(url: string) {
 		return new Promise<HTMLImageElement>((resolve, reject) => {
-			const img = new Image();
-			img.onload = () => resolve(img);
-			img.onerror = () => reject(new Error('Failed to load image'));
-			img.src = url;
-		});
+			const img = new Image()
+			img.onload = () => resolve(img)
+			img.onerror = () => reject(new Error('Failed to load image'))
+			img.src = url
+		})
 	}
 </script>
 

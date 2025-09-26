@@ -25,8 +25,7 @@
 
 	const { move, isCurrentMove = false, withUsername = false }: Props = $props()
 
-	const { usersStore, playersStore, playersMovesStore } = getAppManagerContext()
-	const { myUser } = usersStore
+	const { playersStore, playersMovesStore } = getAppManagerContext()
 	const { moves } = playersMovesStore
 
 	const player = $derived.by(() => (move.player_id ? playersStore.getPlayer(move.player_id) : null))

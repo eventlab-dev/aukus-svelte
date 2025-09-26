@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Toggle } from '$lib/components/ui/toggle'
-	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { flip } from 'svelte/animate'
 	import AchievementCard from './components/AchievementCard.svelte'

@@ -23,6 +23,7 @@
 	} from '../ui/dialog'
 	import X from '@lucide/svelte/icons/x'
 	import WandIcon from '../icons/WandIcon.svelte'
+	import { get } from 'svelte/store'
 
 	type FormType = {
 		title: string
@@ -32,9 +33,10 @@
 		review: string
 	}
 
-	const { usersStore } = getAppManagerContext()
+	const { usersStore, eventDataStore } = getAppManagerContext()
 
-	const { myUser, turnState } = usersStore
+	const { myUser } = usersStore
+	const { eventDataQuery } = eventDataStore
 
 	let form: FormType = $state({
 		title: '',
@@ -62,7 +64,7 @@
 		// POST form
 		console.log($state.snapshot(form))
 
-		turnState.set('rolling-dice')
+		get(eventDataQuery).refetch()
 
 		isDialogOpen = false
 

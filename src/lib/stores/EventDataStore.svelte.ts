@@ -1,4 +1,3 @@
-import { EventlabBaseUrl } from '$lib/client'
 import { type TurnState } from '$lib/types'
 import { createQuery } from '@tanstack/svelte-query'
 import { derived, type Readable } from 'svelte/store'

@@ -7,10 +7,9 @@ import {
 	loginApiLoginPostMutation
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import type { UserItem } from '$lib/heyapi/eventlab/types.gen'
-import { type TurnState } from '$lib/types'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
-import { derived, get, writable } from 'svelte/store'
+import { derived, get } from 'svelte/store'
 
 export function createUsersStore() {
 	const myUserQuery = createQuery({
@@ -79,8 +78,6 @@ export function createUsersStore() {
 		return map
 	})
 
-	const turnState = writable<TurnState>('filling-form')
-
 	const makeMove = createMutation({
 		...makePlayerMoveApiPlayersMovePostMutation({ baseUrl: AukusBaseUrl })
 	})
@@ -95,7 +92,6 @@ export function createUsersStore() {
 		logout,
 		users,
 		usersQuery,
-		usersBySlug,
-		turnState
+		usersBySlug
 	}
 }
