@@ -4,12 +4,13 @@ import { derived, type Readable } from 'svelte/store'
 import { getEventDataApiEventDataGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { SkinItem } from '$lib/heyapi/aukus/types.gen'
 import { SvelteMap } from 'svelte/reactivity'
+import { AukusBaseUrl } from '$lib/client'
 
 export function createEventDataStore() {
 	const eventDataQuery = createQuery({
 		...{
 			...getEventDataApiEventDataGetOptions(),
-			// baseUrl: EventlabBaseUrl,
+			baseUrl: AukusBaseUrl,
 			auth: () => localStorage.getItem('auth_token') ?? undefined
 		},
 		retry: false

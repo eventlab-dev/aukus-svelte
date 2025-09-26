@@ -92,6 +92,7 @@ export function createUsersStore() {
 		logout,
 		users,
 		usersQuery,
-		usersBySlug
+		usersBySlug,
+		makeMove
 	}
 }
