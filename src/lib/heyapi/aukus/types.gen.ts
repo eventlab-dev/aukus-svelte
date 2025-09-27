@@ -139,10 +139,6 @@ export type CreatePlayerMoveResponse = {
      * Move Id
      */
     move_id: number;
-    /**
-     * Dice Options
-     */
-    dice_options: Array<DiceOption>;
 };
 
 /**
@@ -173,6 +169,10 @@ export type EventDataResponse = {
      */
     achievements: Array<AchievementItem>;
     my_last_move: PlayerMoveItem | null;
+    /**
+     * Dice Options
+     */
+    dice_options: Array<DiceOption>;
 };
 
 /**
