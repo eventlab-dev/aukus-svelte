@@ -128,6 +128,10 @@ export type CreatePlayerMoveRequest = {
      * Game Id
      */
     game_id: number | null;
+    /**
+     * Cover Image Url
+     */
+    cover_image_url: string | null;
     difficulty: GameDifficulty | null;
 };
 
@@ -334,6 +338,16 @@ export type PlayerMoveItem = {
  * PlayerMoveType
  */
 export type PlayerMoveType = 'completed' | 'reroll' | 'drop' | 'movie' | 'sheikh_moment';
+
+/**
+ * PlayerMovesResponse
+ */
+export type PlayerMovesResponse = {
+    /**
+     * Moves
+     */
+    moves: Array<PlayerMoveItem>;
+};
 
 /**
  * PlayerStatsItem
@@ -696,6 +710,36 @@ export type FinishPlayerMoveApiPlayersMoveFinishPostResponses = {
 };
 
 export type FinishPlayerMoveApiPlayersMoveFinishPostResponse = FinishPlayerMoveApiPlayersMoveFinishPostResponses[keyof FinishPlayerMoveApiPlayersMoveFinishPostResponses];
+
+export type GetPlayerMovesApiPlayersPlayerSlugMovesGetData = {
+    body?: never;
+    path: {
+        /**
+         * Player Slug
+         */
+        player_slug: string;
+    };
+    query?: never;
+    url: '/api/players/{player_slug}/moves';
+};
+
+export type GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetPlayerMovesApiPlayersPlayerSlugMovesGetError = GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors];
+
+export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: PlayerMovesResponse;
+};
+
+export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponse = GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses];
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8301' | (string & {});

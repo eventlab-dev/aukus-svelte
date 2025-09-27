@@ -71,12 +71,12 @@ export const transliterationMap: { [key: string]: string[] } = {
 	я: ['ya', 'ia']
 }
 
-export const gameLengthRanges = {
-	tiny: '0-5ч',
-	short: '5-15ч',
-	medium: '15-30ч',
-	long: '30+ч'
-} as const
+export const gameLengthRanges: Record<GameLength, string> = {
+	'0-3': '0-3ч',
+	'3-15': '3-15ч',
+	'15-30': '15-30ч',
+	'30+': '30+ч'
+}
 
 import ARMY_SOUND_URL from '$lib/assets/sounds/army-roll.mp3'
 import INDIAN_ROLL_URL from '$lib/assets/sounds/indian-roll.mp3'
@@ -84,6 +84,7 @@ import DRUM_SOUND_URL from '$lib/assets/sounds/baraban.mp3'
 import MAX_SOUND_URL from '$lib/assets/sounds/max-roll2.mp3'
 import DASBOOT_SOUND_URL from '$lib/assets/sounds/dasboot-roll.mp3'
 import DVAR_SOUND_URL from '$lib/assets/sounds/dvar-roll.mp3'
+import type { GameLength } from './heyapi/aukus/types.gen'
 
 export const SOUNDS = [
 	{ key: 'army', url: ARMY_SOUND_URL },

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { PlayerMove } from '$lib/api/aukus/types'
 	import AddSquareIcon from '$lib/components/icons/AddSquareIcon.svelte'
 	import EditIcon from '$lib/components/icons/EditIcon.svelte'
 	import MinusSquareIcon from '$lib/components/icons/MinusSquareIcon.svelte'
@@ -16,9 +15,10 @@
 	import PopoverMoveCard from './PopoverMoveCard.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { derived } from 'svelte/store'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 
 	type Props = {
-		move: PlayerMove
+		move: PlayerMoveItem
 		isCurrentMove?: boolean
 		withUsername?: boolean
 	}
@@ -33,15 +33,13 @@
 	const isValidModerator = true // $derived(usersStore.isModerator && myUser?.moder_for === move.player_id)
 	const canEdit = $derived(isPlayersMove || isValidModerator)
 
-	const categoryDuration = $derived(
-		formatMs(parseInt((move.stream_title_category_duration || 0).toString()) * 1000)
-	)
+	const categoryDuration = $derived(formatMs(move.item_duration * 1000))
 	const playedBy = $derived.by(getPlayedBy)
 	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type))
 	const parsedReview = $derived.by(() => renderToHTML(move.item_review || ''))
 
 	let gameTitle = $state(move.item_title)
-	let vodLinks = $state(move.vod_link || '')
+	let vodLinks = $state(move.vod_links || '')
 	let isExtended = $state(false)
 	let isEditMode = $state(false)
 	let isVodsShown = $state(false)
@@ -151,7 +149,7 @@
 		<div
 			class="absolute top-3 right-3 text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground"
 		>
-			{formatDateTime(move.created_at || '')}
+			{formatDateTime(move.created_at)}
 		</div>
 	</div>
 
