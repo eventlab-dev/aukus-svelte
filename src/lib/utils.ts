@@ -86,8 +86,8 @@ export function transliterateRussianToEnglishVariants(russianText: string): stri
 	return results
 }
 
-export function formatDateTime(dateString: string, options: { onlyHourMinute?: boolean } = {}) {
-	const date = new Date(dateString)
+export function formatDateTime(timestamp: number, options: { onlyHourMinute?: boolean } = {}) {
+	const date = new Date(timestamp)
 	const today = new Date()
 	const isToday = date.toDateString() === today.toDateString()
 

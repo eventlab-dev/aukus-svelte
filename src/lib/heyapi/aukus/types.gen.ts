@@ -295,6 +295,10 @@ export type PlayerMoveItem = {
      * Game Id
      */
     game_id: number | null;
+    /**
+     * Cover Image Url
+     */
+    cover_image_url: string | null;
     difficulty_level: GameDifficulty;
     /**
      * Cell From

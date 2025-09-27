@@ -155,7 +155,7 @@
 
 	<div class="mt-3 flex gap-3">
 		<ImageLoader
-			src={move.item_image || ''}
+			src={move.cover_image_url || ''}
 			alt={move.item_title || ''}
 			class="h-[140px] w-[105px]"
 		/>
