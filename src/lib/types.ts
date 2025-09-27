@@ -1,3 +1,6 @@
+import type { PlayerItem } from './heyapi/aukus/types.gen'
+import type { UserItem } from './heyapi/eventlab/types.gen'
+
 export const Color = {
 	greyLight: '#414141',
 	greyDark: '#222222',
@@ -83,12 +86,6 @@ export type TableHeaderType<T> = {
 	width: number
 }
 
-export function getPlayerColor(urlHandle: PlayerUrl): string {
-	return ColorByUrlHandle[urlHandle] || Color.blueLight
-}
-
 export type TurnState = 'filling-form' | 'rolling-dice' | 'animation'
 
-// export function getPlayerColorName(player: Player): CustomColorNames {
-// 	return ColorNameByUrlHandle[player.url_handle] || 'customBlueLight'
-// }
+export type PlayerData = UserItem & PlayerItem & { total_score: number }

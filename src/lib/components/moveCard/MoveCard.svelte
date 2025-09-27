@@ -14,21 +14,21 @@
 	import { fade, slide } from 'svelte/transition'
 	import { gameLengthRanges } from '$lib/constants'
 	import PopoverMoveCard from './PopoverMoveCard.svelte'
-	import { getPlayerColor } from '$lib/types'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { derived } from 'svelte/store'
 
 	type Props = {
-		move: Partial<PlayerMove>
+		move: PlayerMove
 		isCurrentMove?: boolean
 		withUsername?: boolean
 	}
 
 	const { move, isCurrentMove = false, withUsername = false }: Props = $props()
 
-	const { playersStore, playersMovesStore } = getAppManagerContext()
+	const { playersMovesStore, playersBySlug } = getAppManagerContext()
 	const { moves } = playersMovesStore
 
-	const player = $derived.by(() => (move.player_id ? playersStore.getPlayer(move.player_id) : null))
+	const player = derived(playersBySlug, ($playersBySlug) => $playersBySlug[move.player_slug])
 	const isPlayersMove = true // $derived(myUser && myUser.slug === move.player_slug)
 	const isValidModerator = true // $derived(usersStore.isModerator && myUser?.moder_for === move.player_id)
 	const canEdit = $derived(isPlayersMove || isValidModerator)
@@ -48,7 +48,7 @@
 
 	function getPlayedBy() {
 		return moves.filter((m) => {
-			const isMyMove = m.player_id === move.player_id
+			const isMyMove = m.player_slug === move.player_slug
 			const isSameItem = m.item_title === move.item_title
 
 			return !isMyMove && isSameItem
@@ -76,8 +76,8 @@
 		<div class="flex">
 			<div class="flex gap-1.5">
 				{#if withUsername && player}
-					<Badge variant="secondary" style="background-color: {getPlayerColor(player.url_handle)}">
-						{player.name}
+					<Badge variant="secondary" style="background-color: {$player.color}">
+						{$player.username}
 					</Badge>
 				{/if}
 				{#if isCurrentMove}

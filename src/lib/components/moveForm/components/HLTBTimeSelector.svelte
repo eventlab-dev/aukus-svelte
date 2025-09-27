@@ -15,8 +15,8 @@
 	let { value = $bindable(), disabled }: Props = $props()
 
 	const items: ItemType[] = [
-		{ value: '0-5', label: '0 — 5 часов' },
-		{ value: '5-15', label: '5 — 15 часов' },
+		{ value: '0-3', label: '0 — 3 часов' },
+		{ value: '3-15', label: '3 — 15 часов' },
 		{ value: '15-30', label: '15 — 30 часов' },
 		{ value: '30+', label: '30+ часов' }
 	]

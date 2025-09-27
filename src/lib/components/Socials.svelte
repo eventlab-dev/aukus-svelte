@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import TwitchIcon from '$lib/components/icons/TwitchIcon.svelte';
-	import DonationAlertsIcon from '$lib/components/icons/DonationAlertsIcon.svelte';
-	import TelegramIcon from '$lib/components/icons/TelegramIcon.svelte';
-	import VkLiveIcon from '$lib/components/icons/VKLiveIcon.svelte';
-	import KickIcon from '$lib/components/icons/KickIcon.svelte';
+	import { Button } from '$lib/components/ui/button'
+	import TwitchIcon from '$lib/components/icons/TwitchIcon.svelte'
+	import DonationAlertsIcon from '$lib/components/icons/DonationAlertsIcon.svelte'
+	import TelegramIcon from '$lib/components/icons/TelegramIcon.svelte'
+	import VkLiveIcon from '$lib/components/icons/VKLiveIcon.svelte'
+	import KickIcon from '$lib/components/icons/KickIcon.svelte'
 
 	type Props = {
-		twitchLink?: string;
-		donationAlertsLink?: string;
-		telegramLink?: string;
-		vkLiveLink?: string;
-		kickLink?: string;
-		colored?: boolean;
-	};
+		twitchLink?: string
+		donationAlertsLink?: string
+		telegramLink?: string
+		vkLiveLink?: string
+		kickLink?: string
+		colored?: boolean
+	}
 
 	const {
 		twitchLink,
@@ -22,7 +22,7 @@
 		vkLiveLink,
 		kickLink,
 		colored = true
-	}: Props = $props();
+	}: Props = $props()
 
 	const items = $derived([
 		{
@@ -50,11 +50,11 @@
 			Icon: KickIcon,
 			color: 'bg-custom-green'
 		}
-	]);
+	])
 </script>
 
 <div class="space-x-3">
-	{#each items as { href, Icon, color }}
+	{#each items as { href, Icon, color }, idx (idx)}
 		{#if href}
 			<Button
 				{href}

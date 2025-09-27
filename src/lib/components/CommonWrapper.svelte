@@ -5,19 +5,16 @@
 	import PlayerCard from './player/PlayerCard.svelte'
 	import QuickMenu from './quickMenu/QuickMenu.svelte'
 	import { ScrollArea } from './ui/scroll-area'
-	import AppManager from '$lib/stores/AppManager.svelte'
+	import { createAppManager } from '$lib/stores/AppManager.svelte'
 	import { setAppManagerContext } from '$lib/contexts/appManagerContext'
+	import type { Player } from '$lib/api/aukus/types'
 
 	let { children } = $props()
 
-	const appManager = new AppManager()
+	const appManager = createAppManager()
 	setAppManagerContext(appManager)
 
-	const { playersStore } = appManager
-
-	const sortedPlayers = $derived(
-		playersStore.players.toSorted((a, b) => b.total_score - a.total_score)
-	)
+	const sortedPlayers: Player[] = []
 </script>
 
 <ScrollArea class="h-screen px-3" type="always">

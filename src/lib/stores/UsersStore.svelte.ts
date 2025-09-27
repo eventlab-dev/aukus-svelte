@@ -64,7 +64,7 @@ export function createUsersStore() {
 			baseUrl: EventlabBaseUrl,
 			query: { is_active: 1 }
 		}),
-		refetchInterval: 60 * 1000
+		refetchInterval: 2 * 60 * 1000
 	})
 
 	const users = derived(usersQuery, ($query) => {
