@@ -35,7 +35,7 @@
 
 	const { usersStore, eventDataStore } = getAppManagerContext()
 
-	const { myUser, makeMove } = usersStore
+	const { myUser, saveMoveForm } = usersStore
 	const { eventDataQuery } = eventDataStore
 
 	let form: FormType = $state({
@@ -62,10 +62,7 @@
 	})
 
 	async function saveReview() {
-		// POST form
-		console.log($state.snapshot(form))
-
-		await get(makeMove).mutateAsync({
+		await get(saveMoveForm).mutateAsync({
 			body: {
 				type: form.status!,
 				item_review: form.review,
@@ -74,8 +71,7 @@
 				item_title: form.title,
 				// TODO: fill these fields
 				game_id: null,
-				difficulty: 0,
-				dice_roll_id: null
+				difficulty: 0
 			}
 		})
 

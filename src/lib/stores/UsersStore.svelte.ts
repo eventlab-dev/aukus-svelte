@@ -1,10 +1,14 @@
 import { goto } from '$app/navigation'
 import { AukusBaseUrl, EventlabBaseUrl } from '$lib/client'
-import { makePlayerMoveApiPlayersMovePostMutation } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+import {
+	createPlayerMoveApiPlayersMovePostMutation,
+	finishPlayerMoveApiPlayersMoveFinishPostMutation
+} from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
 	getUsersApiUsersGetOptions,
-	loginApiLoginPostMutation
+	loginApiLoginPostMutation,
+	makeDiceRollApiDiceRollsPostMutation
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import type { UserItem } from '$lib/heyapi/eventlab/types.gen'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
@@ -78,8 +82,16 @@ export function createUsersStore() {
 		return map
 	})
 
-	const makeMove = createMutation({
-		...makePlayerMoveApiPlayersMovePostMutation({ baseUrl: AukusBaseUrl })
+	const saveMoveForm = createMutation({
+		...createPlayerMoveApiPlayersMovePostMutation({ baseUrl: AukusBaseUrl })
+	})
+
+	const finishMove = createMutation({
+		...finishPlayerMoveApiPlayersMoveFinishPostMutation({ baseUrl: AukusBaseUrl })
+	})
+
+	const rollDice = createMutation({
+		...makeDiceRollApiDiceRollsPostMutation({ baseUrl: EventlabBaseUrl })
 	})
 
 	return {
@@ -93,6 +105,8 @@ export function createUsersStore() {
 		users,
 		usersQuery,
 		usersBySlug,
-		makeMove
+		saveMoveForm,
+		finishMove,
+		rollDice
 	}
 }

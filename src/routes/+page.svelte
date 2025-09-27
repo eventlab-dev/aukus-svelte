@@ -9,9 +9,10 @@
 	import MapComponent from '$lib/components/map/MapComponent.svelte'
 	import DiceRoller from '$lib/components/moveForm/DiceRoller.svelte'
 
-	const { playersMovesStore, usersStore } = getAppManagerContext()
+	const { playersMovesStore, usersStore, eventDataStore } = getAppManagerContext()
 	const { moves } = playersMovesStore
-	const { myUser, turnState } = usersStore
+	const { myUser } = usersStore
+	const { turnState } = eventDataStore
 
 	let filteredMoves: PlayerMove[] = $state([])
 
