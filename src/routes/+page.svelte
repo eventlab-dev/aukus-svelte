@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { PlayerMove } from '$lib/api/aukus/types'
 	import { fade } from 'svelte/transition'
 	import MovesSearch from '$lib/components/MovesSearch.svelte'
 	import MoveCard from '$lib/components/moveCard/MoveCard.svelte'
@@ -8,19 +7,20 @@
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte'
 	import MapComponent from '$lib/components/map/MapComponent.svelte'
 	import DiceRoller from '$lib/components/moveForm/DiceRoller.svelte'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 
 	const { playersMovesStore, usersStore, eventDataStore } = getAppManagerContext()
 	const { moves } = playersMovesStore
 	const { myUser } = usersStore
 	const { turnState } = eventDataStore
 
-	let filteredMoves: PlayerMove[] = $state([])
+	let filteredMoves: PlayerMoveItem[] = $state([])
 
 	const sortedMovesByDate = $derived.by(getSortedMovesByDate)
 
 	function getSortedMovesByDate() {
 		// Helper function to extract date portion from timestamp
-		const getDateKey = (timestamp: string) => new Date(timestamp).toISOString().slice(0, 10)
+		const getDateKey = (timestamp: number) => new Date(timestamp * 1000).toISOString().slice(0, 10)
 
 		// Sort from newest to oldest
 		const sortedMoves = filteredMoves.toSorted(
@@ -28,7 +28,7 @@
 		)
 
 		// Group moves by date
-		const movesByDate: Record<string, PlayerMove[]> = {}
+		const movesByDate: Record<string, PlayerMoveItem[]> = {}
 
 		for (const move of sortedMoves) {
 			const dateKey = getDateKey(move.created_at)

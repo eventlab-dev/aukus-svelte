@@ -71,6 +71,7 @@
 				item_title: form.title,
 				// TODO: fill these fields
 				game_id: null,
+				cover_image_url: null,
 				difficulty: 0
 			}
 		})

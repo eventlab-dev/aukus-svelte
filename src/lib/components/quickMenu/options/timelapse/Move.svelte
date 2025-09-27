@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { PlayerMove } from '$lib/api/aukus/types'
 	import { Badge } from '$lib/components/ui/badge'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { getMoveTypeStyles } from '$lib/utils'
 	import { derived } from 'svelte/store'
 
 	type Props = {
-		move: PlayerMove
+		move: PlayerMoveItem
 	}
 
 	const { move }: Props = $props()

@@ -4,11 +4,11 @@
 	import { fade } from 'svelte/transition'
 	import Summary from './components/Summary.svelte'
 	import MoveCard from '../../../lib/components/moveCard/MoveCard.svelte'
-	import type { PlayerMove } from '$lib/api/aukus/types'
 	import MovesSearch from '$lib/components/MovesSearch.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { page } from '$app/state'
 	import { derived } from 'svelte/store'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 
 	const { playersMovesStore, playersBySlug } = getAppManagerContext()
 	const { moves } = playersMovesStore
@@ -31,7 +31,7 @@
 		kickLink: $player.kick_stream_link || ''
 	}))
 
-	let filteredMoves: PlayerMove[] = $state([])
+	let filteredMoves: PlayerMoveItem[] = $state([])
 
 	// const aukus1games = aukus1Games[player.url_handle];
 	// const aukus2games = aukus2Games[player.url_handle];

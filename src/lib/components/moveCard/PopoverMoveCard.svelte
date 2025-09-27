@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type { PlayerMove } from '$lib/api/aukus/types'
 	import ArrowRightIcon from '$lib/components/icons/ArrowRightIcon.svelte'
 	import { Badge } from '$lib/components/ui/badge'
 	import { Button, buttonVariants } from '$lib/components/ui/button'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { gameLengthRanges } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { getMoveTypeStyles, renderToHTML } from '$lib/utils'
 
 	type Props = {
-		move: PlayerMove
+		move: PlayerMoveItem
 	}
 
 	const { move }: Props = $props()
