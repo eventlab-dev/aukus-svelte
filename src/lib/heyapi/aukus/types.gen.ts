@@ -107,6 +107,50 @@ export type CanvasUpdateRequest = {
 };
 
 /**
+ * CreatePlayerMoveRequest
+ */
+export type CreatePlayerMoveRequest = {
+    type: PlayerMoveType;
+    /**
+     * Item Title
+     */
+    item_title: string;
+    item_length: GameLength | null;
+    /**
+     * Item Review
+     */
+    item_review: string;
+    /**
+     * Item Rating
+     */
+    item_rating: number | null;
+    /**
+     * Game Id
+     */
+    game_id: number | null;
+    difficulty: GameDifficulty | null;
+};
+
+/**
+ * CreatePlayerMoveResponse
+ */
+export type CreatePlayerMoveResponse = {
+    /**
+     * Move Id
+     */
+    move_id: number;
+    /**
+     * Dice Options
+     */
+    dice_options: Array<DiceOption>;
+};
+
+/**
+ * DiceOption
+ */
+export type DiceOption = '1d4' | '1d6' | '2d6' | '3d6';
+
+/**
  * EventDataResponse
  */
 export type EventDataResponse = {
@@ -132,6 +176,34 @@ export type EventDataResponse = {
 };
 
 /**
+ * FinishPlayerMoveRequest
+ */
+export type FinishPlayerMoveRequest = {
+    /**
+     * Dice Roll Id
+     */
+    dice_roll_id: number;
+};
+
+/**
+ * FinishPlayerMoveResponse
+ */
+export type FinishPlayerMoveResponse = {
+    /**
+     * Move To
+     */
+    move_to: number;
+    /**
+     * Snake To
+     */
+    snake_to: number | null;
+    /**
+     * Ladder To
+     */
+    ladder_to: number | null;
+};
+
+/**
  * GameDifficulty
  */
 export type GameDifficulty = -1 | 0 | 1 | 2;
@@ -139,7 +211,7 @@ export type GameDifficulty = -1 | 0 | 1 | 2;
 /**
  * GameLength
  */
-export type GameLength = '0-5' | '5-15' | '15-30' | '30+';
+export type GameLength = '0-3' | '3-15' | '15-30' | '30+';
 
 /**
  * HTTPValidationError
@@ -256,57 +328,6 @@ export type PlayerMoveItem = {
      * Dice Roll
      */
     dice_roll: string | null;
-};
-
-/**
- * PlayerMoveRequest
- */
-export type PlayerMoveRequest = {
-    type: PlayerMoveType;
-    /**
-     * Item Title
-     */
-    item_title: string;
-    item_length: GameLength | null;
-    /**
-     * Item Review
-     */
-    item_review: string;
-    /**
-     * Item Rating
-     */
-    item_rating: number | null;
-    /**
-     * Game Id
-     */
-    game_id: number | null;
-    difficulty: GameDifficulty | null;
-    /**
-     * Dice Roll Id
-     */
-    dice_roll_id: number | null;
-};
-
-/**
- * PlayerMoveResponse
- */
-export type PlayerMoveResponse = {
-    /**
-     * Move Id
-     */
-    move_id: number;
-    /**
-     * Move To
-     */
-    move_to: number;
-    /**
-     * Snake To
-     */
-    snake_to: number | null;
-    /**
-     * Ladder To
-     */
-    ladder_to: number | null;
 };
 
 /**
@@ -608,8 +629,8 @@ export type PlayerStatsApiPlayersStatsGetResponses = {
 
 export type PlayerStatsApiPlayersStatsGetResponse = PlayerStatsApiPlayersStatsGetResponses[keyof PlayerStatsApiPlayersStatsGetResponses];
 
-export type MakePlayerMoveApiPlayersMovePostData = {
-    body: PlayerMoveRequest;
+export type CreatePlayerMoveApiPlayersMovePostData = {
+    body: CreatePlayerMoveRequest;
     path?: never;
     query?: {
         /**
@@ -624,23 +645,57 @@ export type MakePlayerMoveApiPlayersMovePostData = {
     url: '/api/players/move';
 };
 
-export type MakePlayerMoveApiPlayersMovePostErrors = {
+export type CreatePlayerMoveApiPlayersMovePostErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type MakePlayerMoveApiPlayersMovePostError = MakePlayerMoveApiPlayersMovePostErrors[keyof MakePlayerMoveApiPlayersMovePostErrors];
+export type CreatePlayerMoveApiPlayersMovePostError = CreatePlayerMoveApiPlayersMovePostErrors[keyof CreatePlayerMoveApiPlayersMovePostErrors];
 
-export type MakePlayerMoveApiPlayersMovePostResponses = {
+export type CreatePlayerMoveApiPlayersMovePostResponses = {
     /**
      * Successful Response
      */
-    200: PlayerMoveResponse;
+    200: CreatePlayerMoveResponse;
 };
 
-export type MakePlayerMoveApiPlayersMovePostResponse = MakePlayerMoveApiPlayersMovePostResponses[keyof MakePlayerMoveApiPlayersMovePostResponses];
+export type CreatePlayerMoveApiPlayersMovePostResponse = CreatePlayerMoveApiPlayersMovePostResponses[keyof CreatePlayerMoveApiPlayersMovePostResponses];
+
+export type FinishPlayerMoveApiPlayersMoveFinishPostData = {
+    body: FinishPlayerMoveRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/move/finish';
+};
+
+export type FinishPlayerMoveApiPlayersMoveFinishPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type FinishPlayerMoveApiPlayersMoveFinishPostError = FinishPlayerMoveApiPlayersMoveFinishPostErrors[keyof FinishPlayerMoveApiPlayersMoveFinishPostErrors];
+
+export type FinishPlayerMoveApiPlayersMoveFinishPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: FinishPlayerMoveResponse;
+};
+
+export type FinishPlayerMoveApiPlayersMoveFinishPostResponse = FinishPlayerMoveApiPlayersMoveFinishPostResponses[keyof FinishPlayerMoveApiPlayersMoveFinishPostResponses];
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8301' | (string & {});
