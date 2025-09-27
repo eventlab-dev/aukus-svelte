@@ -1,35 +1,36 @@
 <script lang="ts">
-	import type { PlayerMove } from '$lib/api/aukus/types';
-	import ArrowRightIcon from '$lib/components/icons/ArrowRightIcon.svelte';
-	import { Badge } from '$lib/components/ui/badge';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover';
-	import { gameLengthRanges } from '$lib/constants';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import { getMoveTypeStyles, renderToHTML } from '$lib/utils';
+	import type { PlayerMove } from '$lib/api/aukus/types'
+	import ArrowRightIcon from '$lib/components/icons/ArrowRightIcon.svelte'
+	import { Badge } from '$lib/components/ui/badge'
+	import { Button, buttonVariants } from '$lib/components/ui/button'
+	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
+	import { gameLengthRanges } from '$lib/constants'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getMoveTypeStyles, renderToHTML } from '$lib/utils'
 
 	type Props = {
-		move: PlayerMove;
-	};
+		move: PlayerMove
+	}
 
-	const { move }: Props = $props();
+	const { move }: Props = $props()
 
-	const { playersStore } = getAppManagerContext();
+	const { playersBySlug } = getAppManagerContext()
 
-	const parsedReview = $derived.by(() => renderToHTML(move.item_review || ''));
-	const player = $derived.by(() => playersStore.getPlayer(move.player_id));
-	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type));
+	const parsedReview = $derived.by(() => renderToHTML(move.item_review || ''))
+	const player = $derived($playersBySlug[move.player_slug])
+	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type))
 </script>
 
 <Popover>
 	<PopoverTrigger
 		class={[buttonVariants({ variant: 'secondary', size: 'sm' }), 'data-[state=open]:bg-primary']}
 	>
-		{player?.name}
+		{player.username}
 	</PopoverTrigger>
 	<PopoverContent class="w-[346px] space-y-3">
 		<div class="font-bold">{move.item_title}</div>
 		<div class="text-sm leading-[18px] font-medium text-muted-foreground">
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			{@html parsedReview}
 		</div>
 		<div class="flex gap-1.5">

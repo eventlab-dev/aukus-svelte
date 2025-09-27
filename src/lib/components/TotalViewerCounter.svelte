@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { derived } from 'svelte/store'
 
-	const { playersStore } = getAppManagerContext();
-	const totalViewerCounter = $derived.by(getTotalViewerCounter);
+	const { players } = getAppManagerContext()
 
-	function getTotalViewerCounter() {
-		return playersStore.players.reduce((prev, curr) => prev + (curr.online_count || 0), 0);
-	}
+	const totalViewers = derived(players, ($players) =>
+		$players.map((p) => p.online_count).reduce((a, b) => a + b, 0)
+	)
 </script>
 
 <div class="shrink-0 rounded-lg bg-card p-2.5 font-medium text-muted-foreground">
-	Общий онлайн: {totalViewerCounter}
+	Общий онлайн: {$totalViewers}
 </div>

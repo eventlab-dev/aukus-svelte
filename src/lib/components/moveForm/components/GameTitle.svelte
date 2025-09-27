@@ -17,7 +17,7 @@
 
 	let { value = $bindable('') }: Props = $props()
 
-	const { myUser: myPlayer } = getAppManagerContext()
+	const { myPlayer } = getAppManagerContext()
 
 	const searchResults = $derived(
 		value === ''
@@ -36,8 +36,8 @@
 	let inputRef: HTMLInputElement | null = $state(null)
 
 	onMount(() => {
-		if (myPlayer) {
-			value = myPlayer.current_game || ''
+		if ($myPlayer) {
+			value = $myPlayer.current_game || ''
 		}
 	})
 

@@ -1,16 +1,15 @@
 <script lang="ts">
-	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte';
-	import Socials from '$lib/components/Socials.svelte';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import { fade } from 'svelte/transition';
+	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
+	import Socials from '$lib/components/Socials.svelte'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { fade } from 'svelte/transition'
 
-	const { playersStore } = getAppManagerContext();
-	const { players } = playersStore;
+	const { players } = getAppManagerContext()
 </script>
 
 <div class="mx-auto mt-[100px] max-w-[800px]" in:fade>
 	<div class="space-y-[100px]">
-		{#each players as player}
+		{#each $players as player (player.slug)}
 			{@const socials = {
 				twitchLink: player?.twitch_stream_link || '',
 				donationAlertsLink: player?.donation_link || '',
@@ -21,13 +20,13 @@
 
 			<div class="flex flex-col items-center gap-5">
 				<PlayerAvatar
-					src={player.avatar_link}
-					name={player.name}
-					isOnline={player.is_online}
+					src={player.avatar_link ?? ''}
+					name={player.username}
+					isOnline={Boolean(player.is_online)}
 					size="lg"
 				/>
 				<div class="text-5xl leading-[58px] font-bold">
-					{player.first_name} «{player.name}» {player.last_name}
+					{player.first_name} «{player.username}»
 				</div>
 				<Socials {...socials} />
 			</div>

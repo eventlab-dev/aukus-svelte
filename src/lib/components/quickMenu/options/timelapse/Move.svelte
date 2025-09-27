@@ -1,27 +1,27 @@
 <script lang="ts">
-	import type { PlayerMove } from '$lib/api/aukus/types';
-	import { Badge } from '$lib/components/ui/badge';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import { getPlayerColor } from '$lib/types';
-	import { getMoveTypeStyles } from '$lib/utils';
+	import type { PlayerMove } from '$lib/api/aukus/types'
+	import { Badge } from '$lib/components/ui/badge'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getMoveTypeStyles } from '$lib/utils'
+	import { derived } from 'svelte/store'
 
 	type Props = {
-		move: PlayerMove;
-	};
+		move: PlayerMove
+	}
 
-	const { move }: Props = $props();
+	const { move }: Props = $props()
 
-	const { playersStore } = getAppManagerContext();
+	const { playersBySlug } = getAppManagerContext()
 
-	const player = $derived.by(() => playersStore.getPlayer(move.player_id));
-	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type));
+	const player = derived(playersBySlug, ($playersBySlug) => $playersBySlug[move.player_slug])
+	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type))
 </script>
 
 <div class="space-y-1.5">
 	<div class="flex gap-1.5">
-		{#if player}
-			<Badge variant="secondary" style="background-color: {getPlayerColor(player.url_handle)}">
-				{player.name}
+		{#if $player}
+			<Badge variant="secondary" style="background-color: {$player.color}">
+				{$player.username}
 			</Badge>
 		{/if}
 		<Badge variant={moveTypeStyles.variant}>

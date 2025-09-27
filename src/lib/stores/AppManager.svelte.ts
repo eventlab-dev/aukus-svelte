@@ -42,6 +42,13 @@ export function createAppManager() {
 		return map
 	})
 
+	const myUser = usersStore.myUser
+
+	const myPlayer = derived([players, myUser], ([$players, $myUser]) => {
+		if (!$myUser) return null
+		return $players.find((p) => p.slug === $myUser.slug) || null
+	})
+
 	return {
 		usersStore,
 		gamesHistoryStore,
@@ -49,7 +56,8 @@ export function createAppManager() {
 		playersMovesStore,
 		soundManager,
 		players,
-		playersBySlug
+		playersBySlug,
+		myPlayer
 	}
 }
 
