@@ -59,7 +59,7 @@
 		<LifebuoyIcon /> Колёса вариантов
 	</DialogTrigger>
 	<DialogContent
-		class="bg-unset top-0 bottom-0 h-full w-full -translate-x-1/2 translate-y-0 items-center px-[90px]"
+		class="bg-unset top-0 bottom-0 mt-15 h-full w-full -translate-x-1/2 translate-y-0 items-center px-[90px]"
 		showCloseButton={false}
 	>
 		<div class="absolute top-3 left-1/2 flex -translate-x-1/2 gap-3">
