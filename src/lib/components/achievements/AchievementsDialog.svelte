@@ -40,9 +40,7 @@
 	<DialogTrigger>
 		<CrownIcon /> Достижения
 	</DialogTrigger>
-	<DialogContent
-		class="w-[900px] text-primary-foreground selection:bg-foreground selection:text-background"
-	>
+	<DialogContent class="text-primary-foreground selection:bg-foreground selection:text-background">
 		<DialogHeader class="gap-3">
 			<DialogTitle class="text-2xl font-bold">Достижения</DialogTitle>
 		</DialogHeader>
@@ -65,15 +63,17 @@
 				{/each}
 			</div>
 
-			<ScrollArea class="h-[70vh] w-full px-3" type="always">
-				<div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
-					{#each $achievements as achievement (achievement.id)}
-						<div animate:flip={{ duration: 300, easing: sineInOut }}>
-							<AchievementCard {achievement} />
-						</div>
-					{/each}
-				</div>
-			</ScrollArea>
+			<div class="flex justify-center">
+				<ScrollArea class="h-[70vh] w-fit" type="always">
+					<div class="flex flex-wrap justify-center gap-3">
+						{#each $achievements as achievement (achievement.id)}
+							<div animate:flip={{ duration: 300, easing: sineInOut }}>
+								<AchievementCard {achievement} />
+							</div>
+						{/each}
+					</div>
+				</ScrollArea>
+			</div>
 		</div>
 	</DialogContent>
 </Dialog>

@@ -163,8 +163,8 @@
 			</Toggle>
 		</div>
 		<div class="flex justify-center">
-			<ScrollArea class=" h-[50vh] w-[680px] px-3" type="always">
-				<div class="flex flex-wrap gap-4">
+			<ScrollArea class="h-[50vh] w-fit" type="always">
+				<div class="flex w-fit flex-wrap justify-center gap-3">
 					{#each availableSkins as skin (skin.id)}
 						<Button
 							onclick={() => selectSkin(skin)}
