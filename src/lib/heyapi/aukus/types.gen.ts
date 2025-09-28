@@ -247,6 +247,10 @@ export type PlayerItem = {
      * Unlocked Achievements
      */
     unlocked_achievements: Array<UnlockedAchievementItem>;
+    /**
+     * Color
+     */
+    color: string;
 };
 
 /**

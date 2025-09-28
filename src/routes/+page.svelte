@@ -30,6 +30,8 @@
 		// Group moves by date
 		const movesByDate: Record<string, PlayerMoveItem[]> = {}
 
+		console.log({ sortedMoves })
+
 		for (const move of sortedMoves) {
 			const dateKey = getDateKey(move.created_at)
 
