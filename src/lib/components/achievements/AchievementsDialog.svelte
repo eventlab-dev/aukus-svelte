@@ -9,7 +9,7 @@
 	import CrownIcon from '../icons/CrownIcon.svelte'
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
 
-	const { eventDataStore, players } = getAppManagerContext()
+	const { eventDataStore, players, myPlayer } = getAppManagerContext()
 
 	const { achievements } = eventDataStore
 
@@ -26,9 +26,17 @@
 	function getPressed(slug: string) {
 		return selectedPlayerSlug === slug
 	}
+
+	function handleOpenChange(open: boolean) {
+		if (open && $myPlayer) {
+			if (!selectedPlayerSlug) {
+				selectedPlayerSlug = $myPlayer.slug
+			}
+		}
+	}
 </script>
 
-<Dialog>
+<Dialog onOpenChange={handleOpenChange}>
 	<DialogTrigger>
 		<CrownIcon /> Достижения
 	</DialogTrigger>
