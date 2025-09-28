@@ -1,18 +1,22 @@
 <script lang="ts">
-	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils';
-	import CellNumber from './CellNumber.svelte';
-	import MapArrow from './MapArrow.svelte';
-	import MapArrowMarkers from './MapArrowMarkers.svelte';
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
+	import CellNumber from './CellNumber.svelte'
+	import MapArrow from './MapArrow.svelte'
+	import MapArrowMarkers from './MapArrowMarkers.svelte'
+	import PlayerCharacter from './PlayerCharacter.svelte'
+
+	const { players } = getAppManagerContext()
 
 	$effect(() => {
-		const mapWidth = 1715;
-		const diff = mapWidth - window.innerWidth;
+		const mapWidth = 1715
+		const diff = mapWidth - window.innerWidth
 		if (diff > 0) {
 			document
 				.getElementById('map-scroll-container')
-				?.scrollTo({ left: diff / 2, behavior: 'smooth' });
+				?.scrollTo({ left: diff / 2, behavior: 'smooth' })
 		}
-	});
+	})
 </script>
 
 <div class="flex justify-center">
@@ -32,6 +36,9 @@
 			{/each}
 			{#each mapCellsSorted as cell (cell.id)}
 				<CellNumber cellId={cell.id} />
+			{/each}
+			{#each $players as player (player.slug)}
+				<PlayerCharacter {player} />
 			{/each}
 		</div>
 	</div>
