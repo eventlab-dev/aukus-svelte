@@ -36,7 +36,6 @@
 			src={loadedSrc}
 			class="w-full object-cover"
 			{alt}
-			draggable={false}
 			in:scale={{ start: 0.9, opacity: 0 }}
 		/>
 	{:else}
