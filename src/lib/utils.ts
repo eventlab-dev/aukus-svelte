@@ -172,3 +172,7 @@ export function doubleSineEaseOut(t: number) {
 	const firstPass = Math.sin((t * Math.PI) / 2)
 	return Math.sin((firstPass * Math.PI) / 2)
 }
+
+export function defaultAuth() {
+	return localStorage.getItem('auth_token') ?? undefined
+}

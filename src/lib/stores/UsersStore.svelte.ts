@@ -2,7 +2,8 @@ import { goto } from '$app/navigation'
 import { AukusBaseUrl, EventlabBaseUrl } from '$lib/client'
 import {
 	createPlayerMoveApiPlayersMovePostMutation,
-	finishPlayerMoveApiPlayersMoveFinishPostMutation
+	finishPlayerMoveApiPlayersMoveFinishPostMutation,
+	setPlayerSkinsApiPlayersSkinsPostMutation
 } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
@@ -11,6 +12,7 @@ import {
 	makeDiceRollApiDiceRollsPostMutation
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import type { UserItem } from '$lib/heyapi/eventlab/types.gen'
+import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
 import { derived, get } from 'svelte/store'
@@ -19,7 +21,7 @@ export function createUsersStore() {
 	const myUserQuery = createQuery({
 		...fetchCurrentUserApiUsersCurrentGetOptions({
 			baseUrl: EventlabBaseUrl,
-			auth: () => localStorage.getItem('auth_token') ?? undefined
+			auth: defaultAuth
 		}),
 		retry: false
 	})
@@ -82,17 +84,33 @@ export function createUsersStore() {
 		return map
 	})
 
-	const saveMoveForm = createMutation({
-		...createPlayerMoveApiPlayersMovePostMutation({ baseUrl: AukusBaseUrl })
-	})
+	const saveMoveForm = createMutation(
+		createPlayerMoveApiPlayersMovePostMutation({
+			baseUrl: AukusBaseUrl,
+			auth: defaultAuth
+		})
+	)
 
-	const finishMove = createMutation({
-		...finishPlayerMoveApiPlayersMoveFinishPostMutation({ baseUrl: AukusBaseUrl })
-	})
+	const finishMove = createMutation(
+		finishPlayerMoveApiPlayersMoveFinishPostMutation({
+			baseUrl: AukusBaseUrl,
+			auth: defaultAuth
+		})
+	)
 
-	const rollDice = createMutation({
-		...makeDiceRollApiDiceRollsPostMutation({ baseUrl: EventlabBaseUrl })
-	})
+	const rollDice = createMutation(
+		makeDiceRollApiDiceRollsPostMutation({
+			baseUrl: EventlabBaseUrl,
+			auth: defaultAuth
+		})
+	)
+
+	const setSkins = createMutation(
+		setPlayerSkinsApiPlayersSkinsPostMutation({
+			baseUrl: AukusBaseUrl,
+			auth: defaultAuth
+		})
+	)
 
 	return {
 		myUserQuery,
@@ -107,6 +125,7 @@ export function createUsersStore() {
 		usersBySlug,
 		saveMoveForm,
 		finishMove,
-		rollDice
+		rollDice,
+		setSkins
 	}
 }

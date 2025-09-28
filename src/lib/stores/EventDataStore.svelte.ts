@@ -5,13 +5,14 @@ import { getEventDataApiEventDataGetOptions } from '$lib/heyapi/aukus/@tanstack/
 import type { SkinItem } from '$lib/heyapi/aukus/types.gen'
 import { SvelteMap } from 'svelte/reactivity'
 import { AukusBaseUrl } from '$lib/client'
+import { defaultAuth } from '$lib/utils'
 
 export function createEventDataStore() {
 	const eventDataQuery = createQuery({
 		...{
 			...getEventDataApiEventDataGetOptions(),
 			baseUrl: AukusBaseUrl,
-			auth: () => localStorage.getItem('auth_token') ?? undefined
+			auth: defaultAuth
 		},
 		retry: false
 	})

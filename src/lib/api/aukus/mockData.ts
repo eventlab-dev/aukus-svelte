@@ -25,7 +25,8 @@ const playerLasqa: PlayerData = {
 	equipped_skins: [],
 	main_platform: 'twitch',
 	online_count: 100,
-	unlocked_achievements: []
+	unlocked_achievements: [],
+	available_skins: []
 }
 
 const playerSegall: PlayerData = {
@@ -51,7 +52,8 @@ const playerSegall: PlayerData = {
 	equipped_skins: [],
 	main_platform: 'twitch',
 	online_count: 100,
-	unlocked_achievements: []
+	unlocked_achievements: [],
+	available_skins: []
 }
 
 const playerRoadhouse: PlayerData = {
@@ -78,7 +80,8 @@ const playerRoadhouse: PlayerData = {
 	role: 'streamer',
 	equipped_skins: [],
 	main_platform: 'twitch',
-	unlocked_achievements: []
+	unlocked_achievements: [],
+	available_skins: []
 }
 
 const playerPraden: PlayerData = {
@@ -104,7 +107,8 @@ const playerPraden: PlayerData = {
 	role: 'streamer',
 	equipped_skins: [],
 	main_platform: 'twitch',
-	unlocked_achievements: []
+	unlocked_achievements: [],
+	available_skins: []
 }
 
 export const playersMock = [playerLasqa, playerSegall, playerRoadhouse, playerPraden].toSorted(

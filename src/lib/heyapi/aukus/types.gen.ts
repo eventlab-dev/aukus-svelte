@@ -228,6 +228,16 @@ export type HttpValidationError = {
 };
 
 /**
+ * PlayerChangeSkinRequest
+ */
+export type PlayerChangeSkinRequest = {
+    /**
+     * Skin Ids
+     */
+    skin_ids: Array<number>;
+};
+
+/**
  * PlayerItem
  */
 export type PlayerItem = {
@@ -243,6 +253,10 @@ export type PlayerItem = {
      * Equipped Skins
      */
     equipped_skins: Array<number>;
+    /**
+     * Available Skins
+     */
+    available_skins: Array<number>;
     /**
      * Unlocked Achievements
      */
@@ -748,6 +762,38 @@ export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses = {
 };
 
 export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponse = GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses];
+
+export type SetPlayerSkinsApiPlayersSkinsPostData = {
+    body: PlayerChangeSkinRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/skins';
+};
+
+export type SetPlayerSkinsApiPlayersSkinsPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SetPlayerSkinsApiPlayersSkinsPostError = SetPlayerSkinsApiPlayersSkinsPostErrors[keyof SetPlayerSkinsApiPlayersSkinsPostErrors];
+
+export type SetPlayerSkinsApiPlayersSkinsPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8301' | (string & {});
