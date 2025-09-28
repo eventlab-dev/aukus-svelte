@@ -335,7 +335,7 @@ export type PlayerMoveItem = {
     /**
      * Dice Roll
      */
-    dice_roll: string | null;
+    dice_roll: Array<number> | null;
 };
 
 /**

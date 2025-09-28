@@ -1,27 +1,27 @@
 <script lang="ts">
-	import type { PlayerMove } from '$lib/api/aukus/types';
-	import SearchIcon from '$lib/components/icons/SearchIcon.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
-	import { transliterateRussianToEnglishVariants } from '$lib/utils';
+	import SearchIcon from '$lib/components/icons/SearchIcon.svelte'
+	import Input from '$lib/components/ui/input/input.svelte'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import { transliterateRussianToEnglishVariants } from '$lib/utils'
 
 	type Props = {
-		moves: PlayerMove[];
-		filteredMoves: PlayerMove[];
-	};
+		moves: PlayerMoveItem[]
+		filteredMoves: PlayerMoveItem[]
+	}
 
-	let { moves, filteredMoves = $bindable([]) }: Props = $props();
+	let { moves, filteredMoves = $bindable([]) }: Props = $props()
 
-	let value = $state('');
+	let value = $state('')
 
 	const translitFilter = $derived.by(() =>
 		transliterateRussianToEnglishVariants(value.toLowerCase())
-	);
+	)
 
 	$effect(() => {
 		filteredMoves = moves.filter((move) => {
-			return translitFilter.some((ftext) => move.item_title.toLowerCase().includes(ftext));
-		});
-	});
+			return translitFilter.some((ftext) => move.item_title.toLowerCase().includes(ftext))
+		})
+	})
 </script>
 
 <div class="relative w-full">

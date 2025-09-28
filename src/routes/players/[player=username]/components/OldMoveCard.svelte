@@ -1,31 +1,29 @@
 <script lang="ts">
-	import type { PreviousGame } from '$lib/api/aukus/types';
-	import { Badge, type BadgeVariant } from '$lib/components/ui/badge';
+	import { Badge, type BadgeVariant } from '$lib/components/ui/badge'
+	import type { GameHistoryItem } from '$lib/heyapi/eventlab/types.gen'
 
 	type Props = {
-		move: PreviousGame;
-	};
+		game: GameHistoryItem
+	}
 
-	const { move }: Props = $props();
+	const { game }: Props = $props()
 
-	const moveTypeStyles = $derived.by(getMoveTypeStyles);
+	const moveTypeStyles = $derived.by(getMoveTypeStyles)
 
 	function getMoveTypeStyles(): { text: string; variant: BadgeVariant } {
-		switch (move.status) {
+		switch (game.completion_status) {
 			case 'completed': {
-				return { text: 'Пройдено', variant: 'green' };
+				return { text: 'Пройдено', variant: 'green' }
 			}
 			case 'drop': {
-				return { text: 'Дроп', variant: 'red' };
+				return { text: 'Дроп', variant: 'red' }
 			}
 			case 'reroll': {
-				return { text: 'Реролл', variant: 'blue' };
-			}
-			case 'movie': {
-				return { text: 'Кино', variant: 'default' };
+				return { text: 'Реролл', variant: 'blue' }
 			}
 			default: {
-				return { text: 'Ошибка', variant: 'default' };
+				const error: never = game.completion_status
+				throw new Error(`Unknown move type: ${error}`)
 			}
 		}
 	}
@@ -42,9 +40,9 @@
 
 	<div class="mt-3 flex gap-3">
 		<div class="space-y-3">
-			<div class="text-2xl leading-[29px] font-bold">{move.title}</div>
+			<div class="text-2xl leading-[29px] font-bold">{game.game_title}</div>
 			<div class="font-medium text-muted-foreground">
-				{move.review}
+				{game.review}
 			</div>
 		</div>
 	</div>

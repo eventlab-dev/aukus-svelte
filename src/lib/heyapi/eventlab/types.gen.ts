@@ -61,9 +61,9 @@ export type DiceType = '1d4' | '2d4' | '1d6' | '2d6' | '3d6' | '2d8';
 export type GameCompletionStatus = 'completed' | 'reroll' | 'drop';
 
 /**
- * GameItem
+ * GameHistoryItem
  */
-export type GameItem = {
+export type GameHistoryItem = {
     /**
      * Id
      */
@@ -122,7 +122,7 @@ export type GamesHistoryResponse = {
     /**
      * Games
      */
-    games: Array<GameItem>;
+    games: Array<GameHistoryItem>;
     /**
      * Count
      */
