@@ -10,7 +10,8 @@
 
 	const { player }: Props = $props()
 
-	const { players } = getAppManagerContext()
+	const { players, eventDataStore } = getAppManagerContext()
+	const { skinsById } = eventDataStore
 
 	const cellPosition = getCellPosition(player.map_position)
 
@@ -43,12 +44,31 @@
 	const finalTop = $derived(cellPosition.y + cellOffset.y)
 	const finalLeft = $derived(cellPosition.x + cellOffset.x)
 
-	const skins = $derived(player.equipped_skins)
+	const skins = $derived.by(() => {
+		return player.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
+	})
 </script>
 
 <div class="absolute" style="top: {finalTop}px; left: {finalLeft}px">
 	<img src={PlayerBaseModelUrl} alt="player-model" class="h-20" />
 	<div class="flex w-full justify-center">
-		<p class="relative top-[-20px] left-0">{player.username}</p>
+		<p class="relative top-[-18px] left-0">{player.username}</p>
 	</div>
+	{#each skins as skin (skin.id)}
+		{#if skin.slot === 'head'}
+			<img
+				src={skin.image_url}
+				alt="player-skin"
+				class="absolute top-0 left-1/2 h-[40px] -translate-x-1/2"
+			/>
+		{:else if skin.slot === 'body'}
+			<img
+				src={skin.image_url}
+				alt="player-skin"
+				class="absolute top-[25px] left-1/2 h-[38px] -translate-x-1/2"
+			/>
+		{:else if skin.slot === 'side'}
+			<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[40px]" />
+		{/if}
+	{/each}
 </div>
