@@ -9,10 +9,10 @@
 	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte'
 	import CalendarIcon from '../icons/CalendarIcon.svelte'
 	import GalleryAddIcon from '../icons/GalleryAddIcon.svelte'
-	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte'
 	import MoonIcon from '../icons/MoonIcon.svelte'
 	import ProfileIcon from '../icons/ProfileIcon.svelte'
 	import TwitchIcon from '../icons/TwitchIcon.svelte'
+	import SkinEditorDialog from '../skinEditor/SkinEditorDialog.svelte'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import { Button } from '../ui/button'
 	import GamesHistoryDialog from './options/GamesHistoryDialog.svelte'
@@ -72,7 +72,7 @@
 
 			<CollapsibleGroup>
 				{#if $isPlayer}
-					<div><GrammerlyIcon /> Кастомизация</div>
+					<SkinEditorDialog />
 				{/if}
 				<AchievementsDialog />
 				<GamesHistoryDialog />
