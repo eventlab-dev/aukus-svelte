@@ -81,7 +81,7 @@
 <div in:fade>
 	<div class="mx-auto mt-[30px] flex max-w-[800px] flex-col space-y-3">
 		<div class="flex gap-3">
-			<MovesSearch {moves} bind:filteredMoves />
+			<MovesSearch moves={$moves} bind:filteredMoves />
 			<TotalViewerCounter />
 		</div>
 		<div class="space-y-[30px]">

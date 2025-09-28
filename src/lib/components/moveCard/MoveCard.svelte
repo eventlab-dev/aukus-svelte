@@ -34,7 +34,15 @@
 	const canEdit = $derived(isPlayersMove || isValidModerator)
 
 	const categoryDuration = $derived(formatMs(move.item_duration * 1000))
-	const playedBy = $derived.by(getPlayedBy)
+	const playedBy = derived(moves, ($moves) => {
+		return $moves.filter((m) => {
+			const isMyMove = m.player_slug === move.player_slug
+			const isSameItem = m.item_title === move.item_title
+
+			return !isMyMove && isSameItem
+		})
+	})
+
 	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type))
 	const parsedReview = $derived.by(() => renderToHTML(move.item_review || ''))
 
@@ -43,15 +51,6 @@
 	let isExtended = $state(false)
 	let isEditMode = $state(false)
 	let isVodsShown = $state(false)
-
-	function getPlayedBy() {
-		return moves.filter((m) => {
-			const isMyMove = m.player_slug === move.player_slug
-			const isSameItem = m.item_title === move.item_title
-
-			return !isMyMove && isSameItem
-		})
-	}
 
 	function setEditMode(pressed: boolean) {
 		if (!pressed) {
@@ -210,7 +209,7 @@
 				Записи
 			</Toggle>
 			<div>
-				{#each playedBy as move (move.id)}
+				{#each $playedBy as move (move.id)}
 					<PopoverMoveCard {move} />
 				{/each}
 			</div>

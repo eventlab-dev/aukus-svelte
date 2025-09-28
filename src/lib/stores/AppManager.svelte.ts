@@ -2,7 +2,7 @@ import { SOUNDS } from '$lib/constants'
 import { derived, type Readable } from 'svelte/store'
 import { createEventDataStore } from './EventDataStore.svelte'
 import { createGamesHistoryStore } from './GamesHistoryStore.svelte'
-import PlayersMovesStore from './PlayersMovesStore.svelte'
+import { createPlayerMovesStore } from './PlayersMovesStore.svelte'
 import SoundManager from './SoundManager.svelte'
 import { createUsersStore } from './UsersStore.svelte'
 import type { PlayerData } from '$lib/types'
@@ -11,8 +11,8 @@ export function createAppManager() {
 	const usersStore = createUsersStore()
 	const gamesHistoryStore = createGamesHistoryStore()
 	const eventDataStore = createEventDataStore()
+	const playersMovesStore = createPlayerMovesStore()
 
-	const playersMovesStore = new PlayersMovesStore()
 	const soundManager = new SoundManager()
 	soundManager.preloadSounds(SOUNDS)
 
@@ -26,8 +26,8 @@ export function createAppManager() {
 			const user = $users.find((u) => u.slug === slug)
 			if (!user) continue
 			list.push({
-				...player,
 				...user,
+				...player,
 				total_score: 0
 			})
 		}

@@ -16,11 +16,8 @@
 	const playerSlug = page.params.player
 
 	const player = derived(playersBySlug, ($playersBySlug) => $playersBySlug[playerSlug!])
-	const playerMoves = derived(player, ($player) =>
-		moves.filter((move) => move.player_slug === $player.slug)
-	)
 	const gamesCompleted = derived(
-		playerMoves,
+		moves,
 		($playerMoves) => $playerMoves.filter((move) => move.type === 'completed').length || 0
 	)
 	const socials = derived(player, ($player) => ({
@@ -77,7 +74,7 @@
 			/>
 		</div>
 
-		<MovesSearch {moves} bind:filteredMoves />
+		<MovesSearch moves={$moves} bind:filteredMoves />
 
 		<div class="mt-5 space-y-[200px]">
 			<div class="space-y-5">

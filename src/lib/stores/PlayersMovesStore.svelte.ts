@@ -1,14 +1,25 @@
-import { playerMovesData } from "$lib/api/aukus/mockData";
-import type { PlayerMove } from "$lib/api/aukus/types";
+import { AukusBaseUrl } from '$lib/client'
+import { getPlayerMovesApiPlayersPlayerSlugMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+import { createQuery } from '@tanstack/svelte-query'
+import { derived, writable } from 'svelte/store'
 
-class PlayersMovesStore {
-	private _moves: PlayerMove[] = $state(playerMovesData);
+export function createPlayerMovesStore() {
+	const playerSlug = writable('')
 
-	public setPlayerMoves(playerMoves: PlayerMove[]) {
-		this._moves = playerMoves;
+	const movesQuery = createQuery(
+		derived(playerSlug, ($playerSlug) => {
+			return getPlayerMovesApiPlayersPlayerSlugMovesGetOptions({
+				baseUrl: AukusBaseUrl,
+				path: { player_slug: $playerSlug }
+			})
+		})
+	)
+
+	const playerMoves = derived(movesQuery, ($movesQuery) => $movesQuery.data?.moves ?? [])
+
+	return {
+		playerSlug,
+		movesQuery,
+		moves: playerMoves
 	}
-
-	get moves() { return this._moves }
 }
-
-export default PlayersMovesStore;

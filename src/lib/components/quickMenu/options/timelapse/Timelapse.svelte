@@ -1,55 +1,50 @@
 <script lang="ts">
-	import CalendarIcon from '$lib/components/icons/CalendarIcon.svelte';
-	import { Button } from '$lib/components/ui/button';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import { formatDateTime } from '$lib/utils';
-	import X from '@lucide/svelte/icons/x';
-	import { fade, fly } from 'svelte/transition';
-	import Move from './Move.svelte';
+	import CalendarIcon from '$lib/components/icons/CalendarIcon.svelte'
+	import { Button } from '$lib/components/ui/button'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { formatDateTime } from '$lib/utils'
+	import X from '@lucide/svelte/icons/x'
+	import { fade, fly } from 'svelte/transition'
+	import Move from './Move.svelte'
 
 	type Props = {
-		close?: () => void;
-	};
-
-	let { close }: Props = $props();
-
-	const currentDay = new Date().getDate();
-	const daysInMonth = Array(31);
-
-	const { playersMovesStore } = getAppManagerContext();
-	const { moves } = playersMovesStore;
-
-	let selectedDay = $state(currentDay);
-	let currentPage = $state(0);
-	let flyDirection = $state(1);
-
-	const filteredMoves = $derived.by(getCurrentDayMoves);
-	const currentMove = $derived(filteredMoves[currentPage]);
-	const currentMoveTime = $derived(
-		formatDateTime(currentMove.created_at, { onlyHourMinute: true })
-	);
-
-	function replayAllMoves() {
-		console.log('replay all moves');
+		close?: () => void
 	}
 
-	function getCurrentDayMoves() {
-		const selectedDate = new Date(new Date().toDateString());
-		selectedDate.setDate(selectedDay);
+	let { close }: Props = $props()
 
-		return moves.filter(({ created_at }) => {
-			return new Date(created_at).toDateString() === selectedDate.toDateString();
-		});
+	const currentDay = new Date().getDate()
+	const daysInMonth = Array(31)
+
+	const { playersMovesStore } = getAppManagerContext()
+	const { moves } = playersMovesStore
+
+	let selectedDay = $state(currentDay)
+	let currentPage = $state(0)
+	let flyDirection = $state(1)
+
+	const filteredMoves = $derived.by(() => {
+		const today = new Date(new Date().toDateString())
+		return $moves.filter(({ created_at }) => {
+			return new Date(created_at).toDateString() === today.toDateString()
+		})
+	})
+
+	const currentMove = $derived(filteredMoves[currentPage])
+	const currentMoveTime = $derived(formatDateTime(currentMove.created_at, { onlyHourMinute: true }))
+
+	function replayAllMoves() {
+		console.log('replay all moves')
 	}
 
 	function onDayClick(day: number) {
-		selectedDay = day;
-		currentPage = 0;
+		selectedDay = day
+		currentPage = 0
 	}
 
 	function changePage(delta: number) {
-		flyDirection = delta;
-		currentPage = (currentPage + delta + filteredMoves.length) % filteredMoves.length;
+		flyDirection = delta
+		currentPage = (currentPage + delta + filteredMoves.length) % filteredMoves.length
 	}
 </script>
 

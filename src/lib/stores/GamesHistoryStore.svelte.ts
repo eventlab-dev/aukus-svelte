@@ -8,12 +8,10 @@ export function createGamesHistoryStore() {
 
 	const historyQuery = createQuery(
 		derived(search, ($search) => {
-			return {
-				...getGamesApiGamesHistoryGetOptions({
-					baseUrl: EventlabBaseUrl,
-					query: { title_search: $search }
-				})
-			}
+			return getGamesApiGamesHistoryGetOptions({
+				baseUrl: EventlabBaseUrl,
+				query: { title_search: $search }
+			})
 		})
 	)
 
