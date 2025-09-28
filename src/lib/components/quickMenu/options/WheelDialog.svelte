@@ -28,8 +28,8 @@
 	const currentEntries = $derived(isMomentType ? moment : difficulty)
 
 	$effect(() => {
-		currentType
-
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const _ = currentType
 		soundManager.stop()
 	})
 
@@ -43,7 +43,7 @@
 		}, delay)
 	}
 
-	function onSpinEnd(entry: WheelEntry) {
+	function onSpinEnd() {
 		soundManager.stop()
 	}
 
