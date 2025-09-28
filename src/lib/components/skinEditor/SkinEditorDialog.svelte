@@ -20,6 +20,13 @@
 		return unlocked.map((a) => $skinsById.get(a.reward_skin_id)).filter((s) => s !== undefined)
 	})
 
+	const equippedSkins = $derived.by(() => {
+		if (!$myPlayer) {
+			return []
+		}
+		return $myPlayer.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
+	})
+
 	let selected = $state<SkinSlot | null>(null)
 
 	function selectPart(part: SkinSlot) {
@@ -38,7 +45,30 @@
 			<DialogTitle>Кастомизация персонажа</DialogTitle>
 		</DialogHeader>
 		<div class="flex w-full justify-center">
-			<img src={PlayerBaseModelUrl} alt="Base Model" class="h-[150px]" />
+			<div class="relative">
+				<img src={PlayerBaseModelUrl} alt="Base Model" class="h-[150px]" />
+				{#each equippedSkins as skin (skin.id)}
+					{#if skin.slot === 'head'}
+						<img
+							src={skin.image_url}
+							alt="Head Skin"
+							class="absolute top-[6px] left-1/2 h-[50px] -translate-x-1/2"
+						/>
+					{:else if skin.slot === 'body'}
+						<img
+							src={skin.image_url}
+							alt="Body Skin"
+							class="absolute top-[43px] left-1/2 h-[70px] -translate-x-1/2"
+						/>
+					{:else if skin.slot === 'side'}
+						<img
+							src={skin.image_url}
+							alt="Side Skin"
+							class="absolute top-0 left-1/2 h-[150px] -translate-x-1/2"
+						/>
+					{/if}
+				{/each}
+			</div>
 		</div>
 		<div class="flex w-full justify-center gap-5">
 			<Toggle
