@@ -5,7 +5,7 @@ export const FALLBACK_GAME_POSTER =
 
 export const routes = [
 	{
-		title: 'Главная',
+		title: 'Карта',
 		url: '/'
 	},
 	{
