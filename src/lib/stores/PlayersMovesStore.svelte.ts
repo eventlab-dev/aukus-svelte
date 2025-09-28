@@ -8,10 +8,13 @@ export function createPlayerMovesStore() {
 
 	const movesQuery = createQuery(
 		derived(playerSlug, ($playerSlug) => {
-			return getPlayerMovesApiPlayersPlayerSlugMovesGetOptions({
-				baseUrl: AukusBaseUrl,
-				path: { player_slug: $playerSlug }
-			})
+			return {
+				...getPlayerMovesApiPlayersPlayerSlugMovesGetOptions({
+					baseUrl: AukusBaseUrl,
+					path: { player_slug: $playerSlug }
+				}),
+				enabled: !!$playerSlug
+			}
 		})
 	)
 

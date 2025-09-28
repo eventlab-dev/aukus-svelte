@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
-	import { page } from '$app/state'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import storable from '$lib/stores/LocalStore.svelte'
+	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
 	import Collapsible from '../collapsible/Collapsible.svelte'
 	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte'
 	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte'
 	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte'
 	import CalendarIcon from '../icons/CalendarIcon.svelte'
-	import CrownIcon from '../icons/CrownIcon.svelte'
 	import GalleryAddIcon from '../icons/GalleryAddIcon.svelte'
 	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte'
 	import MoonIcon from '../icons/MoonIcon.svelte'
@@ -75,13 +74,7 @@
 				{#if $isPlayer}
 					<div><GrammerlyIcon /> Кастомизация</div>
 				{/if}
-				<Button
-					class="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground data-[active=true]:hover:bg-primary"
-					data-active={page.route.id === '/achievements'}
-					onclick={() => goto('/achievements')}
-				>
-					<CrownIcon /> Достижения
-				</Button>
+				<AchievementsDialog />
 				<GamesHistoryDialog />
 			</CollapsibleGroup>
 

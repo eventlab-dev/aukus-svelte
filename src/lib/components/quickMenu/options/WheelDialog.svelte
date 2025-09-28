@@ -1,57 +1,55 @@
 <script lang="ts">
-	import LifebuoyIcon from '$lib/components/icons/LifebuoyIcon.svelte';
-	import { Button } from '$lib/components/ui/button';
-	import { Dialog, DialogClose, DialogContent, DialogTrigger } from '$lib/components/ui/dialog';
-	import Wheel, { type WheelEntry } from '$lib/components/wheel/Wheel.svelte';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import X from '@lucide/svelte/icons/x';
-	import Volume1 from '@lucide/svelte/icons/volume-1';
-	import VolumeX from '@lucide/svelte/icons/volume-x';
-	import Volume from '$lib/components/Volume.svelte';
+	import LifebuoyIcon from '$lib/components/icons/LifebuoyIcon.svelte'
+	import { Button } from '$lib/components/ui/button'
+	import { Dialog, DialogClose, DialogContent, DialogTrigger } from '$lib/components/ui/dialog'
+	import Wheel, { type WheelEntry } from '$lib/components/wheel/Wheel.svelte'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import X from '@lucide/svelte/icons/x'
+	import Volume from '$lib/components/Volume.svelte'
 
-	type EntriesType = 'moment' | 'difficulty';
+	type EntriesType = 'moment' | 'difficulty'
 
 	const difficulty: WheelEntry[] = [
 		{ id: 1, label: 'Легкая', color: '#34C759', weight: 0.5 },
 		{ id: 3, label: 'Нормальная', color: '#5856D6', weight: 8 },
 		{ id: 4, label: 'Сложная', color: '#E58600', weight: 1 },
 		{ id: 2, label: 'Очень сложная', color: '#FF3B30', weight: 0.5 }
-	];
+	]
 	const moment: WheelEntry[] = [
 		{ id: 1, label: 'Дроп', color: '#FF3B30', weight: 0.5 },
 		{ id: 2, label: 'Не дроп', color: '#34C759', weight: 0.5 }
-	];
+	]
 
-	const { soundManager } = getAppManagerContext();
+	const { soundManager } = getAppManagerContext()
 
-	let currentType: EntriesType = $state('difficulty');
+	let currentType: EntriesType = $state('difficulty')
 
-	const isMomentType = $derived((currentType as EntriesType) === 'moment');
-	const currentEntries = $derived(isMomentType ? moment : difficulty);
+	const isMomentType = $derived((currentType as EntriesType) === 'moment')
+	const currentEntries = $derived(isMomentType ? moment : difficulty)
 
 	$effect(() => {
-		currentType;
+		currentType
 
-		soundManager.stop();
-	});
+		soundManager.stop()
+	})
 
 	function changeEntries(type: EntriesType) {
-		currentType = type;
+		currentType = type
 	}
 
 	function onSpinStart(delay: number) {
 		setTimeout(() => {
-			soundManager.playRandom({ fadeIn: 1, loop: true });
-		}, delay);
+			soundManager.playRandom({ fadeIn: 1, loop: true })
+		}, delay)
 	}
 
 	function onSpinEnd(entry: WheelEntry) {
-		soundManager.stop();
+		soundManager.stop()
 	}
 
 	function onOpenChange(open: boolean) {
 		if (!open) {
-			soundManager.stop();
+			soundManager.stop()
 		}
 	}
 </script>

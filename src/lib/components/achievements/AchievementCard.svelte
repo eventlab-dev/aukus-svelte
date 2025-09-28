@@ -28,7 +28,6 @@
 	transition:scale={{ duration: 200, start: 0.9, opacity: 0 }}
 >
 	<div class="flex">
-		<h3 class="w-full text-xl leading-6 font-semibold">{name}</h3>
 		<Tooltip>
 			<TooltipTrigger>
 				<span class="text-xs font-medium text-muted-foreground">
@@ -42,7 +41,7 @@
 			</TooltipContent>
 		</Tooltip>
 	</div>
-	<ImageLoader src={$skin!.image_url} alt={$skin!.slot} class="rounded-sm" />
+	<ImageLoader src={$skin!.image_url} alt={$skin!.slot} class="h-[100px] w-auto rounded-sm" />
 	<p class="text-sm leading-4 font-semibold text-muted-foreground">
 		{achievement.description}
 	</p>

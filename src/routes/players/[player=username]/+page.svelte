@@ -51,34 +51,35 @@
 	{/if}
 </svelte:head>
 
-<div class="mt-20">
-	<div class="mx-auto flex w-fit flex-col items-center" in:fade>
-		<PlayerAvatar
-			src={$player.avatar_link ?? ''}
-			name={$player.username}
-			isOnline={Boolean($player.is_online)}
-			size="lg"
-			class="mb-2.5"
-		/>
-		<div class="mb-[30px] flex flex-col items-center gap-5">
-			<div class="text-5xl leading-[58px] font-bold">
-				{$player.first_name} «{$player.username}»
-			</div>
-			<Socials {...$socials} />
-			<Summary
-				totalScore={$player.total_score}
-				gamesCompleted={$gamesCompleted}
-				gameName={$player.current_game || ''}
-				gameImage={$player.current_game_cover || ''}
-				gameDuration={$player.current_game_duration || 0}
+{#if $player}
+	<div class="mt-20">
+		<div class="mx-auto flex w-fit flex-col items-center" in:fade>
+			<PlayerAvatar
+				src={$player.avatar_link ?? ''}
+				name={$player.username}
+				isOnline={Boolean($player.is_online)}
+				size="lg"
+				class="mb-2.5"
 			/>
-		</div>
+			<div class="mb-[30px] flex flex-col items-center gap-5">
+				<div class="text-5xl leading-[58px] font-bold">
+					{$player.first_name} «{$player.username}»
+				</div>
+				<Socials {...$socials} />
+				<Summary
+					totalScore={$player.total_score}
+					gamesCompleted={$gamesCompleted}
+					gameName={$player.current_game || ''}
+					gameImage={$player.current_game_cover || ''}
+					gameDuration={$player.current_game_duration || 0}
+				/>
+			</div>
 
-		<MovesSearch moves={$moves} bind:filteredMoves />
+			<MovesSearch moves={$moves} bind:filteredMoves />
 
-		<div class="mt-5 space-y-[200px]">
-			<div class="space-y-5">
-				<!-- {#if $player.current_game}
+			<div class="mt-5 space-y-[200px]">
+				<div class="space-y-5">
+					<!-- {#if $player.current_game}
 					<MoveCard
 						move={{
 							item_title: player.current_game,
@@ -89,12 +90,12 @@
 						isCurrentMove
 					/>
 				{/if} -->
-				{#each filteredMoves as move (move.id)}
-					<MoveCard {move} />
-				{/each}
-			</div>
+					{#each filteredMoves as move (move.id)}
+						<MoveCard {move} />
+					{/each}
+				</div>
 
-			<!-- {#if aukus2FilteredGames?.length > 0}
+				<!-- {#if aukus2FilteredGames?.length > 0}
 				<div class="flex flex-col items-center gap-5">
 					<Button href="" variant="link" class="mb-[50px] text-2xl font-semibold text-foreground">
 						Аукус Сезон 2 (2023)
@@ -115,6 +116,7 @@
 					{/each}
 				</div>
 			{/if} -->
+			</div>
 		</div>
 	</div>
-</div>
+{/if}
