@@ -11,15 +11,6 @@
 	const { eventDataStore, myPlayer } = getAppManagerContext()
 	const { achievements, skinsById } = eventDataStore
 
-	const availableSkins = $derived.by(() => {
-		if (!$myPlayer) {
-			return []
-		}
-		const achievementsIds = new Set($myPlayer.unlocked_achievements.map((a) => a.id))
-		const unlocked = $achievements.filter((a) => achievementsIds.has(a.id))
-		return unlocked.map((a) => $skinsById.get(a.reward_skin_id)).filter((s) => s !== undefined)
-	})
-
 	const equippedSkins = $derived.by(() => {
 		if (!$myPlayer) {
 			return []
@@ -27,15 +18,30 @@
 		return $myPlayer.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
 	})
 
-	let selected = $state<SkinSlot | null>(null)
+	let filter = $state<SkinSlot | null>(null)
 
 	function selectPart(part: SkinSlot) {
-		if (selected === part) {
-			selected = null
+		if (filter === part) {
+			filter = null
 		} else {
-			selected = part
+			filter = part
 		}
 	}
+
+	const availableSkins = $derived.by(() => {
+		if (!$myPlayer) {
+			return []
+		}
+		const achievementsIds = new Set($myPlayer.unlocked_achievements.map((a) => a.id))
+		const unlocked = $achievements.filter((a) => achievementsIds.has(a.id))
+		const available = unlocked
+			.map((a) => $skinsById.get(a.reward_skin_id))
+			.filter((s) => s !== undefined)
+		if (filter) {
+			return available.filter((s) => s.slot === filter)
+		}
+		return available
+	})
 </script>
 
 <Dialog>
@@ -73,11 +79,11 @@
 		<div class="flex w-full justify-center gap-5">
 			<Toggle
 				class="cursor-pointer"
-				pressed={selected === 'head'}
+				pressed={filter === 'head'}
 				onPressedChange={() => selectPart('head')}
 			>
 				Голова
-				{#if selected === 'head'}
+				{#if filter === 'head'}
 					<span class="rounded bg-white/20 p-0.5">
 						<X class="stroke-4" />
 					</span>
@@ -85,11 +91,11 @@
 			</Toggle>
 			<Toggle
 				class="cursor-pointer"
-				pressed={selected === 'body'}
+				pressed={filter === 'body'}
 				onPressedChange={() => selectPart('body')}
 			>
 				Тело
-				{#if selected === 'body'}
+				{#if filter === 'body'}
 					<span class="rounded bg-white/20 p-0.5">
 						<X class="stroke-4" />
 					</span>
@@ -97,11 +103,11 @@
 			</Toggle>
 			<Toggle
 				class="cursor-pointer"
-				pressed={selected === 'side'}
+				pressed={filter === 'side'}
 				onPressedChange={() => selectPart('side')}
 			>
 				Аксессуар
-				{#if selected === 'side'}
+				{#if filter === 'side'}
 					<span class="rounded bg-white/20 p-0.5">
 						<X class="stroke-4" />
 					</span>
