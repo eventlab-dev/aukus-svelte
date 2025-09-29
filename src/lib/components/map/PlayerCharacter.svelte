@@ -50,7 +50,7 @@
 </script>
 
 <div class="absolute" style="top: {finalTop}px; left: {finalLeft}px">
-	<img src={PlayerBaseModelUrl} alt="player-model" class="h-20" />
+	<img src={PlayerBaseModelUrl} alt="player-model" class="h-20 w-auto" />
 	<div class="flex w-full justify-center">
 		<p class="relative top-[-18px] left-0">{player.username}</p>
 	</div>
@@ -59,13 +59,13 @@
 			<img
 				src={skin.image_url}
 				alt="player-skin"
-				class="absolute top-0 left-1/2 h-[40px] -translate-x-1/2"
+				class="absolute top-[-6px] left-1/2 h-[45px] -translate-x-1/2"
 			/>
 		{:else if skin.slot === 'body'}
 			<img
 				src={skin.image_url}
 				alt="player-skin"
-				class="absolute top-[25px] left-1/2 h-[38px] -translate-x-1/2"
+				class="absolute top-[6px] left-1/2 w-[80px] max-w-none -translate-x-1/2"
 			/>
 		{:else if skin.slot === 'side'}
 			<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[40px]" />
