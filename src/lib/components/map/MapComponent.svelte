@@ -21,12 +21,8 @@
 
 <div class="flex justify-center">
 	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
-		<div id={MapContainerId} class="relative h-[2146px] w-[1715px]">
-			<img
-				class="h-[2146px] w-[1715px] bg-center bg-no-repeat"
-				src="https://storage.yandexcloud.net/aukus-2024-prod/aukus_map_compressed.png"
-				alt="map"
-			/>
+		<div id={MapContainerId} class="relative h-[2000px] w-[1700px]">
+			<img class="h-[2000] w-[1700px] bg-center bg-no-repeat" src="map_demo.png" alt="map" />
 			<MapArrowMarkers />
 			{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
 				<MapArrow {from} {to} />

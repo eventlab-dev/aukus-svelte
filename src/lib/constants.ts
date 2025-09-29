@@ -104,3 +104,5 @@ export const MapDungeonMarker = `${CDN_URL_BASE}/map/marker_dungeon.png`
 export const MapForestMarker = `${CDN_URL_BASE}/map/marker_forest.png`
 
 export const PlayerBaseModelUrl = `${CDN_URL_BASE}/map/player_model.webp`
+
+export const MAP_IMAGE = `${CDN_URL_BASE}/map/map_demo.png`
