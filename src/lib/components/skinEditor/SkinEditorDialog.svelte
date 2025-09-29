@@ -99,26 +99,30 @@
 			<DialogTitle>Кастомизация персонажа</DialogTitle>
 		</DialogHeader>
 		<div class="flex w-full justify-center">
-			<div class="relative">
-				<img src={PlayerBaseModelUrl} alt="Base Model" class="h-[150px]" />
+			<div class="relative h-[200px] w-[200px]">
+				<img
+					src={PlayerBaseModelUrl}
+					alt="Base Model"
+					class="absolute left-1/2 h-[150px] w-auto -translate-x-1/2"
+				/>
 				{#each selectedSkinItems as skin (skin.id)}
 					{#if skin.slot === 'head'}
 						<img
 							src={skin.image_url}
 							alt="Head Skin"
-							class="absolute top-[2px] left-1/2 h-[60px] -translate-x-1/2"
+							class="absolute top-[-10px] left-1/2 h-[80px] w-auto -translate-x-1/2"
 						/>
 					{:else if skin.slot === 'body'}
 						<img
 							src={skin.image_url}
 							alt="Body Skin"
-							class="absolute top-[43px] left-1/2 h-[70px] -translate-x-1/2"
+							class="absolute top-[15px] left-1/2 h-auto w-[140px] -translate-x-1/2"
 						/>
 					{:else if skin.slot === 'side'}
 						<img
 							src={skin.image_url}
 							alt="Side Skin"
-							class="absolute top-0 left-1/2 h-[150px] -translate-x-1/2"
+							class="absolute top-0 left-1/2 h-[150px] w-auto -translate-x-1/2"
 						/>
 					{/if}
 				{/each}
