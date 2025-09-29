@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { MAP_IMAGE } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
 	import CellNumber from './CellNumber.svelte'
@@ -22,7 +23,7 @@
 <div class="flex justify-center">
 	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
 		<div id={MapContainerId} class="relative h-[2000px] w-[1700px]">
-			<img class="h-[2000] w-[1700px] bg-center bg-no-repeat" src="map_demo.png" alt="map" />
+			<img class="h-[2000] w-[1700px] bg-center bg-no-repeat" src={MAP_IMAGE} alt="map" />
 			<MapArrowMarkers />
 			{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
 				<MapArrow {from} {to} />
