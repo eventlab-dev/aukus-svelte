@@ -46,9 +46,18 @@ export function createEventDataStore() {
 		return map
 	})
 
+	const playersBySlug = derived(players, ($players) => {
+		const map = new SvelteMap<string, (typeof $players)[0]>()
+		$players.forEach((player) => {
+			map.set(player.slug, player)
+		})
+		return map
+	})
+
 	return {
 		eventDataQuery,
 		players,
+		playersBySlug,
 		skins,
 		skinsById,
 		achievements,
@@ -58,3 +67,5 @@ export function createEventDataStore() {
 		diceOptions
 	}
 }
+
+export type EventDataStore = ReturnType<typeof createEventDataStore>

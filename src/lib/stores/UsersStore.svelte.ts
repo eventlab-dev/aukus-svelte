@@ -129,3 +129,5 @@ export function createUsersStore() {
 		setSkins
 	}
 }
+
+export type UsersStore = ReturnType<typeof createUsersStore>

@@ -6,12 +6,15 @@ import { createPlayerMovesStore } from './PlayersMovesStore.svelte'
 import SoundManager from './SoundManager.svelte'
 import { createUsersStore } from './UsersStore.svelte'
 import type { PlayerData } from '$lib/types'
+import { createMovementStore } from './MovementStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
 	const gamesHistoryStore = createGamesHistoryStore()
 	const eventDataStore = createEventDataStore()
 	const playersMovesStore = createPlayerMovesStore()
+
+	const movementStore = createMovementStore({ eventDataStore })
 
 	const soundManager = new SoundManager()
 	soundManager.preloadSounds(SOUNDS)
@@ -57,7 +60,8 @@ export function createAppManager() {
 		soundManager,
 		players,
 		playersBySlug,
-		myPlayer
+		myPlayer,
+		movementStore
 	}
 }
 

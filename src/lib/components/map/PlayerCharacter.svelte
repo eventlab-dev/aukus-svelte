@@ -3,6 +3,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { getCellPosition } from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
+	import { onMount } from 'svelte'
 
 	type Props = {
 		player: PlayerData
@@ -10,7 +11,7 @@
 
 	const { player }: Props = $props()
 
-	const { players, eventDataStore } = getAppManagerContext()
+	const { players, eventDataStore, movementStore } = getAppManagerContext()
 	const { skinsById } = eventDataStore
 
 	const cellPosition = getCellPosition(player.map_position)
@@ -47,9 +48,16 @@
 	const skins = $derived.by(() => {
 		return player.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
 	})
+
+	let element: HTMLDivElement
+
+	onMount(() => {
+		movementStore.registerPlayer(player.slug, element)
+		movementStore.movePlayer(player.slug, 25)
+	})
 </script>
 
-<div class="absolute" style="top: {finalTop}px; left: {finalLeft}px">
+<div bind:this={element} class="absolute" style="top: {finalTop}px; left: {finalLeft}px">
 	<img src={PlayerBaseModelUrl} alt="player-model" class="h-20 w-auto" />
 	<div class="flex w-full justify-center">
 		<p class="relative top-[-18px] left-0">{player.username}</p>
