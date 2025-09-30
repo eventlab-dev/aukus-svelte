@@ -58,7 +58,6 @@
 
 	onMount(() => {
 		movementStore.registerPlayer(player.slug, element)
-		movementStore.movePlayer({ playerSlug: player.slug, steps: 5 })
 	})
 </script>
 
@@ -81,14 +80,14 @@
 			<img
 				src={skin.image_url}
 				alt="player-skin"
-				class="pointer-events-none absolute top-[-6px] left-1/2 h-[45px] -translate-x-1/2
+				class="pointer-events-none absolute top-[-2px] left-1/2 h-[45px] -translate-x-1/2
 "
 			/>
 		{:else if skin.slot === 'body'}
 			<img
 				src={skin.image_url}
 				alt="player-skin"
-				class="pointer-events-none absolute top-[6px] left-1/2 w-[80px] max-w-none -translate-x-1/2
+				class="pointer-events-none absolute top-[12px] left-1/2 w-[80px] max-w-none -translate-x-1/2
 "
 			/>
 		{:else if skin.slot === 'side'}
