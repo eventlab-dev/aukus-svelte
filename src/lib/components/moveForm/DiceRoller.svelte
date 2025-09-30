@@ -1,41 +1,55 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { derived, get } from 'svelte/store'
 	import { Button } from '../ui/button'
 	import { ToggleGroupItem } from '../ui/toggle-group'
 	import ToggleGroup from '../ui/toggle-group/toggle-group.svelte'
 	import type { DiceOption } from '$lib/heyapi/aukus/types.gen'
 
-	const { usersStore, eventDataStore } = getAppManagerContext()
+	const { usersStore, eventDataStore, movementStore, myPlayer } = getAppManagerContext()
 	const { finishMove, rollDice } = usersStore
-	const { diceOptions } = eventDataStore
+	const { diceOptions, eventDataQuery, myLastMove } = eventDataStore
 
-	const defaultOption = derived(diceOptions, ($diceOptions) => {
-		return $diceOptions[$diceOptions.length - 1] ?? null
+	const defaultOption = $derived($diceOptions[$diceOptions.length - 1] ?? null)
+
+	let currentOption = $state<DiceOption | null>(null)
+
+	$effect(() => {
+		if (defaultOption) {
+			currentOption = defaultOption
+		}
 	})
 
-	let currentOption = $state<DiceOption | null>($defaultOption)
-
 	async function handleThrowDice() {
-		const rollResult = await get(rollDice).mutateAsync({
+		const rollResult = await $rollDice.mutateAsync({
 			body: {
 				dice: currentOption!,
 				used: true
 			}
 		})
-		await get(finishMove).mutateAsync({
+		await $finishMove.mutateAsync({
 			body: {
 				dice_roll_id: rollResult.id
 			}
 		})
+
+		let rollSum = rollResult.roll_values.reduce((a, b) => a + b, 0)
+		if ($myLastMove!.type === 'drop' || $myLastMove!.type === 'sheikh_moment') {
+			rollSum = -rollSum
+		}
+
+		movementStore.movePlayer({
+			playerSlug: $myPlayer!.slug,
+			steps: rollSum
+		})
+		$eventDataQuery.refetch()
 	}
 </script>
 
-{#if $diceOptions.length > 0 && defaultOption}
+{#if $diceOptions.length > 1 && defaultOption}
 	<div class="w-100 rounded-2xl bg-card p-5">
 		<ToggleGroup
 			type="single"
-			value={$defaultOption}
+			value={defaultOption}
 			onValueChange={(value) => (currentOption = value as DiceOption)}
 			variant="outline"
 			class="w-full"
@@ -51,5 +65,17 @@
 			<p>Шанс змейки: 5%</p>
 		</div>
 		<Button class="mt-5 w-full" onclick={handleThrowDice}>Бросить кубики</Button>
+	</div>
+{:else if $diceOptions.length === 1 && defaultOption}
+	<div class="w-100 rounded-2xl bg-card p-5">
+		<p class="mb-5">Шанс лестницы: 5%</p>
+		<p class="mb-5">Шанс змейки: 5%</p>
+		<Button
+			class="mt-5 w-full"
+			onclick={handleThrowDice}
+			loading={$rollDice.isPending || $finishMove.isPending}
+		>
+			Бросить кубики {defaultOption}
+		</Button>
 	</div>
 {/if}

@@ -13,7 +13,7 @@ export function createEventDataStore() {
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		}),
-		retry: false
+		refetchInterval: 2 * 60 * 1000
 	})
 
 	const eventData = derived(eventDataQuery, ($query) => {

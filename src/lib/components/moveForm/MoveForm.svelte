@@ -67,7 +67,7 @@
 				type: form.status!,
 				item_review: form.review,
 				item_rating: form.rating,
-				item_length: form.hltbTime ?? null,
+				item_length: form.hltbTime || null,
 				item_title: form.title,
 				// TODO: fill these fields
 				game_id: null,
