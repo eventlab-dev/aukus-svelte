@@ -1,5 +1,11 @@
 import { createTimeline } from 'animejs'
-import { getCellPosition, getMapCellById, type MapCell } from '$lib/mapUtils'
+import {
+	getCellPosition,
+	getMapCellById,
+	laddersByCell,
+	snakesByCell,
+	type MapCell
+} from '$lib/mapUtils'
 import { SvelteMap } from 'svelte/reactivity'
 import { get, writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
@@ -14,39 +20,75 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 		})
 	}
 
-	const movePlayer = (playerId: string, cellTo: number) => {
-		const element = get(playerElements).get(playerId)
+	const movePlayer = (params: { playerSlug: string; steps: number }) => {
+		const element = get(playerElements).get(params.playerSlug)
 		if (!element) return
 
-		const player = get(eventDataStore.playersBySlug).get(playerId)
+		const player = get(eventDataStore.playersBySlug).get(params.playerSlug)
 		if (!player) return
 
-		const currentCell = player.map_position
-		if (currentCell === cellTo) return
+		if (params.steps === 0) return
 
-		const direction = cellTo > currentCell ? 'forward' : 'backward'
+		const startCell = player.map_position
+		const endCell = startCell + params.steps
+		const direction = params.steps > 0 ? 1 : -1
 
 		const cellsPath: MapCell[] = []
-		if (direction === 'forward') {
-			for (let i = currentCell + 1; i <= cellTo; i++) {
-				cellsPath.push(getMapCellById(i))
-			}
-		} else {
-			for (let i = currentCell - 1; i >= cellTo; i--) {
-				cellsPath.push(getMapCellById(i))
-			}
+		for (let i = 1; i <= Math.abs(params.steps); i++) {
+			cellsPath.push(getMapCellById(startCell + i * direction))
 		}
+
+		const offsetInsideCellX = 25
+		const offsetInsideCellY = 15
 
 		const timeline = createTimeline()
 		cellsPath.forEach((cell) => {
 			const pos = getCellPosition(cell.id)
 			timeline.add(element, {
-				left: `${pos.x}px`,
-				top: `${pos.y}px`,
-				duration: 300,
-				easing: 'easeInOutQuad'
+				left: `${pos.x + offsetInsideCellX}px`,
+				top: `${pos.y + offsetInsideCellY}px`,
+				duration: 700,
+				easing: 'easeInOutQuad',
+				// add "jump" effect
+				keyframes: [
+					{ translateY: -30, scale: 0.85, duration: 350, easing: 'easeOutQuad' },
+					{ translateY: 0, scale: 1, duration: 350, easing: 'easeInQuad' }
+				]
 			})
 		})
+
+		const ladder = laddersByCell[endCell]
+		if (ladder) {
+			const pos = getCellPosition(ladder.cellTo)
+			timeline.add(element, {
+				left: `${pos.x + offsetInsideCellX}px`,
+				top: `${pos.y + offsetInsideCellY}px`,
+				duration: 1500,
+				easing: 'easeInOutQuad',
+				// add "climb" effect
+				keyframes: [
+					{ translateY: -30, scale: 0.85, duration: 750, easing: 'easeOutQuad' },
+					{ translateY: 0, scale: 1, duration: 750, easing: 'easeInQuad' }
+				]
+			})
+		}
+		const snake = snakesByCell[endCell]
+		if (snake) {
+			const pos = getCellPosition(snake.cellTo)
+			timeline.add(element, {
+				left: `${pos.x + offsetInsideCellX}px`,
+				top: `${pos.y + offsetInsideCellY}px`,
+				duration: 1500,
+				easing: 'easeInOutQuad',
+				keyframes: [
+					// add "fall" effect
+					{ translateY: 0, scale: 1.1, rotate: 90, duration: 900, easing: 'easeInBounce' },
+					{ translateY: 0, scale: 1.1, rotate: 90, duration: 5000, easing: 'easeInBounce' },
+					{ translateY: 0, scale: 1, rotate: 0, duration: 200, easing: 'easeOutBounce' }
+				]
+			})
+		}
+
 		return timeline.init()
 	}
 

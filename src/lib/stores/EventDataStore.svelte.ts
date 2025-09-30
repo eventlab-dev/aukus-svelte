@@ -50,6 +50,7 @@ export function createEventDataStore() {
 		const map = new SvelteMap<string, (typeof $players)[0]>()
 		$players.forEach((player) => {
 			map.set(player.slug, player)
+			player.map_position = 92
 		})
 		return map
 	})
