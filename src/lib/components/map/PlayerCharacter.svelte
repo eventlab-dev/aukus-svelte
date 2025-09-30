@@ -14,7 +14,7 @@
 	const { players, eventDataStore, movementStore } = getAppManagerContext()
 	const { skinsById } = eventDataStore
 
-	const cellPosition = getCellPosition(player.map_position)
+	const cellPosition = $derived(getCellPosition(player.map_position))
 
 	const otherPlayersOnCell = $derived(
 		$players
@@ -51,15 +51,29 @@
 
 	let element: HTMLDivElement
 
+	const onCharacterClick = () => {
+		console.log('Character clicked:', player.username)
+		// Here you can add logic to open a profile modal or display more info
+	}
+
 	onMount(() => {
 		movementStore.registerPlayer(player.slug, element)
-		movementStore.movePlayer(player.slug, 25)
+		movementStore.movePlayer({ playerSlug: player.slug, steps: 5 })
 	})
 </script>
 
 <div bind:this={element} class="absolute" style="top: {finalTop}px; left: {finalLeft}px">
-	<img src={PlayerBaseModelUrl} alt="player-model" class="h-20 w-auto" />
-	<div class="flex w-full justify-center">
+	<button
+		onclick={onCharacterClick}
+		class="relative cursor-pointer rounded-full p-1
+         transition hover:bg-yellow-200/40"
+	>
+		<img src={PlayerBaseModelUrl} alt="player-model" class="pointer-events-none h-20 w-auto" />
+	</button>
+	<div
+		class="pointer-events-none flex w-full justify-center
+"
+	>
 		<p class="relative top-[-18px] left-0">{player.username}</p>
 	</div>
 	{#each skins as skin (skin.id)}
@@ -67,16 +81,23 @@
 			<img
 				src={skin.image_url}
 				alt="player-skin"
-				class="absolute top-[-6px] left-1/2 h-[45px] -translate-x-1/2"
+				class="pointer-events-none absolute top-[-6px] left-1/2 h-[45px] -translate-x-1/2
+"
 			/>
 		{:else if skin.slot === 'body'}
 			<img
 				src={skin.image_url}
 				alt="player-skin"
-				class="absolute top-[6px] left-1/2 w-[80px] max-w-none -translate-x-1/2"
+				class="pointer-events-none absolute top-[6px] left-1/2 w-[80px] max-w-none -translate-x-1/2
+"
 			/>
 		{:else if skin.slot === 'side'}
-			<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[40px]" />
+			<img
+				src={skin.image_url}
+				alt="player-skin"
+				class="pointer-events-none absolute top-0 h-[40px]
+"
+			/>
 		{/if}
 	{/each}
 </div>
