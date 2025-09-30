@@ -475,7 +475,7 @@ export type MakeDiceRollApiDiceRollsPostData = {
          */
         allow_acting?: boolean;
     };
-    url: '/api/dice-rolls/';
+    url: '/api/dice-rolls';
 };
 
 export type MakeDiceRollApiDiceRollsPostErrors = {

@@ -95,7 +95,7 @@ export const makeDiceRollApiDiceRollsPost = <ThrowOnError extends boolean = fals
                 type: 'http'
             }
         ],
-        url: '/api/dice-rolls/',
+        url: '/api/dice-rolls',
         ...options,
         headers: {
             'Content-Type': 'application/json',
