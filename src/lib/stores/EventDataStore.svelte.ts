@@ -9,11 +9,10 @@ import { defaultAuth } from '$lib/utils'
 
 export function createEventDataStore() {
 	const eventDataQuery = createQuery({
-		...{
-			...getEventDataApiEventDataGetOptions(),
+		...getEventDataApiEventDataGetOptions({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
-		},
+		}),
 		retry: false
 	})
 
