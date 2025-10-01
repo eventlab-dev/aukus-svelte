@@ -16,34 +16,42 @@
 
 	const cellPosition = $derived(getCellPosition(player.map_position))
 
-	const otherPlayersOnCell = $derived(
+	const playersOnCell = $derived(
 		$players
-			.filter((p) => p.map_position === player.map_position && p.slug !== player.slug)
+			.filter((p) => p.map_position === player.map_position)
 			.sort((a, b) => a.slug.localeCompare(b.slug))
 	)
 
-	const cellOffset = $derived.by(() => {
-		if (otherPlayersOnCell.length === 0) {
-			return { x: 28, y: 20 }
+	const {
+		x: cellOffsetX,
+		y: cellOffsetY,
+		onlyName
+	} = $derived.by(() => {
+		if (playersOnCell.length === 1) {
+			return { x: 26, y: 20, onlyName: false }
 		}
 
-		const index = otherPlayersOnCell.findIndex((p) => p.slug === player.slug)
-		if (otherPlayersOnCell.length === 1) {
+		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
+		if (playersOnCell.length === 2) {
 			if (index === 0) {
-				return { x: 0, y: 0 }
+				return { x: 50, y: 0, onlyName: false }
 			}
-			return { x: 28, y: 20 }
+			return { x: -5, y: 35, onlyName: false }
 		}
 
-		const offsetAmount = 15
+		if (player.map_position === 0) {
+			return { x: 30 + 90 * index, y: 20, onlyName: false }
+		}
+
 		return {
-			x: index * offsetAmount,
-			y: index * offsetAmount
+			x: 20,
+			y: 20 + index * 30,
+			onlyName: true
 		}
 	})
 
-	const finalTop = $derived(cellPosition.y + cellOffset.y)
-	const finalLeft = $derived(cellPosition.x + cellOffset.x)
+	const finalTop = $derived(cellPosition.y + cellOffsetY)
+	const finalLeft = $derived(cellPosition.x + cellOffsetX)
 
 	const skins = $derived.by(() => {
 		return player.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
@@ -67,32 +75,34 @@
 		class="relative cursor-pointer rounded-full
          transition hover:bg-yellow-200/40"
 	>
-		<img src={PlayerBaseModelUrl} alt="player-model" class="pointer-events-none h-[80px] w-auto" />
-		{#each skins as skin (skin.id)}
-			{#if skin.slot === 'head'}
-				<img
-					src={skin.image_url}
-					alt="player-skin"
-					class="pointer-events-none absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2
+		{#if onlyName}
+			<div class="flex w-full justify-center p-1">
+				<p class="relative left-1/2 -translate-x-1/2">{player.username}</p>
+			</div>
+		{:else}
+			<img src={PlayerBaseModelUrl} alt="player-model" class="h-[80px] w-auto" />
+			{#each skins as skin (skin.id)}
+				{#if skin.slot === 'head'}
+					<img
+						src={skin.image_url}
+						alt="player-skin"
+						class="absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2
 "
-				/>
-			{:else if skin.slot === 'body'}
-				<img
-					src={skin.image_url}
-					alt="player-skin"
-					class="pointer-events-none absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2
+					/>
+				{:else if skin.slot === 'body'}
+					<img
+						src={skin.image_url}
+						alt="player-skin"
+						class="absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2
 "
-				/>
-			{:else if skin.slot === 'side'}
-				<img
-					src={skin.image_url}
-					alt="player-skin"
-					class="pointer-events-none absolute top-0 h-[40px]"
-				/>
-			{/if}
-		{/each}
-		<div class="pointer-events-none flex w-full justify-center">
-			<p class="relative top-[-18px] left-0">{player.username}</p>
-		</div>
+					/>
+				{:else if skin.slot === 'side'}
+					<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[40px]" />
+				{/if}
+			{/each}
+			<div class="relative flex h-[10px] w-full justify-center">
+				<p class="absolute top-[-20px]">{player.username}</p>
+			</div>
+		{/if}
 	</button>
 </div>
