@@ -64,39 +64,35 @@
 <div bind:this={element} class="absolute" style="top: {finalTop}px; left: {finalLeft}px">
 	<button
 		onclick={onCharacterClick}
-		class="relative cursor-pointer rounded-full p-1
+		class="relative cursor-pointer rounded-full
          transition hover:bg-yellow-200/40"
 	>
-		<img src={PlayerBaseModelUrl} alt="player-model" class="pointer-events-none h-20 w-auto" />
+		<img src={PlayerBaseModelUrl} alt="player-model" class="pointer-events-none h-[80px] w-auto" />
+		{#each skins as skin (skin.id)}
+			{#if skin.slot === 'head'}
+				<img
+					src={skin.image_url}
+					alt="player-skin"
+					class="pointer-events-none absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2
+"
+				/>
+			{:else if skin.slot === 'body'}
+				<img
+					src={skin.image_url}
+					alt="player-skin"
+					class="pointer-events-none absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2
+"
+				/>
+			{:else if skin.slot === 'side'}
+				<img
+					src={skin.image_url}
+					alt="player-skin"
+					class="pointer-events-none absolute top-0 h-[40px]"
+				/>
+			{/if}
+		{/each}
+		<div class="pointer-events-none flex w-full justify-center">
+			<p class="relative top-[-18px] left-0">{player.username}</p>
+		</div>
 	</button>
-	<div
-		class="pointer-events-none flex w-full justify-center
-"
-	>
-		<p class="relative top-[-18px] left-0">{player.username}</p>
-	</div>
-	{#each skins as skin (skin.id)}
-		{#if skin.slot === 'head'}
-			<img
-				src={skin.image_url}
-				alt="player-skin"
-				class="pointer-events-none absolute top-[-2px] left-1/2 h-[45px] -translate-x-1/2
-"
-			/>
-		{:else if skin.slot === 'body'}
-			<img
-				src={skin.image_url}
-				alt="player-skin"
-				class="pointer-events-none absolute top-[12px] left-1/2 w-[80px] max-w-none -translate-x-1/2
-"
-			/>
-		{:else if skin.slot === 'side'}
-			<img
-				src={skin.image_url}
-				alt="player-skin"
-				class="pointer-events-none absolute top-0 h-[40px]
-"
-			/>
-		{/if}
-	{/each}
 </div>

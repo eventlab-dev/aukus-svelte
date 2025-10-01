@@ -90,6 +90,14 @@
 			await get(eventDataQuery).refetch()
 		}
 	}
+
+	function getIconUrl(url: string) {
+		// parse the url and insert "icon_" before the filename
+		const parts = url.split('/')
+		const filename = parts.pop()
+		if (!filename) return url
+		return [...parts, `icon_${filename}`].join('/')
+	}
 </script>
 
 <Dialog onOpenChange={handleOpenChange}>
@@ -106,13 +114,13 @@
 						<img
 							src={skin.image_url}
 							alt="Head Skin"
-							class="absolute top-[-10px] left-1/2 h-[80px] w-auto -translate-x-1/2"
+							class="absolute top-[0px] left-1/2 h-[150px] w-auto -translate-x-1/2"
 						/>
 					{:else if skin.slot === 'body'}
 						<img
 							src={skin.image_url}
 							alt="Body Skin"
-							class="absolute top-[12px] left-1/2 h-auto w-[145px] max-w-none -translate-x-1/2"
+							class="absolute top-[0px] left-1/2 h-[150px] w-auto max-w-none -translate-x-1/2"
 						/>
 					{:else if skin.slot === 'side'}
 						<img
@@ -174,7 +182,7 @@
 								? 'bg-primary'
 								: 'bg-secondary'}"
 						>
-							<img src={skin.image_url} alt="skin" class="h-full object-contain" />
+							<img src={getIconUrl(skin.image_url)} alt="skin" class="h-full object-contain" />
 						</Button>
 					{/each}
 				</div>
