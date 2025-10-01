@@ -4,31 +4,41 @@
 	import { fade } from 'svelte/transition'
 	import Summary from './components/Summary.svelte'
 	import MoveCard from '../../../lib/components/moveCard/MoveCard.svelte'
-	import MovesSearch from '$lib/components/MovesSearch.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { page } from '$app/state'
-	import { derived } from 'svelte/store'
-	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import SearchIcon from '$lib/components/icons/SearchIcon.svelte'
+	import { Input } from '$lib/components/ui/input'
 
 	const { playersMovesStore, playersBySlug } = getAppManagerContext()
-	const { moves } = playersMovesStore
+	const { moves, playerSlug: movesPlayerSlug } = playersMovesStore
+
+	$effect(() => {
+		movesPlayerSlug.set(page.params.player!)
+	})
 
 	const playerSlug = page.params.player
 
-	const player = derived(playersBySlug, ($playersBySlug) => $playersBySlug[playerSlug!])
-	const gamesCompleted = derived(
-		moves,
-		($playerMoves) => $playerMoves.filter((move) => move.type === 'completed').length || 0
-	)
-	const socials = derived(player, ($player) => ({
-		twitchLink: $player.twitch_stream_link || '',
-		donationAlertsLink: $player.donation_link || '',
-		telegramLink: $player.telegram_link || '',
-		vkLiveLink: $player.vk_stream_link || '',
-		kickLink: $player.kick_stream_link || ''
-	}))
+	const player = $derived($playersBySlug[playerSlug!])
+	const gamesCompleted = $derived($moves.filter((move) => move.type === 'completed').length || 0)
+	const socials = $derived({
+		twitchLink: player.twitch_stream_link || '',
+		donationAlertsLink: player.donation_link || '',
+		telegramLink: player.telegram_link || '',
+		vkLiveLink: player.vk_stream_link || '',
+		kickLink: player.kick_stream_link || ''
+	})
 
-	let filteredMoves: PlayerMoveItem[] = $state([])
+	let filterValue = $state('')
+
+	const filteredMoves = $derived(
+		$moves.filter((move) => {
+			const filterText = filterValue.toLowerCase()
+			return (
+				move.item_title.toLowerCase().includes(filterText) ||
+				(move.item_review && move.item_review.toLowerCase().includes(filterText))
+			)
+		})
+	)
 
 	// const aukus1games = aukus1Games[player.url_handle];
 	// const aukus2games = aukus2Games[player.url_handle];
@@ -46,36 +56,47 @@
 </script>
 
 <svelte:head>
-	{#if $player}
-		<title>Aukus - {$player.username}</title>
+	{#if player}
+		<title>Aukus - {player.username}</title>
 	{/if}
 </svelte:head>
 
-{#if $player}
+{#if player}
 	<div class="mt-20">
 		<div class="mx-auto flex w-fit flex-col items-center" in:fade>
 			<PlayerAvatar
-				src={$player.avatar_link ?? ''}
-				name={$player.username}
-				isOnline={Boolean($player.is_online)}
+				src={player.avatar_link ?? ''}
+				name={player.username}
+				isOnline={Boolean(player.is_online)}
 				size="lg"
 				class="mb-2.5"
 			/>
 			<div class="mb-[30px] flex flex-col items-center gap-5">
 				<div class="text-5xl leading-[58px] font-bold">
-					{$player.first_name} «{$player.username}»
+					{player.first_name} «{player.username}»
 				</div>
-				<Socials {...$socials} />
+				<Socials {...socials} />
 				<Summary
-					totalScore={$player.total_score}
-					gamesCompleted={$gamesCompleted}
-					gameName={$player.current_game || ''}
-					gameImage={$player.current_game_cover || ''}
-					gameDuration={$player.current_game_duration || 0}
+					totalScore={player.total_score}
+					{gamesCompleted}
+					gameName={player.current_game || ''}
+					gameImage={player.current_game_cover || ''}
+					gameDuration={player.current_game_duration || 0}
 				/>
 			</div>
 
-			<MovesSearch moves={$moves} bind:filteredMoves />
+			<div class="relative w-full">
+				<SearchIcon
+					class="absolute top-1/2 left-3 size-[19px] -translate-y-1/2 text-muted-foreground"
+				/>
+				<Input
+					id="moves-search"
+					class="w-full pl-[43px]"
+					type="text"
+					placeholder="Поиск среди игр всех аукусов"
+					bind:value={filterValue}
+				/>
+			</div>
 
 			<div class="mt-5 space-y-[200px]">
 				<div class="space-y-5">
