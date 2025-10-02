@@ -12,7 +12,7 @@
 	const { player }: Props = $props()
 
 	const { players, eventDataStore, movementStore } = getAppManagerContext()
-	const { skinsById } = eventDataStore
+	const { skinsById, playersBySlug } = eventDataStore
 
 	const cellPosition = $derived(getCellPosition(player.map_position))
 
@@ -66,6 +66,15 @@
 
 	onMount(() => {
 		movementStore.registerPlayer(player.slug, element)
+		// @ts-expect-error - for debugging purposes
+		window.movePlayer = (slug: string, steps: number) => {
+			const endCell = movementStore.movePlayer({ playerSlug: slug, steps })
+			const player = $playersBySlug.get(slug)
+			if (player && endCell !== undefined) {
+				console.log('Moving player', slug, 'to cell', endCell)
+				player.map_position = endCell
+			}
+		}
 	})
 </script>
 

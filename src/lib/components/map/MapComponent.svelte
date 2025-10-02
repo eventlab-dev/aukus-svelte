@@ -5,6 +5,7 @@
 	import CellNumber from './CellNumber.svelte'
 	import MapArrow from './MapArrow.svelte'
 	import MapArrowMarkers from './MapArrowMarkers.svelte'
+	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'
 
 	const { players } = getAppManagerContext()
@@ -34,6 +35,7 @@
 			{#each mapCellsSorted as cell (cell.id)}
 				<CellNumber cellId={cell.id} />
 			{/each}
+			<MovementMarkers />
 			{#each $players as player (player.slug)}
 				<PlayerCharacter {player} />
 			{/each}

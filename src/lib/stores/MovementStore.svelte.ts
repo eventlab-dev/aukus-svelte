@@ -9,9 +9,12 @@ import {
 import { SvelteMap } from 'svelte/reactivity'
 import { get, writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
+import { type MovementParams } from '$lib/types'
 
 export function createMovementStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
 	const playerElements = writable(new SvelteMap<string, HTMLElement>())
+
+	const movementParams = writable<MovementParams | null>(null)
 
 	const registerPlayer = (playerId: string, element: HTMLElement) => {
 		playerElements.update((map) => {
@@ -40,6 +43,12 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 
 		const direction = params.steps > 0 ? 1 : -1
 
+		movementParams.set({
+			steps: boundSteps,
+			direction: direction === 1 ? 'forward' : 'backward',
+			startCell
+		})
+
 		const cellsPath: MapCell[] = []
 		for (let i = 1; i <= Math.abs(boundSteps); i++) {
 			cellsPath.push(getMapCellById(startCell + i * direction))
@@ -49,6 +58,21 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 		const offsetInsideCellY = 15
 
 		const timeline = createTimeline()
+		if (startCell === 0) {
+			// move to the start
+			timeline.add(element, {
+				left: `${getCellPosition(0).x + offsetInsideCellX}px`,
+				top: `${getCellPosition(0).y + offsetInsideCellY}px`,
+				duration: 700,
+				easing: 'easeInOutQuad',
+				// add "jump" effect
+				keyframes: [
+					{ translateY: -30, scale: 0.85, duration: 350, easing: 'easeOutQuad' },
+					{ translateY: 0, scale: 1, duration: 350, easing: 'easeInQuad' }
+				]
+			})
+		}
+
 		cellsPath.forEach((cell) => {
 			const pos = getCellPosition(cell.id)
 			timeline.add(element, {
@@ -64,6 +88,7 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 			})
 		})
 
+		let finalCell = endCell
 		const ladder = laddersByCell[endCell]
 		if (ladder) {
 			const pos = getCellPosition(ladder.cellTo)
@@ -78,6 +103,7 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 					{ translateY: 0, scale: 1, duration: 750, easing: 'easeInQuad' }
 				]
 			})
+			finalCell = ladder.cellTo
 		}
 		const snake = snakesByCell[endCell]
 		if (snake) {
@@ -94,13 +120,20 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 					{ translateY: 0, scale: 1, rotate: 0, duration: 200, easing: 'easeOutBounce' }
 				]
 			})
+			finalCell = snake.cellTo
 		}
 
-		return timeline.init()
+		timeline.onComplete = () => {
+			movementParams.set(null)
+		}
+		timeline.play()
+
+		return finalCell
 	}
 
 	return {
 		registerPlayer,
-		movePlayer
+		movePlayer,
+		movementParams
 	}
 }

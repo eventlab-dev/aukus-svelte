@@ -89,3 +89,9 @@ export type TableHeaderType<T> = {
 export type TurnState = 'filling-form' | 'rolling-dice' | 'animation'
 
 export type PlayerData = UserItem & PlayerItem & { total_score: number }
+
+export type MovementParams = {
+	steps: number
+	direction: 'forward' | 'backward'
+	startCell: number
+}
