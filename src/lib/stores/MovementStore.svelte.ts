@@ -30,11 +30,18 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 		if (params.steps === 0) return
 
 		const startCell = player.map_position
-		const endCell = startCell + params.steps
+		let endCell = startCell + params.steps
+		let boundSteps = params.steps
+
+		if (endCell < 1) {
+			endCell = 1
+			boundSteps = 1 - startCell
+		}
+
 		const direction = params.steps > 0 ? 1 : -1
 
 		const cellsPath: MapCell[] = []
-		for (let i = 1; i <= Math.abs(params.steps); i++) {
+		for (let i = 1; i <= Math.abs(boundSteps); i++) {
 			cellsPath.push(getMapCellById(startCell + i * direction))
 		}
 
