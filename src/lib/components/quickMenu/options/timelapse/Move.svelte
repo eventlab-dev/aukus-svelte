@@ -3,7 +3,6 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { getMoveTypeStyles } from '$lib/utils'
-	import { derived } from 'svelte/store'
 
 	type Props = {
 		move: PlayerMoveItem
@@ -13,15 +12,15 @@
 
 	const { playersBySlug } = getAppManagerContext()
 
-	const player = derived(playersBySlug, ($playersBySlug) => $playersBySlug[move.player_slug])
+	const player = $derived($playersBySlug[move.player_slug])
 	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type))
 </script>
 
 <div class="space-y-1.5">
 	<div class="flex gap-1.5">
-		{#if $player}
-			<Badge variant="secondary" style="background-color: {$player.color}">
-				{$player.username}
+		{#if player}
+			<Badge variant="secondary" style="background-color: {player.color}">
+				{player.username}
 			</Badge>
 		{/if}
 		<Badge variant={moveTypeStyles.variant}>

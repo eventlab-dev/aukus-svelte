@@ -7,7 +7,6 @@
 	import { ScrollArea } from './ui/scroll-area'
 	import { createAppManager } from '$lib/stores/AppManager.svelte'
 	import { setAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { derived } from 'svelte/store'
 
 	let { children } = $props()
 
@@ -16,9 +15,7 @@
 
 	const { players } = appManager
 
-	const sortedPlayers = derived(players, ($players) => {
-		return [...$players].sort((a, b) => b.map_position - a.map_position)
-	})
+	const sortedPlayers = $derived([...$players].sort((a, b) => b.map_position - a.map_position))
 </script>
 
 <ScrollArea class="h-screen px-3" type="always">
@@ -28,7 +25,7 @@
 		</div>
 
 		<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
-			{#each $sortedPlayers as player (player.slug)}
+			{#each sortedPlayers as player (player.slug)}
 				<div animate:flip={{ duration: 300 }}>
 					<PlayerCard {player} />
 				</div>

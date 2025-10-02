@@ -22,7 +22,6 @@
 	} from '../ui/dialog'
 	import X from '@lucide/svelte/icons/x'
 	import WandIcon from '../icons/WandIcon.svelte'
-	import { get } from 'svelte/store'
 	import type { GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
 
 	type FormType = {
@@ -62,7 +61,7 @@
 	})
 
 	async function saveReview() {
-		await get(saveMoveForm).mutateAsync({
+		await $saveMoveForm.mutateAsync({
 			body: {
 				type: form.status!,
 				item_review: form.review,
@@ -76,7 +75,7 @@
 			}
 		})
 
-		get(eventDataQuery).refetch()
+		$eventDataQuery.refetch()
 
 		isDialogOpen = false
 

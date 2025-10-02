@@ -7,7 +7,6 @@
 	import Toggle from '../ui/toggle/toggle.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
-	import { get } from 'svelte/store'
 	import Button from '../ui/button/button.svelte'
 
 	const { eventDataStore, myPlayer, usersStore } = getAppManagerContext()
@@ -86,8 +85,8 @@
 			) {
 				return
 			}
-			await get(setSkins).mutateAsync({ body: { skin_ids: selectedSkinIds } })
-			await get(eventDataQuery).refetch()
+			await $setSkins.mutateAsync({ body: { skin_ids: selectedSkinIds } })
+			await $eventDataQuery.refetch()
 		}
 	}
 
