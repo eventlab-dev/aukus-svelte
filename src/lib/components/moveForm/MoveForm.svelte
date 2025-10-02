@@ -48,16 +48,19 @@
 	let isDialogOpen = $state(false)
 	let editorState: { editor: Editor | null } = $state({ editor: null })
 
-	const isFormFilled = $derived.by(() => {
-		if (!form.title) return false
-		if (!form.status) return false
-		if (!form.review) return false
-		if (form.status === 'reroll') return true
-		if (form.rating === null) return false
-		if (form.status === 'drop' || form.status === 'movie' || form.status === 'sheikh_moment')
-			return true
-		if (!form.hltbTime) return false
-		return true
+	const { isFormFilled, buttonText } = $derived.by(() => {
+		if (!form.title) return { isFormFilled: false, buttonText: 'Введи название игры' }
+		if (!form.status) return { isFormFilled: false, buttonText: 'Выбери статус игры' }
+		if (!form.review) return { isFormFilled: false, buttonText: 'Напиши отзыв' }
+		if (form.status === 'reroll') return { isFormFilled: true, buttonText: 'Рерольнуть игру' }
+		if (form.rating === null) return { isFormFilled: false, buttonText: 'Поставь оценку' }
+		if (form.status === 'drop' || form.status === 'sheikh_moment') {
+			return { isFormFilled: true, buttonText: 'Дропнуть игру' }
+		}
+		if (form.status === 'movie')
+			return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
+		if (!form.hltbTime) return { isFormFilled: false, buttonText: 'Выбери время по HLTB' }
+		return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
 	})
 
 	async function saveReview() {
@@ -149,7 +152,8 @@
 				</div>
 
 				<Button class="ml-auto w-[264px]" disabled={!isFormFilled} onclick={saveReview}>
-					<BoxIcon /> Перейти к броску кубиков
+					<BoxIcon />
+					{buttonText}
 				</Button>
 			</div>
 		</div>

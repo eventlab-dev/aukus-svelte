@@ -30,15 +30,17 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 		const player = get(eventDataStore.playersBySlug).get(params.playerSlug)
 		if (!player) return
 
-		if (params.steps === 0) return
-
 		const startCell = player.map_position
+
+		if (params.steps === 0) return
+		if (startCell <= 1 && params.steps < 0) return
+
 		let endCell = startCell + params.steps
 		let boundSteps = params.steps
 
-		if (endCell < 1) {
-			endCell = 1
-			boundSteps = 1 - startCell
+		if (endCell < 0) {
+			endCell = 0
+			boundSteps = -startCell
 		}
 
 		const direction = params.steps > 0 ? 1 : -1
