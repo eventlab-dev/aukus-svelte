@@ -8,6 +8,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
 	import Button from '../ui/button/button.svelte'
+	import { getSkinIconUrl } from '$lib/utils'
 
 	const { eventDataStore, myPlayer, usersStore } = getAppManagerContext()
 	const { skinsById, eventDataQuery } = eventDataStore
@@ -88,14 +89,6 @@
 			await $setSkins.mutateAsync({ body: { skin_ids: selectedSkinIds } })
 			await $eventDataQuery.refetch()
 		}
-	}
-
-	function getIconUrl(url: string) {
-		// parse the url and insert "icon_" before the filename
-		const parts = url.split('/')
-		const filename = parts.pop()
-		if (!filename) return url
-		return [...parts, `icon_${filename}`].join('/')
 	}
 </script>
 
@@ -181,7 +174,7 @@
 								? 'bg-primary'
 								: 'bg-secondary'}"
 						>
-							<img src={getIconUrl(skin.image_url)} alt="skin" class="h-full object-contain" />
+							<img src={getSkinIconUrl(skin.image_url)} alt="skin" class="h-full object-contain" />
 						</Button>
 					{/each}
 				</div>

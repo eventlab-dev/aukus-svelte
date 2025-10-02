@@ -176,3 +176,11 @@ export function doubleSineEaseOut(t: number) {
 export function defaultAuth() {
 	return localStorage.getItem('auth_token') ?? undefined
 }
+
+export function getSkinIconUrl(url: string) {
+	// parse the url and insert "icon_" before the filename
+	const parts = url.split('/')
+	const filename = parts.pop()
+	if (!filename) return url
+	return [...parts, `icon_${filename}`].join('/')
+}
