@@ -40,7 +40,7 @@
 		}
 
 		if (player.map_position === 0) {
-			return { x: 30 + 90 * index, y: 20, onlyName: false }
+			return { x: 160 + 90 * index, y: 20, onlyName: false }
 		}
 
 		return {
