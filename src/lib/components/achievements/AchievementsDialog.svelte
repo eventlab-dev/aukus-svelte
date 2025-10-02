@@ -65,9 +65,9 @@
 
 			<div class="flex justify-center">
 				<ScrollArea class="h-[70vh] w-fit" type="always">
-					<div class="flex flex-wrap justify-center gap-3">
+					<div class="flex flex-wrap items-stretch gap-3">
 						{#each $achievements as achievement (achievement.id)}
-							<div animate:flip={{ duration: 300, easing: sineInOut }}>
+							<div animate:flip={{ duration: 300, easing: sineInOut }} class="flex flex-col">
 								<AchievementCard {achievement} />
 							</div>
 						{/each}

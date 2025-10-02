@@ -21,25 +21,27 @@
 
 {#if skin}
 	<Tooltip>
-		<TooltipTrigger>
+		<TooltipTrigger class="h-full">
 			<div
-				class="w-[150px] space-y-2 rounded-lg bg-secondary p-2"
+				class="flex h-full w-[150px] flex-col justify-between space-y-2 rounded-lg bg-secondary p-2"
 				transition:scale={{ duration: 200, start: 0.9, opacity: 0 }}
 			>
-				<div class="flex justify-center p-2">
-					<img
-						src={getSkinIconUrl(skin.image_url)}
-						alt={skin.slot}
-						class="h-[80px] w-auto rounded-sm"
-					/>
+				<div>
+					<div class="flex justify-center p-2">
+						<img
+							src={getSkinIconUrl(skin.image_url)}
+							alt={skin.slot}
+							class="h-[80px] w-auto rounded-sm"
+						/>
+					</div>
+					<div class="mt-3 text-left text-sm leading-4 font-semibold text-muted-foreground">
+						{achievement.description}
+					</div>
 				</div>
-				<div class="text-left text-sm leading-4 font-semibold text-muted-foreground">
-					{achievement.description}
-				</div>
-				<div class="flex">
-					<span class="text-xs font-medium text-muted-foreground">
+				<div>
+					<p class="text-right text-xs font-medium text-muted-foreground">
 						Получили {playersWithAchievement.length}/{$players.length}
-					</span>
+					</p>
 				</div>
 			</div>
 		</TooltipTrigger>
