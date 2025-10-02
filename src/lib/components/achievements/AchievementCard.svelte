@@ -2,6 +2,7 @@
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { AchievementItem } from '$lib/heyapi/aukus/types.gen'
+	import { getSkinIconUrl } from '$lib/utils'
 	import { scale } from 'svelte/transition'
 
 	type Props = { achievement: AchievementItem }
@@ -25,8 +26,12 @@
 				class="w-[150px] space-y-2 rounded-lg bg-secondary p-2"
 				transition:scale={{ duration: 200, start: 0.9, opacity: 0 }}
 			>
-				<div class="flex justify-center">
-					<img src={skin.image_url} alt={skin.slot} class="h-[80px] w-auto rounded-sm" />
+				<div class="flex justify-center p-2">
+					<img
+						src={getSkinIconUrl(skin.image_url)}
+						alt={skin.slot}
+						class="h-[80px] w-auto rounded-sm"
+					/>
 				</div>
 				<div class="text-left text-sm leading-4 font-semibold text-muted-foreground">
 					{achievement.description}
