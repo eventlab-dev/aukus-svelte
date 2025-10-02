@@ -168,7 +168,7 @@
 					{#each availableSkins as skin (skin.id)}
 						<Button
 							onclick={() => selectSkin(skin)}
-							class="flex h-[90px] w-[150px] cursor-pointer justify-center rounded-xl p-2 {selectedSkinIds.includes(
+							class="flex h-[90px] w-[150px] cursor-pointer justify-center rounded-xl p-4 {selectedSkinIds.includes(
 								skin.id
 							)
 								? 'bg-primary'
