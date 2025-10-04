@@ -143,11 +143,6 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 		return finalCell
 	}
 
-	// diceAnimationState.set({
-	// 	rollValues: [3],
-	// 	state: 'animating'
-	// })
-
 	async function doRollAnimation(rollValues: number[]) {
 		if (rollValues.length === 0) {
 			throw new Error('rollValues cannot be empty')

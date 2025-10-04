@@ -90,6 +90,14 @@
 				startCell: $myPlayer.map_position,
 				steps: maxRoll * moveDirection
 			})
+
+			// movementState.set({
+			// 	direction: 'forward',
+			// 	rollValues: [3, 5],
+			// 	state: 'dice-results',
+			// 	steps: 3,
+			// 	startCell: 5
+			// })
 		}
 	})
 

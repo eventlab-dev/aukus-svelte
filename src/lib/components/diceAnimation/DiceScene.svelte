@@ -90,11 +90,23 @@
 	})
 
 	const texture = useLoader(THREE.TextureLoader).load('/texture1.jpg')
+
+	const totalSum = $derived($movementState.rollValues.reduce((a, b) => a + b, 0))
 </script>
 
 {#if modelsParams.length > 0}
 	<T.DirectionalLight position={[0, 10, 10]} intensity={1} />
 	<T.AmbientLight intensity={0.1} />
+
+	{#if $movementState.state === 'dice-results' && modelsParams.length > 1}
+		<HTML position={[-3, 6, -5]}>
+			<div
+				class="pointer-events-none rounded-md bg-black px-4 py-2 text-center text-3xl font-bold whitespace-nowrap text-white select-none"
+			>
+				Всего: {totalSum}
+			</div>
+		</HTML>
+	{/if}
 
 	{#each modelsParams as params, idx (idx)}
 		<!-- Main red dodecahedron -->
