@@ -11,8 +11,8 @@
 
 	const { player }: Props = $props()
 
-	const { players, eventDataStore, movementStore } = getAppManagerContext()
-	const { skinsById, playersBySlug } = eventDataStore
+	const { players, eventDataStore, movementStore, myPlayer } = getAppManagerContext()
+	const { skinsById, playersBySlug, turnState } = eventDataStore
 
 	const cellPosition = $derived(getCellPosition(player.map_position))
 
@@ -59,6 +59,13 @@
 
 	let element: HTMLDivElement
 
+	$effect(() => {
+		if (element && $turnState === 'rolling-dice' && player.slug === $myPlayer?.slug) {
+			// scroll to element
+			element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+		}
+	})
+
 	const onCharacterClick = () => {
 		console.log('Character clicked:', player.username)
 		// Here you can add logic to open a profile modal or display more info
@@ -95,15 +102,13 @@
 					<img
 						src={skin.image_url}
 						alt="player-skin"
-						class="absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2
-"
+						class="absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2"
 					/>
 				{:else if skin.slot === 'body'}
 					<img
 						src={skin.image_url}
 						alt="player-skin"
-						class="absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2
-"
+						class="absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2"
 					/>
 				{:else if skin.slot === 'side'}
 					<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[40px]" />

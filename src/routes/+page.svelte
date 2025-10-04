@@ -74,11 +74,7 @@
 {/if}
 
 {#if $myUser && $turnState === 'rolling-dice'}
-	<div
-		class="fixed top-1/2 left-1/2 w-200 -translate-x-1/2 -translate-y-1/2 rounded bg-transparent"
-	>
-		<DiceAnimationPanel />
-	</div>
+	<DiceAnimationPanel />
 	<div class="sticky bottom-10 mt-10 flex justify-center">
 		<DiceRoller />
 	</div>
