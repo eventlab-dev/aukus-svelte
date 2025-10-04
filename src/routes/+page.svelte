@@ -8,6 +8,7 @@
 	import MapComponent from '$lib/components/map/MapComponent.svelte'
 	import DiceRoller from '$lib/components/moveForm/DiceRoller.svelte'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import DiceAnimationPanel from '$lib/components/diceAnimation/DiceAnimationPanel.svelte'
 
 	const { playersMovesStore, usersStore, eventDataStore } = getAppManagerContext()
 	const { moves } = playersMovesStore
@@ -73,6 +74,11 @@
 {/if}
 
 {#if $myUser && $turnState === 'rolling-dice'}
+	<div
+		class="fixed top-1/2 left-1/2 w-200 -translate-x-1/2 -translate-y-1/2 rounded bg-transparent"
+	>
+		<DiceAnimationPanel />
+	</div>
 	<div class="sticky bottom-10 mt-10 flex justify-center">
 		<DiceRoller />
 	</div>

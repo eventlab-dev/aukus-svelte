@@ -33,6 +33,7 @@
 		"@tiptap/pm": "^3.4.1",
 		"@tiptap/starter-kit": "^3.4.1",
 		"@tiptap/static-renderer": "^3.4.1",
+		"@types/three": "^0.180.0",
 		"bits-ui": "^2.11.3",
 		"clsx": "^2.1.1",
 		"cross-env": "^7.0.3",
@@ -63,6 +64,9 @@
 	"packageManager": "pnpm@10.15.1+sha512.34e538c329b5553014ca8e8f4535997f96180a1d0f614339357449935350d924e22f8614682191264ec33d1462ac21561aff97f6bb18065351c162c7e8f6de67",
 	"dependencies": {
 		"@tanstack/svelte-query": "^5.90.1",
-		"animejs": "^4.1.4"
+		"@threlte/core": "^8.1.5",
+		"@threlte/extras": "^9.5.4",
+		"animejs": "^4.1.4",
+		"three": "^0.180.0"
 	}
 }

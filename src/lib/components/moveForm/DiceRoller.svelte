@@ -9,6 +9,7 @@
 	const { usersStore, eventDataStore, movementStore, myPlayer } = getAppManagerContext()
 	const { finishMove, rollDice } = usersStore
 	const { diceOptions, eventDataQuery, myLastMove } = eventDataStore
+	const { movementState } = movementStore
 
 	let currentOption = $state<DiceOption>($diceOptions[$diceOptions.length - 1])
 
@@ -29,9 +30,10 @@
 			}
 		})
 
+		await movementStore.doRollAnimation(rollResult.roll_values)
 		const rollSteps = rollResult.roll_values.reduce((a, b) => a + b, 0) * moveDirection
 
-		movementStore.movePlayer({
+		await movementStore.movePlayer({
 			playerSlug: $myPlayer!.slug,
 			steps: rollSteps
 		})
@@ -81,7 +83,9 @@
 
 	$effect(() => {
 		if (currentOption && $myPlayer) {
-			movementStore.movementParams.set({
+			movementState.set({
+				rollValues: [],
+				state: 'selecting-die',
 				direction: moveDirection === 1 ? 'forward' : 'backward',
 				startCell: $myPlayer.map_position,
 				steps: maxRoll * moveDirection
@@ -100,36 +104,38 @@
 	}
 </script>
 
-{#if $diceOptions.length > 1 && currentOption}
-	<div class="w-100 rounded-2xl bg-card p-5">
-		<ToggleGroup
-			type="single"
-			bind:value={getDiceOption, setDiceOption}
-			variant="outline"
-			class="w-full"
-		>
-			{#each $diceOptions as option (option)}
-				<ToggleGroupItem value={option} class="data-[state=on]:bg-primary">
-					{option}
-				</ToggleGroupItem>
-			{/each}
-		</ToggleGroup>
-		<div class="py-5">
-			<p>Шанс лестницы: {ladderChance.toFixed(1)}%</p>
-			<p>Шанс змейки: {snakeChance.toFixed(1)}%</p>
+{#if $movementState.state === 'selecting-die'}
+	{#if $diceOptions.length > 1 && currentOption}
+		<div class="w-100 rounded-2xl bg-card p-5">
+			<ToggleGroup
+				type="single"
+				bind:value={getDiceOption, setDiceOption}
+				variant="outline"
+				class="w-full"
+			>
+				{#each $diceOptions as option (option)}
+					<ToggleGroupItem value={option} class="data-[state=on]:bg-primary">
+						{option}
+					</ToggleGroupItem>
+				{/each}
+			</ToggleGroup>
+			<div class="py-5">
+				<p>Шанс лестницы: {ladderChance.toFixed(1)}%</p>
+				<p>Шанс змейки: {snakeChance.toFixed(1)}%</p>
+			</div>
+			<Button class="mt-5 w-full" onclick={handleThrowDice}>Бросить кубики {currentOption}</Button>
 		</div>
-		<Button class="mt-5 w-full" onclick={handleThrowDice}>Бросить кубики {currentOption}</Button>
-	</div>
-{:else if $diceOptions.length === 1 && currentOption}
-	<div class="w-100 rounded-2xl bg-card p-5">
-		<p class="mb-5">Шанс лестницы: {ladderChance.toFixed(1)}%</p>
-		<p class="mb-5">Шанс змейки: {snakeChance.toFixed(1)}%</p>
-		<Button
-			class="mt-5 w-full"
-			onclick={handleThrowDice}
-			loading={$rollDice.isPending || $finishMove.isPending}
-		>
-			Бросить кубики {currentOption}
-		</Button>
-	</div>
+	{:else if $diceOptions.length === 1 && currentOption}
+		<div class="w-100 rounded-2xl bg-card p-5">
+			<p class="mb-5">Шанс лестницы: {ladderChance.toFixed(1)}%</p>
+			<p class="mb-5">Шанс змейки: {snakeChance.toFixed(1)}%</p>
+			<Button
+				class="mt-5 w-full"
+				onclick={handleThrowDice}
+				loading={$rollDice.isPending || $finishMove.isPending}
+			>
+				Бросить кубики {currentOption}
+			</Button>
+		</div>
+	{/if}
 {/if}

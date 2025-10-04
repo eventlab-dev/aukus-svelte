@@ -90,8 +90,10 @@ export type TurnState = 'filling-form' | 'rolling-dice' | 'animation'
 
 export type PlayerData = UserItem & PlayerItem & { total_score: number }
 
-export type MovementParams = {
+export type PlayerMovementState = {
+	state: 'selecting-die' | 'rolling-dice' | 'dice-results' | 'moving' | 'finished'
 	steps: number
 	direction: 'forward' | 'backward'
 	startCell: number
+	rollValues: number[]
 }

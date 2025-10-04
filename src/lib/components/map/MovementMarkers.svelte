@@ -3,11 +3,10 @@
 	import { getCellPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
 
 	const { movementStore } = getAppManagerContext()
-	const { movementParams } = movementStore
+	const { movementState } = movementStore
 
 	const cells = $derived.by(() => {
-		if (!$movementParams) return null
-		const { startCell, steps, direction } = $movementParams
+		const { startCell, steps, direction } = $movementState
 		const cells = []
 		for (let i = 1; i <= Math.abs(steps); i++) {
 			cells.push(direction === 'forward' ? startCell + i : startCell - i)
@@ -26,7 +25,7 @@
 	}
 </script>
 
-{#if $movementParams && cells}
+{#if $movementState.state !== 'finished' && cells}
 	{#each cells as cell, idx (idx)}
 		<div
 			class="absolute w-10 rounded-2xl p-3 text-center data-[variant=negative]:bg-red-500 data-[variant=neutral]:bg-secondary data-[variant=positive]:bg-green-500"

@@ -9,12 +9,19 @@ import {
 import { SvelteMap } from 'svelte/reactivity'
 import { get, writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
-import { type MovementParams } from '$lib/types'
+import { type PlayerMovementState } from '$lib/types'
+import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME } from '$lib/constants'
 
 export function createMovementStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
 	const playerElements = writable(new SvelteMap<string, HTMLElement>())
 
-	const movementParams = writable<MovementParams | null>(null)
+	const movementState = writable<PlayerMovementState>({
+		direction: 'forward',
+		rollValues: [],
+		startCell: 0,
+		state: 'finished',
+		steps: 0
+	})
 
 	const registerPlayer = (playerId: string, element: HTMLElement) => {
 		playerElements.update((map) => {
@@ -23,7 +30,7 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 		})
 	}
 
-	const movePlayer = (params: { playerSlug: string; steps: number }) => {
+	const movePlayer = async (params: { playerSlug: string; steps: number }) => {
 		const element = get(playerElements).get(params.playerSlug)
 		if (!element) return
 
@@ -45,11 +52,13 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 
 		const direction = params.steps > 0 ? 1 : -1
 
-		movementParams.set({
+		movementState.update((s) => ({
+			...s,
+			state: 'moving',
 			steps: boundSteps,
 			direction: direction === 1 ? 'forward' : 'backward',
 			startCell
-		})
+		}))
 
 		const cellsPath: MapCell[] = []
 		for (let i = 1; i <= Math.abs(boundSteps); i++) {
@@ -125,17 +134,34 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 			finalCell = snake.cellTo
 		}
 
-		timeline.onComplete = () => {
-			movementParams.set(null)
-		}
-		timeline.play()
-
+		await new Promise((resolve) => {
+			timeline.play().onComplete = () => {
+				resolve(true)
+			}
+		})
+		movementState.update((s) => ({ ...s, state: 'finished' }))
 		return finalCell
+	}
+
+	// diceAnimationState.set({
+	// 	rollValues: [3],
+	// 	state: 'animating'
+	// })
+
+	async function doRollAnimation(rollValues: number[]) {
+		if (rollValues.length === 0) {
+			throw new Error('rollValues cannot be empty')
+		}
+		movementState.update((s) => ({ ...s, rollValues, state: 'rolling-dice' }))
+		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_ANIMATION_TIME))
+		movementState.update((s) => ({ ...s, state: 'dice-results' }))
+		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_IDLE_TIME))
 	}
 
 	return {
 		registerPlayer,
 		movePlayer,
-		movementParams
+		movementState,
+		doRollAnimation
 	}
 }

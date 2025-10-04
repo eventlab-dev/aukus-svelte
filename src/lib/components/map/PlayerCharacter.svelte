@@ -67,8 +67,8 @@
 	onMount(() => {
 		movementStore.registerPlayer(player.slug, element)
 		// @ts-expect-error - for debugging purposes
-		window.movePlayer = (slug: string, steps: number) => {
-			const endCell = movementStore.movePlayer({ playerSlug: slug, steps })
+		window.movePlayer = async (slug: string, steps: number) => {
+			const endCell = await movementStore.movePlayer({ playerSlug: slug, steps })
 			const player = $playersBySlug.get(slug)
 			if (player && endCell !== undefined) {
 				console.log('Moving player', slug, 'to cell', endCell)
