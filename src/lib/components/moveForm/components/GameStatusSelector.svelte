@@ -24,7 +24,7 @@
 		{ value: 'drop', label: 'Дроп' },
 		{ value: 'reroll', label: 'Рерол' },
 		{ value: 'movie', label: 'Просмотровый' },
-		{ value: 'sheikh_moment', label: 'Шейх-момент' }
+		{ value: 'sheikh_moment', label: 'Шейх-момент (дроп)' }
 	])
 
 	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Выберите игру')
