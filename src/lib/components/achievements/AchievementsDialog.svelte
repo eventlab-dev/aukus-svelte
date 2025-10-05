@@ -9,11 +9,19 @@
 	import CrownIcon from '../icons/CrownIcon.svelte'
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
 
-	const { eventDataStore, players, myPlayer } = getAppManagerContext()
+	const { eventDataStore, players, myPlayer, playersBySlug } = getAppManagerContext()
 
 	const { achievements } = eventDataStore
 
 	let selectedPlayerSlug: string | null = $state(null)
+
+	const filteredAchievements = $derived.by(() => {
+		if (!selectedPlayerSlug) return $achievements
+		const player = $playersBySlug[selectedPlayerSlug]
+		if (!player) return $achievements
+
+		return $achievements.filter((a) => player.unlocked_achievements.find((pa) => pa.id === a.id))
+	})
 
 	function setPressed(_: boolean, slug: string) {
 		if (selectedPlayerSlug === slug) {
@@ -66,7 +74,7 @@
 			<div class="flex justify-center">
 				<ScrollArea class="h-[70vh] w-fit" type="always">
 					<div class="flex flex-wrap items-stretch gap-3">
-						{#each $achievements as achievement (achievement.id)}
+						{#each filteredAchievements as achievement (achievement.id)}
 							<div animate:flip={{ duration: 300, easing: sineInOut }} class="flex flex-col">
 								<AchievementCard {achievement} />
 							</div>

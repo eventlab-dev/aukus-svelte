@@ -46,7 +46,7 @@
 			</div>
 		</TooltipTrigger>
 		<TooltipContent side="bottom" align="start" class="flex flex-col gap-1.5">
-			{#each playersWithAchievement as player (player.slug)}
+			Получили: {#each playersWithAchievement as player (player.slug)}
 				<div>{$playersBySlug[player.slug]?.username}</div>
 			{/each}
 		</TooltipContent>
