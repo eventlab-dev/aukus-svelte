@@ -63,18 +63,17 @@
 				used: true
 			}
 		})
-		await $finishMove.mutateAsync({
+		const moveParams = await $finishMove.mutateAsync({
 			body: {
 				dice_roll_id: rollResult.id
 			}
 		})
 
-		const rollSteps = rollResult.roll_values.reduce((a, b) => a + b, 0) * moveDirection
-		const normalizedSteps = normalizeSteps(player.map_position, rollSteps)
-		await movementStore.doRollAnimation(rollResult.roll_values, normalizedSteps)
+		const steps = moveParams.move_to - player.map_position
+		await movementStore.doRollAnimation(rollResult.roll_values, steps)
 		await movementStore.movePlayer({
 			playerSlug: $myPlayer!.slug,
-			steps: normalizedSteps
+			steps: steps
 		})
 		await $eventDataQuery.refetch()
 		frontendState.set(null)
