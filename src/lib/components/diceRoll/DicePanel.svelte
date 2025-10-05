@@ -24,7 +24,7 @@
 				diceOptinos: diceOptionsForPosition($selectedPlayer.map_position)
 			}
 		}
-		if ($myPlayer && $turnState === 'selecting-dice') {
+		if ($turnState === 'selecting-dice') {
 			let options: DiceOptionOrDrop[] = $diceOptions
 			if ($myLastMove?.type === 'drop' || $myLastMove?.type === 'sheikh_moment') {
 				options = ['drop']

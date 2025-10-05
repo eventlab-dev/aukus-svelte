@@ -10,9 +10,9 @@
 	import DiceAnimationPanel from '$lib/components/diceRoll/DiceAnimationPanel.svelte'
 	import DicePanel from '$lib/components/diceRoll/DicePanel.svelte'
 
-	const { playersMovesStore, usersStore, turnState } = getAppManagerContext()
+	const { playersMovesStore, turnState, movementStore } = getAppManagerContext()
 	const { moves } = playersMovesStore
-	const { myUser } = usersStore
+	const { selectedPlayer } = movementStore
 
 	let filteredMoves: PlayerMoveItem[] = $state([])
 
@@ -66,17 +66,17 @@
 	<MapComponent />
 </div>
 
-{#if $myUser && $turnState === 'filling-form'}
+{#if $turnState === 'filling-form' && !$selectedPlayer}
 	<div class="sticky bottom-10 mt-10 flex justify-center">
 		<MoveForm />
 	</div>
 {/if}
 
-{#if $myUser && ($turnState === 'dice-animation' || $turnState === 'dice-results')}
+{#if $turnState === 'dice-animation' || $turnState === 'dice-results'}
 	<DiceAnimationPanel />
 {/if}
 
-{#if $myUser && $turnState === 'selecting-dice'}
+{#if $turnState === 'selecting-dice' || $selectedPlayer}
 	<div class="sticky bottom-10 left-1/2 mt-10 flex w-fit -translate-x-1/2 justify-center">
 		<DicePanel />
 	</div>

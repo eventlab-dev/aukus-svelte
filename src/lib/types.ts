@@ -92,6 +92,7 @@ export type TurnState =
 	| 'dice-animation'
 	| 'dice-results'
 	| 'player-animation'
+	| null
 
 export type PlayerData = UserItem & PlayerItem & { total_score: number }
 

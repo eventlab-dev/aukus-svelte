@@ -14,7 +14,7 @@ export function createAppManager() {
 	const eventDataStore = createEventDataStore()
 	const playersMovesStore = createPlayerMovesStore()
 
-	const frontendState = writable<TurnState | null>(null)
+	const frontendState = writable<TurnState>(null)
 
 	const movementStore = createMovementStore({ eventDataStore, frontendTurnState: frontendState })
 
@@ -55,10 +55,13 @@ export function createAppManager() {
 	})
 
 	const backendState: Readable<TurnState> = derived(eventDataStore.myLastMove, ($myLastMove) => {
-		if ($myLastMove && !$myLastMove.dice_roll_id) {
-			return 'selecting-dice'
+		if ($myLastMove) {
+			if (!$myLastMove.dice_roll_id) {
+				return 'selecting-dice'
+			}
+			return 'filling-form'
 		}
-		return 'filling-form'
+		return null
 	})
 
 	const turnState = derived([backendState, frontendState], ([$backendState, $frontendState]) => {
