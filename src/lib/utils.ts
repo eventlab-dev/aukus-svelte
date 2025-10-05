@@ -179,6 +179,9 @@ export function defaultAuth() {
 
 export function getSkinIconUrl(url: string) {
 	// parse the url and insert "icon_" before the filename
+	if (!url.includes('yandex')) {
+		return url
+	}
 	const parts = url.split('/')
 	const filename = parts.pop()
 	if (!filename) return url
