@@ -1,6 +1,5 @@
-import { type TurnState } from '$lib/types'
 import { createQuery } from '@tanstack/svelte-query'
-import { derived, type Readable } from 'svelte/store'
+import { derived } from 'svelte/store'
 import { getEventDataApiEventDataGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { SkinItem } from '$lib/heyapi/aukus/types.gen'
 import { SvelteMap } from 'svelte/reactivity'
@@ -30,13 +29,6 @@ export function createEventDataStore() {
 	const myLastMove = derived(eventData, ($eventData) => $eventData?.my_last_move ?? null)
 	const diceOptions = derived(eventData, ($eventData) => $eventData?.dice_options ?? [])
 
-	const turnState: Readable<TurnState> = derived(myLastMove, ($myLastMove) => {
-		if ($myLastMove && !$myLastMove.dice_roll_id) {
-			return 'rolling-dice'
-		}
-		return 'filling-form'
-	})
-
 	const skinsById = derived(skins, ($skins) => {
 		const map = new SvelteMap<number, SkinItem>()
 		$skins.forEach((skin) => {
@@ -61,7 +53,6 @@ export function createEventDataStore() {
 		skinsById,
 		achievements,
 		eventSettings,
-		turnState,
 		myLastMove,
 		diceOptions
 	}

@@ -1,0 +1,48 @@
+<script lang="ts">
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import type { DiceOption } from '$lib/heyapi/aukus/types.gen'
+	import DicePanelContent from './DicePanelContent.svelte'
+
+	type DiceOptionOrDrop = DiceOption | 'drop'
+
+	const { eventDataStore, movementStore, myPlayer, turnState } = getAppManagerContext()
+	const { diceOptions, myLastMove } = eventDataStore
+	const { selectedPlayer } = movementStore
+
+	function diceOptionsForPosition(mapPosition: number): DiceOptionOrDrop[] {
+		if (mapPosition >= 81) {
+			return ['drop', '1d4', '1d6']
+		}
+		return ['drop', '1d4', '1d6', '2d6', '3d6']
+	}
+
+	const panelParams = $derived.by(() => {
+		if ($selectedPlayer) {
+			return {
+				playerToShow: $selectedPlayer,
+				canRollDice: false,
+				diceOptinos: diceOptionsForPosition($selectedPlayer.map_position)
+			}
+		}
+		if ($myPlayer && $turnState === 'selecting-dice') {
+			let options: DiceOptionOrDrop[] = $diceOptions
+			if ($myLastMove?.type === 'drop' || $myLastMove?.type === 'sheikh_moment') {
+				options = ['drop']
+			}
+			return {
+				playerToShow: $myPlayer,
+				canRollDice: true,
+				diceOptinos: options
+			}
+		}
+		return null
+	})
+</script>
+
+{#if panelParams}
+	<DicePanelContent
+		player={panelParams.playerToShow}
+		canRollDice={panelParams.canRollDice}
+		diceOptions={panelParams.diceOptinos}
+	/>
+{/if}

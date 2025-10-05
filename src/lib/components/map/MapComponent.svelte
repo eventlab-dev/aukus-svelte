@@ -8,7 +8,7 @@
 	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'
 
-	const { players } = getAppManagerContext()
+	const { players, movementStore } = getAppManagerContext()
 
 	$effect(() => {
 		const mapWidth = 1715
@@ -19,11 +19,15 @@
 				?.scrollTo({ left: diff / 2, behavior: 'smooth' })
 		}
 	})
+
+	function handleClick() {
+		movementStore.selectedPlayer.set(null)
+	}
 </script>
 
 <div class="flex justify-center">
 	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
-		<div id={MapContainerId} class="relative h-[2000px] w-[1700px]">
+		<button id={MapContainerId} class="relative h-[2000px] w-[1700px]" onclick={handleClick}>
 			<img class="h-[2000] w-[1700px] bg-center bg-no-repeat" src={MAP_IMAGE} alt="map" />
 			<MapArrowMarkers />
 			{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
@@ -39,6 +43,6 @@
 			{#each $players as player (player.slug)}
 				<PlayerCharacter {player} />
 			{/each}
-		</div>
+		</button>
 	</div>
 </div>

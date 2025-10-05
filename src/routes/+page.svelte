@@ -6,14 +6,13 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte'
 	import MapComponent from '$lib/components/map/MapComponent.svelte'
-	import DiceRoller from '$lib/components/moveForm/DiceRoller.svelte'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
-	import DiceAnimationPanel from '$lib/components/diceAnimation/DiceAnimationPanel.svelte'
+	import DiceAnimationPanel from '$lib/components/diceRoll/DiceAnimationPanel.svelte'
+	import DicePanel from '$lib/components/diceRoll/DicePanel.svelte'
 
-	const { playersMovesStore, usersStore, eventDataStore } = getAppManagerContext()
+	const { playersMovesStore, usersStore, turnState } = getAppManagerContext()
 	const { moves } = playersMovesStore
 	const { myUser } = usersStore
-	const { turnState } = eventDataStore
 
 	let filteredMoves: PlayerMoveItem[] = $state([])
 
@@ -63,7 +62,7 @@
 	<title>Aukus</title>
 </svelte:head>
 
-<div class="mt-[100px]">
+<div class="mt-[20px]">
 	<MapComponent />
 </div>
 
@@ -73,10 +72,10 @@
 	</div>
 {/if}
 
-{#if $myUser && $turnState === 'rolling-dice'}
+{#if $myUser && $turnState === 'selecting-dice'}
 	<DiceAnimationPanel />
-	<div class="sticky bottom-10 mt-10 flex justify-center">
-		<DiceRoller />
+	<div class="sticky bottom-10 left-1/2 mt-10 flex w-fit -translate-x-1/2 justify-center">
+		<DicePanel />
 	</div>
 {/if}
 

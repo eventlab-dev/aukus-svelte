@@ -11,8 +11,8 @@
 
 	const { player }: Props = $props()
 
-	const { players, eventDataStore, movementStore, myPlayer } = getAppManagerContext()
-	const { skinsById, playersBySlug, turnState } = eventDataStore
+	const { players, eventDataStore, movementStore, myPlayer, turnState } = getAppManagerContext()
+	const { skinsById, playersBySlug } = eventDataStore
 
 	const cellPosition = $derived(getCellPosition(player.map_position))
 
@@ -60,15 +60,15 @@
 	let element: HTMLDivElement
 
 	$effect(() => {
-		if (element && $turnState === 'rolling-dice' && player.slug === $myPlayer?.slug) {
+		if (element && $turnState === 'selecting-dice' && player.slug === $myPlayer?.slug) {
 			// scroll to element
 			element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
 		}
 	})
 
-	const onCharacterClick = () => {
-		console.log('Character clicked:', player.username)
-		// Here you can add logic to open a profile modal or display more info
+	const onCharacterClick = (e: MouseEvent) => {
+		movementStore.selectedPlayer.set(player)
+		e.stopPropagation()
 	}
 
 	onMount(() => {

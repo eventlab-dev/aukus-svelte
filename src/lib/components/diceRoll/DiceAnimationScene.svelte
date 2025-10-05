@@ -14,11 +14,11 @@
 		valuePosition: Vector3
 	}
 
-	const { movementStore } = getAppManagerContext()
+	const { turnState, movementStore } = getAppManagerContext()
 	const { movementState } = movementStore
 
 	const modelsParams: ModelParams[] = $derived.by(() => {
-		if ($movementState.state === 'rolling-dice' || $movementState.state === 'dice-results') {
+		if ($turnState === 'dice-animation' || $turnState === 'dice-results') {
 			if ($movementState.rollValues.length === 1) {
 				return [
 					{
@@ -74,7 +74,7 @@
 	let rotation = $state({ x: 0, y: 0, z: 0 })
 
 	$effect(() => {
-		if ($movementState.state === 'rolling-dice') {
+		if ($turnState === 'dice-animation') {
 			const xRotation = utils.random(70, 100)
 			const yRotation = utils.random(70, 100)
 			const zRotation = utils.random(70, 100)
@@ -98,7 +98,7 @@
 	<T.DirectionalLight position={[0, 10, 10]} intensity={1} />
 	<T.AmbientLight intensity={0.1} />
 
-	{#if $movementState.state === 'dice-results' && modelsParams.length > 1}
+	{#if $turnState === 'dice-results' && modelsParams.length > 1}
 		<HTML position={[-3, 6, -5]}>
 			<div
 				class="pointer-events-none rounded-md bg-black px-4 py-2 text-center text-3xl font-bold whitespace-nowrap text-white select-none"
@@ -128,7 +128,7 @@
 			<T.DodecahedronGeometry />
 			<T.MeshBasicMaterial color="black" side={THREE.BackSide} />
 		</T.Mesh>
-		{#if $movementState.state === 'dice-results'}
+		{#if $turnState === 'dice-results'}
 			<HTML position={params.valuePosition}>
 				<div
 					class="pointer-events-none rounded-md bg-black/70 px-2 py-1 text-center text-5xl font-bold text-white select-none"

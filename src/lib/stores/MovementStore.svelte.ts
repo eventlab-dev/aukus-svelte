@@ -9,17 +9,15 @@ import {
 import { SvelteMap } from 'svelte/reactivity'
 import { get, writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
-import { type PlayerMovementState } from '$lib/types'
+import { type PlayerData, type PlayerMovementState } from '$lib/types'
 import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME } from '$lib/constants'
 
 export function createMovementStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
 	const playerElements = writable(new SvelteMap<string, HTMLElement>())
 
 	const movementState = writable<PlayerMovementState>({
-		direction: 'forward',
 		rollValues: [],
 		startCell: 0,
-		state: 'finished',
 		steps: 0
 	})
 
@@ -153,10 +151,13 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_IDLE_TIME))
 	}
 
+	const selectedPlayer = writable<PlayerData | null>(null)
+
 	return {
 		registerPlayer,
 		movePlayer,
 		movementState,
-		doRollAnimation
+		doRollAnimation,
+		selectedPlayer
 	}
 }

@@ -1,11 +1,11 @@
 import { SOUNDS } from '$lib/constants'
-import { derived, type Readable } from 'svelte/store'
+import { derived, writable, type Readable } from 'svelte/store'
 import { createEventDataStore } from './EventDataStore.svelte'
 import { createGamesHistoryStore } from './GamesHistoryStore.svelte'
 import { createPlayerMovesStore } from './PlayersMovesStore.svelte'
 import SoundManager from './SoundManager.svelte'
 import { createUsersStore } from './UsersStore.svelte'
-import type { PlayerData } from '$lib/types'
+import { type PlayerData, type TurnState } from '$lib/types'
 import { createMovementStore } from './MovementStore.svelte'
 
 export function createAppManager() {
@@ -52,6 +52,19 @@ export function createAppManager() {
 		return $players.find((p) => p.slug === $myUser.slug) || null
 	})
 
+	const backendState: Readable<TurnState> = derived(eventDataStore.myLastMove, ($myLastMove) => {
+		if ($myLastMove && !$myLastMove.dice_roll_id) {
+			return 'selecting-dice'
+		}
+		return 'filling-form'
+	})
+
+	const frontendState = writable<TurnState | null>(null)
+
+	const turnState = derived([backendState, frontendState], ([$backendState, $frontendState]) => {
+		return $frontendState || $backendState
+	})
+
 	return {
 		usersStore,
 		gamesHistoryStore,
@@ -61,7 +74,8 @@ export function createAppManager() {
 		players,
 		playersBySlug,
 		myPlayer,
-		movementStore
+		movementStore,
+		turnState
 	}
 }
 
