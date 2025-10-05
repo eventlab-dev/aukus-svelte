@@ -27,20 +27,21 @@
 		y: cellOffsetY,
 		onlyName
 	} = $derived.by(() => {
+		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
+
+		if (player.map_position === 0) {
+			return { x: 160 + 90 * index, y: 20, onlyName: false }
+		}
+
 		if (playersOnCell.length === 1) {
 			return { x: 26, y: 20, onlyName: false }
 		}
 
-		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
 		if (playersOnCell.length === 2) {
 			if (index === 0) {
 				return { x: 50, y: 0, onlyName: false }
 			}
 			return { x: -5, y: 35, onlyName: false }
-		}
-
-		if (player.map_position === 0) {
-			return { x: 160 + 90 * index, y: 20, onlyName: false }
 		}
 
 		return {
