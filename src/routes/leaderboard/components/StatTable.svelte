@@ -1,5 +1,5 @@
-<script lang="ts" generics="T extends { name: string; avatarLink: string }">
-	import ImageLoader from '$lib/components/ImageLoader.svelte';
+<script lang="ts" generics="T extends { username: string; avatarLink: string }">
+	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import {
 		Table,
 		TableBody,
@@ -7,50 +7,50 @@
 		TableHead,
 		TableHeader,
 		TableRow
-	} from '$lib/components/ui/table';
-	import type { TableHeaderType } from '$lib/types';
+	} from '$lib/components/ui/table'
+	import type { TableHeaderType } from '$lib/types'
 
 	type Props = {
-		data: T[];
-		headers: TableHeaderType<T>[];
-	};
+		data: T[]
+		headers: TableHeaderType<T>[]
+	}
 
-	const { data, headers }: Props = $props();
+	const { data, headers }: Props = $props()
 
-	let sortByKey: keyof T | null = $state(null);
-	let sortOrder: 1 | -1 = $state(1);
+	let sortByKey: keyof T | null = $state(null)
+	let sortOrder: 1 | -1 = $state(1)
 
-	const sortedData = $derived.by(sortRows);
+	const sortedData = $derived.by(sortRows)
 
 	function sortRows() {
 		return data.toSorted((a, b) => {
-			if (!sortByKey) return 0;
+			if (!sortByKey) return 0
 
 			if (a[sortByKey] > b[sortByKey]) {
-				return sortOrder;
+				return sortOrder
 			} else if (a[sortByKey] < b[sortByKey]) {
-				return -sortOrder;
+				return -sortOrder
 			}
 
-			return 0;
-		});
+			return 0
+		})
 	}
 
 	function selectSortKey(key: keyof T) {
 		if (key === sortByKey) {
-			sortOrder *= -1;
-			return;
+			sortOrder *= -1
+			return
 		}
 
-		sortByKey = key;
-		sortOrder = -1;
+		sortByKey = key
+		sortOrder = -1
 	}
 </script>
 
 <Table>
 	<TableHeader>
 		<TableRow>
-			{#each headers as { key, name, width }}
+			{#each headers as { key, name, width } (key)}
 				<TableHead
 					class="relative select-none data-[active=true]:text-foreground data-[avatar=true]:pointer-events-none"
 					data-active={sortByKey === key}
@@ -75,14 +75,14 @@
 		</TableRow>
 	</TableHeader>
 	<TableBody>
-		{#each sortedData as player (player.name)}
+		{#each sortedData as player (player.username)}
 			<TableRow>
-				{#each headers as { key }}
+				{#each headers as { key } (key)}
 					{#if key === 'avatarLink'}
 						<TableCell class="p-0">
 							<ImageLoader
 								src={player.avatarLink}
-								alt={player.name}
+								alt={player.username}
 								class="size-[27px] !rounded-full"
 							/>
 						</TableCell>

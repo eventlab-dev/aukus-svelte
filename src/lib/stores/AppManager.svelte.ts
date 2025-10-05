@@ -7,12 +7,14 @@ import SoundManager from './SoundManager.svelte'
 import { createUsersStore } from './UsersStore.svelte'
 import { type PlayerData, type TurnState } from '$lib/types'
 import { createMovementStore } from './MovementStore.svelte'
+import { createStatsStore } from './StatsStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
 	const gamesHistoryStore = createGamesHistoryStore()
 	const eventDataStore = createEventDataStore()
 	const playersMovesStore = createPlayerMovesStore()
+	const statsStore = createStatsStore()
 
 	const frontendState = writable<TurnState>(null)
 
@@ -79,7 +81,8 @@ export function createAppManager() {
 		myPlayer,
 		movementStore,
 		turnState,
-		frontendState
+		frontendState,
+		statsStore
 	}
 }
 
