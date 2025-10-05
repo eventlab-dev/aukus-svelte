@@ -66,8 +66,8 @@
 			}
 		})
 
-		await movementStore.doRollAnimation(rollResult.roll_values)
 		const rollSteps = rollResult.roll_values.reduce((a, b) => a + b, 0) * moveDirection
+		await movementStore.doRollAnimation(rollResult.roll_values, rollSteps)
 
 		await movementStore.movePlayer({
 			playerSlug: $myPlayer!.slug,

@@ -146,7 +146,7 @@ export function createMovementStore({
 		return finalCell
 	}
 
-	async function doRollAnimation(rollValues: number[]) {
+	async function doRollAnimation(rollValues: number[], steps: number) {
 		if (rollValues.length === 0) {
 			throw new Error('rollValues cannot be empty')
 		}
@@ -154,6 +154,7 @@ export function createMovementStore({
 		frontendTurnState.set('dice-animation')
 		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_ANIMATION_TIME))
 		frontendTurnState.set('dice-results')
+		movementState.update((s) => ({ ...s, steps }))
 		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_IDLE_TIME))
 	}
 
