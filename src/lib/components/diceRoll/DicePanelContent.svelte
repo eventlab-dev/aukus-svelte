@@ -148,9 +148,9 @@
 
 	function dropDiceText() {
 		if (player.map_position >= 81) {
-			return '-2d6'
+			return '2d6'
 		}
-		return '-1d6'
+		return '1d6'
 	}
 </script>
 
