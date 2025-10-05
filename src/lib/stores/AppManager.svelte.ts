@@ -14,7 +14,9 @@ export function createAppManager() {
 	const eventDataStore = createEventDataStore()
 	const playersMovesStore = createPlayerMovesStore()
 
-	const movementStore = createMovementStore({ eventDataStore })
+	const frontendState = writable<TurnState | null>(null)
+
+	const movementStore = createMovementStore({ eventDataStore, frontendTurnState: frontendState })
 
 	const soundManager = new SoundManager()
 	soundManager.preloadSounds(SOUNDS)
@@ -59,8 +61,6 @@ export function createAppManager() {
 		return 'filling-form'
 	})
 
-	const frontendState = writable<TurnState | null>(null)
-
 	const turnState = derived([backendState, frontendState], ([$backendState, $frontendState]) => {
 		return $frontendState || $backendState
 	})
@@ -75,7 +75,8 @@ export function createAppManager() {
 		playersBySlug,
 		myPlayer,
 		movementStore,
-		turnState
+		turnState,
+		frontendState
 	}
 }
 

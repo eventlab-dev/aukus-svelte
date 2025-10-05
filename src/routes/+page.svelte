@@ -72,8 +72,11 @@
 	</div>
 {/if}
 
-{#if $myUser && $turnState === 'selecting-dice'}
+{#if $myUser && ($turnState === 'dice-animation' || $turnState === 'dice-results')}
 	<DiceAnimationPanel />
+{/if}
+
+{#if $myUser && $turnState === 'selecting-dice'}
 	<div class="sticky bottom-10 left-1/2 mt-10 flex w-fit -translate-x-1/2 justify-center">
 		<DicePanel />
 	</div>

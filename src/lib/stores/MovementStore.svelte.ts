@@ -7,12 +7,18 @@ import {
 	type MapCell
 } from '$lib/mapUtils'
 import { SvelteMap } from 'svelte/reactivity'
-import { get, writable } from 'svelte/store'
+import { get, writable, type Writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
-import { type PlayerData, type PlayerMovementState } from '$lib/types'
+import { type PlayerData, type PlayerMovementState, type TurnState } from '$lib/types'
 import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME } from '$lib/constants'
 
-export function createMovementStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
+export function createMovementStore({
+	eventDataStore,
+	frontendTurnState
+}: {
+	eventDataStore: EventDataStore
+	frontendTurnState: Writable<TurnState | null>
+}) {
 	const playerElements = writable(new SvelteMap<string, HTMLElement>())
 
 	const movementState = writable<PlayerMovementState>({
@@ -50,11 +56,11 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 
 		const direction = params.steps > 0 ? 1 : -1
 
+		frontendTurnState.set('player-animation')
+
 		movementState.update((s) => ({
 			...s,
-			state: 'moving',
 			steps: boundSteps,
-			direction: direction === 1 ? 'forward' : 'backward',
 			startCell
 		}))
 
@@ -137,7 +143,6 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 				resolve(true)
 			}
 		})
-		movementState.update((s) => ({ ...s, state: 'finished' }))
 		return finalCell
 	}
 
@@ -145,9 +150,10 @@ export function createMovementStore({ eventDataStore }: { eventDataStore: EventD
 		if (rollValues.length === 0) {
 			throw new Error('rollValues cannot be empty')
 		}
-		movementState.update((s) => ({ ...s, rollValues, state: 'rolling-dice' }))
+		movementState.update((s) => ({ ...s, rollValues }))
+		frontendTurnState.set('dice-animation')
 		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_ANIMATION_TIME))
-		movementState.update((s) => ({ ...s, state: 'dice-results' }))
+		frontendTurnState.set('dice-results')
 		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_IDLE_TIME))
 	}
 

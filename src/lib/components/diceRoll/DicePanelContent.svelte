@@ -21,7 +21,8 @@
 
 	const { player, canRollDice, diceOptions }: Props = $props()
 
-	const { usersStore, eventDataStore, movementStore, myPlayer } = getAppManagerContext()
+	const { usersStore, eventDataStore, movementStore, myPlayer, frontendState } =
+		getAppManagerContext()
 	const { finishMove, rollDice } = usersStore
 	const { eventDataQuery } = eventDataStore
 	const { movementState } = movementStore
@@ -72,7 +73,8 @@
 			playerSlug: $myPlayer!.slug,
 			steps: rollSteps
 		})
-		$eventDataQuery.refetch()
+		await $eventDataQuery.refetch()
+		frontendState.set(null)
 	}
 
 	const { ladderChance, snakeChance, maxRoll } = $derived.by(() => {
