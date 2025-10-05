@@ -44,28 +44,20 @@ export function createMovementStore({
 		const startCell = player.map_position
 
 		if (params.steps === 0) return
-		if (startCell <= 1 && params.steps < 0) return
 
-		let endCell = startCell + params.steps
-		let boundSteps = params.steps
-
-		if (endCell < 0) {
-			endCell = 0
-			boundSteps = -startCell
-		}
-
+		const endCell = startCell + params.steps
 		const direction = params.steps > 0 ? 1 : -1
 
 		frontendTurnState.set('player-animation')
 
 		movementState.update((s) => ({
 			...s,
-			steps: boundSteps,
+			steps: params.steps,
 			startCell
 		}))
 
 		const cellsPath: MapCell[] = []
-		for (let i = 1; i <= Math.abs(boundSteps); i++) {
+		for (let i = 1; i <= Math.abs(params.steps); i++) {
 			cellsPath.push(getMapCellById(startCell + i * direction))
 		}
 

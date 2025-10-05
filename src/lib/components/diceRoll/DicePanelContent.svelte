@@ -5,6 +5,7 @@
 	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
 	import ToggleButtonGroup from './ToggleButtonGroup.svelte'
 	import type { PlayerData } from '$lib/types'
+	import { normalizeSteps } from '$lib/utils'
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
@@ -43,6 +44,8 @@
 	let selectedDiceOption = $state<DiceOption | 'drop' | null>(null)
 
 	$effect(() => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+		player
 		selectedDiceOption = defaultOption
 	})
 
@@ -67,11 +70,11 @@
 		})
 
 		const rollSteps = rollResult.roll_values.reduce((a, b) => a + b, 0) * moveDirection
-		await movementStore.doRollAnimation(rollResult.roll_values, rollSteps)
-
+		const normalizedSteps = normalizeSteps(player.map_position, rollSteps)
+		await movementStore.doRollAnimation(rollResult.roll_values, normalizedSteps)
 		await movementStore.movePlayer({
 			playerSlug: $myPlayer!.slug,
-			steps: rollSteps
+			steps: normalizedSteps
 		})
 		await $eventDataQuery.refetch()
 		frontendState.set(null)
@@ -129,11 +132,10 @@
 
 	$effect(() => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		// canRollDice
 		movementState.set({
 			rollValues: [],
 			startCell: player.map_position,
-			steps: maxRoll
+			steps: normalizeSteps(player.map_position, maxRoll)
 		})
 		// movementState.set({
 		// 	direction: 'forward',

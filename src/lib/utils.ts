@@ -184,3 +184,17 @@ export function getSkinIconUrl(url: string) {
 	if (!filename) return url
 	return [...parts, `icon_${filename}`].join('/')
 }
+
+export function normalizeSteps(mapPosition: number, steps: number) {
+	const targetPosition = mapPosition + steps
+	if (targetPosition < 0) {
+		return -mapPosition // Can't go below 0
+	}
+	if (targetPosition > 100 && mapPosition < 100) {
+		return 100 - mapPosition // Can't go above 100
+	}
+	if (targetPosition > 100 && mapPosition >= 100) {
+		return 101
+	}
+	return steps // Valid move
+}
