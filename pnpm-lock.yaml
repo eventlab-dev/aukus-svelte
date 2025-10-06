@@ -17,6 +17,12 @@ importers:
       '@threlte/extras':
         specifier: ^9.5.4
         version: 9.5.4(@types/three@0.180.0)(svelte@5.38.6)(three@0.180.0)
+      '@tiptap/extension-highlight':
+        specifier: ^3.6.5
+        version: 3.6.5(@tiptap/core@3.4.1(@tiptap/pm@3.4.1))
+      '@tiptap/extension-text-align':
+        specifier: ^3.6.5
+        version: 3.6.5(@tiptap/core@3.4.1(@tiptap/pm@3.4.1))
       animejs:
         specifier: ^4.1.4
         version: 4.1.4
@@ -775,6 +781,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.4.1
 
+  '@tiptap/extension-highlight@3.6.5':
+    resolution: {integrity: sha512-316Sj6GB8yLx5tgJHsclm5Rn/6g+mqUx6Jhzxth28L8CmcJoSioMJd14dux2rk1yhzSfBveAUyr5cPWcVGerVg==}
+    peerDependencies:
+      '@tiptap/core': ^3.6.5
+
   '@tiptap/extension-horizontal-rule@3.4.1':
     resolution: {integrity: sha512-rZDci6ZER5e41qr6z8ZC8L7Ir8AaPwRfY534jH/FVuKJeg6T7TEIxUQoYFp2QZQMhr1Hb81MfmLO0RUpoIitMg==}
     peerDependencies:
@@ -827,6 +838,11 @@ packages:
     resolution: {integrity: sha512-m3RJA9kq39mDUZR/i9NJVtNlbaa+7F+hv8FkNDNOyaHwn52mas7bbtNEI73/O48r7GsPhLhfzeShhGXtwRINmQ==}
     peerDependencies:
       '@tiptap/core': ^3.4.1
+
+  '@tiptap/extension-text-align@3.6.5':
+    resolution: {integrity: sha512-QdFHQqRKbuUnBDoQkW3yYrUUFvYIlvZJPMH65+egicPiVOOFxB8zRlQI/FCpCRH97w+zFbpEXrFxvXgB7K2Vxg==}
+    peerDependencies:
+      '@tiptap/core': ^3.6.5
 
   '@tiptap/extension-text@3.4.1':
     resolution: {integrity: sha512-6qcBjRAE4HpjbFShf9e44uBuq8jMvrumzvK4FwhAwZ7S8nyywN1WLZY3S1UQLMYJr3wZn+9IhKMb2CjBeGIPiA==}
@@ -2704,6 +2720,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.4.1(@tiptap/pm@3.4.1)
 
+  '@tiptap/extension-highlight@3.6.5(@tiptap/core@3.4.1(@tiptap/pm@3.4.1))':
+    dependencies:
+      '@tiptap/core': 3.4.1(@tiptap/pm@3.4.1)
+
   '@tiptap/extension-horizontal-rule@3.4.1(@tiptap/core@3.4.1(@tiptap/pm@3.4.1))(@tiptap/pm@3.4.1)':
     dependencies:
       '@tiptap/core': 3.4.1(@tiptap/pm@3.4.1)
@@ -2745,6 +2765,10 @@ snapshots:
       '@tiptap/core': 3.4.1(@tiptap/pm@3.4.1)
 
   '@tiptap/extension-strike@3.4.1(@tiptap/core@3.4.1(@tiptap/pm@3.4.1))':
+    dependencies:
+      '@tiptap/core': 3.4.1(@tiptap/pm@3.4.1)
+
+  '@tiptap/extension-text-align@3.6.5(@tiptap/core@3.4.1(@tiptap/pm@3.4.1))':
     dependencies:
       '@tiptap/core': 3.4.1(@tiptap/pm@3.4.1)
 

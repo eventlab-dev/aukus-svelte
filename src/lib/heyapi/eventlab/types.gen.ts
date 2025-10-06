@@ -249,7 +249,7 @@ export type UserItem = {
 /**
  * UserRole
  */
-export type UserRole = 'streamer' | 'admin';
+export type UserRole = 'streamer' | 'moderator' | 'admin';
 
 /**
  * UsersResponse

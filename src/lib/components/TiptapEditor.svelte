@@ -1,34 +1,39 @@
 <script lang="ts">
-	import { Editor } from '@tiptap/core';
-	import { onMount } from 'svelte';
-	import { cn } from '$lib/utils';
-	import enabledExtensions from '$lib/tiptapExtensions/enabledExtensions';
+	import { Editor } from '@tiptap/core'
+	import { onMount } from 'svelte'
+	import { cn } from '$lib/utils'
+	import enabledExtensions from '$lib/tiptapExtensions/enabledExtensions'
+	import TiptapMenu from './TiptapMenu.svelte'
 
 	type Props = {
-		content: string;
-		value?: string;
-		editorState?: { editor: Editor | null };
-		editable?: boolean;
-		class?: string;
-	};
+		content: string
+		value?: string
+		editorState?: { editor: Editor | null }
+		editable?: boolean
+		class?: string
+		withMenu?: boolean
+	}
 
 	let {
 		class: className,
 		value = $bindable(''),
 		editorState = $bindable({ editor: null }),
 		content,
-		editable = true
-	}: Props = $props();
+		editable = true,
+		withMenu = false
+	}: Props = $props()
 
-	let element: HTMLDivElement | undefined = $state();
+	let element: HTMLDivElement | undefined = $state()
 
 	const editorStyles =
-		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg border-2 border-muted bg-transparent p-2 font-medium transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20';
+		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg border-2 border-muted bg-transparent p-2 font-medium transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20'
+
+	let editor: Editor | null = $state(null)
 
 	onMount(() => {
-		if (!element) return;
+		if (!element) return
 
-		const editor = new Editor({
+		editor = new Editor({
 			element,
 			content: content ? JSON.parse(content) : '',
 			enablePasteRules: false,
@@ -41,25 +46,28 @@
 			extensions: enabledExtensions,
 			onTransaction: ({ editor }) => {
 				// force re-render so `editor.isActive` works as expected
-				editorState = { editor };
+				editorState = { editor }
 			}
-		});
+		})
 
-		return () => editor.destroy();
-	});
+		return () => editor?.destroy()
+	})
 
 	$effect(() => {
-		if (!editorState.editor) return;
+		if (!editorState.editor) return
 
 		if (editorState.editor.isEmpty) {
-			value = '';
+			value = ''
 		} else {
-			value = JSON.stringify(editorState.editor.getJSON());
+			value = JSON.stringify(editorState.editor.getJSON())
 		}
-	});
+	})
 </script>
 
 <div style="position: relative">
+	{#if withMenu && editor}
+		<TiptapMenu {editor} />
+	{/if}
 	<div bind:this={element}></div>
 </div>
 

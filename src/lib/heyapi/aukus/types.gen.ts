@@ -16,7 +16,13 @@ export type AchievementItem = {
      * Reward Skin Id
      */
     reward_skin_id: number;
+    visibility: AchievementVisibility;
 };
+
+/**
+ * AchievementVisibility
+ */
+export type AchievementVisibility = 'visible' | 'hidden';
 
 /**
  * Body_upload_canvas_image_api_canvas__player_slug__upload_post
@@ -228,6 +234,17 @@ export type HttpValidationError = {
 };
 
 /**
+ * NewRulesVersionRequest
+ */
+export type NewRulesVersionRequest = {
+    /**
+     * Content
+     */
+    content: string;
+    category: RulesCategory;
+};
+
+/**
  * PlayerChangeSkinRequest
  */
 export type PlayerChangeSkinRequest = {
@@ -304,7 +321,7 @@ export type PlayerMoveItem = {
      * Item Rating
      */
     item_rating: number;
-    item_length: GameLength;
+    item_length: GameLength | null;
     /**
      * Vod Links
      */
@@ -457,6 +474,36 @@ export type PlayerStatsResponse = {
      * Players
      */
     players: Array<PlayerStatsItem>;
+};
+
+/**
+ * RulesCategory
+ */
+export type RulesCategory = 'general' | 'gameplay' | 'donations';
+
+/**
+ * RulesResponse
+ */
+export type RulesResponse = {
+    /**
+     * Versions
+     */
+    versions: Array<RulesVersion>;
+};
+
+/**
+ * RulesVersion
+ */
+export type RulesVersion = {
+    /**
+     * Content
+     */
+    content: string;
+    category: RulesCategory;
+    /**
+     * Created At
+     */
+    created_at: number;
 };
 
 /**
@@ -789,6 +836,61 @@ export type SetPlayerSkinsApiPlayersSkinsPostErrors = {
 export type SetPlayerSkinsApiPlayersSkinsPostError = SetPlayerSkinsApiPlayersSkinsPostErrors[keyof SetPlayerSkinsApiPlayersSkinsPostErrors];
 
 export type SetPlayerSkinsApiPlayersSkinsPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type GetCurrentRulesVersionApiRulesCurrentGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/rules/current';
+};
+
+export type GetCurrentRulesVersionApiRulesCurrentGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: RulesResponse;
+};
+
+export type GetCurrentRulesVersionApiRulesCurrentGetResponse = GetCurrentRulesVersionApiRulesCurrentGetResponses[keyof GetCurrentRulesVersionApiRulesCurrentGetResponses];
+
+export type GetAllRulesVersionsApiRulesGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/rules';
+};
+
+export type GetAllRulesVersionsApiRulesGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: RulesResponse;
+};
+
+export type GetAllRulesVersionsApiRulesGetResponse = GetAllRulesVersionsApiRulesGetResponses[keyof GetAllRulesVersionsApiRulesGetResponses];
+
+export type CreateNewRulesVersionApiRulesPostData = {
+    body: NewRulesVersionRequest;
+    path?: never;
+    query?: never;
+    url: '/api/rules';
+};
+
+export type CreateNewRulesVersionApiRulesPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CreateNewRulesVersionApiRulesPostError = CreateNewRulesVersionApiRulesPostErrors[keyof CreateNewRulesVersionApiRulesPostErrors];
+
+export type CreateNewRulesVersionApiRulesPostResponses = {
     /**
      * Successful Response
      */
