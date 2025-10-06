@@ -41,7 +41,7 @@
 			data-variant={cellType(cell.id)}
 			style="top: {cell.position.y + 40}px; left: {cell.position.x + 45}px;"
 		>
-			<div>{showMinus ? '-' : '+'}{idx + 1}</div>
+			<div class="w-[2ch]">{showMinus ? '-' : ''}{idx + 1}</div>
 		</div>
 	{/each}
 {/if}
