@@ -1,86 +1,103 @@
 <script lang="ts">
 	import type { Editor } from '@tiptap/core'
-	import { Button } from './ui/button'
+	import ToggleGroup from './ui/toggle-group/toggle-group.svelte'
+	import { ToggleGroupItem } from './ui/toggle-group'
+	import BoldIcon from '@lucide/svelte/icons/bold'
+	import ItalicIcon from '@lucide/svelte/icons/italic'
+	import UnderlineIcon from '@lucide/svelte/icons/underline'
+	import StrikethroughIcon from '@lucide/svelte/icons/strikethrough'
+	import HighlightIcon from '@lucide/svelte/icons/highlighter'
 
 	type Props = {
-		editor: Editor
+		editorState: { editor: Editor | null }
 	}
-	const { editor }: Props = $props()
+	const { editorState }: Props = $props()
+
+	const headerType = $derived.by(() => {
+		if (editorState.editor?.isActive('heading', { level: 1 })) return 'h1'
+		if (editorState.editor?.isActive('heading', { level: 2 })) return 'h2'
+		if (editorState.editor?.isActive('heading', { level: 3 })) return 'h3'
+		return undefined
+	})
+
+	const textFormats = $derived.by(() => {
+		const formats = []
+		if (editorState.editor?.isActive('bold')) formats.push('bold')
+		if (editorState.editor?.isActive('italic')) formats.push('italic')
+		if (editorState.editor?.isActive('strike')) formats.push('strike')
+		if (editorState.editor?.isActive('highlight')) formats.push('highlight')
+		if (editorState.editor?.isActive('underline')) formats.push('underline')
+		return formats
+	})
 </script>
 
-<div class="control-group">
-	<div class="flex w-[500px] flex-wrap gap-3">
-		<Button
-			onclick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-			class={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
+<div class="flex gap-3">
+	<ToggleGroup variant="outline" type="single" value={headerType}>
+		<ToggleGroupItem
+			value="h1"
+			onclick={() => editorState.editor?.chain().focus().toggleHeading({ level: 1 }).run()}
+			>H1</ToggleGroupItem
 		>
-			H1
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-			class={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
+		<ToggleGroupItem
+			value="h2"
+			onclick={() => editorState.editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+			>H2</ToggleGroupItem
 		>
-			H2
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-			class={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
+		<ToggleGroupItem
+			value="h3"
+			onclick={() => editorState.editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+			>H3</ToggleGroupItem
 		>
-			H3
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().setParagraph().run()}
-			class={editor.isActive('paragraph') ? 'is-active' : ''}
+	</ToggleGroup>
+	<ToggleGroup variant="outline" type="multiple" value={textFormats}>
+		<ToggleGroupItem
+			value="bold"
+			onclick={() => editorState.editor?.chain().focus().toggleBold().run()}
 		>
-			Paragraph
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().toggleBold().run()}
-			class={editor.isActive('bold') ? 'is-active' : ''}
+			<BoldIcon />
+		</ToggleGroupItem>
+		<ToggleGroupItem
+			value="italic"
+			onclick={() => editorState.editor?.chain().focus().toggleItalic().run()}
 		>
-			Bold
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().toggleItalic().run()}
-			class={editor.isActive('italic') ? 'is-active' : ''}
+			<ItalicIcon />
+		</ToggleGroupItem>
+		<ToggleGroupItem
+			value="underline"
+			onclick={() => editorState.editor?.chain().focus().toggleUnderline().run()}
+			><UnderlineIcon /></ToggleGroupItem
 		>
-			Italic
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().toggleStrike().run()}
-			class={editor.isActive('strike') ? 'is-active' : ''}
+		<ToggleGroupItem
+			value="strike"
+			onclick={() => editorState.editor?.chain().focus().toggleStrike().run()}
+			><StrikethroughIcon /></ToggleGroupItem
 		>
-			Strike
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().toggleHighlight().run()}
-			class={editor.isActive('highlight') ? 'is-active' : ''}
+		<ToggleGroupItem
+			value="highlight"
+			onclick={() => editorState.editor?.chain().focus().toggleHighlight().run()}
+			><HighlightIcon /></ToggleGroupItem
 		>
-			Highlight
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().setTextAlign('left').run()}
-			class={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}
+	</ToggleGroup>
+	<ToggleGroup variant="outline" type="single">
+		<ToggleGroupItem
+			value="left"
+			onclick={() => editorState.editor?.chain().focus().setTextAlign('left').run()}
+			>Left</ToggleGroupItem
 		>
-			Left
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().setTextAlign('center').run()}
-			class={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}
+		<ToggleGroupItem
+			value="center"
+			onclick={() => editorState.editor?.chain().focus().setTextAlign('center').run()}
+			>Center</ToggleGroupItem
 		>
-			Center
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().setTextAlign('right').run()}
-			class={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}
+		<ToggleGroupItem
+			value="right"
+			onclick={() => editorState.editor?.chain().focus().setTextAlign('right').run()}
+			>Right</ToggleGroupItem
 		>
-			Right
-		</Button>
-		<Button
-			onclick={() => editor.chain().focus().setTextAlign('justify').run()}
-			class={editor.isActive({ textAlign: 'justify' }) ? 'is-active' : ''}
+		<ToggleGroupItem
+			value="justify"
+			onclick={() => editorState.editor?.chain().focus().setTextAlign('justify').run()}
+			>Justify</ToggleGroupItem
 		>
-			Justify
-		</Button>
-	</div>
+	</ToggleGroup>
 </div>

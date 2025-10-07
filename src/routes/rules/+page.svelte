@@ -1,15 +1,25 @@
 <script lang="ts">
+	import { AukusBaseUrl } from '$lib/client'
 	import TiptapEditor from '$lib/components/TiptapEditor.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { getCurrentRulesVersionApiRulesCurrentGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+	import {
+		createNewRulesVersionApiRulesPostMutation,
+		getCurrentRulesVersionApiRulesCurrentGetOptions
+	} from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+	import { defaultAuth } from '$lib/utils'
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
-	import { createQuery } from '@tanstack/svelte-query'
+	import { createMutation, createQuery } from '@tanstack/svelte-query'
 
 	const { myPlayer } = getAppManagerContext()
 	const canEdit = $derived($myPlayer?.role === 'admin')
 
-	const rulesQuery = createQuery(getCurrentRulesVersionApiRulesCurrentGetOptions())
+	const rulesQuery = createQuery(
+		getCurrentRulesVersionApiRulesCurrentGetOptions({ baseUrl: AukusBaseUrl })
+	)
+	const saveQuery = createMutation(
+		createNewRulesVersionApiRulesPostMutation({ baseUrl: AukusBaseUrl, auth: defaultAuth() })
+	)
 
 	const defaultRuleValue = '<h3><u>Правила не найдены</u></h3>'
 
@@ -18,10 +28,18 @@
 	let editorMode = $state(false)
 	let editedRules = $state('')
 
-	$inspect(editedRules)
+	$inspect(rules)
 
 	function saveRules() {
 		editorMode = false
+		$saveQuery.mutate(
+			{ body: { category: 'general', content: editedRules } },
+			{
+				onSettled: () => {
+					$rulesQuery.refetch()
+				}
+			}
+		)
 	}
 </script>
 

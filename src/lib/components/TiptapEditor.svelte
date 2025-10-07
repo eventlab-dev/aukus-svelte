@@ -28,12 +28,10 @@
 	const editorStyles =
 		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg border-2 border-muted bg-transparent p-2 font-medium transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20'
 
-	let editor: Editor | null = $state(null)
-
 	onMount(() => {
 		if (!element) return
 
-		editor = new Editor({
+		const editor = new Editor({
 			element,
 			content: content ? JSON.parse(content) : '',
 			enablePasteRules: false,
@@ -50,7 +48,15 @@
 			}
 		})
 
-		return () => editor?.destroy()
+		return () => editor.destroy()
+	})
+
+	const editor = $derived(editorState.editor)
+
+	$effect(() => {
+		if (editor) {
+			editor.commands.setContent(content ? JSON.parse(content) : '')
+		}
 	})
 
 	$effect(() => {
@@ -65,8 +71,8 @@
 </script>
 
 <div style="position: relative">
-	{#if withMenu && editor}
-		<TiptapMenu {editor} />
+	{#if withMenu && editorState.editor}
+		<TiptapMenu {editorState} />
 	{/if}
 	<div bind:this={element}></div>
 </div>
