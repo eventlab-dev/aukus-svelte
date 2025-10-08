@@ -19,12 +19,12 @@
 			console.log({ element })
 			if (!element) return
 
-			const pos = editor.view.posAtDOM(element, 0)
+			const editorPos = editor.view.posAtDOM(element, 0)
 
 			// set focus
 			const tr = editor.view.state.tr
 
-			tr.setSelection(new TextSelection(tr.doc.resolve(pos)))
+			tr.setSelection(new TextSelection(tr.doc.resolve(editorPos)))
 
 			editor.view.dispatch(tr)
 
@@ -34,7 +34,13 @@
 			// 	history.pushState(null, '', `#${id}`)
 			// }
 
-			element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+			// element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+			const mainScroll = document.getElementById('main-scroll-area')?.firstElementChild
+			mainScroll?.scrollTo({
+				top: element.getBoundingClientRect().top + mainScroll.scrollTop - pos.top,
+				behavior: 'smooth'
+			})
 
 			// window.scrollTo({
 			// 	top: element.getBoundingClientRect().top + window.scrollY,
@@ -93,9 +99,9 @@
 			padding-left: calc(0.875rem * (var(--level) - 1));
 			transition: all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1);
 
-			&:hover {
+			/*&:hover {
 				background-color: var(--gray-2);
-			}
+			}*/
 		}
 
 		/*.empty-state {
