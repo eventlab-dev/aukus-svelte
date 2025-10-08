@@ -18,7 +18,7 @@
 	const sortedPlayers = $derived([...$players].sort((a, b) => b.map_position - a.map_position))
 </script>
 
-<ScrollArea class="h-screen px-3" type="always">
+<ScrollArea class="h-screen px-3" type="always" id="main-scroll-area">
 	<div class="py-3">
 		<div class="absolute top-3 left-3 z-10">
 			<QuickMenu />

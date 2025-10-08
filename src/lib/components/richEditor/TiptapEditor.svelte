@@ -2,8 +2,10 @@
 	import { Editor } from '@tiptap/core'
 	import { onMount } from 'svelte'
 	import { cn } from '$lib/utils'
-	import enabledExtensions from '$lib/tiptapExtensions/enabledExtensions'
+	import { initExtensions } from '$lib/tiptapExtensions/enabledExtensions'
 	import TiptapMenu from './TiptapMenu.svelte'
+	import { type TableOfContentDataItem } from '@tiptap/extension-table-of-contents'
+	import TableOfContents from './TableOfContents.svelte'
 
 	type Props = {
 		content: string
@@ -28,8 +30,12 @@
 	const editorStyles =
 		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg border-2 border-muted bg-transparent p-2 font-medium transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20'
 
+	let tocData = $state<TableOfContentDataItem[]>([])
+
 	onMount(() => {
 		if (!element) return
+
+		const extensions = initExtensions({ onTOCupdate: (data) => (tocData = data) })
 
 		const editor = new Editor({
 			element,
@@ -41,7 +47,7 @@
 					class: cn(editorStyles, className, 'prose prose-invert')
 				}
 			},
-			extensions: enabledExtensions,
+			extensions,
 			onTransaction: ({ editor }) => {
 				// force re-render so `editor.isActive` works as expected
 				editorState = { editor }
@@ -50,6 +56,11 @@
 
 		return () => editor.destroy()
 	})
+
+	// const activeToc = $derived(tocData.find((item) => item.isActive) || null)
+
+	// $inspect(tocData, 'TOC Data')
+	// $inspect(activeToc, 'Active TOC Item')
 
 	const editor = $derived(editorState.editor)
 
@@ -68,15 +79,25 @@
 			value = JSON.stringify(editorState.editor.getJSON())
 		}
 	})
+
+	const editorTopLeft = $derived.by(() => {
+		if (!element) return { top: 0, left: 0 }
+		const rect = element.getBoundingClientRect()
+		return { top: rect.top + window.scrollY, left: rect.left + window.scrollX }
+	})
 </script>
 
-<div style="position: relative">
+<div class="relative">
 	{#if withMenu && editorState.editor}
 		<div class="mb-3">
 			<TiptapMenu {editorState} />
 		</div>
 	{/if}
 	<div bind:this={element}></div>
+
+	{#if editor}
+		<TableOfContents items={tocData} {editor} pos={editorTopLeft} />
+	{/if}
 </div>
 
 <style>

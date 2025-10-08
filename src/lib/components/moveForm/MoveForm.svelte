@@ -7,7 +7,7 @@
 	import Rating from './components/Rating.svelte'
 	import { Button } from '../ui/button'
 	import BoxIcon from '../icons/BoxIcon.svelte'
-	import TiptapEditor from '../TiptapEditor.svelte'
+	import TiptapEditor from '../richEditor/TiptapEditor.svelte'
 	import { Editor } from '@tiptap/core'
 	import GameTitle from './components/GameTitle.svelte'
 	import EmotesPopover from './components/EmotesPopover.svelte'

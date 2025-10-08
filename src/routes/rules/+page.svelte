@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { AukusBaseUrl } from '$lib/client'
-	import TiptapEditor from '$lib/components/TiptapEditor.svelte'
+	import TiptapEditor from '$lib/components/richEditor/TiptapEditor.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import {
@@ -28,7 +28,7 @@
 	let editorMode = $state(false)
 	let editedRules = $state('')
 
-	$inspect(rules)
+	// $inspect(rules)
 
 	function saveRules() {
 		editorMode = false
@@ -63,7 +63,7 @@
 		{:else if editorMode}
 			<TiptapEditor class="h-[80vh] w-[700px]" content={rules} bind:value={editedRules} withMenu />
 		{:else}
-			<TiptapEditor class="h-[80vh] w-[700px] border-none" content={rules} editable={false} />
+			<TiptapEditor class="h-fit w-[700px] border-none" content={rules} editable={false} />
 		{/if}
 	</div>
 </div>

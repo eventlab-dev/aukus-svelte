@@ -3,9 +3,11 @@ import { twMerge } from 'tailwind-merge'
 import { transliterationMap } from './constants'
 import type { BadgeVariant } from './components/ui/badge'
 import { renderToHTMLString } from '@tiptap/static-renderer'
-import enabledExtensions from './tiptapExtensions/enabledExtensions'
+import { initExtensions } from './tiptapExtensions/enabledExtensions'
 import dompurify from 'dompurify'
 import type { PlayerMoveType } from './heyapi/aukus/types.gen'
+
+const enabledExtensions = initExtensions()
 
 export function randomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min

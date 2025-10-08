@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Editor } from '@tiptap/core'
-	import ToggleGroup from './ui/toggle-group/toggle-group.svelte'
-	import { ToggleGroupItem } from './ui/toggle-group'
+	import ToggleGroup from '../ui/toggle-group/toggle-group.svelte'
+	import { ToggleGroupItem } from '../ui/toggle-group'
 	import BoldIcon from '@lucide/svelte/icons/bold'
 	import ItalicIcon from '@lucide/svelte/icons/italic'
 	import UnderlineIcon from '@lucide/svelte/icons/underline'
@@ -13,7 +13,7 @@
 	import MinusIcon from '@lucide/svelte/icons/minus'
 	import LinkIcon from '@lucide/svelte/icons/link'
 	import UnlinkIcon from '@lucide/svelte/icons/unlink'
-	import { Button } from './ui/button'
+	import { Button } from '../ui/button'
 
 	type Props = {
 		editorState: { editor: Editor | null }
