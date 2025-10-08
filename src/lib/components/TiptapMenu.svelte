@@ -10,6 +10,8 @@
 	import ListIcon from '@lucide/svelte/icons/list'
 	import OrderedListIcon from '@lucide/svelte/icons/list-ordered'
 	import ClearIcon from '@lucide/svelte/icons/octagon-x'
+	import MinusIcon from '@lucide/svelte/icons/minus'
+	import { Button } from './ui/button'
 
 	type Props = {
 		editorState: { editor: Editor | null }
@@ -148,5 +150,12 @@
 				><ClearIcon></ClearIcon></ToggleGroupItem
 			>
 		</ToggleGroup>
+
+		<Button
+			variant="outline"
+			class=" w-auto flex-none"
+			onclick={() => editorState.editor?.chain().focus().setHorizontalRule().run()}
+			><MinusIcon></MinusIcon></Button
+		>
 	</div>
 </div>
