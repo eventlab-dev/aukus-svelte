@@ -11,6 +11,8 @@
 	import OrderedListIcon from '@lucide/svelte/icons/list-ordered'
 	import ClearIcon from '@lucide/svelte/icons/octagon-x'
 	import MinusIcon from '@lucide/svelte/icons/minus'
+	import LinkIcon from '@lucide/svelte/icons/link'
+	import UnlinkIcon from '@lucide/svelte/icons/unlink'
 	import { Button } from './ui/button'
 
 	type Props = {
@@ -42,6 +44,31 @@
 		if (editorState.editor?.isActive('orderedList')) types.push('ordered')
 		return types
 	})
+
+	function setLink() {
+		const previousUrl = editorState.editor?.getAttributes('link').href
+		const url = prompt('URL', previousUrl || '')
+
+		if (url === null) {
+			return
+		}
+
+		if (url === '') {
+			editorState.editor?.chain().focus().extendMarkRange('link').unsetLink().run()
+			return
+		}
+		editorState.editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+
+		// editorState.editor?.chain().focus().setLink({ href: url }).run()
+
+		//   // update link
+		//   try {
+		//     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+		//   } catch (e) {
+		//     alert(e.message)
+		//   }
+		// }, [editor])
+	}
 </script>
 
 <div class="flex flex-col gap-3">
@@ -156,6 +183,13 @@
 			class=" w-auto flex-none"
 			onclick={() => editorState.editor?.chain().focus().setHorizontalRule().run()}
 			><MinusIcon></MinusIcon></Button
+		>
+
+		<Button variant="outline" onclick={setLink}><LinkIcon /></Button>
+		<Button
+			variant="outline"
+			onclick={() => editorState.editor?.chain().focus().unsetLink().run()}
+			disabled={!editorState.editor?.isActive('link')}><UnlinkIcon /></Button
 		>
 	</div>
 </div>

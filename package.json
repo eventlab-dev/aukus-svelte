@@ -67,6 +67,7 @@
 		"@threlte/core": "^8.1.5",
 		"@threlte/extras": "^9.5.4",
 		"@tiptap/extension-highlight": "^3.6.5",
+		"@tiptap/extension-link": "^3.6.5",
 		"@tiptap/extension-text-align": "^3.6.5",
 		"animejs": "^4.1.4",
 		"three": "^0.180.0"

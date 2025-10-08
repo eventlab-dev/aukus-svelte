@@ -119,4 +119,9 @@
 			opacity: 1;
 		}
 	}
+
+	:global(.tiptap a) {
+		color: var(--color-primary);
+		text-decoration: underline;
+	}
 </style>
