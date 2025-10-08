@@ -72,7 +72,9 @@
 
 <div style="position: relative">
 	{#if withMenu && editorState.editor}
-		<TiptapMenu {editorState} />
+		<div class="mb-3">
+			<TiptapMenu {editorState} />
+		</div>
 	{/if}
 	<div bind:this={element}></div>
 </div>
