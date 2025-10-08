@@ -38,7 +38,7 @@
 			editable,
 			editorProps: {
 				attributes: {
-					class: cn(editorStyles, className)
+					class: cn(editorStyles, className, 'prose prose-invert')
 				}
 			},
 			extensions: enabledExtensions,

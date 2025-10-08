@@ -1,121 +1,121 @@
-@import "tailwindcss";
-
-@import "tw-animate-css";
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(0.19 0 0);
-  --foreground: oklch(0.96 0 0);
-  --hover: oklch(0.34 0 0);
-  --card: oklch(0.25 0 0);
-  --card-foreground: oklch(0.96 0 0);
-  --popover: oklch(0.25 0 0);
-  --popover-foreground: oklch(0.96 0 0);
-  --primary: oklch(0.56 0.23 279.32);
-  --primary-foreground: oklch(0.96 0 0);
-  --primary-hover: oklch(0.48 0.18 278.04);
-  --secondary: oklch(0.38 0 0);
-  --secondary-foreground: oklch(0.96 0 0);
-  --muted: oklch(0.38 0 0);
-  --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.38 0 0);
-  --accent-foreground: oklch(0.96 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.552 0.016 285.938);
-  --green: oklch(0.73 0.19 147.44);
-  --red: oklch(0.65 0.23 25.74);
-  --blue: oklch(0.6 0.22 257.43);
-  --orange: oklch(0.74 0.18 54.54);
-  --violet: oklch(0.56 0.23 279.32);
-  --purple: oklch(0.61 0.21 312.42);
+	--radius: 0.625rem;
+	--background: oklch(0.19 0 0);
+	--foreground: oklch(0.96 0 0);
+	--hover: oklch(0.34 0 0);
+	--card: oklch(0.25 0 0);
+	--card-foreground: oklch(0.96 0 0);
+	--popover: oklch(0.25 0 0);
+	--popover-foreground: oklch(0.96 0 0);
+	--primary: oklch(0.56 0.23 279.32);
+	--primary-foreground: oklch(0.96 0 0);
+	--primary-hover: oklch(0.48 0.18 278.04);
+	--secondary: oklch(0.38 0 0);
+	--secondary-foreground: oklch(0.96 0 0);
+	--muted: oklch(0.38 0 0);
+	--muted-foreground: oklch(0.7 0 0);
+	--accent: oklch(0.38 0 0);
+	--accent-foreground: oklch(0.96 0 0);
+	--destructive: oklch(0.704 0.191 22.216);
+	--border: oklch(1 0 0 / 10%);
+	--input: oklch(1 0 0 / 15%);
+	--ring: oklch(0.552 0.016 285.938);
+	--green: oklch(0.73 0.19 147.44);
+	--red: oklch(0.65 0.23 25.74);
+	--blue: oklch(0.6 0.22 257.43);
+	--orange: oklch(0.74 0.18 54.54);
+	--violet: oklch(0.56 0.23 279.32);
+	--purple: oklch(0.61 0.21 312.42);
 }
 
 @theme inline {
-  --leading-normal: 1.25;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 2px);
-  --radius-2xl: calc(var(--radius) + 4px);
-  --radius-3xl: calc(var(--radius) + 6px);
+	--leading-normal: 1.25;
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 2px);
+	--radius-2xl: calc(var(--radius) + 4px);
+	--radius-3xl: calc(var(--radius) + 6px);
 
-  --color-custom-green: var(--green);
-  --color-custom-red: var(--red);
-  --color-custom-blue: var(--blue);
-  --color-custom-orange: var(--orange);
-  --color-custom-violet: var(--violet);
-  --color-custom-purple: var(--purple);
+	--color-custom-green: var(--green);
+	--color-custom-red: var(--red);
+	--color-custom-blue: var(--blue);
+	--color-custom-orange: var(--orange);
+	--color-custom-violet: var(--violet);
+	--color-custom-purple: var(--purple);
 
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-hover: var(--hover);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary-hover: var(--primary-hover);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-hover: var(--hover);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary-hover: var(--primary-hover);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
 
-  --animate-spin-alt: spin-alt 1.5s cubic-bezier(0.83, 0, 0.17, 1) infinite alternate;
+	--animate-spin-alt: spin-alt 1.5s cubic-bezier(0.83, 0, 0.17, 1) infinite alternate;
 
-  @keyframes spin-alt {
-    from {
-      transform: rotate(0deg);
-    }
+	@keyframes spin-alt {
+		from {
+			transform: rotate(0deg);
+		}
 
-    to {
-      transform: rotate(360deg);
-    }
-  }
+		to {
+			transform: rotate(360deg);
+		}
+	}
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50 font-['Golos_Text'];
-  }
+	* {
+		@apply border-border outline-ring/50 font-['Golos_Text'];
+	}
 
-  html {
-    @apply leading-normal;
-  }
+	html {
+		@apply leading-normal;
+	}
 
-  body {
-    @apply bg-background text-foreground overflow-hidden;
-  }
+	body {
+		@apply bg-background text-foreground overflow-hidden;
+	}
 
-  ::selection {
-    @apply bg-primary text-primary-foreground;
-  }
+	::selection {
+		@apply bg-primary text-primary-foreground;
+	}
 
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button {
-    appearance: none;
-    margin: 0;
-  }
+	input[type='number']::-webkit-outer-spin-button,
+	input[type='number']::-webkit-inner-spin-button {
+		appearance: none;
+		margin: 0;
+	}
 
-  .thin-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-muted-foreground) var(--color-card);
-    scrollbar-gutter: stable;
-  }
+	.thin-scrollbar {
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-muted-foreground) var(--color-card);
+		scrollbar-gutter: stable;
+	}
 
-  @-moz-document url-prefix() {
-    input[type="number"] {
-      appearance: textfield;
-    }
-  }
+	@-moz-document url-prefix() {
+		input[type='number'] {
+			appearance: textfield;
+		}
+	}
 }
