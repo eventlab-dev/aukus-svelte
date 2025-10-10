@@ -70,6 +70,40 @@ export function createAppManager() {
 		return $frontendState || $backendState
 	})
 
+	const playersCompletedMap = derived(players, ($players) => {
+		return $players
+			.filter((p) => p.map_position > 101)
+			.toSorted((a, b) => b.total_score - a.total_score)
+	})
+
+	const playersInOrder = derived(
+		[players, playersCompletedMap],
+		([$players, $playersCompletedMap]) => {
+			const playersNotCompletedMap = $players.filter((p) => p.map_position <= 101)
+			playersNotCompletedMap.sort((a, b) => {
+				return b.total_score - a.total_score
+			})
+			return [...$playersCompletedMap, ...playersNotCompletedMap]
+		}
+	)
+
+	const eventFinished = derived(eventDataStore.eventSettings, ($settings) => {
+		if ($settings?.event_end_time) {
+			return Number($settings?.event_end_time) * 1000 >= Date.now()
+		}
+		return false
+	})
+
+	const winners = derived(
+		[playersInOrder, playersCompletedMap, eventFinished],
+		([$players, $playersCompletedMap, $eventFinished]) => {
+			if ($eventFinished) {
+				return $players.length > 3 ? $players.slice(0, 3) : $players
+			}
+			return $playersCompletedMap
+		}
+	)
+
 	return {
 		usersStore,
 		gamesHistoryStore,
@@ -82,7 +116,11 @@ export function createAppManager() {
 		movementStore,
 		turnState,
 		frontendState,
-		statsStore
+		statsStore,
+		winners,
+		eventFinished,
+		playersInOrder,
+		playersCompletedMap
 	}
 }
 
