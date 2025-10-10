@@ -14,6 +14,7 @@
 		editable?: boolean
 		class?: string
 		withMenu?: boolean
+		extensions: Parameters<typeof initExtensions>[0]
 	}
 
 	let {
@@ -22,7 +23,8 @@
 		editorState = $bindable({ editor: null }),
 		content,
 		editable = true,
-		withMenu = false
+		withMenu = false,
+		extensions: extensionsParams
 	}: Props = $props()
 
 	let element: HTMLDivElement | undefined = $state()
@@ -35,7 +37,10 @@
 	onMount(() => {
 		if (!element) return
 
-		const extensions = initExtensions({ onTOCupdate: (data) => (tocData = data) })
+		const extensions = initExtensions({
+			...extensionsParams,
+			onTOCupdate: (data) => (tocData = data)
+		})
 
 		const editor = new Editor({
 			element,

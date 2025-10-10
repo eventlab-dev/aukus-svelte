@@ -10,35 +10,61 @@ import TableOfContents, {
 	getHierarchicalIndexes,
 	type TableOfContentData
 } from '@tiptap/extension-table-of-contents'
-import { SectionPlugin } from '$lib/components/richEditor/SectionPlugin'
+import { createSectionPlugin } from './Sections'
 
-export function initExtensions(props: { onTOCupdate?: (data: TableOfContentData) => void } = {}) {
+export function initExtensions(
+	props: {
+		withTOC?: boolean
+		sectionsMode?: 'full' | 'parse-only'
+		onTOCupdate?: (data: TableOfContentData) => void
+		placeholderText?: string
+		withLinks?: boolean
+	} = {}
+) {
 	const enabledExtensions = [
 		StarterKit,
 		CleanPaste,
 		SpoilerMark,
 		Highlight,
 		TextAlign.configure({ types: ['heading', 'paragraph'] }),
-		Placeholder.configure({ placeholder: 'Ваш комментарий' }),
-		Image.configure({ inline: true, HTMLAttributes: { class: 'emote' } }),
-		Link.configure({
-			protocols: ['https'],
-			openOnClick: false,
-			HTMLAttributes: {
-				rel: 'noopener noreferrer',
-				target: '_blank'
-			}
-		}),
-		TableOfContents.configure({
-			getIndex: getHierarchicalIndexes,
-			onUpdate: props.onTOCupdate,
-			scrollParent: () => {
-				return (
-					(document.getElementById('main-scroll-area')?.firstElementChild as HTMLElement) ?? window
-				)
-			}
-		}),
-		SectionPlugin
+		Image.configure({ inline: true, HTMLAttributes: { class: 'emote' } })
 	]
+
+	if (props.placeholderText) {
+		enabledExtensions.push(Placeholder.configure({ placeholder: props.placeholderText }))
+	}
+
+	if (props.withLinks) {
+		enabledExtensions.push(
+			Link.configure({
+				protocols: ['https'],
+				openOnClick: false,
+				HTMLAttributes: {
+					rel: 'noopener noreferrer',
+					target: '_blank'
+				}
+			})
+		)
+	}
+
+	if (props.withTOC) {
+		enabledExtensions.push(
+			TableOfContents.configure({
+				getIndex: getHierarchicalIndexes,
+				onUpdate: props.onTOCupdate,
+				scrollParent: () => {
+					return (
+						(document.getElementById('main-scroll-area')?.firstElementChild as HTMLElement) ??
+						window
+					)
+				}
+			})
+		)
+	}
+
+	if (props.sectionsMode) {
+		enabledExtensions.push(createSectionPlugin({ mode: props.sectionsMode }))
+	}
+
 	return enabledExtensions
 }

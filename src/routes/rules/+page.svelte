@@ -61,9 +61,20 @@
 		{#if $rulesQuery.isLoading}
 			<LoaderCircle class="inline animate-spin" />
 		{:else if editorMode}
-			<TiptapEditor class="h-[80vh] w-[700px]" content={rules} bind:value={editedRules} withMenu />
+			<TiptapEditor
+				class="h-[80vh] w-[700px]"
+				content={rules}
+				bind:value={editedRules}
+				withMenu
+				extensions={{ withLinks: true, sectionsMode: 'parse-only' }}
+			/>
 		{:else}
-			<TiptapEditor class="h-fit w-[700px] border-none" content={rules} editable={false} />
+			<TiptapEditor
+				class="h-fit w-[700px] border-none"
+				content={rules}
+				editable={false}
+				extensions={{ sectionsMode: 'full', withTOC: true, withLinks: true }}
+			/>
 		{/if}
 	</div>
 </div>

@@ -58,7 +58,7 @@
 
 <div
 	bind:this={element}
-	class="fixed w-fit rounded-2xl bg-secondary p-5"
+	class="fixed w-fit rounded-2xl bg-card p-5"
 	style="top: {pos.top}px; left: {pos.left - elementWidth - 30}px"
 >
 	<div class="mb-5">Быстрые ссылки</div>
@@ -66,7 +66,7 @@
 		<div class="table-of-contents">
 			{#each items as item (item.id)}
 				<div
-					class="data-[active=true]:bg-primary"
+					class="data-[active=true]:text-normal data-[active=false]:text-muted-foreground"
 					style="--level: {item.level}"
 					data-active={item.isActive}
 				>
