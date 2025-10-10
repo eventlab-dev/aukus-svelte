@@ -6,12 +6,16 @@ export const CleanPaste = Extension.create({
 
 	addOptions() {
 		return {
-			// - \x20-\x7E includes ASCII printable characters, including digits, letters, and punctuation.
-			// - \u00A0-\u02AF and \u0370-\u03FF include many Latin, Greek, and other letters, including those with diacritics.
-			// - \p{Letter} includes any Unicode letter character from any language.
-			// - \s includes whitespace characters.
-			// - u flag for Unicode mode.
-			regexPattern: /[^\p{Letter}\p{Currency_Symbol}\s]/gu
+			// Allow:
+			// - Printable ASCII (20–7E)
+			// - Latin Extended, Greek, Cyrillic, and common symbols (00A0–03FF)
+			// - Currency symbols (20A0–20CF)
+			// - General punctuation, arrows, math symbols (2000–2BFF)
+			// - Emoji & pictographs (1F000–1FAFF)
+			// - All Unicode letters, numbers, marks, punctuation, and symbols
+
+			regexPattern:
+				/[^\p{L}\p{N}\p{P}\p{S}\p{M}\s\x20-\x7E\u00A0-\u03FF\u2000-\u2BFF\u20A0-\u20CF\u1F000-\u1FAFF]/gu
 		}
 	},
 
