@@ -36,9 +36,11 @@
 
 			// element.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
+			const sectionPadding = 12
+
 			const mainScroll = document.getElementById('main-scroll-area')?.firstElementChild
 			mainScroll?.scrollTo({
-				top: element.getBoundingClientRect().top + mainScroll.scrollTop - pos.top,
+				top: element.getBoundingClientRect().top + mainScroll.scrollTop - pos.top - sectionPadding,
 				behavior: 'smooth'
 			})
 

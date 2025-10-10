@@ -44,7 +44,7 @@
 			editable,
 			editorProps: {
 				attributes: {
-					class: cn(editorStyles, className, 'prose prose-invert')
+					class: cn(editorStyles, className, 'prose prose-invert p-0')
 				}
 			},
 			extensions,
@@ -144,5 +144,39 @@
 	:global(.tiptap a) {
 		color: var(--color-primary);
 		text-decoration: underline;
+	}
+
+	:global(.tiptap-section) {
+		padding: 12px;
+		background-color: var(--color-card);
+		border-radius: var(--radius-2xl);
+		margin-bottom: 12px;
+	}
+
+	:global(.tiptap h1),
+	:global(.tiptap h2),
+	:global(.triptap h3) {
+		padding: 0px;
+		margin: 0px;
+	}
+
+	:global(.tiptap h1) {
+		font-weight: 600;
+	}
+	:global(.tiptap h2) {
+		font-weight: 600;
+	}
+	:global(.tiptap h3) {
+		font-weight: 600;
+	}
+
+	:global(.tiptap p) {
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	:global(.tiptap li) {
+		margin-top: 0px;
+		margin-bottom: 0px;
 	}
 </style>
