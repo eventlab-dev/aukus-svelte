@@ -15,6 +15,7 @@
 		class?: string
 		withMenu?: boolean
 		extensions: Parameters<typeof initExtensions>[0]
+		simple?: boolean
 	}
 
 	let {
@@ -24,13 +25,16 @@
 		content,
 		editable = true,
 		withMenu = false,
-		extensions: extensionsParams
+		extensions: extensionsParams,
+		simple
 	}: Props = $props()
 
 	let element: HTMLDivElement | undefined = $state()
 
 	const editorStyles =
-		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg border-2 border-muted bg-transparent p-2 font-medium transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20'
+		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg border-2 border-muted bg-transparent p-2 font-medium transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 prose prose-invert p-0 max-w-full'
+
+	const additonalStyles = simple ? 'simple-variant' : ''
 
 	let tocData = $state<TableOfContentDataItem[]>([])
 
@@ -49,7 +53,7 @@
 			editable,
 			editorProps: {
 				attributes: {
-					class: cn(editorStyles, className, 'prose prose-invert p-0 max-w-full')
+					class: cn(editorStyles, className, additonalStyles)
 				}
 			},
 			extensions,
@@ -100,7 +104,7 @@
 	{/if}
 	<div bind:this={element}></div>
 
-	{#if editor}
+	{#if editor && extensionsParams?.withTOC}
 		<TableOfContents items={tocData} {editor} pos={editorTopLeft} />
 	{/if}
 </div>
@@ -178,6 +182,18 @@
 	:global(.tiptap p) {
 		margin-top: 20px;
 		margin-bottom: 20px;
+	}
+
+	:global(.tiptap p:first-child) {
+		margin-top: 0px;
+	}
+	:global(.tiptap p:last-child) {
+		margin-bottom: 0px;
+	}
+
+	:global(.tiptap.simple-variant p) {
+		margin-top: 0px;
+		margin-bottom: 0px;
 	}
 
 	:global(.tiptap li) {

@@ -145,6 +145,7 @@
 						extensions={{
 							placeholderText: 'Отзыв об игре'
 						}}
+						simple
 					/>
 					<div class="absolute right-1.5 bottom-1.5 flex flex-col">
 						<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
