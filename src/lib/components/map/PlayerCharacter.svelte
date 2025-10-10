@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { PlayerBaseModelUrl } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { getCellPosition } from '$lib/mapUtils'
+	import { getCellPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
 	import { onMount } from 'svelte'
 
@@ -76,8 +76,24 @@
 		movementStore.registerPlayer(player.slug, element)
 		// @ts-expect-error - for debugging purposes
 		window.movePlayer = async (slug: string, steps: number) => {
-			const endCell = await movementStore.movePlayer({ playerSlug: slug, steps })
 			const player = $playersBySlug.get(slug)
+			if (!player) {
+				console.warn('Player not found', slug)
+				return
+			}
+			const moveTo = player.map_position + steps
+			const ladderTo = laddersByCell[moveTo]?.cellTo
+			const snakeTo = snakesByCell[moveTo]?.cellTo
+			const endCell = await movementStore.movePlayer({
+				playerSlug: slug,
+				steps,
+				moveResponse: {
+					move_to: moveTo,
+					ladder_to: ladderTo ?? null,
+					snake_to: snakeTo ?? null
+				}
+			})
+
 			if (player && endCell !== undefined) {
 				console.log('Moving player', slug, 'to cell', endCell)
 				player.map_position = endCell
