@@ -21,12 +21,24 @@
 		getCurrentRulesVersionApiRulesCurrentGetOptions({ baseUrl: AukusBaseUrl })
 	)
 	const saveQuery = createMutation(
-		createNewRulesVersionApiRulesPostMutation({ baseUrl: AukusBaseUrl, auth: defaultAuth() })
+		createNewRulesVersionApiRulesPostMutation({
+			baseUrl: AukusBaseUrl,
+			auth: defaultAuth()
+		})
 	)
 
-	const defaultRuleValue = '<h3><u>Правила не найдены</u></h3>'
+	const defaultRuleValue = JSON.stringify('<h3><u>Правила не найдены</u></h3>')
 
-	const rules = $derived($rulesQuery.data?.versions[0]?.content ?? JSON.stringify(defaultRuleValue))
+	const { generalRules, donationsRules } = $derived.by(() => {
+		const general = $rulesQuery.data?.versions.find((v) => v.category === 'general')?.content
+		const donations = $rulesQuery.data?.versions.find((v) => v.category === 'donations')?.content
+		return {
+			generalRules: general || defaultRuleValue,
+			donationsRules: donations || defaultRuleValue
+		}
+	})
+
+	const rules = $derived(category === 'general' ? generalRules : donationsRules)
 
 	let editorMode = $state(false)
 	let editedRules = $state('')
@@ -36,7 +48,7 @@
 	function saveRules() {
 		editorMode = false
 		$saveQuery.mutate(
-			{ body: { category: 'general', content: editedRules } },
+			{ body: { category, content: editedRules } },
 			{
 				onSettled: () => {
 					$rulesQuery.refetch()
