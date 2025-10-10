@@ -49,7 +49,7 @@
 			editable,
 			editorProps: {
 				attributes: {
-					class: cn(editorStyles, className, 'prose prose-invert p-0')
+					class: cn(editorStyles, className, 'prose prose-invert p-0 max-w-full')
 				}
 			},
 			extensions,
