@@ -58,7 +58,7 @@ export function createAppManager() {
 
 	const backendState: Readable<TurnState> = derived(eventDataStore.myLastMove, ($myLastMove) => {
 		if ($myLastMove) {
-			if (!$myLastMove.dice_roll_id) {
+			if (!$myLastMove.dice_roll_id && $myLastMove.type !== 'reroll') {
 				return 'selecting-dice'
 			}
 			return 'filling-form'
