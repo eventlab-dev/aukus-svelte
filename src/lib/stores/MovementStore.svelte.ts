@@ -1,16 +1,11 @@
 import { createTimeline } from 'animejs'
-import {
-	getCellPosition,
-	getMapCellById,
-	laddersByCell,
-	snakesByCell,
-	type MapCell
-} from '$lib/mapUtils'
+import { getCellPosition, getMapCellById, type MapCell } from '$lib/mapUtils'
 import { SvelteMap } from 'svelte/reactivity'
 import { get, writable, type Writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
 import { type PlayerData, type PlayerMovementState, type TurnState } from '$lib/types'
 import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME } from '$lib/constants'
+import type { FinishPlayerMoveResponse } from '$lib/heyapi/aukus/types.gen'
 
 export function createMovementStore({
 	eventDataStore,
@@ -34,7 +29,11 @@ export function createMovementStore({
 		})
 	}
 
-	const movePlayer = async (params: { playerSlug: string; steps: number }) => {
+	const movePlayer = async (params: {
+		playerSlug: string
+		steps: number
+		moveResponse: FinishPlayerMoveResponse
+	}) => {
 		const element = get(playerElements).get(params.playerSlug)
 		if (!element) return
 
@@ -96,9 +95,9 @@ export function createMovementStore({
 		})
 
 		let finalCell = endCell
-		const ladder = laddersByCell[endCell]
-		if (ladder) {
-			const pos = getCellPosition(ladder.cellTo)
+		// const ladder = laddersByCell[endCell]
+		if (params.moveResponse.ladder_to) {
+			const pos = getCellPosition(params.moveResponse.ladder_to)
 			timeline.add(element, {
 				left: `${pos.x + offsetInsideCellX}px`,
 				top: `${pos.y + offsetInsideCellY}px`,
@@ -110,11 +109,11 @@ export function createMovementStore({
 					{ translateY: 0, scale: 1, duration: 750, easing: 'easeInQuad' }
 				]
 			})
-			finalCell = ladder.cellTo
+			finalCell = params.moveResponse.ladder_to
 		}
-		const snake = snakesByCell[endCell]
-		if (snake) {
-			const pos = getCellPosition(snake.cellTo)
+		// const snake = snakesByCell[endCell]
+		if (params.moveResponse.snake_to) {
+			const pos = getCellPosition(params.moveResponse.snake_to)
 			timeline.add(element, {
 				left: `${pos.x + offsetInsideCellX}px`,
 				top: `${pos.y + offsetInsideCellY}px`,
@@ -127,7 +126,7 @@ export function createMovementStore({
 					{ translateY: 0, scale: 1, rotate: 0, duration: 200, easing: 'easeOutBounce' }
 				]
 			})
-			finalCell = snake.cellTo
+			finalCell = params.moveResponse.snake_to
 		}
 
 		await new Promise((resolve) => {

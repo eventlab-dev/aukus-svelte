@@ -73,7 +73,8 @@
 		await movementStore.doRollAnimation(rollResult.roll_values, steps)
 		await movementStore.movePlayer({
 			playerSlug: $myPlayer!.slug,
-			steps: steps
+			steps: steps,
+			moveResponse: moveParams
 		})
 		await $eventDataQuery.refetch()
 		frontendState.set(null)
