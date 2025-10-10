@@ -7,12 +7,15 @@
 		createNewRulesVersionApiRulesPostMutation,
 		getCurrentRulesVersionApiRulesCurrentGetOptions
 	} from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+	import { type RulesCategory } from '$lib/heyapi/aukus/types.gen'
 	import { defaultAuth } from '$lib/utils'
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 
 	const { myPlayer } = getAppManagerContext()
 	const canEdit = $derived($myPlayer?.role === 'admin')
+
+	let category = $state<RulesCategory>('general')
 
 	const rulesQuery = createQuery(
 		getCurrentRulesVersionApiRulesCurrentGetOptions({ baseUrl: AukusBaseUrl })
@@ -44,8 +47,26 @@
 </script>
 
 <div class="mt-[100px] flex w-full justify-center">
-	<div>
-		<div class="text-center text-[40px] font-bold">Правила ивента</div>
+	<div class="w-[700px]">
+		<div class="flex gap-3">
+			<Button
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
+				onclick={() => (category = 'general')}
+				data-active={category === 'general'}
+			>
+				Для участников
+			</Button>
+			<Button
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
+				onclick={() => (category = 'donations')}
+				data-active={category === 'donations'}
+			>
+				Для донатеров
+			</Button>
+		</div>
+		<div class="mt-[20px] text-5xl font-bold">
+			Правила Аукуса для {category === 'general' ? 'участников' : 'донатеров'}
+		</div>
 		<div class="mt-10">
 			{#if canEdit}
 				{#if editorMode}
