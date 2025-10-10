@@ -88,7 +88,7 @@
 	const editorTopLeft = $derived.by(() => {
 		if (!element) return { top: 0, left: 0 }
 		const rect = element.getBoundingClientRect()
-		return { top: rect.top + window.scrollY, left: rect.left + window.scrollX }
+		return { top: window.scrollY + 150, left: rect.left + window.scrollX }
 	})
 </script>
 

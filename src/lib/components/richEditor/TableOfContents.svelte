@@ -2,6 +2,7 @@
 	import type { Editor } from '@tiptap/core'
 	import type { TableOfContentDataItem } from '@tiptap/extension-table-of-contents'
 	import { TextSelection } from '@tiptap/pm/state'
+	import { Button } from '../ui/button'
 
 	type Props = {
 		items: TableOfContentDataItem[]
@@ -54,6 +55,11 @@
 	let element = $state<HTMLDivElement | undefined>(undefined)
 
 	const elementWidth = $derived(element?.offsetWidth || 0)
+
+	function scrollToTop() {
+		const mainScroll = document.getElementById('main-scroll-area')?.firstElementChild
+		mainScroll?.scrollTo({ top: 0, behavior: 'smooth' })
+	}
 </script>
 
 <div
@@ -61,7 +67,10 @@
 	class="fixed w-fit rounded-2xl bg-card p-5"
 	style="top: {pos.top}px; left: {pos.left - elementWidth - 30}px"
 >
-	<div class="mb-5">Быстрые ссылки</div>
+	<div class="mb-5 flex justify-between">
+		<div>Быстрые ссылки</div>
+		<Button variant="link" class="m-0 h-fit w-fit p-0" onclick={scrollToTop}>Наверх</Button>
+	</div>
 	{#if items.length > 0}
 		<div class="table-of-contents">
 			{#each items as item (item.id)}
