@@ -160,7 +160,7 @@
 
 	:global(.tiptap h1),
 	:global(.tiptap h2),
-	:global(.triptap h3) {
+	:global(.tiptap h3) {
 		padding: 0px;
 		margin: 0px;
 	}
