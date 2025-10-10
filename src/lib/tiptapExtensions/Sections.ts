@@ -61,7 +61,7 @@ export function createSectionPlugin(params: { mode: 'full' | 'parse-only' } = { 
 					let buffer: ProseMirrorNode[] = []
 
 					for (const node of flatNodes) {
-						if (node.type === heading) {
+						if (node.type === heading && node.attrs.level < 3) {
 							if (buffer.length > 0) {
 								newSections.push(section.create({}, buffer))
 								buffer = []
