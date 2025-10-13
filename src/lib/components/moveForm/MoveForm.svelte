@@ -32,9 +32,9 @@
 		review: string
 	}
 
-	const { usersStore, eventDataStore } = getAppManagerContext()
+	const { usersStore, eventDataStore, myPlayer } = getAppManagerContext()
 
-	const { myUser, saveMoveForm } = usersStore
+	const { saveMoveForm } = usersStore
 	const { eventDataQuery } = eventDataStore
 
 	let form: FormType = $state({
@@ -60,6 +60,10 @@
 		if (form.status === 'movie')
 			return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
 		if (!form.hltbTime) return { isFormFilled: false, buttonText: 'Выбери время по HLTB' }
+
+		if ($myPlayer?.map_position === 101) {
+			return { isFormFilled: true, buttonText: 'Победить в АУКУСЕ 4' }
+		}
 		return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
 	})
 
@@ -111,7 +115,7 @@
 	<DialogContent class="gap-3 overflow-hidden p-3 sm:max-w-[800px]" showCloseButton={false}>
 		<DialogHeader>
 			<DialogTitle aria-describedby="move form">
-				Новый ход — {$myUser?.current_game}
+				Новый ход — {$myPlayer?.current_game}
 			</DialogTitle>
 		</DialogHeader>
 
@@ -122,7 +126,7 @@
 
 				<div class="flex gap-3">
 					<GameStatusSelector
-						gameDuration={$myUser?.current_game_duration}
+						gameDuration={$myPlayer?.current_game_duration}
 						bind:value={form.status}
 					/>
 					<HltbTimeSelector bind:value={form.hltbTime} disabled={form.status !== 'completed'} />

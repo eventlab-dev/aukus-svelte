@@ -36,6 +36,8 @@
 			{#each snakes as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
 				<MapArrow {from} {to} />
 			{/each}
+			<CellNumber cellId={0} />
+			<CellNumber cellId={101} />
 			{#each mapCellsSorted as cell (cell.id)}
 				<CellNumber cellId={cell.id} />
 			{/each}

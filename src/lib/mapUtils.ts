@@ -147,6 +147,15 @@ export function getCellPosition(cellId: number): CellPosition {
 			y1: cell1Pos.y1 + CellSize
 		}
 	}
+	if (cellId === 101) {
+		const cell100Pos = getCellPosition(100)
+		return {
+			x: cell100Pos.x,
+			y: cell100Pos.y - CellSize,
+			x1: cell100Pos.x1,
+			y1: cell100Pos.y1 - CellSize
+		}
+	}
 
 	const cellRow = Math.floor((cellId - 1) / 10)
 	const cellCol = (cellId - 1) % 10

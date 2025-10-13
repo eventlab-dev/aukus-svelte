@@ -29,6 +29,15 @@
 	}
 
 	const markerUrl = getMarkerUrl(cellId)
+
+	const cellText = $derived.by(() => {
+		if (cellId === 0) {
+			return 'Старт'
+		} else if (cellId === 101) {
+			return 'Рывок'
+		}
+		return cellId.toString()
+	})
 </script>
 
 <div
@@ -36,5 +45,5 @@
 	style="top: {cellPosition.y + 1}px; left: {cellPosition.x + 3}px"
 >
 	<img src={markerUrl} alt="marker" class="absolute inset-0" />
-	<p class="relative">{cellId}</p>
+	<p class="relative">{cellText}</p>
 </div>

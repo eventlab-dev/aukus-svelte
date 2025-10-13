@@ -56,15 +56,21 @@ export function createAppManager() {
 		return $players.find((p) => p.slug === $myUser.slug) || null
 	})
 
-	const backendState: Readable<TurnState> = derived(eventDataStore.myLastMove, ($myLastMove) => {
-		if ($myLastMove) {
-			if (!$myLastMove.dice_roll_id && $myLastMove.type !== 'reroll') {
-				return 'selecting-dice'
+	const backendState: Readable<TurnState> = derived(
+		[eventDataStore.myLastMove, myPlayer],
+		([$myLastMove, $myPlayer]) => {
+			if ($myLastMove) {
+				if ($myLastMove.type === 'completed' && $myPlayer?.map_position === 102) {
+					return 'event-completed'
+				}
+				if (!$myLastMove.dice_roll_id && $myLastMove.type !== 'reroll') {
+					return 'selecting-dice'
+				}
+				return 'filling-form'
 			}
-			return 'filling-form'
+			return null
 		}
-		return null
-	})
+	)
 
 	const turnState = derived([backendState, frontendState], ([$backendState, $frontendState]) => {
 		return $frontendState || $backendState
