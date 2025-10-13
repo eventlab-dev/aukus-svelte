@@ -97,11 +97,13 @@ export const SOUNDS = [
 
 export const CDN_URL_BASE = 'https://storage.yandexcloud.net/eventlab/assets/aukus4'
 
-export const MapIceMarker = `${CDN_URL_BASE}/map/marker_ice.png`
-export const MapFireMarker = `${CDN_URL_BASE}/map/marker_fire.png`
-export const MapSwampMarker = `${CDN_URL_BASE}/map/marker_swamp.png`
-export const MapDungeonMarker = `${CDN_URL_BASE}/map/marker_dungeon.png`
-export const MapForestMarker = `${CDN_URL_BASE}/map/marker_forest.png`
+export const MapMarkerIce = `${CDN_URL_BASE}/map/marker_ice.png`
+export const MapMarkerFire = `${CDN_URL_BASE}/map/marker_fire.png`
+export const MapMarkerSwamp = `${CDN_URL_BASE}/map/marker_swamp.png`
+export const MapMarkerDungeon = `${CDN_URL_BASE}/map/marker_dungeon.png`
+export const MapMarkerForest = `${CDN_URL_BASE}/map/marker_forest.png`
+export const MapMarkerStart = `${CDN_URL_BASE}/map/marker_start.png`
+export const MapMarkerFinish = `${CDN_URL_BASE}/map/marker_finish.png`
 
 export const PlayerBaseModelUrl = `${CDN_URL_BASE}/map/player_model.png`
 
