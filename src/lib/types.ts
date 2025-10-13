@@ -88,10 +88,12 @@ export type TableHeaderType<T> = {
 
 export type TurnState =
 	| 'filling-form'
+	| 'form-sent'
 	| 'selecting-dice'
 	| 'dice-animation'
 	| 'dice-results'
-	| 'player-animation'
+	| 'player-map-animation'
+	| 'player-win-animation'
 	| 'event-completed'
 	| null
 

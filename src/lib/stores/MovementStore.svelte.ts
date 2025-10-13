@@ -1,5 +1,11 @@
 import { createTimeline } from 'animejs'
-import { getCellPosition, getMapCellById, type MapCell } from '$lib/mapUtils'
+import {
+	CellSize,
+	getCellPosition,
+	getMapCellById,
+	getWinnerPosition,
+	type MapCell
+} from '$lib/mapUtils'
 import { SvelteMap } from 'svelte/reactivity'
 import { get, writable, type Writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
@@ -29,7 +35,10 @@ export function createMovementStore({
 		})
 	}
 
-	const movePlayer = async (params: {
+	const offsetInsideCellX = 25
+	const offsetInsideCellY = 15
+
+	const moveToCell = async (params: {
 		playerSlug: string
 		steps: number
 		moveResponse: FinishPlayerMoveResponse
@@ -47,7 +56,7 @@ export function createMovementStore({
 		const endCell = startCell + params.steps
 		const direction = params.steps > 0 ? 1 : -1
 
-		frontendTurnState.set('player-animation')
+		frontendTurnState.set('player-map-animation')
 
 		movementState.update((s) => ({
 			...s,
@@ -59,9 +68,6 @@ export function createMovementStore({
 		for (let i = 1; i <= Math.abs(params.steps); i++) {
 			cellsPath.push(getMapCellById(startCell + i * direction))
 		}
-
-		const offsetInsideCellX = 25
-		const offsetInsideCellY = 15
 
 		const timeline = createTimeline()
 		if (startCell === 0) {
@@ -137,6 +143,47 @@ export function createMovementStore({
 		return finalCell
 	}
 
+	async function moveToWinPosition(params: { playerSlug: string; position: number }) {
+		const element = get(playerElements).get(params.playerSlug)
+		if (!element) return
+
+		const startPos = getCellPosition(101)
+		const finalPos = getWinnerPosition(params.position)
+
+		frontendTurnState.set('player-map-animation')
+
+		const timeline = createTimeline()
+		timeline.add(element, {
+			top: `${startPos.y - CellSize + offsetInsideCellY}px`,
+			left: `${startPos.x + offsetInsideCellX * 2}px`,
+			duration: 1000,
+			easing: 'easeInOutQuad'
+		})
+		timeline.add(element, {
+			top: `${startPos.y - CellSize + offsetInsideCellY}px`,
+			left: `${finalPos.x}px`,
+			duration: 2000,
+			easing: 'easeInOutQuad'
+		})
+		timeline.add(element, {
+			left: `${finalPos.x}px`,
+			top: `${finalPos.y}px`,
+			duration: 2000,
+			easing: 'easeInOutQuad'
+			// add "jump" effect
+			// keyframes: [
+			// 	{ translateY: -50, scale: 0.85, duration: 350, easing: 'easeOutQuad' },
+			// 	{ translateY: 0, scale: 1, duration: 350, easing: 'easeInQuad' }
+			// ]
+		})
+
+		await new Promise((resolve) => {
+			timeline.play().onComplete = () => {
+				resolve(true)
+			}
+		})
+	}
+
 	async function doRollAnimation(rollValues: number[], steps: number) {
 		if (rollValues.length === 0) {
 			throw new Error('rollValues cannot be empty')
@@ -153,7 +200,8 @@ export function createMovementStore({
 
 	return {
 		registerPlayer,
-		movePlayer,
+		moveToCell,
+		moveToWinPosition,
 		movementState,
 		doRollAnimation,
 		selectedPlayer

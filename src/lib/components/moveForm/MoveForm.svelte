@@ -32,7 +32,7 @@
 		review: string
 	}
 
-	const { usersStore, eventDataStore, myPlayer } = getAppManagerContext()
+	const { usersStore, eventDataStore, myPlayer, frontendState } = getAppManagerContext()
 
 	const { saveMoveForm } = usersStore
 	const { eventDataQuery } = eventDataStore
@@ -82,9 +82,11 @@
 			}
 		})
 
-		$eventDataQuery.refetch()
+		frontendState.set('form-sent')
 
 		isDialogOpen = false
+
+		$eventDataQuery.refetch()
 
 		setTimeout(() => {
 			form = {

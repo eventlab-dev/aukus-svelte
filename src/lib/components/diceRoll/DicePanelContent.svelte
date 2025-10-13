@@ -71,7 +71,7 @@
 
 		const steps = moveParams.move_to - player.map_position
 		await movementStore.doRollAnimation(rollResult.roll_values, steps)
-		await movementStore.movePlayer({
+		await movementStore.moveToCell({
 			playerSlug: $myPlayer!.slug,
 			steps: steps,
 			moveResponse: moveParams

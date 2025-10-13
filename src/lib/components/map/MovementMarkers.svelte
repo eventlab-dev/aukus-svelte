@@ -29,7 +29,7 @@
 	const showMarkers = $derived(
 		$turnState === 'selecting-dice' ||
 			$turnState === 'dice-results' ||
-			$turnState === 'player-animation' ||
+			$turnState === 'player-map-animation' ||
 			$selectedPlayer
 	)
 </script>

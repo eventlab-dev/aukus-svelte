@@ -68,13 +68,19 @@ export function createAppManager() {
 	})
 
 	const turnState = derived([backendState, frontendState], ([$backendState, $frontendState]) => {
+		if ($frontendState === 'form-sent') {
+			if ($backendState === 'event-completed') {
+				return 'player-win-animation'
+			}
+			return $backendState
+		}
 		return $frontendState || $backendState
 	})
 
 	const playersCompletedMap = derived(players, ($players) => {
 		return $players
-			.filter((p) => p.map_position > 101)
-			.toSorted((a, b) => b.total_score - a.total_score)
+			.filter((p) => p.map_position === 102)
+			.toSorted((a, b) => a.last_move!.created_at - b.last_move!.created_at)
 	})
 
 	const playersInOrder = derived(

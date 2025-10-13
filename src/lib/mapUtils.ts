@@ -138,6 +138,10 @@ const Cell100Coords: CellPosition = {
 }
 
 export function getCellPosition(cellId: number): CellPosition {
+	if (cellId === 102) {
+		// count winner offset from 0,0
+		return { x: 0, y: 0, x1: 0, y1: 0 }
+	}
 	if (cellId === 0) {
 		const cell1Pos = getCellPosition(1)
 		return {
@@ -166,4 +170,19 @@ export function getCellPosition(cellId: number): CellPosition {
 	const y = yRaw + Cell100Coords.y
 
 	return { x, y, x1: x + CellSize, y1: y + CellSize }
+}
+
+export function getWinnerPosition(place: number) {
+	switch (place) {
+		case 1:
+			return { x: 870, y: 120 }
+		case 2:
+			return { x: 760, y: 182 }
+		case 3:
+			return { x: 980, y: 200 }
+		default: {
+			const relative = place - 4
+			return { x: 300 + relative * 150, y: 280 }
+		}
+	}
 }

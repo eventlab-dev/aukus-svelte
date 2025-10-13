@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { PlayerBaseModelUrl } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { getCellPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
+	import { getCellPosition, getWinnerPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
 	import { onMount } from 'svelte'
 
@@ -11,10 +11,40 @@
 
 	const { player }: Props = $props()
 
-	const { players, eventDataStore, movementStore, myPlayer, turnState } = getAppManagerContext()
+	const {
+		players,
+		eventDataStore,
+		movementStore,
+		myPlayer,
+		turnState,
+		playersCompletedMap,
+		frontendState
+	} = getAppManagerContext()
 	const { skinsById, playersBySlug } = eventDataStore
 
-	const cellPosition = $derived(getCellPosition(player.map_position))
+	let element: HTMLDivElement
+
+	const startWinAnimation = $derived(
+		player.slug === $myPlayer?.slug &&
+			player.map_position === 102 &&
+			$turnState === 'player-win-animation'
+	)
+
+	const cellPosition = $derived.by(() => {
+		if (startWinAnimation) {
+			return getCellPosition(101)
+		}
+		return getCellPosition(player.map_position)
+	})
+
+	$effect(() => {
+		if (startWinAnimation && element) {
+			const position = $playersCompletedMap.findIndex((p) => p.slug === player.slug) + 1
+			movementStore.moveToWinPosition({ playerSlug: player.slug, position }).then(() => {
+				frontendState.set('event-completed')
+			})
+		}
+	})
 
 	const playersOnCell = $derived(
 		$players
@@ -27,6 +57,12 @@
 		y: cellOffsetY,
 		onlyName
 	} = $derived.by(() => {
+		const completedIndex = $playersCompletedMap.findIndex((p) => p.slug === player.slug)
+		if (completedIndex !== -1 && !startWinAnimation) {
+			const coord = getWinnerPosition(completedIndex + 1)
+			return { ...coord, onlyName: false }
+		}
+
 		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
 
 		if (player.map_position === 0) {
@@ -58,8 +94,6 @@
 		return player.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
 	})
 
-	let element: HTMLDivElement
-
 	$effect(() => {
 		if (element && $turnState === 'selecting-dice' && player.slug === $myPlayer?.slug) {
 			// scroll to element
@@ -84,7 +118,7 @@
 			const moveTo = player.map_position + steps
 			const ladderTo = laddersByCell[moveTo]?.cellTo
 			const snakeTo = snakesByCell[moveTo]?.cellTo
-			const endCell = await movementStore.movePlayer({
+			const endCell = await movementStore.moveToCell({
 				playerSlug: slug,
 				steps,
 				moveResponse: {
