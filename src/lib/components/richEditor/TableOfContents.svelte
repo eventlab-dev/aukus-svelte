@@ -3,6 +3,7 @@
 	import type { TableOfContentDataItem } from '@tiptap/extension-table-of-contents'
 	import { TextSelection } from '@tiptap/pm/state'
 	import { Button } from '../ui/button'
+	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
 
 	type Props = {
 		items: TableOfContentDataItem[]
@@ -64,36 +65,38 @@
 
 <div
 	bind:this={element}
-	class="fixed w-fit rounded-2xl bg-card p-5"
+	class="fixed h-fit w-fit rounded-2xl bg-card p-5"
 	style="top: {pos.top}px; left: {pos.left - elementWidth - 30}px"
 >
-	<div class="mb-5 flex justify-between">
-		<div>Быстрые ссылки</div>
-		<Button variant="link" class="m-0 h-fit w-fit p-0" onclick={scrollToTop}>Наверх</Button>
-	</div>
-	{#if items.length > 0}
-		<div class="table-of-contents">
-			{#each items as item (item.id)}
-				<div
-					class="data-[active=true]:text-normal data-[active=false]:text-muted-foreground"
-					style="--level: {item.level}"
-					data-active={item.isActive}
-				>
-					<a
-						href={`#${item.id}`}
-						onclick={(e) => onItemClick(e, item.id)}
-						data-item-index={item.itemIndex}
+	<ScrollArea class="h-[75vh]" type="auto">
+		<div class="mb-5 flex justify-between">
+			<div>Быстрые ссылки</div>
+			<Button variant="link" class="m-0 mr-3 h-fit w-fit p-0" onclick={scrollToTop}>Наверх</Button>
+		</div>
+		{#if items.length > 0}
+			<div class="table-of-contents">
+				{#each items as item (item.id)}
+					<div
+						class="data-[active=true]:text-normal data-[active=false]:text-muted-foreground"
+						style="--level: {item.level}"
+						data-active={item.isActive}
 					>
-						{item.textContent}
-					</a>
-				</div>
-			{/each}
-		</div>
-	{:else}
-		<div>
-			<p>Нет заголовков</p>
-		</div>
-	{/if}
+						<a
+							href={`#${item.id}`}
+							onclick={(e) => onItemClick(e, item.id)}
+							data-item-index={item.itemIndex}
+						>
+							{item.textContent}
+						</a>
+					</div>
+				{/each}
+			</div>
+		{:else}
+			<div>
+				<p>Нет заголовков</p>
+			</div>
+		{/if}
+	</ScrollArea>
 </div>
 
 <style>
