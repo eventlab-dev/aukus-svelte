@@ -23,7 +23,7 @@ export function createAppManager() {
 	const soundManager = new SoundManager()
 	soundManager.preloadSounds(SOUNDS)
 
-	const { users } = usersStore
+	const { users, myUser } = usersStore
 	const { players: playersData } = eventDataStore
 
 	const players: Readable<PlayerData[]> = derived([users, playersData], ([$users, $players]) => {
@@ -49,28 +49,23 @@ export function createAppManager() {
 		return map
 	})
 
-	const myUser = usersStore.myUser
-
 	const myPlayer = derived([players, myUser], ([$players, $myUser]) => {
 		if (!$myUser) return null
 		return $players.find((p) => p.slug === $myUser.slug) || null
 	})
 
-	const backendState: Readable<TurnState> = derived(
-		[eventDataStore.myLastMove, myPlayer],
-		([$myLastMove, $myPlayer]) => {
-			if ($myLastMove) {
-				if ($myLastMove.type === 'completed' && $myPlayer?.map_position === 102) {
-					return 'event-completed'
-				}
-				if (!$myLastMove.dice_roll_id && $myLastMove.type !== 'reroll') {
-					return 'selecting-dice'
-				}
-				return 'filling-form'
+	const backendState: Readable<TurnState> = derived(myPlayer, ($myPlayer) => {
+		if ($myPlayer?.last_move) {
+			if ($myPlayer.last_move.type === 'completed' && $myPlayer?.map_position === 102) {
+				return 'event-completed'
 			}
-			return null
+			if (!$myPlayer.last_move.dice_roll_id && $myPlayer.last_move.type !== 'reroll') {
+				return 'selecting-dice'
+			}
+			return 'filling-form'
 		}
-	)
+		return null
+	})
 
 	const turnState = derived([backendState, frontendState], ([$backendState, $frontendState]) => {
 		return $frontendState || $backendState

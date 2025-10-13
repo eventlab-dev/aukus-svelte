@@ -178,7 +178,6 @@ export type EventDataResponse = {
      * Achievements
      */
     achievements: Array<AchievementItem>;
-    my_last_move: PlayerMoveItem | null;
     /**
      * Dice Options
      */
@@ -282,6 +281,7 @@ export type PlayerItem = {
      * Color
      */
     color: string;
+    last_move: PlayerMoveItem | null;
 };
 
 /**

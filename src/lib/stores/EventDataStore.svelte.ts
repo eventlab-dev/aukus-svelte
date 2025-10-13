@@ -26,7 +26,6 @@ export function createEventDataStore() {
 	const skins = derived(eventData, ($eventData) => $eventData?.skins ?? [])
 	const achievements = derived(eventData, ($eventData) => $eventData?.achievements ?? [])
 	const eventSettings = derived(eventData, ($eventData) => $eventData?.event_settings ?? {})
-	const myLastMove = derived(eventData, ($eventData) => $eventData?.my_last_move ?? null)
 	const diceOptions = derived(eventData, ($eventData) => $eventData?.dice_options ?? [])
 
 	const skinsById = derived(skins, ($skins) => {
@@ -53,7 +52,6 @@ export function createEventDataStore() {
 		skinsById,
 		achievements,
 		eventSettings,
-		myLastMove,
 		diceOptions
 	}
 }

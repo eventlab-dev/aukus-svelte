@@ -6,7 +6,7 @@
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
 	const { eventDataStore, movementStore, myPlayer, turnState } = getAppManagerContext()
-	const { diceOptions, myLastMove } = eventDataStore
+	const { diceOptions } = eventDataStore
 	const { selectedPlayer } = movementStore
 
 	function diceOptionsForPosition(mapPosition: number): DiceOptionOrDrop[] {
@@ -26,7 +26,7 @@
 		}
 		if ($myPlayer && $turnState === 'selecting-dice') {
 			let options: DiceOptionOrDrop[] = $diceOptions
-			if ($myLastMove?.type === 'drop' || $myLastMove?.type === 'sheikh_moment') {
+			if ($myPlayer.last_move?.type === 'drop' || $myPlayer.last_move?.type === 'sheikh_moment') {
 				options = ['drop']
 			}
 			return {
