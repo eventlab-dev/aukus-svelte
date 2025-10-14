@@ -155,15 +155,29 @@ export function createMovementStore({
 		const timeline = createTimeline()
 		timeline.add(element, {
 			top: `${startPos.y - CellSize + offsetInsideCellY}px`,
-			left: `${startPos.x + offsetInsideCellX * 2}px`,
-			duration: 1000,
+			left: `${startPos.x + offsetInsideCellX}px`,
+			duration: 2000,
 			easing: 'easeInOutQuad'
 		})
 		timeline.add(element, {
 			top: `${startPos.y - CellSize + offsetInsideCellY}px`,
 			left: `${finalPos.x}px`,
-			duration: 2000,
-			easing: 'easeInOutQuad'
+			duration: 4000,
+			easing: 'easeInOutQuad',
+			// add "jump" effect
+			keyframes: [
+				{ translateY: -30, scale: 0.85, duration: 300, easing: 'easeOutQuad' },
+				{ translateY: 0, scale: 1, duration: 300, easing: 'easeInQuad' },
+
+				{ translateY: -30, scale: 0.85, duration: 300, easing: 'easeOutQuad' },
+				{ translateY: 0, scale: 1, duration: 300, easing: 'easeInQuad' },
+
+				{ translateY: -30, scale: 0.85, duration: 300, easing: 'easeOutQuad' },
+				{ translateY: 0, scale: 1, duration: 300, easing: 'easeInQuad' },
+
+				{ translateY: -30, scale: 0.85, duration: 300, easing: 'easeOutQuad' },
+				{ translateY: 0, scale: 1, duration: 300, easing: 'easeInQuad' }
+			]
 		})
 		timeline.add(element, {
 			left: `${finalPos.x}px`,
