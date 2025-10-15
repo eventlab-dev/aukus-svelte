@@ -55,12 +55,14 @@ export function createAppManager() {
 	})
 
 	const backendState: Readable<TurnState> = derived(myPlayer, ($myPlayer) => {
-		if ($myPlayer?.last_move) {
-			if ($myPlayer.last_move.type === 'completed' && $myPlayer?.map_position === 102) {
-				return 'event-completed'
-			}
-			if (!$myPlayer.last_move.dice_roll_id && $myPlayer.last_move.type !== 'reroll') {
-				return 'selecting-dice'
+		if ($myPlayer) {
+			if ($myPlayer.last_move) {
+				if ($myPlayer.last_move.type === 'completed' && $myPlayer.map_position === 102) {
+					return 'event-completed'
+				}
+				if (!$myPlayer.last_move.dice_roll_id && $myPlayer.last_move.type !== 'reroll') {
+					return 'selecting-dice'
+				}
 			}
 			return 'filling-form'
 		}
