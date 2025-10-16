@@ -44,6 +44,14 @@ export function createEventDataStore() {
 		return map
 	})
 
+	const achievementsById = derived(achievements, ($achievements) => {
+		const map = new SvelteMap<number, (typeof $achievements)[0]>()
+		$achievements.forEach((achievement) => {
+			map.set(achievement.id, achievement)
+		})
+		return map
+	})
+
 	return {
 		eventDataQuery,
 		players,
@@ -51,6 +59,7 @@ export function createEventDataStore() {
 		skins,
 		skinsById,
 		achievements,
+		achievementsById,
 		eventSettings,
 		diceOptions
 	}

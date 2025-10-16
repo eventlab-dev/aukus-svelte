@@ -124,7 +124,8 @@
 				moveResponse: {
 					move_to: moveTo,
 					ladder_to: ladderTo ?? null,
-					snake_to: snakeTo ?? null
+					snake_to: snakeTo ?? null,
+					unlocked_achievements: []
 				}
 			})
 

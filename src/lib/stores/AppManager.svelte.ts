@@ -8,6 +8,7 @@ import { createUsersStore } from './UsersStore.svelte'
 import { type PlayerData, type TurnState } from '$lib/types'
 import { createMovementStore } from './MovementStore.svelte'
 import { createStatsStore } from './StatsStore.svelte'
+import { createNotificationStore } from './NotificationStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -19,6 +20,8 @@ export function createAppManager() {
 	const frontendState = writable<TurnState>(null)
 
 	const movementStore = createMovementStore({ eventDataStore, frontendTurnState: frontendState })
+
+	const notificationStore = createNotificationStore({ eventDataStore })
 
 	const soundManager = new SoundManager()
 	soundManager.preloadSounds(SOUNDS)
@@ -119,6 +122,7 @@ export function createAppManager() {
 		eventDataStore,
 		playersMovesStore,
 		soundManager,
+		notificationStore,
 		players,
 		playersBySlug,
 		myPlayer,

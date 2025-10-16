@@ -9,8 +9,9 @@
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import DiceAnimationPanel from '$lib/components/diceRoll/DiceAnimationPanel.svelte'
 	import DicePanel from '$lib/components/diceRoll/DicePanel.svelte'
+	import AchievementsNotifications from '$lib/components/achievements/AchievementsNotifications.svelte'
 
-	const { playersMovesStore, turnState, movementStore } = getAppManagerContext()
+	const { playersMovesStore, turnState, movementStore, myPlayer } = getAppManagerContext()
 	const { moves } = playersMovesStore
 	const { selectedPlayer } = movementStore
 
@@ -80,6 +81,10 @@
 	<div class="sticky bottom-10 left-1/2 mt-10 flex w-fit -translate-x-1/2 justify-center">
 		<DicePanel />
 	</div>
+{/if}
+
+{#if $myPlayer}
+	<AchievementsNotifications />
 {/if}
 
 <div in:fade>

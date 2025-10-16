@@ -22,7 +22,7 @@
 
 	const { player, canRollDice, diceOptions }: Props = $props()
 
-	const { usersStore, eventDataStore, movementStore, myPlayer, frontendState } =
+	const { usersStore, eventDataStore, movementStore, myPlayer, frontendState, notificationStore } =
 		getAppManagerContext()
 	const { finishMove, rollDice } = usersStore
 	const { eventDataQuery } = eventDataStore
@@ -76,6 +76,10 @@
 			steps: steps,
 			moveResponse: moveParams
 		})
+		if (moveParams.unlocked_achievements.length > 0) {
+			await new Promise((resolve) => setTimeout(resolve, 500))
+			notificationStore.notify(moveParams.unlocked_achievements)
+		}
 		await $eventDataQuery.refetch()
 		frontendState.set(null)
 	}
@@ -131,7 +135,6 @@
 	})
 
 	$effect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		movementState.set({
 			rollValues: [],
 			startCell: player.map_position,

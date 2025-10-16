@@ -9,6 +9,10 @@ export type DiceRollRequest = {
      * Used
      */
     used?: boolean;
+    /**
+     * Test Values
+     */
+    test_values?: Array<number>;
 };
 
 /**
