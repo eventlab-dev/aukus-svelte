@@ -36,7 +36,7 @@
 					</div>
 					<div class="mt-3 text-left text-sm leading-4 font-semibold text-muted-foreground">
 						{#if achievement.visibility === 'hidden'}
-							Откроется когда кто-либо из игроков получит это достижение.
+							Откроется когда кто-либо из игроков получит это достижение
 						{:else}
 							{achievement.description}
 						{/if}

@@ -111,3 +111,5 @@ export const MAP_IMAGE = `${CDN_URL_BASE}/map/map_demo.png`
 
 export const DICE_ROLL_ANIMATION_TIME = 2000
 export const DICE_ROLL_IDLE_TIME = 2000
+
+export const AchievementBackgroundUrl = `${CDN_URL_BASE}/utils/achievement_background.png`
