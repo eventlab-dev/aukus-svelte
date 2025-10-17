@@ -128,7 +128,7 @@ export function createMovementStore({
 				keyframes: [
 					// add "fall" effect
 					{ translateY: 0, scale: 1.1, rotate: 90, duration: 900, easing: 'easeInBounce' },
-					{ translateY: 0, scale: 1.1, rotate: 90, duration: 5000, easing: 'easeInBounce' },
+					{ translateY: 0, scale: 1.1, rotate: 90, duration: 1000, easing: 'easeInBounce' },
 					{ translateY: 0, scale: 1, rotate: 0, duration: 200, easing: 'easeOutBounce' }
 				]
 			})
