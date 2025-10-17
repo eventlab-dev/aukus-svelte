@@ -181,7 +181,7 @@ export function defaultAuth() {
 
 export function getSkinIconUrl(url: string) {
 	// parse the url and insert "icon_" before the filename
-	if (!url.includes('yandex')) {
+	if (!url.includes('aukus4/skins')) {
 		return url
 	}
 	const parts = url.split('/')
