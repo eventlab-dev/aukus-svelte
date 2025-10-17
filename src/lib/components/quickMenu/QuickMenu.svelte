@@ -20,9 +20,9 @@
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
 
-	const { usersStore } = getAppManagerContext()
+	const { usersStore, myPlayer } = getAppManagerContext()
 
-	const { isModerator, isPlayer, myUser } = usersStore
+	const { isModerator, myUser } = usersStore
 
 	const collapsed = storable('quickMenuCollapsed', false)
 
@@ -71,21 +71,21 @@
 			{/if}
 
 			<CollapsibleGroup>
-				{#if $isPlayer}
+				{#if $myPlayer}
 					<SkinEditorDialog />
 				{/if}
 				<AchievementsDialog />
 				<GamesHistoryDialog />
 			</CollapsibleGroup>
 
-			{#if $isPlayer}
+			{#if $myPlayer}
 				<CollapsibleGroup>
 					<PunishmentCalculator />
 					<WheelDialog />
 				</CollapsibleGroup>
 			{/if}
 
-			{#if $isPlayer}
+			{#if $myPlayer}
 				<CollapsibleGroup>
 					<div><GalleryAddIcon /> Добавить картинку</div>
 				</CollapsibleGroup>
