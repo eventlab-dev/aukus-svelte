@@ -60,7 +60,8 @@
 		const rollResult = await $rollDice.mutateAsync({
 			body: {
 				dice,
-				used: true
+				used: true,
+				test_values: 'diceRoll' in window ? ((window.diceRoll as number[]) ?? []) : []
 			}
 		})
 		const moveParams = await $finishMove.mutateAsync({
