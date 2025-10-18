@@ -140,8 +140,8 @@
 <div bind:this={element} class="absolute" style="top: {finalTop}px; left: {finalLeft}px">
 	<button
 		onclick={onCharacterClick}
-		class="relative cursor-pointer rounded-full
-         transition hover:bg-yellow-200/40"
+		class="relative isolate cursor-pointer
+         rounded-full transition hover:bg-yellow-200/40"
 	>
 		{#if onlyName}
 			<div class="flex w-full justify-center p-1">
@@ -154,20 +154,20 @@
 					<img
 						src={skin.image_url}
 						alt="player-skin"
-						class="absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2"
+						class="absolute top-[0px] left-1/2 z-25 h-[80px] w-auto -translate-x-1/2"
 					/>
 				{:else if skin.slot === 'body'}
 					<img
 						src={skin.image_url}
 						alt="player-skin"
-						class="absolute top-[0px] left-1/2 h-[80px] w-auto -translate-x-1/2"
+						class="absolute top-[0px] left-1/2 z-20 h-[80px] w-auto -translate-x-1/2"
 					/>
 				{:else if skin.slot === 'side'}
 					<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[40px]" />
 				{/if}
 			{/each}
 			<div class="relative flex h-[10px] w-full justify-center">
-				<p class="absolute top-[-20px]">{player.username}</p>
+				<p class="absolute top-[-20px] z-50">{player.username}</p>
 			</div>
 		{/if}
 	</button>

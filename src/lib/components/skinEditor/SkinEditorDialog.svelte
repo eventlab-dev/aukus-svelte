@@ -106,13 +106,13 @@
 						<img
 							src={skin.image_url}
 							alt="Head Skin"
-							class="absolute top-[0px] left-1/2 h-[150px] w-auto -translate-x-1/2"
+							class="absolute top-[0px] left-1/2 z-20 h-[150px] w-auto -translate-x-1/2"
 						/>
 					{:else if skin.slot === 'body'}
 						<img
 							src={skin.image_url}
 							alt="Body Skin"
-							class="absolute top-[0px] left-1/2 h-[150px] w-auto max-w-none -translate-x-1/2"
+							class="absolute top-[0px] left-1/2 z-10 h-[150px] w-auto max-w-none -translate-x-1/2"
 						/>
 					{:else if skin.slot === 'side'}
 						<img
