@@ -5,7 +5,7 @@ import type { BadgeVariant } from './components/ui/badge'
 import { renderToHTMLString } from '@tiptap/static-renderer'
 import { initExtensions } from './tiptapExtensions/enabledExtensions'
 import dompurify from 'dompurify'
-import type { PlayerMoveType } from './heyapi/aukus/types.gen'
+import type { PlayerMoveType, PlayerStatsItem } from './heyapi/aukus/types.gen'
 
 const enabledExtensions = initExtensions()
 
@@ -202,4 +202,22 @@ export function normalizeSteps(mapPosition: number, steps: number) {
 		return 101
 	}
 	return steps // Valid move
+}
+
+function cellRow(position: number) {
+	if (position >= 100) return 11
+	return Math.floor((position - 1) / 10) + 1
+}
+
+export function getPlayerScore(stats: PlayerStatsItem) {
+	// («Пройденные игры до 15ч» * 1 + «Пройденные игры до 30ч» * 1,5 + «Пройденные игры от 30ч» * 2 - дропнутые игры)*ряд
+	const row = cellRow(stats.map_position)
+	const score =
+		(stats.tiny_games * 1 +
+			stats.short_games * 1 +
+			stats.medium_games * 1.5 +
+			stats.long_games * 2 -
+			stats.games_dropped) *
+		row
+	return Math.max(0, Math.floor(score))
 }

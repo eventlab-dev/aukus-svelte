@@ -21,7 +21,7 @@
 				...playerStat,
 				username: playerInfo ? playerInfo.username : playerStat.player_slug,
 				avatarLink: playerInfo?.avatar_link ?? '',
-				currentGame: playerInfo.current_game ?? '<Нет игры>'
+				currentGame: playerInfo?.current_game ?? '<Нет игры>'
 			}
 		})
 	})

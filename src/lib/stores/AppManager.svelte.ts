@@ -9,6 +9,8 @@ import { type PlayerData, type TurnState } from '$lib/types'
 import { createMovementStore } from './MovementStore.svelte'
 import { createStatsStore } from './StatsStore.svelte'
 import { createNotificationStore } from './NotificationStore.svelte'
+import type { PlayerStatsItem } from '$lib/heyapi/aukus/types.gen'
+import { getPlayerScore } from '$lib/utils'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -28,21 +30,31 @@ export function createAppManager() {
 
 	const { users, myUser } = usersStore
 	const { players: playersData } = eventDataStore
+	const { stats } = statsStore
 
-	const players: Readable<PlayerData[]> = derived([users, playersData], ([$users, $players]) => {
-		const list: PlayerData[] = []
-		for (const player of $players) {
-			const slug = player.slug
-			const user = $users.find((u) => u.slug === slug)
-			if (!user) continue
-			list.push({
-				...user,
-				...player,
-				total_score: 0
+	const players: Readable<PlayerData[]> = derived(
+		[users, playersData, stats],
+		([$users, $players, $stats]) => {
+			const statsBySlug: Record<string, PlayerStatsItem> = {}
+			$stats?.players.forEach((stat) => {
+				statsBySlug[stat.player_slug] = stat
 			})
+
+			const list: PlayerData[] = []
+			for (const player of $players) {
+				const slug = player.slug
+				const user = $users.find((u) => u.slug === slug)
+				const stats = statsBySlug[slug]
+				if (!user || !stats) continue
+				list.push({
+					...user,
+					...player,
+					total_score: getPlayerScore(stats)
+				})
+			}
+			return list
 		}
-		return list
-	})
+	)
 
 	const playersBySlug = derived(players, ($players) => {
 		const map: Record<string, (typeof $players)[0]> = {}
