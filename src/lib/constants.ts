@@ -113,3 +113,6 @@ export const DICE_ROLL_ANIMATION_TIME = 2000
 export const DICE_ROLL_IDLE_TIME = 2000
 
 export const AchievementBackgroundUrl = `${CDN_URL_BASE}/utils/achievement_background.png`
+
+export const DiceModelUrl = `${CDN_URL_BASE}/dice_skins/dice_model.glb`
+export const DefaultDiceTexture = `${CDN_URL_BASE}/dice_skins/default_texture.png`

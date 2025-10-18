@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { T, useLoader } from '@threlte/core'
+	import { T } from '@threlte/core'
 	import { utils, animate } from 'animejs'
 	import { HTML } from '@threlte/extras'
 	import * as THREE from 'three'
-	import { DICE_ROLL_ANIMATION_TIME } from '$lib/constants'
+	import { DefaultDiceTexture, DICE_ROLL_ANIMATION_TIME, DiceModelUrl } from '$lib/constants'
+	import { GLTFLoader, type GLTF } from 'three/examples/jsm/Addons.js'
 
 	type Vector3 = [number, number, number]
 	type ModelParams = {
@@ -73,6 +74,35 @@
 
 	let rotation = $state({ x: 0, y: 0, z: 0 })
 
+	const loader = new GLTFLoader()
+
+	const textureUrl = DefaultDiceTexture
+
+	let loadedMesh: THREE.Mesh | null = $state(null)
+
+	loader.load(DiceModelUrl, (gltf: GLTF) => {
+		// Assume the mesh is the first child of the scene
+		const mesh = gltf.scene.children[0] as THREE.Mesh
+
+		// Load the paintable texture
+		const texture: THREE.Texture = new THREE.TextureLoader().load(textureUrl)
+		texture.flipY = false
+		texture.needsUpdate = true
+
+		const newMaterial = new THREE.MeshBasicMaterial({
+			map: texture
+			// flatShading: true
+		})
+
+		// Apply the texture
+		if (Array.isArray(mesh.material)) {
+			mesh.material = (mesh.material as THREE.Material[]).map(() => newMaterial.clone())
+		} else {
+			mesh.material = newMaterial
+		}
+		loadedMesh = mesh
+	})
+
 	$effect(() => {
 		if ($turnState === 'dice-animation') {
 			const xRotation = utils.random(70, 100)
@@ -89,14 +119,12 @@
 		}
 	})
 
-	const texture = useLoader(THREE.TextureLoader).load('/texture1.jpg')
-
 	const totalSum = $derived($movementState.rollValues.reduce((a, b) => a + b, 0))
 </script>
 
 {#if modelsParams.length > 0}
-	<T.DirectionalLight position={[0, 10, 10]} intensity={1} />
-	<T.AmbientLight intensity={0.1} />
+	<!-- <T.DirectionalLight position={[0, 10, 10]} intensity={1} /> -->
+	<!-- <T.AmbientLight intensity={0} /> -->
 
 	{#if $turnState === 'dice-results' && modelsParams.length > 1}
 		<HTML position={[-3, 6, -5]}>
@@ -108,34 +136,34 @@
 		</HTML>
 	{/if}
 
-	{#each modelsParams as params, idx (idx)}
-		<!-- Main red dodecahedron -->
-		<T.Mesh
-			rotation={[rotation.x, rotation.y, rotation.z]}
-			position={params.position}
-			scale={params.scale}
-		>
-			<T.DodecahedronGeometry />
-			<T.MeshStandardMaterial flatShading={true} map={$texture} color="green" />
-		</T.Mesh>
+	{#if loadedMesh}
+		{#each modelsParams as params, idx (idx)}
+			<T
+				is={loadedMesh.clone()}
+				position={params.position}
+				rotation={[rotation.x, rotation.y, rotation.z]}
+				scale={params.scale}
+			/>
 
-		<!-- Black outline mesh (slightly bigger, drawn inside-out) -->
-		<T.Mesh
-			rotation={[rotation.x, rotation.y, rotation.z]}
-			position={params.position}
-			scale={params.scale + 0.05}
-		>
-			<T.DodecahedronGeometry />
-			<T.MeshBasicMaterial color="black" side={THREE.BackSide} />
-		</T.Mesh>
-		{#if $turnState === 'dice-results'}
-			<HTML position={params.valuePosition}>
-				<div
-					class="pointer-events-none rounded-md bg-black/70 px-2 py-1 text-center text-5xl font-bold text-white select-none"
-				>
-					{params.value}
-				</div>
-			</HTML>
-		{/if}
-	{/each}
+			<!-- Black outline mesh (slightly bigger, drawn inside-out) -->
+			<T
+				is={loadedMesh?.clone()}
+				position={params.position}
+				rotation={[rotation.x, rotation.y, rotation.z]}
+				scale={params.scale + 0.05}
+			>
+				<T.MeshStandardMaterial color="black" side={THREE.BackSide} flatShading={true} />
+			</T>
+
+			{#if $turnState === 'dice-results'}
+				<HTML position={params.valuePosition}>
+					<div
+						class="pointer-events-none rounded-md bg-black/70 px-2 py-1 text-center text-5xl font-bold text-white select-none"
+					>
+						{params.value}
+					</div>
+				</HTML>
+			{/if}
+		{/each}
+	{/if}
 {/if}
