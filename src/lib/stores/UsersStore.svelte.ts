@@ -115,6 +115,7 @@ export function createUsersStore() {
 		isAdmin,
 		isModerator,
 		login,
+		loginMutation,
 		logout,
 		users,
 		usersQuery,

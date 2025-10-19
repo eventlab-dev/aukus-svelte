@@ -6,7 +6,7 @@
 	import { Input } from './ui/input'
 
 	const { usersStore } = getAppManagerContext()
-	const { myUserQuery } = usersStore
+	const { loginMutation } = usersStore
 
 	let name = $state('')
 	let password = $state('')
@@ -47,12 +47,12 @@
 			class="w-full rounded-b-[4px]"
 			disabled={!isValid}
 			onclick={login}
-			loading={$myUserQuery.isLoading}>Войти</Button
+			loading={$loginMutation.isPending}>Войти</Button
 		>
 		<Button
-			class="w-full rounded-t-[4px] bg-[#9146FF] hover:bg-[#9146FF]/80"
+			class="hidden w-full rounded-t-[4px] bg-[#9146FF] hover:bg-[#9146FF]/80"
 			onclick={login}
-			loading={$myUserQuery.isLoading}
+			loading={$loginMutation.isPending}
 		>
 			<TwitchIcon />
 			Войти через Twitch

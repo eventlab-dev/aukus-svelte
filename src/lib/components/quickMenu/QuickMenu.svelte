@@ -34,6 +34,13 @@
 		}
 	})
 
+	$effect(() => {
+		if ($myPlayer) {
+			collapsed.value = true
+			collapsed.value = false
+		}
+	})
+
 	function closeTimelapse() {
 		isTimelapseShown = false
 		collapsed.value = false
