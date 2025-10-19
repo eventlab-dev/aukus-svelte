@@ -50,9 +50,8 @@
 	{/if}
 </svelte:head>
 
-<Canvas />
-
 {#if player}
+	<Canvas playerSlug={player.slug} />
 	<div class="mt-20">
 		<div class="mx-auto flex w-fit flex-col items-center" in:fade>
 			<PlayerAvatar

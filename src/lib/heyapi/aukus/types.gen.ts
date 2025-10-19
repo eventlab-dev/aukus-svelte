@@ -4,922 +4,903 @@
  * AchievementItem
  */
 export type AchievementItem = {
-	/**
-	 * Id
-	 */
-	id: number
-	/**
-	 * Description
-	 */
-	description: string
-	/**
-	 * Reward Skin Id
-	 */
-	reward_skin_id: number
-	visibility: AchievementVisibility
-}
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Reward Skin Id
+     */
+    reward_skin_id: number;
+    visibility: AchievementVisibility;
+};
 
 /**
  * AchievementVisibility
  */
-export type AchievementVisibility = 'visible' | 'hidden'
+export type AchievementVisibility = 'visible' | 'hidden';
 
 /**
  * Body_upload_canvas_image_api_canvas__player_slug__upload_post
  */
 export type BodyUploadCanvasImageApiCanvasPlayerSlugUploadPost = {
-	/**
-	 * File
-	 */
-	file: Blob | File
-	/**
-	 * Width
-	 */
-	width: number
-	/**
-	 * Height
-	 */
-	height: number
-}
+    /**
+     * File
+     */
+    file: Blob | File;
+    /**
+     * Width
+     */
+    width: number;
+    /**
+     * Height
+     */
+    height: number;
+};
 
 /**
  * CanvasFile
  */
 export type CanvasFile = {
-	/**
-	 * Id
-	 */
-	id: number
-	/**
-	 * Rotation
-	 */
-	rotation: number
-	/**
-	 * X
-	 */
-	x: number
-	/**
-	 * Y
-	 */
-	y: number
-	/**
-	 * Url
-	 */
-	url: string
-	/**
-	 * Width
-	 */
-	width: number
-	/**
-	 * Height
-	 */
-	height: number
-	/**
-	 * Zindex
-	 */
-	zIndex: number
-	/**
-	 * Scalex
-	 */
-	scaleX: number
-	/**
-	 * Scaley
-	 */
-	scaleY: number
-}
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Rotation
+     */
+    rotation: number;
+    /**
+     * X
+     */
+    x: number;
+    /**
+     * Y
+     */
+    y: number;
+    /**
+     * Url
+     */
+    url: string;
+    /**
+     * Width
+     */
+    width: number;
+    /**
+     * Height
+     */
+    height: number;
+    /**
+     * Zindex
+     */
+    zIndex: number;
+    /**
+     * Scalex
+     */
+    scaleX: number;
+    /**
+     * Scaley
+     */
+    scaleY: number;
+};
 
 /**
  * CanvasFilesResponse
  */
 export type CanvasFilesResponse = {
-	/**
-	 * Files
-	 */
-	files: Array<CanvasFile>
-}
+    /**
+     * Files
+     */
+    files: Array<CanvasFile>;
+};
 
 /**
  * CanvasUpdateRequest
  */
 export type CanvasUpdateRequest = {
-	/**
-	 * Files
-	 */
-	files: Array<CanvasFile>
-	/**
-	 * Delete Ids
-	 */
-	delete_ids?: Array<number> | null
-}
+    /**
+     * Files
+     */
+    files: Array<CanvasFile>;
+    /**
+     * Delete Ids
+     */
+    delete_ids?: Array<number> | null;
+};
 
 /**
  * CreatePlayerMoveRequest
  */
 export type CreatePlayerMoveRequest = {
-	type: PlayerMoveType
-	/**
-	 * Item Title
-	 */
-	item_title: string
-	item_length: GameLength | null
-	/**
-	 * Item Review
-	 */
-	item_review: string
-	/**
-	 * Item Rating
-	 */
-	item_rating: number | null
-	/**
-	 * Game Id
-	 */
-	game_id: number | null
-	/**
-	 * Cover Image Url
-	 */
-	cover_image_url: string | null
-	difficulty: GameDifficulty | null
-}
+    type: PlayerMoveType;
+    /**
+     * Item Title
+     */
+    item_title: string;
+    item_length: GameLength | null;
+    /**
+     * Item Review
+     */
+    item_review: string;
+    /**
+     * Item Rating
+     */
+    item_rating: number | null;
+    /**
+     * Game Id
+     */
+    game_id: number | null;
+    /**
+     * Cover Image Url
+     */
+    cover_image_url: string | null;
+    difficulty: GameDifficulty | null;
+};
 
 /**
  * CreatePlayerMoveResponse
  */
 export type CreatePlayerMoveResponse = {
-	/**
-	 * Move Id
-	 */
-	move_id: number
-}
+    /**
+     * Move Id
+     */
+    move_id: number;
+};
 
 /**
  * DiceOption
  */
-export type DiceOption = '1d4' | '1d6' | '2d6' | '3d6'
+export type DiceOption = '1d4' | '1d6' | '2d6' | '3d6';
 
 /**
  * EventDataResponse
  */
 export type EventDataResponse = {
-	/**
-	 * Players
-	 */
-	players: Array<PlayerItem>
-	/**
-	 * Event Settings
-	 */
-	event_settings: {
-		[key: string]: string | number | null
-	}
-	/**
-	 * Skins
-	 */
-	skins: Array<SkinItem>
-	/**
-	 * Achievements
-	 */
-	achievements: Array<AchievementItem>
-	/**
-	 * Dice Options
-	 */
-	dice_options: Array<DiceOption>
-}
+    /**
+     * Players
+     */
+    players: Array<PlayerItem>;
+    /**
+     * Event Settings
+     */
+    event_settings: {
+        [key: string]: string | number | null;
+    };
+    /**
+     * Skins
+     */
+    skins: Array<SkinItem>;
+    /**
+     * Achievements
+     */
+    achievements: Array<AchievementItem>;
+    /**
+     * Dice Options
+     */
+    dice_options: Array<DiceOption>;
+};
 
 /**
  * FinishPlayerMoveRequest
  */
 export type FinishPlayerMoveRequest = {
-	/**
-	 * Dice Roll Id
-	 */
-	dice_roll_id: number
-}
+    /**
+     * Dice Roll Id
+     */
+    dice_roll_id: number;
+};
 
 /**
  * FinishPlayerMoveResponse
  */
 export type FinishPlayerMoveResponse = {
-	/**
-	 * Move To
-	 */
-	move_to: number
-	/**
-	 * Snake To
-	 */
-	snake_to: number | null
-	/**
-	 * Ladder To
-	 */
-	ladder_to: number | null
-	/**
-	 * Unlocked Achievements
-	 */
-	unlocked_achievements: Array<number>
-}
+    /**
+     * Move To
+     */
+    move_to: number;
+    /**
+     * Snake To
+     */
+    snake_to: number | null;
+    /**
+     * Ladder To
+     */
+    ladder_to: number | null;
+    /**
+     * Unlocked Achievements
+     */
+    unlocked_achievements: Array<number>;
+};
 
 /**
  * GameDifficulty
  */
-export type GameDifficulty = -1 | 0 | 1 | 2
+export type GameDifficulty = -1 | 0 | 1 | 2;
 
 /**
  * GameLength
  */
-export type GameLength = '0-3' | '3-15' | '15-30' | '30+'
+export type GameLength = '0-3' | '3-15' | '15-30' | '30+';
 
 /**
  * HTTPValidationError
  */
 export type HttpValidationError = {
-	/**
-	 * Detail
-	 */
-	detail?: Array<ValidationError>
-}
+    /**
+     * Detail
+     */
+    detail?: Array<ValidationError>;
+};
 
 /**
  * NewRulesVersionRequest
  */
 export type NewRulesVersionRequest = {
-	/**
-	 * Content
-	 */
-	content: string
-	category: RulesCategory
-}
+    /**
+     * Content
+     */
+    content: string;
+    category: RulesCategory;
+};
 
 /**
  * PlayerChangeSkinRequest
  */
 export type PlayerChangeSkinRequest = {
-	/**
-	 * Skin Ids
-	 */
-	skin_ids: Array<number>
-}
+    /**
+     * Skin Ids
+     */
+    skin_ids: Array<number>;
+};
 
 /**
  * PlayerItem
  */
 export type PlayerItem = {
-	/**
-	 * Slug
-	 */
-	slug: string
-	/**
-	 * Map Position
-	 */
-	map_position: number
-	/**
-	 * Equipped Skins
-	 */
-	equipped_skins: Array<number>
-	/**
-	 * Available Skins
-	 */
-	available_skins: Array<number>
-	/**
-	 * Unlocked Achievements
-	 */
-	unlocked_achievements: Array<UnlockedAchievementItem>
-	/**
-	 * Color
-	 */
-	color: string
-	last_move: PlayerMoveItem | null
-}
+    /**
+     * Slug
+     */
+    slug: string;
+    /**
+     * Map Position
+     */
+    map_position: number;
+    /**
+     * Equipped Skins
+     */
+    equipped_skins: Array<number>;
+    /**
+     * Available Skins
+     */
+    available_skins: Array<number>;
+    /**
+     * Unlocked Achievements
+     */
+    unlocked_achievements: Array<UnlockedAchievementItem>;
+    /**
+     * Color
+     */
+    color: string;
+    last_move: PlayerMoveItem | null;
+};
 
 /**
  * PlayerMoveItem
  */
 export type PlayerMoveItem = {
-	/**
-	 * Id
-	 */
-	id: number
-	/**
-	 * Created At
-	 */
-	created_at: number
-	/**
-	 * Updated At
-	 */
-	updated_at: number
-	/**
-	 * Player Slug
-	 */
-	player_slug: string
-	type: PlayerMoveType
-	/**
-	 * Item Title
-	 */
-	item_title: string
-	/**
-	 * Item Duration
-	 */
-	item_duration: number
-	/**
-	 * Item Review
-	 */
-	item_review: string
-	/**
-	 * Item Rating
-	 */
-	item_rating: number
-	item_length: GameLength | null
-	/**
-	 * Vod Links
-	 */
-	vod_links: string | null
-	/**
-	 * Game Id
-	 */
-	game_id: number | null
-	/**
-	 * Cover Image Url
-	 */
-	cover_image_url: string | null
-	difficulty_level: GameDifficulty
-	/**
-	 * Cell From
-	 */
-	cell_from: number
-	/**
-	 * Cell To
-	 */
-	cell_to: number
-	/**
-	 * Ladder From
-	 */
-	ladder_from: number | null
-	/**
-	 * Ladder To
-	 */
-	ladder_to: number | null
-	/**
-	 * Snake From
-	 */
-	snake_from: number | null
-	/**
-	 * Snake To
-	 */
-	snake_to: number | null
-	/**
-	 * Dice Roll Id
-	 */
-	dice_roll_id: number | null
-	/**
-	 * Dice Roll Sum
-	 */
-	dice_roll_sum: number | null
-	/**
-	 * Dice Roll
-	 */
-	dice_roll: Array<number> | null
-}
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Created At
+     */
+    created_at: number;
+    /**
+     * Updated At
+     */
+    updated_at: number;
+    /**
+     * Player Slug
+     */
+    player_slug: string;
+    type: PlayerMoveType;
+    /**
+     * Item Title
+     */
+    item_title: string;
+    /**
+     * Item Duration
+     */
+    item_duration: number;
+    /**
+     * Item Review
+     */
+    item_review: string;
+    /**
+     * Item Rating
+     */
+    item_rating: number;
+    item_length: GameLength | null;
+    /**
+     * Vod Links
+     */
+    vod_links: string | null;
+    /**
+     * Game Id
+     */
+    game_id: number | null;
+    /**
+     * Cover Image Url
+     */
+    cover_image_url: string | null;
+    difficulty_level: GameDifficulty;
+    /**
+     * Cell From
+     */
+    cell_from: number;
+    /**
+     * Cell To
+     */
+    cell_to: number;
+    /**
+     * Ladder From
+     */
+    ladder_from: number | null;
+    /**
+     * Ladder To
+     */
+    ladder_to: number | null;
+    /**
+     * Snake From
+     */
+    snake_from: number | null;
+    /**
+     * Snake To
+     */
+    snake_to: number | null;
+    /**
+     * Dice Roll Id
+     */
+    dice_roll_id: number | null;
+    /**
+     * Dice Roll Sum
+     */
+    dice_roll_sum: number | null;
+    /**
+     * Dice Roll
+     */
+    dice_roll: Array<number> | null;
+};
 
 /**
  * PlayerMoveType
  */
-export type PlayerMoveType = 'completed' | 'reroll' | 'drop' | 'movie' | 'sheikh_moment'
+export type PlayerMoveType = 'completed' | 'reroll' | 'drop' | 'movie' | 'sheikh_moment';
 
 /**
  * PlayerMovesResponse
  */
 export type PlayerMovesResponse = {
-	/**
-	 * Moves
-	 */
-	moves: Array<PlayerMoveItem>
-}
+    /**
+     * Moves
+     */
+    moves: Array<PlayerMoveItem>;
+};
 
 /**
  * PlayerStatsItem
  */
 export type PlayerStatsItem = {
-	/**
-	 * Player Slug
-	 */
-	player_slug: string
-	/**
-	 * Map Position
-	 */
-	map_position: number
-	/**
-	 * Total Moves
-	 */
-	total_moves: number
-	/**
-	 * Games Completed
-	 */
-	games_completed: number
-	/**
-	 * Games Dropped
-	 */
-	games_dropped: number
-	/**
-	 * Sheikh Moments
-	 */
-	sheikh_moments: number
-	/**
-	 * Rerolls
-	 */
-	rerolls: number
-	/**
-	 * Movies
-	 */
-	movies: number
-	/**
-	 * Ladders
-	 */
-	ladders: number
-	/**
-	 * Snakes
-	 */
-	snakes: number
-	/**
-	 * Tiny Games
-	 */
-	tiny_games: number
-	/**
-	 * Short Games
-	 */
-	short_games: number
-	/**
-	 * Medium Games
-	 */
-	medium_games: number
-	/**
-	 * Long Games
-	 */
-	long_games: number
-	/**
-	 * Average Dice Roll
-	 */
-	average_dice_roll: number
-	/**
-	 * Average Move
-	 */
-	average_move: number
-	/**
-	 * Ladders Moves Sum
-	 */
-	ladders_moves_sum: number
-	/**
-	 * Snakes Moves Sum
-	 */
-	snakes_moves_sum: number
-}
+    /**
+     * Player Slug
+     */
+    player_slug: string;
+    /**
+     * Map Position
+     */
+    map_position: number;
+    /**
+     * Total Moves
+     */
+    total_moves: number;
+    /**
+     * Games Completed
+     */
+    games_completed: number;
+    /**
+     * Games Dropped
+     */
+    games_dropped: number;
+    /**
+     * Sheikh Moments
+     */
+    sheikh_moments: number;
+    /**
+     * Rerolls
+     */
+    rerolls: number;
+    /**
+     * Movies
+     */
+    movies: number;
+    /**
+     * Ladders
+     */
+    ladders: number;
+    /**
+     * Snakes
+     */
+    snakes: number;
+    /**
+     * Tiny Games
+     */
+    tiny_games: number;
+    /**
+     * Short Games
+     */
+    short_games: number;
+    /**
+     * Medium Games
+     */
+    medium_games: number;
+    /**
+     * Long Games
+     */
+    long_games: number;
+    /**
+     * Average Dice Roll
+     */
+    average_dice_roll: number;
+    /**
+     * Average Move
+     */
+    average_move: number;
+    /**
+     * Ladders Moves Sum
+     */
+    ladders_moves_sum: number;
+    /**
+     * Snakes Moves Sum
+     */
+    snakes_moves_sum: number;
+};
 
 /**
  * PlayerStatsResponse
  */
 export type PlayerStatsResponse = {
-	/**
-	 * Players
-	 */
-	players: Array<PlayerStatsItem>
-}
+    /**
+     * Players
+     */
+    players: Array<PlayerStatsItem>;
+};
 
 /**
  * RulesCategory
  */
-export type RulesCategory = 'general' | 'gameplay' | 'donations'
+export type RulesCategory = 'general' | 'gameplay' | 'donations';
 
 /**
  * RulesResponse
  */
 export type RulesResponse = {
-	/**
-	 * Versions
-	 */
-	versions: Array<RulesVersion>
-}
+    /**
+     * Versions
+     */
+    versions: Array<RulesVersion>;
+};
 
 /**
  * RulesVersion
  */
 export type RulesVersion = {
-	/**
-	 * Content
-	 */
-	content: string
-	category: RulesCategory
-	/**
-	 * Created At
-	 */
-	created_at: number
-}
+    /**
+     * Content
+     */
+    content: string;
+    category: RulesCategory;
+    /**
+     * Created At
+     */
+    created_at: number;
+};
 
 /**
  * SkinItem
  */
 export type SkinItem = {
-	/**
-	 * Id
-	 */
-	id: number
-	slot: SkinSlot
-	/**
-	 * Image Url
-	 */
-	image_url: string
-}
+    /**
+     * Id
+     */
+    id: number;
+    slot: SkinSlot;
+    /**
+     * Image Url
+     */
+    image_url: string;
+};
 
 /**
  * SkinSlot
  */
-export type SkinSlot = 'head' | 'body' | 'side'
+export type SkinSlot = 'head' | 'body' | 'side';
 
 /**
  * UnlockedAchievementItem
  */
 export type UnlockedAchievementItem = {
-	/**
-	 * Id
-	 */
-	id: number
-	/**
-	 * Unlocked At
-	 */
-	unlocked_at: number
-}
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Unlocked At
+     */
+    unlocked_at: number;
+};
 
 /**
  * ValidationError
  */
 export type ValidationError = {
-	/**
-	 * Location
-	 */
-	loc: Array<string | number>
-	/**
-	 * Message
-	 */
-	msg: string
-	/**
-	 * Error Type
-	 */
-	type: string
-}
+    /**
+     * Location
+     */
+    loc: Array<string | number>;
+    /**
+     * Message
+     */
+    msg: string;
+    /**
+     * Error Type
+     */
+    type: string;
+};
 
 export type GetCanvasFilesApiCanvasPlayerSlugGetData = {
-	body?: never
-	path: {
-		/**
-		 * Player Slug
-		 */
-		player_slug: string
-	}
-	query?: never
-	url: '/api/canvas/{player_slug}'
-}
+    body?: never;
+    path: {
+        /**
+         * Player Slug
+         */
+        player_slug: string;
+    };
+    query?: never;
+    url: '/api/canvas/{player_slug}';
+};
 
 export type GetCanvasFilesApiCanvasPlayerSlugGetErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type GetCanvasFilesApiCanvasPlayerSlugGetError =
-	GetCanvasFilesApiCanvasPlayerSlugGetErrors[keyof GetCanvasFilesApiCanvasPlayerSlugGetErrors]
+export type GetCanvasFilesApiCanvasPlayerSlugGetError = GetCanvasFilesApiCanvasPlayerSlugGetErrors[keyof GetCanvasFilesApiCanvasPlayerSlugGetErrors];
 
 export type GetCanvasFilesApiCanvasPlayerSlugGetResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: CanvasFilesResponse
-}
+    /**
+     * Successful Response
+     */
+    200: CanvasFilesResponse;
+};
 
-export type GetCanvasFilesApiCanvasPlayerSlugGetResponse =
-	GetCanvasFilesApiCanvasPlayerSlugGetResponses[keyof GetCanvasFilesApiCanvasPlayerSlugGetResponses]
+export type GetCanvasFilesApiCanvasPlayerSlugGetResponse = GetCanvasFilesApiCanvasPlayerSlugGetResponses[keyof GetCanvasFilesApiCanvasPlayerSlugGetResponses];
 
 export type UploadCanvasImageApiCanvasPlayerSlugUploadPostData = {
-	body: BodyUploadCanvasImageApiCanvasPlayerSlugUploadPost
-	path: {
-		/**
-		 * Player Slug
-		 */
-		player_slug: string
-	}
-	query?: {
-		/**
-		 * For Update
-		 */
-		for_update?: boolean
-		/**
-		 * Allow Acting
-		 */
-		allow_acting?: boolean
-	}
-	url: '/api/canvas/{player_slug}/upload'
-}
+    body: BodyUploadCanvasImageApiCanvasPlayerSlugUploadPost;
+    path: {
+        /**
+         * Player Slug
+         */
+        player_slug: string;
+    };
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/canvas/{player_slug}/upload';
+};
 
 export type UploadCanvasImageApiCanvasPlayerSlugUploadPostErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type UploadCanvasImageApiCanvasPlayerSlugUploadPostError =
-	UploadCanvasImageApiCanvasPlayerSlugUploadPostErrors[keyof UploadCanvasImageApiCanvasPlayerSlugUploadPostErrors]
+export type UploadCanvasImageApiCanvasPlayerSlugUploadPostError = UploadCanvasImageApiCanvasPlayerSlugUploadPostErrors[keyof UploadCanvasImageApiCanvasPlayerSlugUploadPostErrors];
 
 export type UploadCanvasImageApiCanvasPlayerSlugUploadPostResponses = {
-	/**
-	 * Successful Response
-	 */
-	201: CanvasFile
-}
+    /**
+     * Successful Response
+     */
+    201: CanvasFile;
+};
 
-export type UploadCanvasImageApiCanvasPlayerSlugUploadPostResponse =
-	UploadCanvasImageApiCanvasPlayerSlugUploadPostResponses[keyof UploadCanvasImageApiCanvasPlayerSlugUploadPostResponses]
+export type UploadCanvasImageApiCanvasPlayerSlugUploadPostResponse = UploadCanvasImageApiCanvasPlayerSlugUploadPostResponses[keyof UploadCanvasImageApiCanvasPlayerSlugUploadPostResponses];
 
 export type UpdateCanvasApiCanvasPlayerSlugUpdatePutData = {
-	body: CanvasUpdateRequest
-	path: {
-		/**
-		 * Player Slug
-		 */
-		player_slug: string
-	}
-	query?: {
-		/**
-		 * For Update
-		 */
-		for_update?: boolean
-		/**
-		 * Allow Acting
-		 */
-		allow_acting?: boolean
-	}
-	url: '/api/canvas/{player_slug}/update'
-}
+    body: CanvasUpdateRequest;
+    path: {
+        /**
+         * Player Slug
+         */
+        player_slug: string;
+    };
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/canvas/{player_slug}/update';
+};
 
 export type UpdateCanvasApiCanvasPlayerSlugUpdatePutErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type UpdateCanvasApiCanvasPlayerSlugUpdatePutError =
-	UpdateCanvasApiCanvasPlayerSlugUpdatePutErrors[keyof UpdateCanvasApiCanvasPlayerSlugUpdatePutErrors]
+export type UpdateCanvasApiCanvasPlayerSlugUpdatePutError = UpdateCanvasApiCanvasPlayerSlugUpdatePutErrors[keyof UpdateCanvasApiCanvasPlayerSlugUpdatePutErrors];
 
 export type UpdateCanvasApiCanvasPlayerSlugUpdatePutResponses = {
-	/**
-	 * Successful Response
-	 */
-	204: void
-}
+    /**
+     * Successful Response
+     */
+    204: void;
+};
 
-export type UpdateCanvasApiCanvasPlayerSlugUpdatePutResponse =
-	UpdateCanvasApiCanvasPlayerSlugUpdatePutResponses[keyof UpdateCanvasApiCanvasPlayerSlugUpdatePutResponses]
+export type UpdateCanvasApiCanvasPlayerSlugUpdatePutResponse = UpdateCanvasApiCanvasPlayerSlugUpdatePutResponses[keyof UpdateCanvasApiCanvasPlayerSlugUpdatePutResponses];
 
 export type GetEventDataApiEventDataGetData = {
-	body?: never
-	path?: never
-	query?: {
-		/**
-		 * Allow Acting
-		 */
-		allow_acting?: boolean
-	}
-	url: '/api/event_data'
-}
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/event_data';
+};
 
 export type GetEventDataApiEventDataGetErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type GetEventDataApiEventDataGetError =
-	GetEventDataApiEventDataGetErrors[keyof GetEventDataApiEventDataGetErrors]
+export type GetEventDataApiEventDataGetError = GetEventDataApiEventDataGetErrors[keyof GetEventDataApiEventDataGetErrors];
 
 export type GetEventDataApiEventDataGetResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: EventDataResponse
-}
+    /**
+     * Successful Response
+     */
+    200: EventDataResponse;
+};
 
-export type GetEventDataApiEventDataGetResponse =
-	GetEventDataApiEventDataGetResponses[keyof GetEventDataApiEventDataGetResponses]
+export type GetEventDataApiEventDataGetResponse = GetEventDataApiEventDataGetResponses[keyof GetEventDataApiEventDataGetResponses];
 
 export type PlayerStatsApiPlayersStatsGetData = {
-	body?: never
-	path?: never
-	query?: never
-	url: '/api/players/stats'
-}
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/players/stats';
+};
 
 export type PlayerStatsApiPlayersStatsGetResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: PlayerStatsResponse
-}
+    /**
+     * Successful Response
+     */
+    200: PlayerStatsResponse;
+};
 
-export type PlayerStatsApiPlayersStatsGetResponse =
-	PlayerStatsApiPlayersStatsGetResponses[keyof PlayerStatsApiPlayersStatsGetResponses]
+export type PlayerStatsApiPlayersStatsGetResponse = PlayerStatsApiPlayersStatsGetResponses[keyof PlayerStatsApiPlayersStatsGetResponses];
 
 export type CreatePlayerMoveApiPlayersMovePostData = {
-	body: CreatePlayerMoveRequest
-	path?: never
-	query?: {
-		/**
-		 * For Update
-		 */
-		for_update?: boolean
-		/**
-		 * Allow Acting
-		 */
-		allow_acting?: boolean
-	}
-	url: '/api/players/move'
-}
+    body: CreatePlayerMoveRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/move';
+};
 
 export type CreatePlayerMoveApiPlayersMovePostErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type CreatePlayerMoveApiPlayersMovePostError =
-	CreatePlayerMoveApiPlayersMovePostErrors[keyof CreatePlayerMoveApiPlayersMovePostErrors]
+export type CreatePlayerMoveApiPlayersMovePostError = CreatePlayerMoveApiPlayersMovePostErrors[keyof CreatePlayerMoveApiPlayersMovePostErrors];
 
 export type CreatePlayerMoveApiPlayersMovePostResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: CreatePlayerMoveResponse
-}
+    /**
+     * Successful Response
+     */
+    200: CreatePlayerMoveResponse;
+};
 
-export type CreatePlayerMoveApiPlayersMovePostResponse =
-	CreatePlayerMoveApiPlayersMovePostResponses[keyof CreatePlayerMoveApiPlayersMovePostResponses]
+export type CreatePlayerMoveApiPlayersMovePostResponse = CreatePlayerMoveApiPlayersMovePostResponses[keyof CreatePlayerMoveApiPlayersMovePostResponses];
 
 export type FinishPlayerMoveApiPlayersMoveFinishPostData = {
-	body: FinishPlayerMoveRequest
-	path?: never
-	query?: {
-		/**
-		 * For Update
-		 */
-		for_update?: boolean
-		/**
-		 * Allow Acting
-		 */
-		allow_acting?: boolean
-	}
-	url: '/api/players/move/finish'
-}
+    body: FinishPlayerMoveRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/move/finish';
+};
 
 export type FinishPlayerMoveApiPlayersMoveFinishPostErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type FinishPlayerMoveApiPlayersMoveFinishPostError =
-	FinishPlayerMoveApiPlayersMoveFinishPostErrors[keyof FinishPlayerMoveApiPlayersMoveFinishPostErrors]
+export type FinishPlayerMoveApiPlayersMoveFinishPostError = FinishPlayerMoveApiPlayersMoveFinishPostErrors[keyof FinishPlayerMoveApiPlayersMoveFinishPostErrors];
 
 export type FinishPlayerMoveApiPlayersMoveFinishPostResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: FinishPlayerMoveResponse
-}
+    /**
+     * Successful Response
+     */
+    200: FinishPlayerMoveResponse;
+};
 
-export type FinishPlayerMoveApiPlayersMoveFinishPostResponse =
-	FinishPlayerMoveApiPlayersMoveFinishPostResponses[keyof FinishPlayerMoveApiPlayersMoveFinishPostResponses]
+export type FinishPlayerMoveApiPlayersMoveFinishPostResponse = FinishPlayerMoveApiPlayersMoveFinishPostResponses[keyof FinishPlayerMoveApiPlayersMoveFinishPostResponses];
 
 export type GetPlayerMovesApiPlayersPlayerSlugMovesGetData = {
-	body?: never
-	path: {
-		/**
-		 * Player Slug
-		 */
-		player_slug: string
-	}
-	query?: never
-	url: '/api/players/{player_slug}/moves'
-}
+    body?: never;
+    path: {
+        /**
+         * Player Slug
+         */
+        player_slug: string;
+    };
+    query?: never;
+    url: '/api/players/{player_slug}/moves';
+};
 
 export type GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type GetPlayerMovesApiPlayersPlayerSlugMovesGetError =
-	GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors]
+export type GetPlayerMovesApiPlayersPlayerSlugMovesGetError = GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors];
 
 export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: PlayerMovesResponse
-}
+    /**
+     * Successful Response
+     */
+    200: PlayerMovesResponse;
+};
 
-export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponse =
-	GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses]
+export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponse = GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses];
 
 export type SetPlayerSkinsApiPlayersSkinsPostData = {
-	body: PlayerChangeSkinRequest
-	path?: never
-	query?: {
-		/**
-		 * For Update
-		 */
-		for_update?: boolean
-		/**
-		 * Allow Acting
-		 */
-		allow_acting?: boolean
-	}
-	url: '/api/players/skins'
-}
+    body: PlayerChangeSkinRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/skins';
+};
 
 export type SetPlayerSkinsApiPlayersSkinsPostErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type SetPlayerSkinsApiPlayersSkinsPostError =
-	SetPlayerSkinsApiPlayersSkinsPostErrors[keyof SetPlayerSkinsApiPlayersSkinsPostErrors]
+export type SetPlayerSkinsApiPlayersSkinsPostError = SetPlayerSkinsApiPlayersSkinsPostErrors[keyof SetPlayerSkinsApiPlayersSkinsPostErrors];
 
 export type SetPlayerSkinsApiPlayersSkinsPostResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown
-}
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type GetCurrentRulesVersionApiRulesCurrentGetData = {
-	body?: never
-	path?: never
-	query?: never
-	url: '/api/rules/current'
-}
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/rules/current';
+};
 
 export type GetCurrentRulesVersionApiRulesCurrentGetResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: RulesResponse
-}
+    /**
+     * Successful Response
+     */
+    200: RulesResponse;
+};
 
-export type GetCurrentRulesVersionApiRulesCurrentGetResponse =
-	GetCurrentRulesVersionApiRulesCurrentGetResponses[keyof GetCurrentRulesVersionApiRulesCurrentGetResponses]
+export type GetCurrentRulesVersionApiRulesCurrentGetResponse = GetCurrentRulesVersionApiRulesCurrentGetResponses[keyof GetCurrentRulesVersionApiRulesCurrentGetResponses];
 
 export type GetAllRulesVersionsApiRulesGetData = {
-	body?: never
-	path?: never
-	query?: never
-	url: '/api/rules'
-}
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/rules';
+};
 
 export type GetAllRulesVersionsApiRulesGetResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: RulesResponse
-}
+    /**
+     * Successful Response
+     */
+    200: RulesResponse;
+};
 
-export type GetAllRulesVersionsApiRulesGetResponse =
-	GetAllRulesVersionsApiRulesGetResponses[keyof GetAllRulesVersionsApiRulesGetResponses]
+export type GetAllRulesVersionsApiRulesGetResponse = GetAllRulesVersionsApiRulesGetResponses[keyof GetAllRulesVersionsApiRulesGetResponses];
 
 export type CreateNewRulesVersionApiRulesPostData = {
-	body: NewRulesVersionRequest
-	path?: never
-	query?: never
-	url: '/api/rules'
-}
+    body: NewRulesVersionRequest;
+    path?: never;
+    query?: never;
+    url: '/api/rules';
+};
 
 export type CreateNewRulesVersionApiRulesPostErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError
-}
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
 
-export type CreateNewRulesVersionApiRulesPostError =
-	CreateNewRulesVersionApiRulesPostErrors[keyof CreateNewRulesVersionApiRulesPostErrors]
+export type CreateNewRulesVersionApiRulesPostError = CreateNewRulesVersionApiRulesPostErrors[keyof CreateNewRulesVersionApiRulesPostErrors];
 
 export type CreateNewRulesVersionApiRulesPostResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown
-}
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type ClientOptions = {
-	baseUrl: 'http://localhost:8301' | (string & {})
-}
+    baseUrl: 'http://localhost:8301' | (string & {});
+};

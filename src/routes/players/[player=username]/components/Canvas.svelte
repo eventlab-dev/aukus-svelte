@@ -1,10 +1,27 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { Stage, Layer } from 'svelte-konva'
+	import { Stage, Layer, type KonvaMouseEvent } from 'svelte-konva'
 	import CanvasImage from './CanvasImage.svelte'
+	import { Button } from '$lib/components/ui/button'
 
-	const { canvasStore } = getAppManagerContext()
-	const { files, editable } = canvasStore
+	type Props = {
+		playerSlug: string
+	}
+
+	const { playerSlug }: Props = $props()
+
+	const { canvasStore, usersStore } = getAppManagerContext()
+	const { displayImages, editMode, selectedImage } = canvasStore
+	const { myUser } = usersStore
+
+	const canEdit = $derived(
+		Boolean(
+			$myUser &&
+				($myUser.slug === playerSlug ||
+					$myUser.moder_for.includes(playerSlug) ||
+					$myUser.role === 'admin')
+		)
+	)
 
 	const canvasMaxSize = 10000
 
@@ -14,18 +31,31 @@
 	const canvasHeight = $derived(
 		Math.min(container?.scrollHeight ?? window.innerHeight, canvasMaxSize)
 	)
+
+	function handleStageClick(event: KonvaMouseEvent) {
+		if (event.target === event.target.getStage()) {
+			selectedImage.set(null)
+			// 	setFlipFunction(null)
+		}
+	}
 </script>
 
 <div bind:this={container} class="relative z-0 h-full w-full">
-	<div
-		class="absolute z-20 overflow-hidden"
-		style={$editable ? 'pointer-events: all; border: 1px solid cyan' : 'pointer-events: none;'}
-	>
-		<Stage width={canvasWidth - 2} height={canvasHeight}>
+	<div class="absolute z-20 overflow-hidden" style={$editMode ? 'border: 1px solid cyan' : ''}>
+		{#if canEdit}
+			<div class="flex justify-center">
+				{#if $editMode}
+					<Button onclick={() => editMode.set(false)}>Закрыть</Button>
+				{:else}
+					<Button onclick={() => editMode.set(true)}>Редактировать</Button>
+				{/if}
+			</div>
+		{/if}
+		<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
 			<Layer>
 				<!-- <Rect x={100} y={100} width={400} height={200} fill="blue" /> -->
-				{#each $files as file (file.id)}
-					<CanvasImage {file} editable={$editable} />
+				{#each $displayImages as img (img.id)}
+					<CanvasImage file={img} editable={$editMode} />
 				{/each}
 			</Layer>
 		</Stage>

@@ -189,6 +189,10 @@ export type UserItem = {
     first_name: string;
     role: UserRole;
     /**
+     * Moder For
+     */
+    moder_for: Array<string>;
+    /**
      * Is Active
      */
     is_active: number;

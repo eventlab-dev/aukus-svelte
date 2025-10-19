@@ -8,7 +8,6 @@
 	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte'
 	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte'
 	import CalendarIcon from '../icons/CalendarIcon.svelte'
-	import GalleryAddIcon from '../icons/GalleryAddIcon.svelte'
 	import MoonIcon from '../icons/MoonIcon.svelte'
 	import ProfileIcon from '../icons/ProfileIcon.svelte'
 	import TwitchIcon from '../icons/TwitchIcon.svelte'
@@ -20,10 +19,9 @@
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
 
-	const { usersStore, myPlayer, canvasStore } = getAppManagerContext()
+	const { usersStore, myPlayer } = getAppManagerContext()
 
-	const { isModerator, myUser } = usersStore
-	const { editable } = canvasStore
+	const { myUser } = usersStore
 
 	const collapsed = storable('quickMenuCollapsed', false)
 
@@ -74,14 +72,6 @@
 		</CollapsibleTrigger>
 
 		<CollapsibleContent>
-			{#if $isModerator}
-				<CollapsibleGroup>
-					<Button onclick={() => editable.set(!$editable)}>
-						<GalleryAddIcon /> Добавить картинку
-					</Button>
-				</CollapsibleGroup>
-			{/if}
-
 			<CollapsibleGroup>
 				{#if $myPlayer}
 					<SkinEditorDialog />
@@ -94,14 +84,6 @@
 				<CollapsibleGroup>
 					<PunishmentCalculator />
 					<WheelDialog />
-				</CollapsibleGroup>
-			{/if}
-
-			{#if $myPlayer}
-				<CollapsibleGroup>
-					<Button onclick={() => editable.set(!$editable)}>
-						<GalleryAddIcon /> Добавить картинку
-					</Button>
 				</CollapsibleGroup>
 			{/if}
 
