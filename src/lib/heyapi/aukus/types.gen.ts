@@ -528,7 +528,7 @@ export type SkinItem = {
 /**
  * SkinSlot
  */
-export type SkinSlot = 'head' | 'body' | 'side';
+export type SkinSlot = 'head' | 'body' | 'item';
 
 /**
  * UnlockedAchievementItem

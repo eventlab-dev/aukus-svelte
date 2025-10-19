@@ -162,7 +162,7 @@
 						alt="player-skin"
 						class="absolute top-[0px] left-1/2 z-20 h-[80px] w-auto -translate-x-1/2"
 					/>
-				{:else if skin.slot === 'side'}
+				{:else if skin.slot === 'item'}
 					<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[40px]" />
 				{/if}
 			{/each}

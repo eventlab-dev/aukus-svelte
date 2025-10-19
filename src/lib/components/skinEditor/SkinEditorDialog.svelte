@@ -17,7 +17,7 @@
 	let selectedSkins = $state<{ [k in SkinSlot]: number | null }>({
 		head: null,
 		body: null,
-		side: null
+		item: null
 	})
 
 	function selectSkin(skin: SkinItem) {
@@ -114,7 +114,7 @@
 							alt="Body Skin"
 							class="absolute top-[0px] left-1/2 z-10 h-[150px] w-auto max-w-none -translate-x-1/2"
 						/>
-					{:else if skin.slot === 'side'}
+					{:else if skin.slot === 'item'}
 						<img
 							src={skin.image_url}
 							alt="Side Skin"
@@ -151,11 +151,11 @@
 			</Toggle>
 			<Toggle
 				class="cursor-pointer"
-				pressed={filter === 'side'}
-				onPressedChange={() => selectFilter('side')}
+				pressed={filter === 'item'}
+				onPressedChange={() => selectFilter('item')}
 			>
 				Аксессуар
-				{#if filter === 'side'}
+				{#if filter === 'item'}
 					<span class="rounded bg-white/20 p-0.5">
 						<X class="stroke-4" />
 					</span>
