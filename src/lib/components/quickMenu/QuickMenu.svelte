@@ -34,8 +34,10 @@
 		}
 	})
 
+	const originalCollapsed = collapsed.value
+
 	$effect(() => {
-		if ($myPlayer) {
+		if ($myPlayer && !originalCollapsed) {
 			collapsed.value = true
 			collapsed.value = false
 		}
