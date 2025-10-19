@@ -72,15 +72,28 @@ export function createCanvasStore() {
 		})
 	}
 
-	async function discardCanvasChanges() {
+	function discardCanvasChanges() {
 		updatedImages.set([])
 		deletedImages.set([])
+	}
+
+	function updateImage(img: CanvasFile) {
+		updatedImages.update((images) => {
+			const index = images.findIndex((i) => i.id === img.id)
+			if (index !== -1) {
+				images[index] = img
+			} else {
+				images.push(img)
+			}
+			return images
+		})
 	}
 
 	return {
 		playerSlug,
 		canvasQuery,
 		updatedImages,
+		updateImage,
 		editMode,
 		selectedImage,
 		displayImages,

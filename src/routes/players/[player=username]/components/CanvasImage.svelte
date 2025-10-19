@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { CanvasFile } from '$lib/heyapi/aukus/types.gen'
 	import { onMount } from 'svelte'
-	import { Image } from 'svelte-konva'
+	import { Image, type KonvaDragTransformEvent } from 'svelte-konva'
 
 	type Props = {
 		file: CanvasFile
@@ -9,6 +10,8 @@
 	}
 
 	const { file, editable }: Props = $props()
+
+	const { canvasStore } = getAppManagerContext()
 
 	const { x, y, scaleX, scaleY, height, width, rotation, zIndex } = file
 
@@ -21,6 +24,15 @@
 			image = img
 		}
 	})
+
+	function handleClick() {
+		canvasStore.selectedImage.set(file)
+	}
+
+	function handleDragEnd(event: KonvaDragTransformEvent) {
+		const updatedFile = { ...file, x: event.target.x(), y: event.target.y() }
+		canvasStore.updateImage(updatedFile)
+	}
 </script>
 
 <Image
@@ -34,4 +46,6 @@
 	{rotation}
 	{zIndex}
 	draggable={editable}
+	onclick={handleClick}
+	ondragend={handleDragEnd}
 />

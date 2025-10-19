@@ -11,7 +11,7 @@
 	const { playerSlug }: Props = $props()
 
 	const { canvasStore, usersStore } = getAppManagerContext()
-	const { displayImages, editMode, selectedImage } = canvasStore
+	const { displayImages, editMode, selectedImage, updateCanvasMutation } = canvasStore
 	const { myUser } = usersStore
 
 	const canEdit = $derived(
@@ -38,14 +38,19 @@
 			// 	setFlipFunction(null)
 		}
 	}
+
+	function handleSave() {
+		canvasStore.saveCanvasChanges()
+	}
 </script>
 
 <div bind:this={container} class="relative z-0 h-full w-full">
 	<div class="absolute z-20 overflow-hidden" style={$editMode ? 'border: 1px solid cyan' : ''}>
 		{#if canEdit}
-			<div class="flex justify-center">
+			<div class="flex justify-center gap-3">
 				{#if $editMode}
 					<Button onclick={() => editMode.set(false)}>Закрыть</Button>
+					<Button onclick={handleSave} loading={$updateCanvasMutation.isPending}>Сохранить</Button>
 				{:else}
 					<Button onclick={() => editMode.set(true)}>Редактировать</Button>
 				{/if}
