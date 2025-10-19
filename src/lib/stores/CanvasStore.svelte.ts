@@ -1,7 +1,8 @@
 import { AukusBaseUrl } from '$lib/client'
 import {
 	getCanvasFilesApiCanvasPlayerSlugGetOptions,
-	updateCanvasApiCanvasPlayerSlugUpdatePutMutation
+	updateCanvasApiCanvasPlayerSlugUpdatePutMutation,
+	uploadCanvasImageApiCanvasPlayerSlugUploadPostMutation
 } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { CanvasFile } from '$lib/heyapi/aukus/types.gen'
 import { defaultAuth } from '$lib/utils'
@@ -29,6 +30,13 @@ export function createCanvasStore() {
 
 	const updateCanvasMutation = createMutation(
 		updateCanvasApiCanvasPlayerSlugUpdatePutMutation({
+			baseUrl: AukusBaseUrl,
+			auth: defaultAuth
+		})
+	)
+
+	const uploadImageMutation = createMutation(
+		uploadCanvasImageApiCanvasPlayerSlugUploadPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
@@ -94,6 +102,7 @@ export function createCanvasStore() {
 		canvasQuery,
 		updatedImages,
 		updateImage,
+		uploadImageMutation,
 		editMode,
 		selectedImage,
 		displayImages,

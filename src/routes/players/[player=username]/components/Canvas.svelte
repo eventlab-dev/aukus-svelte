@@ -11,7 +11,14 @@
 	const { playerSlug }: Props = $props()
 
 	const { canvasStore, usersStore } = getAppManagerContext()
-	const { displayImages, editMode, selectedImage, updateCanvasMutation } = canvasStore
+	const {
+		displayImages,
+		editMode,
+		selectedImage,
+		updateCanvasMutation,
+		uploadImageMutation,
+		canvasQuery
+	} = canvasStore
 	const { myUser } = usersStore
 
 	const canEdit = $derived(
@@ -42,6 +49,45 @@
 	function handleSave() {
 		canvasStore.saveCanvasChanges()
 	}
+
+	let fileInput = $state<HTMLInputElement | null>(null)
+
+	function handleUpload(event: Event) {
+		const input = event.target as HTMLInputElement
+		const file = input?.files?.[0]
+		if (!file) return
+
+		if (file.size > 1024 * 1024 * 5) {
+			alert('Файл слишком большой. Максимальный размер файла: 5 МБ.')
+			return
+		}
+
+		const image = new window.Image()
+		image.src = URL.createObjectURL(file)
+		image.onload = () => {
+			$uploadImageMutation.mutate(
+				{
+					body: {
+						file,
+						height: image.naturalHeight,
+						width: image.naturalWidth
+					},
+					path: {
+						player_slug: playerSlug
+					}
+				},
+				{
+					onSettled: () => {
+						URL.revokeObjectURL(image.src)
+						$canvasQuery.refetch()
+					},
+					onError: (err) => {
+						alert('Ошибка при загрузке изображения: ' + err.detail)
+					}
+				}
+			)
+		}
+	}
 </script>
 
 <div bind:this={container} class="relative z-0 h-full w-full">
@@ -51,6 +97,20 @@
 				{#if $editMode}
 					<Button onclick={() => editMode.set(false)}>Закрыть</Button>
 					<Button onclick={handleSave} loading={$updateCanvasMutation.isPending}>Сохранить</Button>
+					<input
+						bind:this={fileInput}
+						class="hidden"
+						type="file"
+						accept=".jpg, .jpeg, .png, .gif, .webp, .svg"
+						onchange={handleUpload}
+					/>
+					<Button
+						onclick={() => {
+							fileInput?.click()
+						}}
+					>
+						Загрузить изображение
+					</Button>
 				{:else}
 					<Button onclick={() => editMode.set(true)}>Редактировать</Button>
 				{/if}
