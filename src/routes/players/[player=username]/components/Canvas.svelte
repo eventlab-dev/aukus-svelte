@@ -79,6 +79,7 @@
 				{
 					onSettled: () => {
 						URL.revokeObjectURL(image.src)
+						canvasStore.discardCanvasChanges()
 						$canvasQuery.refetch()
 					},
 					onError: (err) => {
@@ -94,6 +95,12 @@
 
 		canvasStore.deleteImage($selectedImage.id)
 	}
+
+	function handleClose() {
+		canvasStore.discardCanvasChanges()
+		editMode.set(false)
+		$canvasQuery.refetch()
+	}
 </script>
 
 <div bind:this={container} class="relative z-0 h-full w-full">
@@ -101,7 +108,7 @@
 		{#if canEdit}
 			<div class="flex justify-center gap-3">
 				{#if $editMode}
-					<Button onclick={() => editMode.set(false)}>Закрыть</Button>
+					<Button onclick={handleClose}>Закрыть</Button>
 					<Button onclick={handleSave} loading={$updateCanvasMutation.isPending}>Сохранить</Button>
 					<input
 						bind:this={fileInput}
@@ -125,8 +132,7 @@
 		{/if}
 		<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
 			<Layer>
-				<!-- <Rect x={100} y={100} width={400} height={200} fill="blue" /> -->
-				{#each $displayImages as img (img.id)}
+				{#each $displayImages as img (img)}
 					<CanvasImage file={img} editable={$editMode} />
 				{/each}
 			</Layer>
