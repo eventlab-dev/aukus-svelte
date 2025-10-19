@@ -44,22 +44,23 @@ export function createCanvasStore() {
 
 	const savedImages = derived(canvasQuery, ($canvasQuery) => $canvasQuery.data?.files || [])
 
-	const displayImages = derived([savedImages, updatedImages], ([$savedImages, $updatedImages]) => {
-		const updatedIds = new SvelteSet($updatedImages.map((img) => img.id))
-		const deletedIds = new SvelteSet(get(deletedImages))
-		const filteredSaved = $savedImages.filter(
-			(img) => !updatedIds.has(img.id) && !deletedIds.has(img.id)
-		)
-		return [...filteredSaved, ...$updatedImages]
-	})
+	const displayImages = derived(
+		[savedImages, updatedImages, deletedImages],
+		([$savedImages, $updatedImages, $deletedImages]) => {
+			const updatedIds = new SvelteSet($updatedImages.map((img) => img.id))
+			const deletedIds = new SvelteSet($deletedImages)
+			const filteredSaved = $savedImages.filter(
+				(img) => !updatedIds.has(img.id) && !deletedIds.has(img.id)
+			)
+			return [...filteredSaved, ...$updatedImages]
+		}
+	)
 
 	const deleteImage = function (imageId: number) {
 		updatedImages.update((images) => images.filter((img) => img.id !== imageId))
 		deletedImages.update((ids) => {
-			if (!ids.includes(imageId)) {
-				ids.push(imageId)
-			}
-			return ids
+			const filtered = ids.filter((id) => id !== imageId)
+			return [...filtered, imageId]
 		})
 		const currentSelected = get(selectedImage)
 		if (currentSelected?.id === imageId) {

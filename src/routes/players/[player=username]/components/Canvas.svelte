@@ -88,6 +88,12 @@
 			)
 		}
 	}
+
+	function handleDelete() {
+		if (!$selectedImage) return
+
+		canvasStore.deleteImage($selectedImage.id)
+	}
 </script>
 
 <div bind:this={container} class="relative z-0 h-full w-full">
@@ -111,6 +117,7 @@
 					>
 						Загрузить изображение
 					</Button>
+					<Button onclick={handleDelete} disabled={!$selectedImage}>Удалить</Button>
 				{:else}
 					<Button onclick={() => editMode.set(true)}>Редактировать</Button>
 				{/if}
