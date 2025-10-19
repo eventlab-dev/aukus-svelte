@@ -11,6 +11,7 @@ import { createStatsStore } from './StatsStore.svelte'
 import { createNotificationStore } from './NotificationStore.svelte'
 import type { PlayerStatsItem } from '$lib/heyapi/aukus/types.gen'
 import { getPlayerScore } from '$lib/utils'
+import { createCanvasStore } from './CanvasStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -24,6 +25,7 @@ export function createAppManager() {
 	const movementStore = createMovementStore({ eventDataStore, frontendTurnState: frontendState })
 
 	const notificationStore = createNotificationStore({ eventDataStore })
+	const canvasStore = createCanvasStore()
 
 	const soundManager = new SoundManager()
 	soundManager.preloadSounds(SOUNDS)
@@ -145,7 +147,8 @@ export function createAppManager() {
 		winners,
 		eventFinished,
 		playersInOrder,
-		playersCompletedMap
+		playersCompletedMap,
+		canvasStore
 	}
 }
 

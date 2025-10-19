@@ -20,9 +20,10 @@
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
 
-	const { usersStore, myPlayer } = getAppManagerContext()
+	const { usersStore, myPlayer, canvasStore } = getAppManagerContext()
 
 	const { isModerator, myUser } = usersStore
+	const { editable } = canvasStore
 
 	const collapsed = storable('quickMenuCollapsed', false)
 
@@ -75,7 +76,9 @@
 		<CollapsibleContent>
 			{#if $isModerator}
 				<CollapsibleGroup>
-					<div><GalleryAddIcon /> Добавить картинку</div>
+					<Button onclick={() => editable.set(!$editable)}>
+						<GalleryAddIcon /> Добавить картинку
+					</Button>
 				</CollapsibleGroup>
 			{/if}
 
@@ -96,7 +99,9 @@
 
 			{#if $myPlayer}
 				<CollapsibleGroup>
-					<div><GalleryAddIcon /> Добавить картинку</div>
+					<Button onclick={() => editable.set(!$editable)}>
+						<GalleryAddIcon /> Добавить картинку
+					</Button>
 				</CollapsibleGroup>
 			{/if}
 

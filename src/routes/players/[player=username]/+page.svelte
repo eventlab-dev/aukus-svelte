@@ -8,12 +8,15 @@
 	import { page } from '$app/state'
 	import SearchIcon from '$lib/components/icons/SearchIcon.svelte'
 	import { Input } from '$lib/components/ui/input'
+	import Canvas from './components/Canvas.svelte'
 
-	const { playersMovesStore, playersBySlug } = getAppManagerContext()
+	const { playersMovesStore, playersBySlug, canvasStore } = getAppManagerContext()
 	const { moves, playerSlug: movesPlayerSlug } = playersMovesStore
+	const { playerSlug: canvasPlayerSlug } = canvasStore
 
 	$effect(() => {
 		movesPlayerSlug.set(page.params.player!)
+		canvasPlayerSlug.set(page.params.player!)
 	})
 
 	const playerSlug = page.params.player
@@ -39,20 +42,6 @@
 			)
 		})
 	)
-
-	// const aukus1games = aukus1Games[player.url_handle];
-	// const aukus2games = aukus2Games[player.url_handle];
-
-	// const aukus1FilteredGames = $derived.by(() => {
-	// 	return aukus1games?.games.filter((game) => {
-	// 		return translitFilter.some((ftext) => game.title.toLowerCase().includes(ftext));
-	// 	});
-	// });
-	// const aukus2FilteredGames = $derived.by(() => {
-	// 	return aukus2games?.games.filter((game) => {
-	// 		return translitFilter.some((ftext) => game.title.toLowerCase().includes(ftext));
-	// 	});
-	// });
 </script>
 
 <svelte:head>
@@ -60,6 +49,8 @@
 		<title>Aukus - {player.username}</title>
 	{/if}
 </svelte:head>
+
+<Canvas />
 
 {#if player}
 	<div class="mt-20">

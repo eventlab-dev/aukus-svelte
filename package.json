@@ -71,9 +71,11 @@
 		"@tiptap/extension-table-of-contents": "^3.6.5",
 		"@tiptap/extension-text-align": "^3.6.5",
 		"animejs": "^4.1.4",
+		"konva": "^10.0.2",
 		"prosemirror-model": "^1.25.3",
 		"prosemirror-state": "^1.4.3",
 		"prosemirror-view": "^1.41.3",
+		"svelte-konva": "^1.0.1",
 		"three": "^0.180.0"
 	}
 }
