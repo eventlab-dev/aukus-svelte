@@ -21,6 +21,7 @@
 		frontendState
 	} = getAppManagerContext()
 	const { skinsById, playersBySlug } = eventDataStore
+	const { selectedPlayer } = movementStore
 
 	let element: HTMLDivElement
 
@@ -102,7 +103,7 @@
 	})
 
 	const onCharacterClick = (e: MouseEvent) => {
-		movementStore.selectedPlayer.set(player)
+		selectedPlayer.set(player)
 		e.stopPropagation()
 	}
 
@@ -141,14 +142,15 @@
 	<button
 		onclick={onCharacterClick}
 		class="relative isolate cursor-pointer
-         rounded-full bg-blue-950/20 transition hover:bg-yellow-200/80"
+         rounded-full transition data-[active=false]:hover:bg-yellow-200/80 data-[active=true]:bg-yellow-200/80"
+		data-active={$selectedPlayer?.slug === player.slug}
 	>
 		{#if onlyName}
 			<div class="flex w-full justify-center p-1">
 				<p class="relative left-1/2 -translate-x-1/2">{player.username}</p>
 			</div>
 		{:else}
-			<img src={PlayerBaseModelUrl} alt="player-model" class="h-[80px] w-auto" />
+			<img src={PlayerBaseModelUrl} alt="player-model" class="player-shadow h-[80px] w-auto" />
 			{#each skins as skin (skin.id)}
 				{#if skin.slot === 'head'}
 					<img
@@ -172,3 +174,9 @@
 		{/if}
 	</button>
 </div>
+
+<style>
+	:global(.player-shadow) {
+		filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.9));
+	}
+</style>
