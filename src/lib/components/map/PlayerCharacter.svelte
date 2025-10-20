@@ -141,7 +141,7 @@
 	<button
 		onclick={onCharacterClick}
 		class="relative isolate cursor-pointer
-         rounded-full bg-yellow-300/40 transition hover:bg-yellow-200/80"
+         rounded-full bg-blue-950/20 transition hover:bg-yellow-200/80"
 	>
 		{#if onlyName}
 			<div class="flex w-full justify-center p-1">

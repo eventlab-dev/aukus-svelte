@@ -9,6 +9,7 @@
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
 	import Button from '../ui/button/button.svelte'
 	import { getSkinIconUrl } from '$lib/utils'
+	import { SvelteSet } from 'svelte/reactivity'
 
 	const { eventDataStore, myPlayer, usersStore } = getAppManagerContext()
 	const { skinsById, eventDataQuery } = eventDataStore
@@ -65,10 +66,19 @@
 			.map((id) => $skinsById.get(id))
 			.filter((s) => s !== undefined)
 			.sort((a, b) => a.id - b.id)
+
+		const uniqueIds = new SvelteSet(available.map((s) => s.id))
+		const availableUnique = available.filter((s) => {
+			if (uniqueIds.has(s.id)) {
+				uniqueIds.delete(s.id)
+				return true
+			}
+			return false
+		})
 		if (filter) {
-			return available.filter((s) => s.slot === filter)
+			return availableUnique.filter((s) => s.slot === filter)
 		}
-		return available
+		return availableUnique
 	})
 
 	async function handleOpenChange(open: boolean) {
