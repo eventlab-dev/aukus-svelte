@@ -7,9 +7,11 @@
 
 	type Props = {
 		playerSlug: string
+		contentCenter: number
+		contentHeight: number
 	}
 
-	const { playerSlug }: Props = $props()
+	const { playerSlug, contentCenter, contentHeight }: Props = $props()
 
 	const { canvasStore, usersStore } = getAppManagerContext()
 	const {
@@ -36,9 +38,7 @@
 	let container = $state<HTMLDivElement | null>(null)
 
 	const canvasWidth = $derived(Math.min(container?.offsetWidth ?? window.innerWidth, canvasMaxSize))
-	const canvasHeight = $derived(
-		Math.min(container?.scrollHeight ?? window.innerHeight, canvasMaxSize)
-	)
+	const canvasHeight = $derived(Math.min(contentHeight, canvasMaxSize))
 
 	function handleStageClick(event: KonvaMouseEvent) {
 		if (event.target === event.target.getStage()) {
@@ -119,47 +119,42 @@
 	class="relative h-full w-full"
 	style={$editMode ? 'z-index: 100;' : 'z-index: 0;'}
 >
+	{#if canEdit}
+		<div class="flex w-full justify-center gap-3">
+			{#if $editMode}
+				<Button onclick={handleClose} variant="destructive">Закрыть</Button>
+				<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>
+					Сохранить
+				</Button>
+				<input
+					bind:this={fileInput}
+					class="hidden"
+					type="file"
+					accept=".jpg, .jpeg, .png, .gif, .webp, .svg"
+					onchange={handleUpload}
+				/>
+				<Button
+					onclick={() => {
+						fileInput?.click()
+					}}
+					variant="secondary"
+				>
+					Загрузить изображение
+				</Button>
+				<Button variant="secondary" onclick={handleFlip}>Отразить</Button>
+				<Button onclick={handleDelete} disabled={!$selectedImage} variant="secondary" class="ml-5">
+					Удалить
+				</Button>
+			{:else}
+				<Button onclick={() => editMode.set(true)}>Редактировать</Button>
+			{/if}
+		</div>
+	{/if}
 	<div class="absolute z-20 overflow-hidden" style={$editMode ? 'border: 1px solid cyan' : ''}>
-		{#if canEdit}
-			<div class="flex justify-center gap-3">
-				{#if $editMode}
-					<Button onclick={handleClose} variant="destructive">Закрыть</Button>
-					<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>
-						Сохранить
-					</Button>
-					<input
-						bind:this={fileInput}
-						class="hidden"
-						type="file"
-						accept=".jpg, .jpeg, .png, .gif, .webp, .svg"
-						onchange={handleUpload}
-					/>
-					<Button
-						onclick={() => {
-							fileInput?.click()
-						}}
-						variant="secondary"
-					>
-						Загрузить изображение
-					</Button>
-					<Button variant="secondary" onclick={handleFlip}>Отразить</Button>
-					<Button
-						onclick={handleDelete}
-						disabled={!$selectedImage}
-						variant="secondary"
-						class="ml-5"
-					>
-						Удалить
-					</Button>
-				{:else}
-					<Button onclick={() => editMode.set(true)}>Редактировать</Button>
-				{/if}
-			</div>
-		{/if}
 		<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
 			<Layer>
 				{#each $displayImages as img (img)}
-					<CanvasImage file={img} editable={$editMode} />
+					<CanvasImage file={img} editable={$editMode} centerX={contentCenter} />
 				{/each}
 			</Layer>
 		</Stage>

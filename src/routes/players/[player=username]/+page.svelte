@@ -42,6 +42,29 @@
 			)
 		})
 	)
+
+	let contentContainer = $state<HTMLDivElement | null>(null)
+	let contentCenter = $state(0)
+	let contentHeight = $state(0)
+
+	$effect(() => {
+		if (contentContainer) {
+			const observer = new ResizeObserver(() => {
+				if (contentContainer) {
+					contentCenter = contentContainer.clientWidth / 2
+					contentHeight = contentContainer.clientHeight
+				}
+			})
+
+			observer.observe(contentContainer)
+
+			// Initial measure
+			contentCenter = contentContainer.clientWidth / 2
+			contentHeight = contentContainer.clientHeight
+
+			return () => observer.disconnect()
+		}
+	})
 </script>
 
 <svelte:head>
@@ -51,8 +74,8 @@
 </svelte:head>
 
 {#if player}
-	<Canvas playerSlug={player.slug} />
-	<div class="relative mt-20">
+	<Canvas playerSlug={player.slug} {contentCenter} {contentHeight} />
+	<div class="relative mt-20" bind:this={contentContainer}>
 		<div class="mx-auto flex w-fit flex-col items-center" in:fade>
 			<PlayerAvatar
 				src={player.avatar_link ?? ''}

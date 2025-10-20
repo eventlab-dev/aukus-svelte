@@ -13,9 +13,10 @@
 	type Props = {
 		file: CanvasFile
 		editable: boolean
+		centerX: number
 	}
 
-	const { file, editable }: Props = $props()
+	const { file, editable, centerX }: Props = $props()
 
 	const { canvasStore } = getAppManagerContext()
 	const { selectedImage } = canvasStore
@@ -47,7 +48,7 @@
 	}
 
 	function handleDragEnd(event: KonvaDragTransformEvent) {
-		const updatedFile = { ...file, x: event.target.x(), y: event.target.y() }
+		const updatedFile = { ...file, x: event.target.x() - centerX, y: event.target.y() }
 		canvasStore.updateImage(updatedFile)
 	}
 
@@ -57,7 +58,7 @@
 
 		const updatedFile: CanvasFile = {
 			...file,
-			x: node.x(),
+			x: node.x() - centerX,
 			y: node.y(),
 			scaleX: node.scaleX(),
 			scaleY: node.scaleY(),
@@ -73,7 +74,7 @@
 <Image
 	bind:this={konvaImage}
 	{image}
-	{x}
+	x={centerX + x}
 	{y}
 	{scaleX}
 	{scaleY}
