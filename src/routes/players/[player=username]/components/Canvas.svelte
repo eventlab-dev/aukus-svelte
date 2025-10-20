@@ -3,6 +3,7 @@
 	import { Stage, Layer, type KonvaMouseEvent } from 'svelte-konva'
 	import CanvasImage from './CanvasImage.svelte'
 	import { Button } from '$lib/components/ui/button'
+	import type { CanvasFile } from '$lib/heyapi/aukus/types.gen'
 
 	type Props = {
 		playerSlug: string
@@ -101,6 +102,16 @@
 		editMode.set(false)
 		$canvasQuery.refetch()
 	}
+
+	function handleFlip() {
+		if (!$selectedImage) return
+
+		const newImage: CanvasFile = {
+			...$selectedImage,
+			scaleX: $selectedImage.scaleX * -1
+		}
+		canvasStore.updateImage(newImage)
+	}
 </script>
 
 <div
@@ -131,7 +142,13 @@
 					>
 						Загрузить изображение
 					</Button>
-					<Button onclick={handleDelete} disabled={!$selectedImage} variant="secondary">
+					<Button variant="secondary" onclick={handleFlip}>Отразить</Button>
+					<Button
+						onclick={handleDelete}
+						disabled={!$selectedImage}
+						variant="secondary"
+						class="ml-5"
+					>
 						Удалить
 					</Button>
 				{:else}
