@@ -103,13 +103,19 @@
 	}
 </script>
 
-<div bind:this={container} class="relative z-0 h-full w-full">
+<div
+	bind:this={container}
+	class="relative h-full w-full"
+	style={$editMode ? 'z-index: 100;' : 'z-index: 0;'}
+>
 	<div class="absolute z-20 overflow-hidden" style={$editMode ? 'border: 1px solid cyan' : ''}>
 		{#if canEdit}
 			<div class="flex justify-center gap-3">
 				{#if $editMode}
-					<Button onclick={handleClose}>Закрыть</Button>
-					<Button onclick={handleSave} loading={$updateCanvasMutation.isPending}>Сохранить</Button>
+					<Button onclick={handleClose} variant="destructive">Закрыть</Button>
+					<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>
+						Сохранить
+					</Button>
 					<input
 						bind:this={fileInput}
 						class="hidden"
@@ -121,10 +127,13 @@
 						onclick={() => {
 							fileInput?.click()
 						}}
+						variant="secondary"
 					>
 						Загрузить изображение
 					</Button>
-					<Button onclick={handleDelete} disabled={!$selectedImage}>Удалить</Button>
+					<Button onclick={handleDelete} disabled={!$selectedImage} variant="secondary">
+						Удалить
+					</Button>
 				{:else}
 					<Button onclick={() => editMode.set(true)}>Редактировать</Button>
 				{/if}
