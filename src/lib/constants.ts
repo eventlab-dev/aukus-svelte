@@ -107,7 +107,8 @@ export const MapMarkerFinish = `${CDN_URL_BASE}/map/marker_finish.png`
 
 export const PlayerBaseModelUrl = `${CDN_URL_BASE}/map/player_model.png`
 
-export const MAP_IMAGE = `${CDN_URL_BASE}/map/map_demo.png`
+// export const MAP_IMAGE = `${CDN_URL_BASE}/map/map_demo.png`
+export const MAP_IMAGE = `/map_final.png`
 
 export const DICE_ROLL_ANIMATION_TIME = 2000
 export const DICE_ROLL_IDLE_TIME = 2000
