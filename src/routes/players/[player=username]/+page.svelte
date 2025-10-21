@@ -9,18 +9,18 @@
 	import SearchIcon from '$lib/components/icons/SearchIcon.svelte'
 	import { Input } from '$lib/components/ui/input'
 	import Canvas from './components/Canvas.svelte'
+	import StaticCanvas from './components/StaticCanvas.svelte'
+	import EditPanel from './components/EditPanel.svelte'
 
 	const { playersMovesStore, playersBySlug, canvasStore } = getAppManagerContext()
 	const { moves, playerSlug: movesPlayerSlug } = playersMovesStore
-	const { playerSlug: canvasPlayerSlug } = canvasStore
+	const { playerSlug: canvasPlayerSlug, editMode } = canvasStore
 
 	$effect(() => {
 		if (!page.params.player) return
 		movesPlayerSlug.set(page.params.player)
 		canvasPlayerSlug.set(page.params.player)
 	})
-
-	const playerSlug = page.params.player
 
 	const player = $derived($playersBySlug[page.params.player!])
 	const gamesCompleted = $derived($moves.filter((move) => move.type === 'completed').length || 0)
@@ -76,7 +76,12 @@
 
 {#if player}
 	<div class="relative min-h-screen">
-		<Canvas playerSlug={player.slug} {contentCenter} {contentHeight} />
+		<EditPanel playerSlug={player.slug} />
+		{#if $editMode}
+			<Canvas {contentCenter} {contentHeight} />
+		{:else}
+			<StaticCanvas {contentCenter} />
+		{/if}
 		<div class="relative pt-20" bind:this={contentContainer}>
 			<div class="mx-auto flex w-fit flex-col items-center" in:fade>
 				<PlayerAvatar
