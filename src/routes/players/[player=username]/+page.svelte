@@ -15,13 +15,14 @@
 	const { playerSlug: canvasPlayerSlug } = canvasStore
 
 	$effect(() => {
-		movesPlayerSlug.set(page.params.player!)
-		canvasPlayerSlug.set(page.params.player!)
+		if (!page.params.player) return
+		movesPlayerSlug.set(page.params.player)
+		canvasPlayerSlug.set(page.params.player)
 	})
 
 	const playerSlug = page.params.player
 
-	const player = $derived($playersBySlug[playerSlug!])
+	const player = $derived($playersBySlug[page.params.player!])
 	const gamesCompleted = $derived($moves.filter((move) => move.type === 'completed').length || 0)
 	const socials = $derived({
 		twitchLink: player.twitch_stream_link || '',
