@@ -1,25 +1,25 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { fade } from 'svelte/transition';
-	import { Button } from './ui/button';
-	import { routes } from '$lib/constants';
+	import { page } from '$app/state'
+	import { fade } from 'svelte/transition'
+	import { Button } from './ui/button'
+	import { routes } from '$lib/constants'
 
-	const GAP = 3;
-	const BASE_WIDTH = 180;
+	const GAP = 3
+	const BASE_WIDTH = 180
 
-	const currentRouteIndex = $derived(routes.findIndex((route) => route.url === $page.url.pathname));
+	const currentRouteIndex = $derived(routes.findIndex((route) => route.url === page.url.pathname))
 
-	let itemsSizes: (HTMLElement | null)[] = $state(new Array(routes.length).fill(null));
+	let itemsSizes: (HTMLElement | null)[] = $state(new Array(routes.length).fill(null))
 	let prevWidthSum = $derived(
 		itemsSizes.reduce(
 			(acc, item, idx) => (currentRouteIndex > idx ? acc + ((item?.offsetWidth || 0) + GAP) : acc),
 			0
 		)
-	);
-	let spanWidth = $derived(itemsSizes[currentRouteIndex]?.offsetWidth ?? BASE_WIDTH);
+	)
+	let spanWidth = $derived(itemsSizes[currentRouteIndex]?.offsetWidth ?? BASE_WIDTH)
 </script>
 
-<nav class="relative mx-auto h-auto w-fit rounded-lg bg-card p-[3px]">
+<nav class="sticky top-2 z-1000 mx-auto h-auto w-fit rounded-lg bg-card p-[3px]">
 	<div class="relative flex h-full w-fit items-center" style="gap: {GAP}px">
 		{#each routes as route, idx (route.title)}
 			<Button
