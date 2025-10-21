@@ -28,6 +28,17 @@
 	let konvaImage = $state<ImageType | null>(null)
 	let transformer = $state<TransformerType | null>(null)
 
+	let attachedMoveCard = $state<HTMLElement | null>(null)
+	const yOffset = $derived.by(() => {
+		if (attachedMoveCard) {
+			const scrollElement = document.getElementById('main-scroll-area')?.firstElementChild
+			if (scrollElement) {
+				return attachedMoveCard.getBoundingClientRect().top + scrollElement.scrollTop
+			}
+		}
+		return 0
+	})
+
 	$effect(() => {
 		if (transformer && konvaImage) {
 			transformer.node.nodes([konvaImage.node])
@@ -43,9 +54,6 @@
 		}
 	})
 
-	let attachedMoveCard = $state<HTMLElement | null>(null)
-	const yOffset = $derived(attachedMoveCard ? attachedMoveCard.getBoundingClientRect().top : 0)
-
 	$effect(() => {
 		if (!attachedMoveCard && file.attach_move_id) {
 			const findCard = () => {
@@ -59,6 +67,9 @@
 			observer.observe(document.body, { childList: true, subtree: true })
 			findCard()
 			return () => observer.disconnect()
+		}
+		if (file.attach_move_id === null) {
+			attachedMoveCard = null
 		}
 	})
 
@@ -101,6 +112,16 @@
 
 		canvasStore.updateImage(updatedFile)
 	}
+
+	const borderColor = $derived.by(() => {
+		if ($selectedImage?.id === file.id) {
+			return 'purple'
+		}
+		if (file.attach_move_id) {
+			return '#ef5a68'
+		}
+		return '#d4ddda'
+	})
 </script>
 
 <Image
@@ -125,8 +146,8 @@
 	<Transformer
 		bind:this={transformer}
 		flipEnabled
-		borderStroke={$selectedImage?.id === file.id ? 'magenta' : undefined}
-		borderStrokeWidth={$selectedImage?.id === file.id ? 2 : 1}
+		borderStroke={borderColor}
+		borderStrokeWidth={$selectedImage?.id === file.id ? 6 : 3}
 		rotationSnaps={[0, 90, 180, 270, 45, -45, 135, 225]}
 		rotationSnapTolerance={5}
 		anchorCornerRadius={50}

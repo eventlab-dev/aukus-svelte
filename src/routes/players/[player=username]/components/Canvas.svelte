@@ -118,26 +118,37 @@
 	const lastMove = $derived<PlayerMoveItem | undefined>($moves[0])
 
 	function handleAttach() {
-		if (!$selectedImage || !lastMove) return
-		const lastMoveElement = document.getElementById(`move-card-${lastMove.id}`)
-		if (!lastMoveElement) return
-		const lastMoveY = lastMoveElement.getBoundingClientRect().top
+		if (!$selectedImage) return
 
-		if ($selectedImage.attach_move_id === null) {
+		if ($selectedImage.attach_move_id === null && lastMove) {
 			// attach
+
+			const moveElement = document.getElementById(`move-card-${lastMove.id}`)
+			if (!moveElement) return
+			const scrollArea = document.getElementById('main-scroll-area')?.firstElementChild
+			if (!scrollArea) return
+			const moveY = moveElement.getBoundingClientRect().top + scrollArea.scrollTop
+
 			const newImage: CanvasFile = {
 				...$selectedImage,
 				attach_move_id: lastMove.id,
-				y: $selectedImage.y - lastMoveY
+				y: $selectedImage.y - moveY
 			}
 			canvasStore.updateImage(newImage)
 			return
-		} else {
+		} else if ($selectedImage.attach_move_id !== null) {
 			// detach
+
+			const moveElement = document.getElementById(`move-card-${$selectedImage.attach_move_id}`)
+			if (!moveElement) return
+			const scrollArea = document.getElementById('main-scroll-area')?.firstElementChild
+			if (!scrollArea) return
+
+			const moveY = moveElement.getBoundingClientRect().top + scrollArea.scrollTop
 			const newImage: CanvasFile = {
 				...$selectedImage,
 				attach_move_id: null,
-				y: $selectedImage.y + lastMoveY
+				y: $selectedImage.y + moveY
 			}
 			canvasStore.updateImage(newImage)
 			return
