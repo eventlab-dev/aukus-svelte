@@ -19,7 +19,7 @@
 	let spanWidth = $derived(itemsSizes[currentRouteIndex]?.offsetWidth ?? BASE_WIDTH)
 </script>
 
-<nav class="sticky top-2 z-1000 mx-auto h-auto w-fit rounded-lg bg-card p-[3px]">
+<nav class="sticky top-3 z-1000 mx-auto h-auto w-fit rounded-lg bg-card p-[3px]">
 	<div class="relative flex h-full w-fit items-center" style="gap: {GAP}px">
 		{#each routes as route, idx (route.title)}
 			<Button
