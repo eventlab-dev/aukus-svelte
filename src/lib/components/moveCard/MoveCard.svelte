@@ -67,6 +67,7 @@
 <div
 	class="group relative flex w-[800px] flex-col rounded-xl bg-card p-3 data-[current=true]:bg-primary data-[current=true]:selection:bg-foreground data-[current=true]:selection:text-primary"
 	data-current={isCurrentMove}
+	id={`move-card-${move.id}`}
 >
 	<div class="flex justify-between">
 		<div class="flex">

@@ -74,46 +74,47 @@
 </svelte:head>
 
 {#if player}
-	<Canvas playerSlug={player.slug} {contentCenter} {contentHeight} />
-	<div class="relative mt-20" bind:this={contentContainer}>
-		<div class="mx-auto flex w-fit flex-col items-center" in:fade>
-			<PlayerAvatar
-				src={player.avatar_link ?? ''}
-				name={player.username}
-				isOnline={Boolean(player.is_online)}
-				size="lg"
-				class="mb-2.5"
-			/>
-			<div class="mb-[30px] flex flex-col items-center gap-5">
-				<div class="text-5xl leading-[58px] font-bold">
-					{player.first_name} «{player.username}»
+	<div class="relative min-h-screen">
+		<Canvas playerSlug={player.slug} {contentCenter} {contentHeight} />
+		<div class="relative pt-20" bind:this={contentContainer}>
+			<div class="mx-auto flex w-fit flex-col items-center" in:fade>
+				<PlayerAvatar
+					src={player.avatar_link ?? ''}
+					name={player.username}
+					isOnline={Boolean(player.is_online)}
+					size="lg"
+					class="mb-2.5"
+				/>
+				<div class="mb-[30px] flex flex-col items-center gap-5">
+					<div class="text-5xl leading-[58px] font-bold">
+						{player.first_name} «{player.username}»
+					</div>
+					<Socials {...socials} />
+					<Summary
+						totalScore={player.total_score}
+						{gamesCompleted}
+						gameName={player.current_game || ''}
+						gameImage={player.current_game_cover || ''}
+						gameDuration={player.current_game_duration || 0}
+					/>
 				</div>
-				<Socials {...socials} />
-				<Summary
-					totalScore={player.total_score}
-					{gamesCompleted}
-					gameName={player.current_game || ''}
-					gameImage={player.current_game_cover || ''}
-					gameDuration={player.current_game_duration || 0}
-				/>
-			</div>
 
-			<div class="relative w-full">
-				<SearchIcon
-					class="absolute top-1/2 left-3 size-[19px] -translate-y-1/2 text-muted-foreground"
-				/>
-				<Input
-					id="moves-search"
-					class="w-full pl-[43px]"
-					type="text"
-					placeholder="Поиск среди игр всех аукусов"
-					bind:value={filterValue}
-				/>
-			</div>
+				<div class="relative w-full">
+					<SearchIcon
+						class="absolute top-1/2 left-3 size-[19px] -translate-y-1/2 text-muted-foreground"
+					/>
+					<Input
+						id="moves-search"
+						class="w-full pl-[43px]"
+						type="text"
+						placeholder="Поиск среди игр всех аукусов"
+						bind:value={filterValue}
+					/>
+				</div>
 
-			<div class="mt-5 space-y-[200px]">
-				<div class="space-y-5">
-					<!-- {#if $player.current_game}
+				<div class="mt-5 space-y-[200px]">
+					<div class="space-y-5">
+						<!-- {#if $player.current_game}
 					<MoveCard
 						move={{
 							item_title: player.current_game,
@@ -124,12 +125,12 @@
 						isCurrentMove
 					/>
 				{/if} -->
-					{#each filteredMoves as move (move.id)}
-						<MoveCard {move} />
-					{/each}
-				</div>
+						{#each filteredMoves as move (move.id)}
+							<MoveCard {move} />
+						{/each}
+					</div>
 
-				<!-- {#if aukus2FilteredGames?.length > 0}
+					<!-- {#if aukus2FilteredGames?.length > 0}
 				<div class="flex flex-col items-center gap-5">
 					<Button href="" variant="link" class="mb-[50px] text-2xl font-semibold text-foreground">
 						Аукус Сезон 2 (2023)
@@ -150,6 +151,7 @@
 					{/each}
 				</div>
 			{/if} -->
+				</div>
 			</div>
 		</div>
 	</div>

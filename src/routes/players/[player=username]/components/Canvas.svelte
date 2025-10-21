@@ -3,7 +3,7 @@
 	import { Stage, Layer, type KonvaMouseEvent } from 'svelte-konva'
 	import CanvasImage from './CanvasImage.svelte'
 	import { Button } from '$lib/components/ui/button'
-	import type { CanvasFile } from '$lib/heyapi/aukus/types.gen'
+	import { type PlayerMoveItem, type CanvasFile } from '$lib/heyapi/aukus/types.gen'
 
 	type Props = {
 		playerSlug: string
@@ -13,16 +13,18 @@
 
 	const { playerSlug, contentCenter, contentHeight }: Props = $props()
 
-	const { canvasStore, usersStore } = getAppManagerContext()
+	const { canvasStore, usersStore, playersMovesStore } = getAppManagerContext()
 	const {
 		displayImages,
 		editMode,
 		selectedImage,
 		updateCanvasMutation,
 		uploadImageMutation,
-		canvasQuery
+		canvasQuery,
+		selectImage
 	} = canvasStore
 	const { myUser } = usersStore
+	const { moves } = playersMovesStore
 
 	const canEdit = $derived(
 		Boolean(
@@ -42,8 +44,7 @@
 
 	function handleStageClick(event: KonvaMouseEvent) {
 		if (event.target === event.target.getStage()) {
-			selectedImage.set(null)
-			// 	setFlipFunction(null)
+			selectImage(null)
 		}
 	}
 
@@ -108,52 +109,89 @@
 
 		const newImage: CanvasFile = {
 			...$selectedImage,
-			scaleX: $selectedImage.scaleX * -1
+			scale_x: $selectedImage.scale_x * -1
 		}
 		canvasStore.updateImage(newImage)
 	}
+
+	const isAttached = $derived($selectedImage?.attach_move_id !== null)
+	const lastMove = $derived<PlayerMoveItem | undefined>($moves[0])
+
+	function handleAttach() {
+		if (!$selectedImage || !lastMove) return
+		const lastMoveElement = document.getElementById(`move-card-${lastMove.id}`)
+		if (!lastMoveElement) return
+		const lastMoveY = lastMoveElement.getBoundingClientRect().top
+
+		if ($selectedImage.attach_move_id === null) {
+			// attach
+			const newImage: CanvasFile = {
+				...$selectedImage,
+				attach_move_id: lastMove.id,
+				y: $selectedImage.y - lastMoveY
+			}
+			canvasStore.updateImage(newImage)
+			return
+		} else {
+			// detach
+			const newImage: CanvasFile = {
+				...$selectedImage,
+				attach_move_id: null,
+				y: $selectedImage.y + lastMoveY
+			}
+			canvasStore.updateImage(newImage)
+			return
+		}
+	}
 </script>
+
+{#if canEdit}
+	<div class="sticky top-15 z-200 flex w-full justify-center gap-3">
+		{#if $editMode}
+			<Button onclick={handleClose} variant="destructive">Закрыть</Button>
+			<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>
+				Сохранить
+			</Button>
+			<input
+				bind:this={fileInput}
+				class="hidden"
+				type="file"
+				accept=".jpg, .jpeg, .png, .gif, .webp, .svg, .avif"
+				onchange={handleUpload}
+			/>
+			<Button
+				onclick={() => {
+					fileInput?.click()
+				}}
+				variant="secondary"
+			>
+				Загрузить изображение
+			</Button>
+			<Button variant="secondary" onclick={handleFlip} disabled={!$selectedImage}>Отразить</Button>
+			<Button variant="secondary" onclick={handleAttach} disabled={!$selectedImage}>
+				{!isAttached ? 'Закрепить' : 'Открепить'}
+			</Button>
+			<Button onclick={handleDelete} disabled={!$selectedImage} variant="secondary" class="ml-5">
+				Удалить
+			</Button>
+		{:else}
+			<Button onclick={() => editMode.set(true)}>Редактировать</Button>
+		{/if}
+	</div>
+{/if}
 
 <div
 	bind:this={container}
-	class="relative h-full w-full"
-	style={$editMode ? 'z-index: 100;' : 'z-index: 0;'}
+	class="absolute inset-0 min-h-screen"
+	style={$editMode ? 'z-index: 100' : 'z-index: 0'}
 >
-	{#if canEdit}
-		<div class="flex w-full justify-center gap-3">
-			{#if $editMode}
-				<Button onclick={handleClose} variant="destructive">Закрыть</Button>
-				<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>
-					Сохранить
-				</Button>
-				<input
-					bind:this={fileInput}
-					class="hidden"
-					type="file"
-					accept=".jpg, .jpeg, .png, .gif, .webp, .svg"
-					onchange={handleUpload}
-				/>
-				<Button
-					onclick={() => {
-						fileInput?.click()
-					}}
-					variant="secondary"
-				>
-					Загрузить изображение
-				</Button>
-				<Button variant="secondary" onclick={handleFlip}>Отразить</Button>
-				<Button onclick={handleDelete} disabled={!$selectedImage} variant="secondary" class="ml-5">
-					Удалить
-				</Button>
-			{:else}
-				<Button onclick={() => editMode.set(true)}>Редактировать</Button>
-			{/if}
-		</div>
-	{/if}
-	<div class="absolute z-20 overflow-hidden" style={$editMode ? 'border: 1px solid cyan' : ''}>
+	<div
+		class="absolute overflow-hidden"
+		style={$editMode ? 'border: 1px solid cyan z-index: 100' : 'z-index: 0'}
+	>
 		<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
 			<Layer>
-				{#each $displayImages as img (img)}
+				{#each $displayImages as img (img.id)}
 					<CanvasImage file={img} editable={$editMode} centerX={contentCenter} />
 				{/each}
 			</Layer>

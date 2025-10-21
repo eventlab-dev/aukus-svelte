@@ -12,7 +12,7 @@ import { derived, get, writable } from 'svelte/store'
 
 export function createCanvasStore() {
 	const editMode = writable(false)
-	const selectedImage = writable<CanvasFile | null>(null)
+	const selectedImageId = writable<number | null>(null)
 	const updatedImages = writable<CanvasFile[]>([])
 	const deletedImages = writable<number[]>([])
 
@@ -56,7 +56,17 @@ export function createCanvasStore() {
 		}
 	)
 
-	const deleteImage = function (imageId: number) {
+	const selectedImage = derived(
+		[displayImages, selectedImageId],
+		([$displayImages, $selectedImageId]) =>
+			$displayImages.find((img) => img.id === $selectedImageId) || null
+	)
+
+	function selectImage(image: CanvasFile | null) {
+		selectedImageId.set(image?.id ?? null)
+	}
+
+	function deleteImage(imageId: number) {
 		updatedImages.update((images) => images.filter((img) => img.id !== imageId))
 		deletedImages.update((ids) => {
 			const filtered = ids.filter((id) => id !== imageId)
@@ -64,7 +74,7 @@ export function createCanvasStore() {
 		})
 		const currentSelected = get(selectedImage)
 		if (currentSelected?.id === imageId) {
-			selectedImage.set(null)
+			selectedImageId.set(null)
 		}
 	}
 
@@ -105,6 +115,7 @@ export function createCanvasStore() {
 		updateImage,
 		uploadImageMutation,
 		editMode,
+		selectImage,
 		selectedImage,
 		displayImages,
 		deleteImage,

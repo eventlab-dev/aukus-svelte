@@ -19,9 +19,9 @@
 	const { file, editable, centerX }: Props = $props()
 
 	const { canvasStore } = getAppManagerContext()
-	const { selectedImage } = canvasStore
+	const { selectedImage, selectImage } = canvasStore
 
-	const { x, y, scaleX, scaleY, height, width, rotation, zIndex } = file
+	const { x, y, scale_x: scaleX, scale_y: scaleY, height, width, rotation, z_index: zIndex } = file
 
 	let image = $state<HTMLImageElement | undefined>(undefined)
 
@@ -35,6 +35,33 @@
 		}
 	})
 
+	$effect(() => {
+		if (konvaImage) {
+			konvaImage.node.scaleX(file.scale_x)
+			konvaImage.node.y(file.y + yOffset)
+			konvaImage.node.getLayer()?.batchDraw()
+		}
+	})
+
+	let attachedMoveCard = $state<HTMLElement | null>(null)
+	const yOffset = $derived(attachedMoveCard ? attachedMoveCard.getBoundingClientRect().top : 0)
+
+	$effect(() => {
+		if (!attachedMoveCard && file.attach_move_id) {
+			const findCard = () => {
+				const el = document.getElementById(`move-card-${file.attach_move_id}`)
+				if (el) {
+					attachedMoveCard = el
+					observer.disconnect()
+				}
+			}
+			const observer = new MutationObserver(findCard)
+			observer.observe(document.body, { childList: true, subtree: true })
+			findCard()
+			return () => observer.disconnect()
+		}
+	})
+
 	onMount(() => {
 		const img = document.createElement('img')
 		img.src = file.url
@@ -44,11 +71,16 @@
 	})
 
 	function handleClick() {
-		selectedImage.set(file)
+		selectImage(file)
 	}
 
 	function handleDragEnd(event: KonvaDragTransformEvent) {
-		const updatedFile = { ...file, x: event.target.x() - centerX, y: event.target.y() }
+		const updatedFile = {
+			...file,
+			x: event.target.x() - centerX,
+			y: event.target.y() - yOffset
+		}
+		// console.log('drag update y', event.target.y(), yOffset, event.target.y() - yOffset)
 		canvasStore.updateImage(updatedFile)
 	}
 
@@ -59,9 +91,9 @@
 		const updatedFile: CanvasFile = {
 			...file,
 			x: node.x() - centerX,
-			y: node.y(),
-			scaleX: node.scaleX(),
-			scaleY: node.scaleY(),
+			y: node.y() - yOffset,
+			scale_x: node.scaleX(),
+			scale_y: node.scaleY(),
 			rotation: node.rotation(),
 			width: node.width(),
 			height: node.height()
@@ -75,7 +107,7 @@
 	bind:this={konvaImage}
 	{image}
 	x={centerX + x}
-	{y}
+	y={y + yOffset}
 	{scaleX}
 	{scaleY}
 	{height}
@@ -85,7 +117,7 @@
 	draggable={editable}
 	onclick={handleClick}
 	ondragend={handleDragEnd}
-	ondragstart={() => selectedImage.set(file)}
+	ondragstart={() => selectImage(file)}
 	ontransformend={handleTransformEnd}
 />
 

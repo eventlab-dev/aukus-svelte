@@ -75,17 +75,21 @@ export type CanvasFile = {
      */
     height: number;
     /**
-     * Zindex
+     * Z Index
      */
-    zIndex: number;
+    z_index: number;
     /**
-     * Scalex
+     * Scale X
      */
-    scaleX: number;
+    scale_x: number;
     /**
-     * Scaley
+     * Scale Y
      */
-    scaleY: number;
+    scale_y: number;
+    /**
+     * Attach Move Id
+     */
+    attach_move_id?: number | null;
 };
 
 /**
