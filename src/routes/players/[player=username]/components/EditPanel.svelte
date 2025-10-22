@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button'
+	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { CanvasFile, PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 
@@ -154,10 +155,26 @@
 			>
 				Загрузить изображение
 			</Button>
-			<Button variant="secondary" onclick={handleFlip} disabled={!$selectedImage}>Отразить</Button>
-			<Button variant="secondary" onclick={handleAttach} disabled={!$selectedImage}>
-				{!isAttached ? 'Закрепить' : 'Открепить'}
-			</Button>
+			<Tooltip>
+				<TooltipTrigger>
+					<Button variant="secondary" onclick={handleFlip} disabled={!$selectedImage}
+						>Отразить</Button
+					>
+				</TooltipTrigger>
+				<TooltipContent side="bottom" class="z-200">
+					Отразить выбранное изображение по горизонтали
+				</TooltipContent>
+			</Tooltip>
+			<Tooltip>
+				<TooltipTrigger>
+					<Button variant="secondary" onclick={handleAttach} disabled={!$selectedImage}>
+						{!isAttached ? 'Закрепить' : 'Открепить'}
+					</Button>
+				</TooltipTrigger>
+				<TooltipContent side="bottom" class="z-200">
+					Изображение закрепится возле хода игрока
+				</TooltipContent>
+			</Tooltip>
 			<Button onclick={handleDelete} disabled={!$selectedImage} variant="secondary" class="ml-5">
 				Удалить
 			</Button>
