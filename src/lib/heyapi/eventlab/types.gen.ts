@@ -148,6 +148,38 @@ export type HttpValidationError = {
 };
 
 /**
+ * IgdbGameSummary
+ */
+export type IgdbGameSummary = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Cover
+     */
+    cover?: string | null;
+    /**
+     * Release Year
+     */
+    release_year?: number | null;
+};
+
+/**
+ * IgdbGamesListResponse
+ */
+export type IgdbGamesListResponse = {
+    /**
+     * Games
+     */
+    games: Array<IgdbGameSummary>;
+};
+
+/**
  * LoginRequest
  */
 export type LoginRequest = {
@@ -533,6 +565,48 @@ export type GetRollByIdApiDiceRollsRollIdGetResponses = {
 };
 
 export type GetRollByIdApiDiceRollsRollIdGetResponse = GetRollByIdApiDiceRollsRollIdGetResponses[keyof GetRollByIdApiDiceRollsRollIdGetResponses];
+
+export type SearchIgdbGamesGetApiIgdbGamesSearchGetData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Query
+         */
+        query: string;
+        /**
+         * Limit
+         */
+        limit?: number;
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/igdb/games/search';
+};
+
+export type SearchIgdbGamesGetApiIgdbGamesSearchGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SearchIgdbGamesGetApiIgdbGamesSearchGetError = SearchIgdbGamesGetApiIgdbGamesSearchGetErrors[keyof SearchIgdbGamesGetApiIgdbGamesSearchGetErrors];
+
+export type SearchIgdbGamesGetApiIgdbGamesSearchGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: IgdbGamesListResponse;
+};
+
+export type SearchIgdbGamesGetApiIgdbGamesSearchGetResponse = SearchIgdbGamesGetApiIgdbGamesSearchGetResponses[keyof SearchIgdbGamesGetApiIgdbGamesSearchGetResponses];
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8300' | (string & {});
