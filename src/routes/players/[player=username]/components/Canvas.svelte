@@ -29,19 +29,14 @@
 
 <div
 	bind:this={container}
-	class="absolute inset-0 min-h-screen"
-	style={$editMode ? 'z-index: 100' : 'z-index: 0'}
+	class="absolute inset-0 min-h-screen overflow-hidden"
+	style={$editMode ? 'border: 1px solid cyan; z-index: 100' : 'z-index: 0'}
 >
-	<div
-		class="absolute overflow-hidden"
-		style={$editMode ? 'border: 1px solid cyan z-index: 100' : 'z-index: 0'}
-	>
-		<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
-			<Layer>
-				{#each $displayImages as img (img.id)}
-					<CanvasImage file={img} editable={$editMode} centerX={contentCenter} />
-				{/each}
-			</Layer>
-		</Stage>
-	</div>
+	<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
+		<Layer>
+			{#each $displayImages as img (img.id)}
+				<CanvasImage file={img} editable={$editMode} centerX={contentCenter} />
+			{/each}
+		</Layer>
+	</Stage>
 </div>

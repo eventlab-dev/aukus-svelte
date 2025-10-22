@@ -44,6 +44,7 @@
 			`left: ${file.x + centerX}px`,
 			`width: ${file.width}px`,
 			`height: ${file.height}px`,
+			`transform-origin: top left;`,
 			`transform: rotate(${file.rotation}deg) scaleX(${file.scale_x}) scaleY(${file.scale_y})`
 		]
 		return styles.join('; ')
