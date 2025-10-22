@@ -3,13 +3,17 @@
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import { Input } from '$lib/components/ui/input'
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
-	import { debounce } from '$lib/utils'
+	import { debounce, defaultAuth } from '$lib/utils'
 	import X from '@lucide/svelte/icons/x'
 	import { fade, slide } from 'svelte/transition'
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import { onMount } from 'svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { createQuery } from '@tanstack/svelte-query'
+	import { searchIgdbGamesGetApiIgdbGamesSearchGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
+	import { EventlabBaseUrl } from '$lib/client'
+	import { derived, writable } from 'svelte/store'
 
 	type Props = {
 		value: string
@@ -19,21 +23,32 @@
 
 	const { myPlayer } = getAppManagerContext()
 
-	const searchResults = $derived(
-		value === ''
-			? []
-			: [
-					{ id: '1', name: 'Game 1', release_year: 1, cover: FALLBACK_GAME_POSTER },
-					{ id: '2', name: 'Game 2', release_year: 1, cover: FALLBACK_GAME_POSTER },
-					{ id: '3', name: 'Game 3', release_year: 1, cover: FALLBACK_GAME_POSTER },
-					{ id: '4', name: 'Game 4', release_year: 1, cover: FALLBACK_GAME_POSTER },
-					{ id: '5', name: 'Game 5', release_year: 1, cover: FALLBACK_GAME_POSTER }
-				].filter((game) => game.name.toLowerCase().includes(value.toLowerCase()))
-	)
-
-	let isSearching = $state(false)
 	let isFocused = $state(false)
 	let inputRef: HTMLInputElement | null = $state(null)
+
+	const searchQuery = writable('')
+
+	const igdbSearchQuery = createQuery(
+		derived(searchQuery, ($searchQuery) => {
+			return searchIgdbGamesGetApiIgdbGamesSearchGetOptions({
+				baseUrl: EventlabBaseUrl,
+				auth: defaultAuth,
+				query: {
+					query: $searchQuery,
+					limit: 10
+				}
+			})
+		})
+	)
+
+	const searchResults = $derived.by(() => {
+		if ($searchQuery === '' || !$igdbSearchQuery.isSuccess) {
+			return []
+		}
+		return $igdbSearchQuery.data?.games || []
+	})
+
+	const isSearching = $derived($igdbSearchQuery.isFetching && $searchQuery !== '')
 
 	onMount(() => {
 		if ($myPlayer) {
@@ -43,10 +58,12 @@
 
 	const debouncedInput = debounce((val: string) => {
 		value = val
+		searchQuery.set(val)
 	}, 400)
 
 	function onGameClick(gameTitle: string) {
 		value = gameTitle
+		searchQuery.set('')
 	}
 
 	function onblur() {
