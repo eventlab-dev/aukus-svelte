@@ -29,7 +29,7 @@
 		simple
 	}: Props = $props()
 
-	let element: HTMLDivElement | undefined = $state()
+	let editorElement: HTMLDivElement | undefined = $state()
 
 	const editorStyles =
 		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg border-2 border-muted bg-transparent p-2 font-medium transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 prose prose-invert p-0 max-w-full'
@@ -39,7 +39,7 @@
 	let tocData = $state<TableOfContentDataItem[]>([])
 
 	onMount(() => {
-		if (!element) return
+		if (!editorElement) return
 
 		const extensions = initExtensions({
 			...extensionsParams,
@@ -47,7 +47,7 @@
 		})
 
 		const editor = new Editor({
-			element,
+			element: editorElement,
 			content: content ? JSON.parse(content) : '',
 			enablePasteRules: false,
 			editable,
@@ -89,12 +89,22 @@
 		}
 	})
 
+	let width = $state(window.innerWidth)
+
+	function handleResize() {
+		width = window.innerWidth
+	}
+
 	const editorTopLeft = $derived.by(() => {
-		if (!element) return { top: 0, left: 0 }
-		const rect = element.getBoundingClientRect()
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+		width
+		if (!editorElement) return { top: 0, left: 0 }
+		const rect = editorElement.getBoundingClientRect()
 		return { top: window.scrollY + 150, left: rect.left + window.scrollX }
 	})
 </script>
+
+<svelte:window onresize={handleResize} />
 
 <div class="relative">
 	{#if withMenu && editorState.editor}
@@ -102,7 +112,7 @@
 			<TiptapMenu {editorState} />
 		</div>
 	{/if}
-	<div bind:this={element}></div>
+	<div bind:this={editorElement}></div>
 
 	{#if editor && extensionsParams?.withTOC}
 		<TableOfContents items={tocData} {editor} pos={editorTopLeft} />
