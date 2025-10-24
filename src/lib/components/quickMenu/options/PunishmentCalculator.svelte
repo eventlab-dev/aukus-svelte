@@ -1,14 +1,14 @@
 <script lang="ts">
-	import MathIcon from '$lib/components/icons/MathIcon.svelte';
+	import MathIcon from '$lib/components/icons/MathIcon.svelte'
 	import {
 		Dialog,
 		DialogContent,
 		DialogHeader,
 		DialogTitle,
 		DialogTrigger
-	} from '$lib/components/ui/dialog';
-	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
+	} from '$lib/components/ui/dialog'
+	import { Input } from '$lib/components/ui/input'
+	import { Label } from '$lib/components/ui/label'
 
 	const ranges = [
 		{ max: 10000, shots: 1, pushups: 30, squats: 50 },
@@ -29,30 +29,30 @@
 		{ max: 750000, shots: 16, pushups: 480, squats: 800 },
 		{ max: 870000, shots: 17, pushups: 510, squats: 850 },
 		{ max: 1000000, shots: 18, pushups: 540, squats: 900 }
-	];
-	const sharedInputStyles = 'border-none bg-muted font-bold h-[44px]';
+	]
+	const sharedInputStyles = 'border-none bg-muted font-bold h-[44px]'
 
-	let auctionSum: string = $state('');
-	let { shots, pushups, squats } = $derived.by(calculatePunishments);
+	let auctionSum: string = $state('')
+	let { shots, pushups, squats } = $derived.by(calculatePunishments)
 
 	function setInputValue(val: string) {
-		const numericValue = val.replace(/[^\d]/g, '');
-		auctionSum = numericValue;
+		const numericValue = val.replace(/[^\d]/g, '')
+		auctionSum = numericValue
 	}
 
 	function getInputValue() {
-		return auctionSum ? Number(auctionSum).toLocaleString('ru-RU').concat(' ₽') : '';
+		return auctionSum ? Number(auctionSum).toLocaleString('ru-RU').concat(' ₽') : ''
 	}
 
 	function calculatePunishments() {
-		const numericAuctionSum = Number(auctionSum);
+		const numericAuctionSum = Number(auctionSum)
 
 		if (isNaN(numericAuctionSum) || numericAuctionSum < 1)
 			return {
 				shots: 0,
 				pushups: 0,
 				squats: 0
-			};
+			}
 
 		for (const range of ranges) {
 			if (numericAuctionSum < range.max) {
@@ -60,23 +60,23 @@
 					shots: range.shots,
 					pushups: range.pushups,
 					squats: range.squats
-				};
+				}
 			}
 		}
 
-		const last = ranges[ranges.length - 1];
+		const last = ranges[ranges.length - 1]
 		return {
 			shots: last.shots,
 			pushups: last.pushups,
 			squats: last.squats
-		};
+		}
 	}
 
 	function handleCursorMove(e: { currentTarget: HTMLInputElement }) {
-		const t = e.currentTarget;
-		const val = t.value;
-		const cursorPos = val.length - (val.endsWith(' ₽') ? 2 : 0);
-		t.setSelectionRange(cursorPos, cursorPos);
+		const t = e.currentTarget
+		const val = t.value
+		const cursorPos = val.length - (val.endsWith(' ₽') ? 2 : 0)
+		t.setSelectionRange(cursorPos, cursorPos)
 	}
 </script>
 
@@ -89,7 +89,7 @@
 
 <Dialog>
 	<DialogTrigger>
-		<MathIcon /> Калкулятор наказаний
+		<MathIcon /> Калькулятор наказаний
 	</DialogTrigger>
 	<DialogContent>
 		<DialogHeader>
