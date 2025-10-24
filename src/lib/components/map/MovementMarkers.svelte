@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { LastMapPosition } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { getCellPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
 
@@ -11,7 +12,9 @@
 		for (let i = 1; i <= Math.abs(steps); i++) {
 			cells.push(steps > 0 ? startCell + i : startCell - i)
 		}
-		return cells.map((cell) => ({ id: cell, position: getCellPosition(cell) }))
+		return cells
+			.filter((c) => c <= LastMapPosition)
+			.map((cell) => ({ id: cell, position: getCellPosition(cell) }))
 	})
 
 	const showMinus = $derived($movementState.steps < 0)

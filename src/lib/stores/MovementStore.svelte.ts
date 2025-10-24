@@ -10,7 +10,7 @@ import { SvelteMap } from 'svelte/reactivity'
 import { get, writable, type Writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
 import { type PlayerData, type PlayerMovementState, type TurnState } from '$lib/types'
-import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME } from '$lib/constants'
+import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME, LastMapPosition } from '$lib/constants'
 import type { FinishPlayerMoveResponse } from '$lib/heyapi/aukus/types.gen'
 
 export function createMovementStore({
@@ -147,7 +147,7 @@ export function createMovementStore({
 		const element = get(playerElements).get(params.playerSlug)
 		if (!element) return
 
-		const startPos = getCellPosition(101)
+		const startPos = getCellPosition(LastMapPosition)
 		const finalPos = getWinnerPosition(params.position)
 
 		frontendTurnState.set('player-map-animation')

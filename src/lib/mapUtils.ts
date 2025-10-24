@@ -1,3 +1,5 @@
+import { LastMapPosition } from './constants'
+
 type CellId = number
 
 export type MapCell = {
@@ -62,13 +64,13 @@ export const mapCellsSorted: Array<MapCell> = generatedMapCells.flat(1).sort((a,
 export const mapCellRows: Array<Array<MapCell>> = generatedMapCells
 
 export const startCell = { id: 0, direction: 'up' } as MapCell
-export const lastCell = { id: 101, direction: 'right' } as MapCell
+export const lastCell = { id: LastMapPosition, direction: 'right' } as MapCell
 
 export const getMapCellById = (id: number) => {
 	if (id === 0) {
 		return startCell
 	}
-	if (id === 101) {
+	if (id === LastMapPosition) {
 		return lastCell
 	}
 	return mapCellsSorted[id - 1]
@@ -151,7 +153,7 @@ export function getCellPosition(cellId: number): CellPosition {
 			y1: cell1Pos.y1 + CellSize
 		}
 	}
-	if (cellId === 101) {
+	if (cellId === LastMapPosition) {
 		const cell100Pos = getCellPosition(100)
 		return {
 			x: cell100Pos.x,

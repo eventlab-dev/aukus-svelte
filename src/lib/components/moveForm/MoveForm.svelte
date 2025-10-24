@@ -23,6 +23,7 @@
 	import X from '@lucide/svelte/icons/x'
 	import WandIcon from '../icons/WandIcon.svelte'
 	import type { GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
+	import { LastMapPosition } from '$lib/constants'
 
 	type FormType = {
 		title: string
@@ -61,7 +62,7 @@
 			return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
 		if (!form.hltbTime) return { isFormFilled: false, buttonText: 'Выбери время по HLTB' }
 
-		if ($myPlayer?.map_position === 101) {
+		if ($myPlayer?.map_position === LastMapPosition) {
 			return { isFormFilled: true, buttonText: 'Победить в АУКУСЕ 4' }
 		}
 		return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }

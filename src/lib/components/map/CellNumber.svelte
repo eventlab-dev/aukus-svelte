@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		LastMapPosition,
 		MapMarkerDungeon,
 		MapMarkerFinish,
 		MapMarkerFire,
@@ -17,7 +18,7 @@
 		if (cellId === 0) {
 			return { cellPosition: { x: pos.x + 50, y: pos.y + 10 }, size: 2 }
 		}
-		if (cellId === 101) {
+		if (cellId === LastMapPosition) {
 			return { cellPosition: { x: pos.x, y: pos.y }, size: 2 }
 		}
 		return { cellPosition: pos, size: 1 }
@@ -27,7 +28,7 @@
 		if (cellId === 0) {
 			return MapMarkerStart
 		}
-		if (cellId === 101) {
+		if (cellId === LastMapPosition) {
 			return MapMarkerFinish
 		}
 		if (cellId <= 20) {
@@ -50,7 +51,7 @@
 	const cellText = $derived.by(() => {
 		if (cellId === 0) {
 			return ''
-		} else if (cellId === 101) {
+		} else if (cellId === LastMapPosition) {
 			return ''
 		}
 		return cellId.toString()

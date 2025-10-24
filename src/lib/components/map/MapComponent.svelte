@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MAP_IMAGE } from '$lib/constants'
+	import { LastMapPosition, MAP_IMAGE } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
 	import CellNumber from './CellNumber.svelte'
@@ -37,7 +37,7 @@
 				<MapArrow {from} {to} />
 			{/each}
 			<CellNumber cellId={0} />
-			<CellNumber cellId={101} />
+			<CellNumber cellId={LastMapPosition} />
 			{#each mapCellsSorted as cell (cell.id)}
 				<CellNumber cellId={cell.id} />
 			{/each}

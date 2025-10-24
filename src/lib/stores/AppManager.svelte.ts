@@ -1,4 +1,4 @@
-import { SOUNDS } from '$lib/constants'
+import { LastMapPosition, SOUNDS } from '$lib/constants'
 import { derived, writable, type Readable } from 'svelte/store'
 import { createEventDataStore } from './EventDataStore.svelte'
 import { createGamesHistoryStore } from './GamesHistoryStore.svelte'
@@ -105,7 +105,7 @@ export function createAppManager() {
 	const playersInOrder = derived(
 		[players, playersCompletedMap],
 		([$players, $playersCompletedMap]) => {
-			const playersNotCompletedMap = $players.filter((p) => p.map_position <= 101)
+			const playersNotCompletedMap = $players.filter((p) => p.map_position <= LastMapPosition)
 			playersNotCompletedMap.sort((a, b) => {
 				return b.total_score - a.total_score
 			})

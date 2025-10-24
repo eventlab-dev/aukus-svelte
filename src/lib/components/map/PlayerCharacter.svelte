@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PlayerBaseModelUrl } from '$lib/constants'
+	import { LastMapPosition, PlayerBaseModelUrl } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { getCellPosition, getWinnerPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
@@ -33,7 +33,7 @@
 
 	const cellPosition = $derived.by(() => {
 		if (startWinAnimation) {
-			return getCellPosition(101)
+			return getCellPosition(LastMapPosition)
 		}
 		return getCellPosition(player.map_position)
 	})
