@@ -103,7 +103,11 @@
 	})
 
 	const onCharacterClick = (e: MouseEvent) => {
-		selectedPlayer.set(player)
+		if ($selectedPlayer?.slug === player.slug) {
+			selectedPlayer.set(null)
+		} else {
+			selectedPlayer.set(player)
+		}
 		e.stopPropagation()
 	}
 
