@@ -56,7 +56,7 @@
 
 <Dialog {onOpenChange}>
 	<DialogTrigger>
-		<LifebuoyIcon /> Колёса вариантов
+		<LifebuoyIcon /> Колёса
 	</DialogTrigger>
 	<DialogContent
 		class="bg-unset top-0 bottom-0 mt-15 h-full w-full -translate-x-1/2 translate-y-0 items-center px-[90px]"
