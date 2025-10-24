@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from './ui/button';
+	import { Button } from './ui/button'
 
 	const sections = [
 		{
@@ -54,10 +54,10 @@
 				}
 			]
 		}
-	];
+	]
 </script>
 
-<footer class="mt-[500px] flex justify-between rounded-xl bg-card px-[120px] py-[50px]">
+<footer class="mt-[100px] flex justify-between rounded-xl bg-card px-[120px] py-[50px]">
 	{#each sections as { title, items } (title)}
 		<div class="space-y-[25px]">
 			<div class="text-xl leading-[24px] font-bold">{title}</div>
