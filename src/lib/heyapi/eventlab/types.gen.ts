@@ -219,7 +219,10 @@ export type UserItem = {
      * First Name
      */
     first_name: string;
-    role: UserRole;
+    /**
+     * Roles
+     */
+    roles: Array<UserRole>;
     /**
      * Moder For
      */
@@ -289,7 +292,7 @@ export type UserItem = {
 /**
  * UserRole
  */
-export type UserRole = 'streamer' | 'moderator' | 'admin';
+export type UserRole = 'streamer' | 'admin' | 'rules.edit';
 
 /**
  * UsersResponse
@@ -414,10 +417,6 @@ export type GetUsersApiUsersGetData = {
     body?: never;
     path?: never;
     query?: {
-        /**
-         * Role
-         */
-        role?: string | null;
         /**
          * Is Active
          */

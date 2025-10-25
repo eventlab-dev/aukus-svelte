@@ -35,8 +35,7 @@ export function createUsersStore() {
 		return null
 	})
 
-	const isAdmin = derived(myUser, ($myUser) => $myUser?.role === 'admin')
-	const isModerator = derived(myUser, ($myUser) => $myUser?.role === 'moderator')
+	const isAdmin = derived(myUser, ($myUser) => $myUser?.roles.includes('admin'))
 
 	const login = (username: string, password: string) => {
 		get(loginMutation)
@@ -113,7 +112,6 @@ export function createUsersStore() {
 		myUserQuery,
 		myUser,
 		isAdmin,
-		isModerator,
 		login,
 		loginMutation,
 		logout,

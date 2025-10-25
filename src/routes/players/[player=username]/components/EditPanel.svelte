@@ -21,7 +21,7 @@
 			$myUser &&
 				($myUser.slug === playerSlug ||
 					$myUser.moder_for.includes(playerSlug) ||
-					$myUser.role === 'admin')
+					$myUser.roles.includes('admin'))
 		)
 	)
 

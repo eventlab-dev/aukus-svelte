@@ -13,7 +13,9 @@
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 
 	const { myPlayer } = getAppManagerContext()
-	const canEdit = $derived($myPlayer?.role === 'admin')
+	const canEdit = $derived(
+		$myPlayer?.roles.includes('admin') || $myPlayer?.roles.includes('rules.edit')
+	)
 
 	let category = $state<RulesCategory>('general')
 

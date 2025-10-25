@@ -38,7 +38,7 @@
 		if ($myPlayer?.moder_for.includes(player.slug)) {
 			return true
 		}
-		if ($myUser?.role === 'admin') {
+		if ($myUser?.roles.includes('admin')) {
 			return true
 		}
 		return false
