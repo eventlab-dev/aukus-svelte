@@ -169,7 +169,7 @@
 						class="absolute top-[0px] left-1/2 z-20 h-[80px] w-auto -translate-x-1/2"
 					/>
 				{:else if skin.slot === 'item'}
-					<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[40px]" />
+					<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[80px]" />
 				{/if}
 			{/each}
 			<div class="relative flex h-[10px] w-full justify-center">
