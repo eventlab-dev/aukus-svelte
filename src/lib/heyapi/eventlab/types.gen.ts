@@ -60,6 +60,11 @@ export type DiceRollResponse = {
 export type DiceType = '1d4' | '2d4' | '1d6' | '2d6' | '3d6' | '2d8';
 
 /**
+ * EventName
+ */
+export type EventName = 'aukus1' | 'aukus2' | 'aukus3' | 'aukus4' | 'igropolius';
+
+/**
  * GameCompletionStatus
  */
 export type GameCompletionStatus = 'completed' | 'reroll' | 'drop';
@@ -418,6 +423,10 @@ export type GetUsersApiUsersGetData = {
     path?: never;
     query?: {
         /**
+         * Roles
+         */
+        roles?: Array<UserRole>;
+        /**
          * Is Active
          */
         is_active?: number | null;
@@ -428,11 +437,11 @@ export type GetUsersApiUsersGetData = {
         /**
          * Slugs
          */
-        slugs?: Array<string> | null;
+        slugs?: Array<string>;
         /**
          * Events
          */
-        events?: Array<string> | null;
+        events?: Array<EventName>;
     };
     url: '/api/users';
 };
@@ -460,9 +469,9 @@ export type GetGamesApiGamesHistoryGetData = {
     path?: never;
     query?: {
         /**
-         * Event Name
+         * Events
          */
-        event_name?: string | null;
+        events?: Array<EventName>;
         /**
          * Player Name
          */

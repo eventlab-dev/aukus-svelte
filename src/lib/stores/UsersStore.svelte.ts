@@ -60,7 +60,7 @@ export function createUsersStore() {
 	const usersQuery = createQuery({
 		...getUsersApiUsersGetOptions({
 			baseUrl: EventlabBaseUrl,
-			query: { is_active: 1 }
+			query: { is_active: 1, events: ['aukus4'] }
 		}),
 		refetchInterval: 2 * 60 * 1000
 	})
