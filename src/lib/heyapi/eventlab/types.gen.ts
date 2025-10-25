@@ -430,6 +430,10 @@ export type GetUsersApiUsersGetData = {
          * Slugs
          */
         slugs?: Array<string> | null;
+        /**
+         * Events
+         */
+        events?: Array<string> | null;
     };
     url: '/api/users';
 };

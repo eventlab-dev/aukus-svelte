@@ -12,7 +12,7 @@
 	import AchievementsNotifications from '$lib/components/achievements/AchievementsNotifications.svelte'
 
 	const { playersMovesStore, turnState, movementStore, myPlayer } = getAppManagerContext()
-	const { moves } = playersMovesStore
+	const { playerMoves } = playersMovesStore
 	const { selectedPlayer } = movementStore
 
 	let filteredMoves: PlayerMoveItem[] = $state([])
@@ -90,7 +90,7 @@
 <div in:fade>
 	<div class="mx-auto mt-[30px] flex max-w-[800px] flex-col space-y-3">
 		<div class="flex gap-3">
-			<MovesSearch moves={$moves} bind:filteredMoves />
+			<MovesSearch moves={$playerMoves} bind:filteredMoves />
 			<TotalViewerCounter />
 		</div>
 		<div class="space-y-[30px]">

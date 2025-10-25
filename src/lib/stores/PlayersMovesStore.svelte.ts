@@ -19,10 +19,15 @@ export function createPlayerMovesStore() {
 	)
 
 	const playerMoves = derived(movesQuery, ($movesQuery) => $movesQuery.data?.moves ?? [])
+	const otherPlayersMoves = derived(
+		movesQuery,
+		($movesQuery) => $movesQuery.data?.other_players ?? []
+	)
 
 	return {
 		playerSlug,
 		movesQuery,
-		moves: playerMoves
+		playerMoves,
+		otherPlayersMoves
 	}
 }

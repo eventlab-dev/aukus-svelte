@@ -14,7 +14,7 @@
 	const { myUser } = usersStore
 	const { editMode, updateCanvasMutation, selectedImage, canvasQuery, uploadImageMutation } =
 		canvasStore
-	const { moves } = playersMovesStore
+	const { playerMoves } = playersMovesStore
 
 	const canEdit = $derived(
 		Boolean(
@@ -92,7 +92,7 @@
 	}
 
 	const isAttached = $derived($selectedImage?.attach_move_id !== null)
-	const lastMove = $derived<PlayerMoveItem | undefined>($moves[0])
+	const lastMove = $derived<PlayerMoveItem | undefined>($playerMoves[0])
 
 	function handleAttach() {
 		if (!$selectedImage) return

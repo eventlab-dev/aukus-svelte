@@ -13,7 +13,7 @@
 	import EditPanel from './components/EditPanel.svelte'
 
 	const { playersMovesStore, playersBySlug, canvasStore } = getAppManagerContext()
-	const { moves, playerSlug: movesPlayerSlug } = playersMovesStore
+	const { playerMoves, playerSlug: movesPlayerSlug } = playersMovesStore
 	const { playerSlug: canvasPlayerSlug, editMode } = canvasStore
 
 	$effect(() => {
@@ -23,7 +23,9 @@
 	})
 
 	const player = $derived($playersBySlug[page.params.player!])
-	const gamesCompleted = $derived($moves.filter((move) => move.type === 'completed').length || 0)
+	const gamesCompleted = $derived(
+		$playerMoves.filter((move) => move.type === 'completed').length || 0
+	)
 	const socials = $derived({
 		twitchLink: player.twitch_stream_link || '',
 		donationAlertsLink: player.donation_link || '',
@@ -35,7 +37,7 @@
 	let filterValue = $state('')
 
 	const filteredMoves = $derived(
-		$moves.filter((move) => {
+		$playerMoves.filter((move) => {
 			const filterText = filterValue.toLowerCase()
 			return (
 				move.item_title.toLowerCase().includes(filterText) ||

@@ -17,7 +17,7 @@
 	const daysInMonth = Array(31)
 
 	const { playersMovesStore } = getAppManagerContext()
-	const { moves } = playersMovesStore
+	const { playerMoves } = playersMovesStore
 
 	let selectedDay = $state(currentDay)
 	let currentPage = $state(0)
@@ -25,7 +25,7 @@
 
 	const filteredMoves = $derived.by(() => {
 		const today = new Date(new Date().toDateString())
-		return $moves.filter(({ created_at }) => {
+		return $playerMoves.filter(({ created_at }) => {
 			return new Date(created_at).toDateString() === today.toDateString()
 		})
 	})

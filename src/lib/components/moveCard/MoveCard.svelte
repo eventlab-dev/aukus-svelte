@@ -1,7 +1,5 @@
 <script lang="ts">
-	import AddSquareIcon from '$lib/components/icons/AddSquareIcon.svelte'
 	import EditIcon from '$lib/components/icons/EditIcon.svelte'
-	import MinusSquareIcon from '$lib/components/icons/MinusSquareIcon.svelte'
 	import TickCircleIcon from '$lib/components/icons/TickCircleIcon.svelte'
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import { Badge } from '$lib/components/ui/badge'
@@ -9,12 +7,12 @@
 	import { Textarea } from '$lib/components/ui/textarea'
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
-	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
-	import { fade, slide } from 'svelte/transition'
 	import { gameLengthRanges } from '$lib/constants'
-	import PopoverMoveCard from './PopoverMoveCard.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
+	import { fade, slide } from 'svelte/transition'
+	import PopoverMoveCard from './PopoverMoveCard.svelte'
 
 	type Props = {
 		move: PlayerMoveItem
@@ -25,7 +23,11 @@
 	const { move, isCurrentMove = false, withUsername = false }: Props = $props()
 
 	const { playersMovesStore, playersBySlug } = getAppManagerContext()
-	const { moves } = playersMovesStore
+	const { otherPlayersMoves } = playersMovesStore
+
+	const otherMovesForSameGame = $derived(
+		$otherPlayersMoves.filter((m) => m.game_id === move.game_id)
+	)
 
 	const player = $derived($playersBySlug[move.player_slug])
 	const isPlayersMove = true // $derived(myUser && myUser.slug === move.player_slug)
@@ -33,21 +35,12 @@
 	const canEdit = $derived(isPlayersMove || isValidModerator)
 
 	const categoryDuration = $derived(formatMs(move.item_duration * 1000))
-	const playedBy = $derived(
-		$moves.filter((m) => {
-			const isMyMove = m.player_slug === move.player_slug
-			const isSameItem = m.item_title === move.item_title
-
-			return !isMyMove && isSameItem
-		})
-	)
 
 	const moveTypeStyles = $derived(getMoveTypeStyles(move.type))
 	const parsedReview = $derived(renderToHTML(move.item_review || ''))
 
 	let gameTitle = $state(move.item_title)
 	let vodLinks = $state(move.vod_links || '')
-	let isExtended = $state(false)
 	let isEditMode = $state(false)
 	let isVodsShown = $state(false)
 
@@ -91,15 +84,10 @@
 						->
 						{move.cell_to}
 					</Badge>
-				{/if}
-			</div>
-
-			{#if isExtended}
-				<div class="ml-1.5 flex gap-1.5" transition:slide={{ axis: 'x' }}>
 					<Tooltip>
 						<TooltipTrigger>
-							<Badge variant="secondary">
-								За {categoryDuration}
+							<Badge variant="secondary" class="h-full">
+								Играл {categoryDuration}
 							</Badge>
 						</TooltipTrigger>
 						<TooltipContent>Примерное время по категории стрима</TooltipContent>
@@ -109,22 +97,10 @@
 							{gameLengthRanges[move.item_length]} HLTB
 						</Badge>
 					{/if}
-				</div>
-			{/if}
+				{/if}
+			</div>
 
-			{#if !isCurrentMove}
-				<Toggle class="ml-1.5" variant="outline" size="sm" bind:pressed={isExtended}>
-					{#if isExtended}
-						<MinusSquareIcon />
-						Свернуть
-					{:else}
-						<AddSquareIcon />
-						Подробнее
-					{/if}
-				</Toggle>
-			{/if}
-
-			{#if !isExtended && canEdit}
+			{#if canEdit}
 				<Toggle
 					size="sm"
 					class="ml-1.5"
@@ -196,23 +172,21 @@
 		</div>
 	</div>
 
-	{#if isExtended}
-		<div class="mt-3 flex justify-between" transition:slide>
-			<Toggle
-				size="sm"
-				class="w-[105px]"
-				bind:pressed={isVodsShown}
-				style={isVodsShown
-					? 'background-color: var(--primary); color: var(--primary-foreground);'
-					: 'background-color: var(--secondary); color: var(--secondary-foreground);'}
-			>
-				Записи
-			</Toggle>
-			<div>
-				{#each playedBy as move (move.id)}
-					<PopoverMoveCard {move} />
-				{/each}
-			</div>
+	<div class="mt-3 flex justify-between" transition:slide>
+		<Toggle
+			size="sm"
+			class="w-[105px]"
+			bind:pressed={isVodsShown}
+			style={isVodsShown
+				? 'background-color: var(--primary); color: var(--primary-foreground);'
+				: 'background-color: var(--secondary); color: var(--secondary-foreground);'}
+		>
+			Записи
+		</Toggle>
+		<div>
+			{#each otherMovesForSameGame as move (move.id)}
+				<PopoverMoveCard {move} eventName="Аукус 4" />
+			{/each}
 		</div>
-	{/if}
+	</div>
 </div>

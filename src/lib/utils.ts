@@ -221,3 +221,14 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 		row
 	return Math.max(0, Math.floor(score))
 }
+
+export function formatDuration(timestamp: number, params: { includeSeconds?: boolean } = {}) {
+	const totalSeconds = Math.floor(timestamp / 1000)
+	const hours = Math.floor(totalSeconds / 3600)
+	const minutes = Math.floor((totalSeconds % 3600) / 60)
+	const seconds = totalSeconds % 60
+	if (!params.includeSeconds) {
+		return `${hours}ч ${minutes}м`
+	}
+	return `${hours}ч ${minutes}м ${seconds}с`
+}

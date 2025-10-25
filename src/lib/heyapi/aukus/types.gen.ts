@@ -394,6 +394,10 @@ export type PlayerMovesResponse = {
      * Moves
      */
     moves: Array<PlayerMoveItem>;
+    /**
+     * Other Players
+     */
+    other_players: Array<PlayerMoveItem>;
 };
 
 /**
