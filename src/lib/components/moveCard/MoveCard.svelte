@@ -22,17 +22,27 @@
 
 	const { move, isCurrentMove = false, withUsername = false }: Props = $props()
 
-	const { playersMovesStore, playersBySlug } = getAppManagerContext()
+	const { playersMovesStore, playersBySlug, myPlayer, usersStore } = getAppManagerContext()
 	const { otherPlayersMoves } = playersMovesStore
+	const { myUser } = usersStore
 
 	const otherMovesForSameGame = $derived(
 		$otherPlayersMoves.filter((m) => m.game_id === move.game_id)
 	)
 
 	const player = $derived($playersBySlug[move.player_slug])
-	const isPlayersMove = true // $derived(myUser && myUser.slug === move.player_slug)
-	const isValidModerator = true // $derived(usersStore.isModerator && myUser?.moder_for === move.player_id)
-	const canEdit = $derived(isPlayersMove || isValidModerator)
+	const canEdit = $derived.by(() => {
+		if (move.player_slug === $myPlayer?.slug) {
+			return true
+		}
+		if ($myPlayer?.moder_for.includes(player.slug)) {
+			return true
+		}
+		if ($myUser?.role === 'admin') {
+			return true
+		}
+		return false
+	})
 
 	const categoryDuration = $derived(formatMs(move.item_duration * 1000))
 
