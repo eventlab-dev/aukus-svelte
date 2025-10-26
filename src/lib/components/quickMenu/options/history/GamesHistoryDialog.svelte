@@ -12,15 +12,19 @@
 	import GameCard from './GameCard.svelte'
 
 	const { gamesHistoryStore } = getAppManagerContext()
-	const { gamesHistory, search } = gamesHistoryStore
+	const { gamesHistory, searchParams } = gamesHistoryStore
 
 	let timer: number = 0
 	const debounceSearch = (v: string) => {
 		clearTimeout(timer)
-		timer = setTimeout(() => {
-			search.set(v)
-		}, 500)
+		if (v.length >= 3 || v.length === 0) {
+			timer = setTimeout(() => {
+				searchParams.update((p) => ({ ...p, title_search: v }))
+			}, 500)
+		}
 	}
+
+	$inspect($gamesHistory)
 </script>
 
 <Dialog>
@@ -35,7 +39,7 @@
 		</DialogHeader>
 		<Input
 			type="text"
-			placeholder="Поиск по названию"
+			placeholder="Поиск по названию (3+ символов)"
 			class="mb-4 w-full rounded-[4px] bg-muted"
 			oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 		/>

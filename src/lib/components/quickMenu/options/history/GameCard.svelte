@@ -13,20 +13,13 @@
 
 	const { game }: Props = $props()
 
-	const { playersMovesStore, playersBySlug } = getAppManagerContext()
-	const { otherPlayersMoves } = playersMovesStore
-
-	const otherMovesForSameGame = $derived(
-		$otherPlayersMoves.filter((m) => m.game_id === game.game_id)
-	)
+	const { playersBySlug } = getAppManagerContext()
 
 	const player = $derived($playersBySlug[game.player_name.toLowerCase()])
 	const categoryDuration = $derived(formatDuration(game.game_time))
 
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
 	const parsedReview = $derived(renderToHTML(game.review))
-
-	console.log({ player })
 </script>
 
 <div
