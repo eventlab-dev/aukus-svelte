@@ -9,6 +9,7 @@
 	} from '$lib/components/ui/dialog'
 	import { Input } from '$lib/components/ui/input'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import GameCard from './GameCard.svelte'
 
 	const { gamesHistoryStore } = getAppManagerContext()
@@ -46,12 +47,14 @@
 			/>
 			{#if $gamesHistory.length === 0}
 				{#if $historyQuery.isPending}
-					<div class="py-10 text-center text-sm text-muted-foreground">Загрузка...</div>
+					<div class="mt-40 flex justify-center">
+						<LoaderCircle class="inline size-20 animate-spin" />
+					</div>
 				{:else}
 					<div class="py-10 text-center text-sm text-muted-foreground">Игр не найдено</div>
 				{/if}
 			{:else}
-				<div class="max-h-[400px] space-y-3 overflow-y-auto pr-1">
+				<div class="space-y-3 overflow-y-auto pr-1">
 					{#each $gamesHistory as game (game.id)}
 						<GameCard {game} />
 					{/each}
