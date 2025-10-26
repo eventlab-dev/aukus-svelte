@@ -11,6 +11,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import GameCard from './GameCard.svelte'
+	import { ScrollArea } from '$lib/components/ui/scroll-area'
 
 	const { gamesHistoryStore } = getAppManagerContext()
 	const { gamesHistory, searchParams, historyQuery } = gamesHistoryStore
@@ -38,28 +39,32 @@
 		<DialogHeader class="gap-3">
 			<DialogTitle class="text-2xl font-bold">История игр</DialogTitle>
 		</DialogHeader>
-		<div>
-			<Input
-				type="text"
-				placeholder="Поиск по названию (3+ символов)"
-				class="mb-4 w-full rounded-[4px] bg-muted"
-				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
-			/>
-			{#if $gamesHistory.length === 0}
-				{#if $historyQuery.isPending}
-					<div class="mt-40 flex justify-center">
-						<LoaderCircle class="inline size-20 animate-spin" />
-					</div>
-				{:else}
-					<div class="py-10 text-center text-sm text-muted-foreground">Игр не найдено</div>
-				{/if}
-			{:else}
-				<div class="space-y-3 overflow-y-auto pr-1">
-					{#each $gamesHistory as game (game.id)}
-						<GameCard {game} />
-					{/each}
+		<div class="mt-10">
+			<ScrollArea class="h-[70vh] w-full" type="always">
+				<Input
+					type="text"
+					placeholder="Поиск по названию (3+ символов)"
+					class="mb-4 w-full rounded-[4px] bg-muted"
+					oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
+				/>
+				<div class="mt-10 mb-30">
+					{#if $gamesHistory.length === 0}
+						{#if $historyQuery.isPending}
+							<div class="mt-40 flex justify-center">
+								<LoaderCircle class="inline size-20 animate-spin" />
+							</div>
+						{:else}
+							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+						{/if}
+					{:else}
+						<div class="flex flex-col gap-10">
+							{#each $gamesHistory as game (game.id)}
+								<GameCard {game} />
+							{/each}
+						</div>
+					{/if}
 				</div>
-			{/if}
+			</ScrollArea>
 		</div>
 	</DialogContent>
 </Dialog>

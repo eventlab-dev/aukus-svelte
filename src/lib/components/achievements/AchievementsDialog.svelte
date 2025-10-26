@@ -72,7 +72,7 @@
 			</div>
 
 			<div class="flex justify-center">
-				<ScrollArea class="h-[70vh] w-fit" type="always">
+				<ScrollArea class="h-[70vh] w-fit">
 					<div class="flex flex-wrap items-stretch gap-3">
 						{#each filteredAchievements as achievement (achievement.id)}
 							<div animate:flip={{ duration: 300, easing: sineInOut }} class="flex flex-col">
