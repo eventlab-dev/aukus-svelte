@@ -45,11 +45,13 @@
 				</Tooltip>
 			</div>
 		</div>
-		<div
-			class="absolute top-3 right-3 text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground"
-		>
-			{formatDateTime(game.timestamp)}
-		</div>
+		{#if game.timestamp}
+			<div
+				class="absolute top-3 right-3 text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground"
+			>
+				{formatDateTime(game.timestamp)}
+			</div>
+		{/if}
 	</div>
 
 	<div class="mt-3 flex gap-3">

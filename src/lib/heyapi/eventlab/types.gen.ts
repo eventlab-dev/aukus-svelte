@@ -101,7 +101,7 @@ export type GameHistoryItem = {
     /**
      * Timestamp
      */
-    timestamp: number;
+    timestamp: number | null;
     /**
      * Review
      */
