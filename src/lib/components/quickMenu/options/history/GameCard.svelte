@@ -30,7 +30,7 @@
 		<div class="flex">
 			<div class="flex gap-1.5">
 				<Badge variant="secondary" style="background-color: {player?.color ?? 'gray'}">
-					{player?.username}
+					{player?.username ?? game.player_name}
 				</Badge>
 				<Badge variant={moveTypeStyles.variant}>
 					{moveTypeStyles.text}
