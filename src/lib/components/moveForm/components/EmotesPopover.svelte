@@ -1,18 +1,18 @@
 <script lang="ts">
-	import ImageLoader from '$lib/components/ImageLoader.svelte';
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
-	import { debounce } from '$lib/utils';
-	import { onMount } from 'svelte';
-	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover';
-	import EmojiIcon from '$lib/components/icons/EmojiIcon.svelte';
+	import ImageLoader from '$lib/components/ImageLoader.svelte'
+	import { Button } from '$lib/components/ui/button'
+	import { Input } from '$lib/components/ui/input'
+	import { debounce } from '$lib/utils'
+	import { onMount } from 'svelte'
+	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle'
+	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
+	import EmojiIcon from '$lib/components/icons/EmojiIcon.svelte'
 
 	type Props = {
-		onEmoteClick: (emote: string) => void;
-	};
+		onEmoteClick: (emote: string) => void
+	}
 
-	const { onEmoteClick }: Props = $props();
+	const { onEmoteClick }: Props = $props()
 
 	const emoteData = {
 		emotes: [
@@ -31,17 +31,17 @@
 			'https://cdn.7tv.app/emote/01FBDZWBCG00072B7YSZWSNQNK/1x.avif',
 			'https://cdn.7tv.app/emote/01F85F0A28000E14C9J6VJDGKD/1x.avif'
 		]
-	};
+	}
 
-	let searchQuery = $state('');
-	let isFetching = $state(false);
-	let searchInputRef: HTMLInputElement | undefined = $state();
+	let searchQuery = $state('')
+	let isFetching = $state(false)
+	let searchInputRef: HTMLInputElement | undefined = $state()
 
 	const debouncedInput = debounce((val: string) => {
-		searchQuery = val;
-	}, 400);
+		searchQuery = val
+	}, 400)
 
-	onMount(() => searchInputRef?.focus());
+	onMount(() => searchInputRef?.focus())
 </script>
 
 <Popover>
@@ -71,7 +71,7 @@
 					</div>
 				{:else if emoteData?.emotes && emoteData.emotes.length > 0}
 					<div class="grid grid-cols-[repeat(7,48px)] grid-rows-[repeat(4,48px)]">
-						{#each emoteData.emotes as emoteUrl}
+						{#each emoteData.emotes as emoteUrl (emoteUrl)}
 							<Button
 								variant="ghost"
 								size="icon"
