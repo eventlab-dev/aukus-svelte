@@ -121,7 +121,7 @@ export type GameHistoryItem = {
     /**
      * Game Id
      */
-    game_id: number;
+    game_id: number | null;
 };
 
 /**

@@ -1,0 +1,77 @@
+<script lang="ts">
+	import ImageLoader from '$lib/components/ImageLoader.svelte'
+	import { Badge } from '$lib/components/ui/badge'
+	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import type { GameHistoryItem } from '$lib/heyapi/eventlab/types.gen'
+	import { formatDateTime, formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
+	import { fade } from 'svelte/transition'
+
+	type Props = {
+		game: GameHistoryItem
+	}
+
+	const { game }: Props = $props()
+
+	const { playersMovesStore, playersBySlug } = getAppManagerContext()
+	const { otherPlayersMoves } = playersMovesStore
+
+	const otherMovesForSameGame = $derived(
+		$otherPlayersMoves.filter((m) => m.game_id === game.game_id)
+	)
+
+	const player = $derived($playersBySlug[game.player_name.toLowerCase()])
+	const categoryDuration = $derived(formatDuration(game.game_time))
+
+	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
+	const parsedReview = $derived(renderToHTML(game.review))
+
+	console.log({ player })
+</script>
+
+<div
+	class="group relative flex w-full flex-col rounded-xl bg-card p-3 data-[current=true]:bg-primary data-[current=true]:selection:bg-foreground data-[current=true]:selection:text-primary"
+	id={`game-card-${game.id}`}
+>
+	<div class="flex justify-between">
+		<div class="flex">
+			<div class="flex gap-1.5">
+				<Badge variant="secondary" style="background-color: {player?.color ?? 'gray'}">
+					{player?.username}
+				</Badge>
+				<Badge variant={moveTypeStyles.variant}>
+					{moveTypeStyles.text}
+				</Badge>
+				<Tooltip>
+					<TooltipTrigger>
+						<Badge variant="secondary" class="h-full">
+							Играл {categoryDuration}
+						</Badge>
+					</TooltipTrigger>
+					<TooltipContent>Примерное время по категории стрима</TooltipContent>
+				</Tooltip>
+			</div>
+		</div>
+		<div
+			class="absolute top-3 right-3 text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground"
+		>
+			{formatDateTime(game.timestamp)}
+		</div>
+	</div>
+
+	<div class="mt-3 flex gap-3">
+		<ImageLoader
+			src={game.game_cover || ''}
+			alt={game.game_title || ''}
+			class="h-[140px] w-[105px]"
+		/>
+		<div class="w-full space-y-3">
+			<div class="text-2xl leading-[29px] font-bold" in:fade>{game.game_title}</div>
+			<div class="font-medium text-muted-foreground [&>*]:inline" in:fade>
+				<span>{game.rating} — </span>
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				{@html parsedReview}
+			</div>
+		</div>
+	</div>
+</div>

@@ -6,6 +6,7 @@ import { renderToHTMLString } from '@tiptap/static-renderer'
 import { initExtensions } from './tiptapExtensions/enabledExtensions'
 import dompurify from 'dompurify'
 import type { PlayerMoveType, PlayerStatsItem } from './heyapi/aukus/types.gen'
+import type { JSONContent } from '@tiptap/core'
 
 const enabledExtensions = initExtensions()
 
@@ -89,13 +90,9 @@ export function transliterateRussianToEnglishVariants(russianText: string): stri
 }
 
 export function formatDateTime(timestamp: number, options: { onlyHourMinute?: boolean } = {}) {
-	const date = new Date(timestamp)
+	const date = new Date(timestamp * 1000)
 	const today = new Date()
 	const isToday = date.toDateString() === today.toDateString()
-
-	const day = date.toLocaleString('ru-RU', { day: 'numeric' })
-	const month = date.toLocaleString('ru-RU', { month: 'long' })
-	const monthFixed = month.slice(0, -1) + 'я'
 
 	const hourMinute = date.toLocaleString('ru-RU', {
 		hour: '2-digit',
@@ -107,7 +104,22 @@ export function formatDateTime(timestamp: number, options: { onlyHourMinute?: bo
 		return hourMinute
 	}
 
-	return isToday ? `Сегодня ${hourMinute}` : `${day} ${monthFixed} ${hourMinute}`
+	if (isToday) {
+		return `Сегодня ${hourMinute}`
+	}
+
+	const day = date.toLocaleString('ru-RU', { day: 'numeric' })
+	const month = date.toLocaleString('ru-RU', { month: 'long' })
+	const monthFixed = month.slice(0, -1) + 'я'
+
+	const year = date.getFullYear()
+	const currentYear = today.getFullYear()
+
+	if (year !== currentYear) {
+		return `${day} ${monthFixed} ${year}`
+	}
+
+	return `${day} ${monthFixed} ${hourMinute}`
 }
 
 type MoveTypeStyles = {
@@ -160,9 +172,24 @@ export function debounce<T extends (...args: any[]) => any>(
 export function renderToHTML(content: string) {
 	if (!content) return ''
 
+	let parsed: Node | JSONContent
+	try {
+		parsed = JSON.parse(content)
+	} catch {
+		parsed = {
+			type: 'doc',
+			content: [
+				{
+					type: 'paragraph',
+					content: [{ type: 'text', text: content }]
+				}
+			]
+		}
+	}
+
 	return dompurify.sanitize(
 		renderToHTMLString({
-			content: JSON.parse(content),
+			content: parsed,
 			extensions: enabledExtensions
 		}),
 		{ ALLOWED_TAGS: ['p', 'img', 'span'] }
@@ -223,7 +250,7 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 }
 
 export function formatDuration(timestamp: number, params: { includeSeconds?: boolean } = {}) {
-	const totalSeconds = Math.floor(timestamp / 1000)
+	const totalSeconds = Math.floor(timestamp)
 	const hours = Math.floor(totalSeconds / 3600)
 	const minutes = Math.floor((totalSeconds % 3600) / 60)
 	const seconds = totalSeconds % 60

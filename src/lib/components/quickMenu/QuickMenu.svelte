@@ -14,7 +14,7 @@
 	import SkinEditorDialog from '../skinEditor/SkinEditorDialog.svelte'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import { Button } from '../ui/button'
-	import GamesHistoryDialog from './options/GamesHistoryDialog.svelte'
+	import GamesHistoryDialog from './options/history/GamesHistoryDialog.svelte'
 	import PunishmentCalculator from './options/PunishmentCalculator.svelte'
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
