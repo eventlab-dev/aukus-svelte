@@ -44,7 +44,7 @@
 		<SearchIcon /> История игр
 	</DialogTrigger>
 	<DialogContent
-		class="flex h-[80vh] w-[750px] flex-col text-primary-foreground selection:bg-foreground selection:text-background"
+		class="flex h-[80vh] w-[750px] flex-col overflow-hidden text-primary-foreground selection:bg-foreground selection:text-background"
 	>
 		<DialogHeader class="gap-3">
 			<DialogTitle class="text-2xl font-bold">История игр</DialogTitle>
@@ -72,27 +72,27 @@
 				class="mb-4 w-full rounded-[4px] bg-muted"
 				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 			/>
-			<ScrollArea class="h-[70vh] w-full" type="always">
-				<div class="mt-10 mb-30">
-					{#if $gamesHistory.length === 0}
-						{#if $historyQuery.isPending}
-							<div class="mt-40 flex justify-center">
-								<LoaderCircle class="inline size-20 animate-spin" />
-							</div>
-						{:else}
-							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-						{/if}
-					{:else}
-						<div class="flex flex-col gap-10">
-							{#each $gamesHistory as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
-									<GameCard {game} />
-								{/if}
-							{/each}
-						</div>
-					{/if}
-				</div>
-			</ScrollArea>
 		</div>
+		<ScrollArea class="h-full w-full flex-1" type="always">
+			<div class="mt-10 mb-80">
+				{#if $gamesHistory.length === 0}
+					{#if $historyQuery.isPending}
+						<div class="mt-40 flex justify-center">
+							<LoaderCircle class="inline size-20 animate-spin" />
+						</div>
+					{:else}
+						<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+					{/if}
+				{:else}
+					<div class="flex flex-col gap-10">
+						{#each $gamesHistory as game (game.id)}
+							{#if $playersBySlug[game.player_name] !== undefined}
+								<GameCard {game} />
+							{/if}
+						{/each}
+					</div>
+				{/if}
+			</div>
+		</ScrollArea>
 	</DialogContent>
 </Dialog>
