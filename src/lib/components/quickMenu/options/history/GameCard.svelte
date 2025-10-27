@@ -20,6 +20,13 @@
 
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
 	const parsedReview = $derived(renderToHTML(game.review))
+
+	const eventTitles: { [k: string]: string } = {
+		aukus1: 'Аукус 1',
+		aukus2: 'Аукус 2',
+		aukus3: 'Аукус 3',
+		aukus4: 'Аукус 4'
+	}
 </script>
 
 <div
@@ -29,6 +36,9 @@
 	<div class="flex justify-between">
 		<div class="flex">
 			<div class="flex gap-1.5">
+				<Badge variant="secondary">
+					{eventTitles[game.event_name] ?? game.event_name}
+				</Badge>
 				<Badge variant="secondary" style="background-color: {player?.color ?? 'gray'}">
 					{player?.username ?? game.player_name}
 				</Badge>
