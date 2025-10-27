@@ -28,13 +28,13 @@
 		}
 	}
 
-	let selectedPlayer = $state<string | null>(null)
+	const selectedPlayer = $derived($searchParams.player_name)
 
 	function selectPlayer(_: boolean, slug: string) {
 		if (selectedPlayer === slug) {
-			selectedPlayer = null
+			searchParams.update((p) => ({ ...p, player_name: null }))
 		} else {
-			selectedPlayer = slug
+			searchParams.update((p) => ({ ...p, player_name: slug }))
 		}
 	}
 </script>
@@ -66,13 +66,13 @@
 					</Toggle>
 				{/each}
 			</div>
+			<Input
+				type="text"
+				placeholder="Поиск по названию (3+ символов)"
+				class="mb-4 w-full rounded-[4px] bg-muted"
+				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
+			/>
 			<ScrollArea class="h-[70vh] w-full" type="always">
-				<Input
-					type="text"
-					placeholder="Поиск по названию (3+ символов)"
-					class="mb-4 w-full rounded-[4px] bg-muted"
-					oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
-				/>
 				<div class="mt-10 mb-30">
 					{#if $gamesHistory.length === 0}
 						{#if $historyQuery.isPending}
