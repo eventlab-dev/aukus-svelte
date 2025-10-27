@@ -73,30 +73,24 @@
 
 		<CollapsibleContent>
 			<CollapsibleGroup>
-				{#if $myPlayer}
-					<SkinEditorDialog />
-				{/if}
 				<AchievementsDialog />
 				<GamesHistoryDialog />
+				<div><TwitchIcon /> Мультитрансляция</div>
 			</CollapsibleGroup>
 
 			{#if $myPlayer}
 				<CollapsibleGroup>
+					<SkinEditorDialog />
 					<PunishmentCalculator />
 					<WheelDialog />
 				</CollapsibleGroup>
 			{/if}
 
-			<CollapsibleGroup>
-				<div><TwitchIcon /> Мультитрансляция</div>
-				<div><MoonIcon /> Затемнить карту</div>
-			</CollapsibleGroup>
-
-			<CollapsibleGroup>
+			<!-- <CollapsibleGroup>
 				<Button onclick={openTimelapse}>
 					<CalendarIcon /> Таймлапс
 				</Button>
-			</CollapsibleGroup>
+			</CollapsibleGroup> -->
 
 			{#if $myUser}
 				<CollapsibleGroup>
