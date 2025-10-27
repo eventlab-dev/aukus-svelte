@@ -119,3 +119,10 @@ export const DiceModelUrl = `${CDN_URL_BASE}/dice_skins/dice_model.glb`
 export const DefaultDiceTexture = `${CDN_URL_BASE}/dice_skins/default_texture.png`
 
 export const LastMapPosition = 101
+
+export const EventTitles: { [k: string]: string } = {
+	aukus1: 'Аукус 1',
+	aukus2: 'Аукус 2',
+	aukus3: 'Аукус 3',
+	aukus4: 'Аукус 4'
+}

@@ -14,6 +14,8 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import { Toggle } from '$lib/components/ui/toggle'
 	import X from '@lucide/svelte/icons/x'
+	import { type EventName } from '$lib/heyapi/eventlab/types.gen'
+	import { EventTitles } from '$lib/constants'
 
 	const { gamesHistoryStore, players, playersBySlug } = getAppManagerContext()
 	const { gamesHistory, searchParams, historyQuery } = gamesHistoryStore
@@ -35,6 +37,23 @@
 			searchParams.update((p) => ({ ...p, player_name: null }))
 		} else {
 			searchParams.update((p) => ({ ...p, player_name: slug }))
+		}
+	}
+
+	const selectedEvent = $derived.by(() => {
+		if ($searchParams.events.length === 1) {
+			return $searchParams.events[0]
+		}
+		return null
+	})
+
+	const eventsList: EventName[] = ['aukus1', 'aukus2', 'aukus3']
+
+	function selectEvent(_: boolean, event: EventName) {
+		if (selectedEvent === event) {
+			searchParams.update((p) => ({ ...p, events: ['aukus1', 'aukus2', 'aukus3'] }))
+		} else {
+			searchParams.update((p) => ({ ...p, events: [event] }))
 		}
 	}
 </script>
@@ -59,6 +78,22 @@
 					>
 						{player.username}
 						{#if selectedPlayer === player.slug}
+							<span class="rounded bg-white/20 p-0.5">
+								<X class="stroke-4" />
+							</span>
+						{/if}
+					</Toggle>
+				{/each}
+			</div>
+			<div class="flex w-full flex-wrap gap-2">
+				{#each eventsList as eventName (eventName)}
+					<Toggle
+						variant="outline"
+						bind:pressed={() => eventName === selectedEvent, (v) => selectEvent(v, eventName)}
+						class="cursor-pointer"
+					>
+						{EventTitles[eventName]}
+						{#if selectedEvent === eventName}
 							<span class="rounded bg-white/20 p-0.5">
 								<X class="stroke-4" />
 							</span>

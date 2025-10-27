@@ -2,6 +2,7 @@
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import { Badge } from '$lib/components/ui/badge'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
+	import { EventTitles } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { GameHistoryItem } from '$lib/heyapi/eventlab/types.gen'
 	import { formatDateTime, formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
@@ -20,13 +21,6 @@
 
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
 	const parsedReview = $derived(renderToHTML(game.review))
-
-	const eventTitles: { [k: string]: string } = {
-		aukus1: 'Аукус 1',
-		aukus2: 'Аукус 2',
-		aukus3: 'Аукус 3',
-		aukus4: 'Аукус 4'
-	}
 </script>
 
 <div
@@ -37,7 +31,7 @@
 		<div class="flex">
 			<div class="flex gap-1.5">
 				<Badge variant="secondary">
-					{eventTitles[game.event_name] ?? game.event_name}
+					{EventTitles[game.event_name] ?? game.event_name}
 				</Badge>
 				<Badge variant="secondary" style="background-color: {player?.color ?? 'gray'}">
 					{player?.username ?? game.player_name}
