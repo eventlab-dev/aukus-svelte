@@ -7,8 +7,6 @@
 	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte'
 	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte'
 	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte'
-	import CalendarIcon from '../icons/CalendarIcon.svelte'
-	import MoonIcon from '../icons/MoonIcon.svelte'
 	import ProfileIcon from '../icons/ProfileIcon.svelte'
 	import TwitchIcon from '../icons/TwitchIcon.svelte'
 	import SkinEditorDialog from '../skinEditor/SkinEditorDialog.svelte'
@@ -47,10 +45,10 @@
 		collapsed.value = false
 	}
 
-	function openTimelapse() {
-		isTimelapseShown = true
-		collapsed.value = true
-	}
+	// function openTimelapse() {
+	// 	isTimelapseShown = true
+	// 	collapsed.value = true
+	// }
 
 	function openLogin() {
 		goto('/login')
