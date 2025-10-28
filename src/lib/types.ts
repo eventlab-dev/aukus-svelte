@@ -1,5 +1,5 @@
-import type { PlayerItem } from './heyapi/aukus/types.gen'
-import type { UserItem } from './heyapi/eventlab/types.gen'
+import type { PlayerItem, PlayerMoveType } from './heyapi/aukus/types.gen'
+import type { GameHistoryItem, UserItem } from './heyapi/eventlab/types.gen'
 
 export const Color = {
 	greyLight: '#414141',
@@ -103,4 +103,8 @@ export type PlayerMovementState = {
 	steps: number
 	startCell: number
 	rollValues: number[]
+}
+
+export type CommonGameItem = Omit<GameHistoryItem, 'completion_status'> & {
+	completion_status: PlayerMoveType
 }

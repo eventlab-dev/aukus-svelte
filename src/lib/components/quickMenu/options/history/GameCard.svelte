@@ -4,12 +4,12 @@
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { EventTitles } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import type { GameHistoryItem } from '$lib/heyapi/eventlab/types.gen'
+	import type { CommonGameItem } from '$lib/types'
 	import { formatDateTime, formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade } from 'svelte/transition'
 
 	type Props = {
-		game: GameHistoryItem
+		game: CommonGameItem
 	}
 
 	const { game }: Props = $props()

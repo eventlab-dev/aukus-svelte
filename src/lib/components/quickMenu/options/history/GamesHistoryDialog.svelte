@@ -15,17 +15,18 @@
 	import { Toggle } from '$lib/components/ui/toggle'
 	import X from '@lucide/svelte/icons/x'
 	import { type EventName } from '$lib/heyapi/eventlab/types.gen'
-	import { EventTitles } from '$lib/constants'
+	import { DifficultyTitle, EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
+	import type { CommonGameItem } from '$lib/types'
 
-	const { gamesHistoryStore, players, playersBySlug } = getAppManagerContext()
+	const { gamesHistoryStore, players, playersBySlug, playersMovesStore } = getAppManagerContext()
 	const { gamesHistoryByEvent, searchParams, historyQuery } = gamesHistoryStore
-
-	const hasNoGames = $derived(Object.keys($gamesHistoryByEvent).length === 0)
 
 	const aukus3Games = $derived($gamesHistoryByEvent['aukus3'] ?? [])
 	const aukus2Games = $derived($gamesHistoryByEvent['aukus2'] ?? [])
 	const aukus1Games = $derived($gamesHistoryByEvent['aukus1'] ?? [])
+
+	const { queryParams: aukus4QueryParams, playerMoves, movesQuery } = playersMovesStore
 
 	let timer: number = 0
 	const debounceSearch = (v: string) => {
@@ -42,8 +43,10 @@
 	function selectPlayer(_: boolean, slug: string) {
 		if (selectedPlayer === slug) {
 			searchParams.update((p) => ({ ...p, player_name: null }))
+			aukus4QueryParams.update((p) => ({ ...p, player_slug: null }))
 		} else {
 			searchParams.update((p) => ({ ...p, player_name: slug }))
+			aukus4QueryParams.update((p) => ({ ...p, player_slug: slug }))
 		}
 	}
 
@@ -63,6 +66,34 @@
 			searchParams.update((p) => ({ ...p, events: [event] }))
 		}
 	}
+
+	const aukus4Games = $derived.by<CommonGameItem[]>(() => {
+		if (selectedEvent !== 'aukus4' && selectedEvent !== null) {
+			return []
+		}
+		return $playerMoves.map((move) => {
+			const item: CommonGameItem = {
+				id: move.id,
+				player_name: move.player_slug,
+				event_name: 'aukus4',
+				game_title: move.item_title,
+				completion_status: move.type,
+				timestamp: move.created_at,
+				difficulty: DifficultyTitle[move.difficulty_level],
+				review: move.item_review,
+				rating: `${move.item_rating}/10`,
+				game_id: move.game_id,
+				game_time: move.item_duration,
+				game_cover: move.cover_image_url ?? '',
+				game_link: ''
+			}
+			return item
+		})
+	})
+
+	const hasNoGames = $derived(
+		Object.keys($gamesHistoryByEvent).length === 0 && aukus4Games.length === 0
+	)
 
 	function openLink(event: 'aukus1' | 'aukus2' | 'aukus3') {
 		let url = ''
@@ -132,7 +163,7 @@
 		<ScrollArea class="h-full w-full flex-1" type="always">
 			<div class="mt-10 mb-80">
 				{#if hasNoGames}
-					{#if $historyQuery.isPending}
+					{#if $historyQuery.isPending || $movesQuery.isPending}
 						<div class="mt-40 flex justify-center">
 							<LoaderCircle class="inline size-20 animate-spin" />
 						</div>
@@ -141,41 +172,59 @@
 					{/if}
 				{:else}
 					<div class="flex flex-col gap-10">
-						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
-							Аукус 3
-						</Button>
-						{#if aukus3Games.length === 0}
-							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-						{:else}
-							{#each aukus3Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
-									<GameCard {game} />
-								{/if}
-							{/each}
+						{#if !(selectedEvent && selectedEvent !== 'aukus4')}
+							<div class="p-0 text-3xl">Аукус 4</div>
+							{#if aukus4Games.length === 0}
+								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+							{:else}
+								{#each aukus4Games as game (game.id)}
+									{#if $playersBySlug[game.player_name] !== undefined}
+										<GameCard {game} />
+									{/if}
+								{/each}
+							{/if}
 						{/if}
-						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
-							Аукус 2
-						</Button>
-						{#if aukus2Games.length === 0}
-							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-						{:else}
-							{#each aukus2Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
-									<GameCard {game} />
-								{/if}
-							{/each}
+						{#if !(selectedEvent && selectedEvent !== 'aukus3')}
+							<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
+								Аукус 3
+							</Button>
+							{#if aukus3Games.length === 0}
+								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+							{:else}
+								{#each aukus3Games as game (game.id)}
+									{#if $playersBySlug[game.player_name] !== undefined}
+										<GameCard {game} />
+									{/if}
+								{/each}
+							{/if}
 						{/if}
-						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
-							Аукус 1
-						</Button>
-						{#if aukus1Games.length === 0}
-							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-						{:else}
-							{#each aukus1Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
-									<GameCard {game} />
-								{/if}
-							{/each}
+						{#if !(selectedEvent && selectedEvent !== 'aukus2')}
+							<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
+								Аукус 2
+							</Button>
+							{#if aukus2Games.length === 0}
+								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+							{:else}
+								{#each aukus2Games as game (game.id)}
+									{#if $playersBySlug[game.player_name] !== undefined}
+										<GameCard {game} />
+									{/if}
+								{/each}
+							{/if}
+						{/if}
+						{#if !(selectedEvent && selectedEvent !== 'aukus1')}
+							<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
+								Аукус 1
+							</Button>
+							{#if aukus1Games.length === 0}
+								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+							{:else}
+								{#each aukus1Games as game (game.id)}
+									{#if $playersBySlug[game.player_name] !== undefined}
+										<GameCard {game} />
+									{/if}
+								{/each}
+							{/if}
 						{/if}
 					</div>
 				{/if}

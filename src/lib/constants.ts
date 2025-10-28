@@ -84,7 +84,7 @@ import DRUM_SOUND_URL from '$lib/assets/sounds/baraban.mp3'
 import MAX_SOUND_URL from '$lib/assets/sounds/max-roll2.mp3'
 import DASBOOT_SOUND_URL from '$lib/assets/sounds/dasboot-roll.mp3'
 import DVAR_SOUND_URL from '$lib/assets/sounds/dvar-roll.mp3'
-import type { GameLength } from './heyapi/aukus/types.gen'
+import type { GameDifficulty, GameLength } from './heyapi/aukus/types.gen'
 
 export const SOUNDS = [
 	{ key: 'army', url: ARMY_SOUND_URL },
@@ -125,4 +125,11 @@ export const EventTitles: { [k: string]: string } = {
 	aukus2: 'Аукус 2',
 	aukus3: 'Аукус 3',
 	aukus4: 'Аукус 4'
+}
+
+export const DifficultyTitle: { [k in GameDifficulty]: string } = {
+	'-1': 'Легкий',
+	0: 'Нормальный',
+	1: 'Сложный',
+	2: 'Очень сложный'
 }
