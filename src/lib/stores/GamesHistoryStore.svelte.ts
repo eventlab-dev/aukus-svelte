@@ -1,41 +1,59 @@
 import { EventlabBaseUrl } from '$lib/client'
 import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
-import type { EventName, GameHistoryItem } from '$lib/heyapi/eventlab/types.gen'
+import type {
+	EventName,
+	GameHistoryItem,
+	GetGamesApiGamesHistoryGetData
+} from '$lib/heyapi/eventlab/types.gen'
 import { createQuery } from '@tanstack/svelte-query'
-import { derived, writable } from 'svelte/store'
+import { derived, get, writable } from 'svelte/store'
 
-type SearchParams = {
-	title_search: string | null
-	events: EventName[]
-	player_name: string | null
-}
+type QueryParams = GetGamesApiGamesHistoryGetData['query']
 
 export function createGamesHistoryStore() {
-	const searchParams = writable<SearchParams>({
+	const searchIdFrom = writable<number | null>(null)
+
+	const searchParams = writable<QueryParams>({
 		events: [],
 		player_name: null,
-		title_search: null
+		title_search: null,
+		limit: 1
 	})
 
 	const historyQuery = createQuery(
-		derived(searchParams, ($search) => {
+		derived([searchParams, searchIdFrom], ([$search, $searchIdFrom]) => {
 			const params = getGamesApiGamesHistoryGetOptions({
 				baseUrl: EventlabBaseUrl,
-				query: { ...$search }
+				query: { ...$search, start_id: $searchIdFrom }
 			})
 			params['placeholderData'] = (data) => data
 			return params
 		})
 	)
 
-	const gamesHistory = derived(historyQuery, ($historyQuery) => $historyQuery.data?.games || [])
+	const allLoadedGames = writable<GameHistoryItem[]>([])
+	historyQuery.subscribe(($historyQuery) => {
+		if ($historyQuery.data?.games) {
+			allLoadedGames.update((current) => {
+				const newGames = $historyQuery.data!.games.filter(
+					(newGame) => !current.some((existingGame) => existingGame.id === newGame.id)
+				)
+				return [...current, ...newGames]
+			})
+		}
+	})
 
-	const gamesHistoryByEvent = derived(gamesHistory, ($gamesHistory) => {
+	searchParams.subscribe(() => {
+		allLoadedGames.set([])
+		searchIdFrom.set(null)
+	})
+
+	const gamesHistoryByEvent = derived(allLoadedGames, ($allLoadedGames) => {
 		const byEvent: Record<EventName, GameHistoryItem[]> = {} as Record<
 			EventName,
-			typeof $gamesHistory
+			typeof $allLoadedGames
 		>
-		$gamesHistory.forEach((game) => {
+		$allLoadedGames.forEach((game) => {
 			const event = game.event_name
 			if (!byEvent[event]) {
 				byEvent[event] = []
@@ -46,10 +64,22 @@ export function createGamesHistoryStore() {
 		return byEvent
 	})
 
+	const hasMore = derived(historyQuery, ($historyQuery) => {
+		return Boolean($historyQuery.data?.next_id)
+	})
+
+	function loadMore() {
+		const nextId = get(historyQuery).data?.next_id
+		if (nextId) {
+			searchIdFrom.set(nextId)
+		}
+	}
+
 	return {
 		searchParams,
 		historyQuery,
-		gamesHistory,
-		gamesHistoryByEvent
+		gamesHistoryByEvent,
+		hasMore,
+		loadMore
 	}
 }

@@ -20,7 +20,7 @@
 	import type { CommonGameItem } from '$lib/types'
 
 	const { gamesHistoryStore, players, playersBySlug, playersMovesStore } = getAppManagerContext()
-	const { gamesHistoryByEvent, searchParams, historyQuery } = gamesHistoryStore
+	const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
 
 	const aukus3Games = $derived($gamesHistoryByEvent['aukus3'] ?? [])
 	const aukus2Games = $derived($gamesHistoryByEvent['aukus2'] ?? [])
@@ -39,7 +39,7 @@
 		}
 	}
 
-	const selectedPlayer = $derived($searchParams.player_name)
+	const selectedPlayer = $derived($searchParams?.player_name)
 
 	function selectPlayer(_: boolean, slug: string) {
 		if (selectedPlayer === slug) {
@@ -52,7 +52,7 @@
 	}
 
 	const selectedEvent = $derived.by(() => {
-		if ($searchParams.events.length === 1) {
+		if ($searchParams?.events?.length === 1) {
 			return $searchParams.events[0]
 		}
 		return null
@@ -226,6 +226,12 @@
 									{/if}
 								{/each}
 							{/if}
+						{/if}
+
+						{#if $hasMore}
+							<div class="flex justify-center">
+								<Button onclick={loadMore}>Загрузить ещё</Button>
+							</div>
 						{/if}
 					</div>
 				{/if}
