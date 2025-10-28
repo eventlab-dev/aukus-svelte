@@ -9,6 +9,9 @@
 	} from '$lib/components/ui/dialog'
 	import { Input } from '$lib/components/ui/input'
 	import { Label } from '$lib/components/ui/label'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+
+	const { myPlayer } = getAppManagerContext()
 
 	const ranges = [
 		{ max: 10000, shots: 1, pushups: 30, squats: 50 },
@@ -97,8 +100,10 @@
 				class="flex flex-col text-5xl leading-[58px]"
 				aria-describedby="punishment calculator"
 			>
-				<span>Наказание за дроп —</span>
-				<span>Fallout 4</span>
+				<span>Наказание за дроп</span>
+				{#if $myPlayer?.current_game}
+					<span> — {$myPlayer?.current_game}</span>
+				{/if}
 			</DialogTitle>
 		</DialogHeader>
 
