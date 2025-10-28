@@ -16,8 +16,7 @@ export function createGamesHistoryStore() {
 	const searchParams = writable<QueryParams>({
 		events: [],
 		player_name: null,
-		title_search: null,
-		limit: 1
+		title_search: null
 	})
 
 	const historyQuery = createQuery(
