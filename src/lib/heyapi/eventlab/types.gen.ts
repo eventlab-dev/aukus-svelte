@@ -133,13 +133,9 @@ export type GamesHistoryResponse = {
      */
     games: Array<GameHistoryItem>;
     /**
-     * Count
+     * Next Id
      */
-    count: number;
-    /**
-     * Last Ts
-     */
-    last_ts: number;
+    next_id: number | null;
 };
 
 /**
@@ -485,9 +481,9 @@ export type GetGamesApiGamesHistoryGetData = {
          */
         completion_status?: GameCompletionStatus | null;
         /**
-         * Start Ts
+         * Start Id
          */
-        start_ts?: number | null;
+        start_id?: number | null;
         /**
          * Limit
          */

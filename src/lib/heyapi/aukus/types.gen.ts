@@ -398,6 +398,10 @@ export type PlayerMovesResponse = {
      * Other Players
      */
     other_players: Array<PlayerMoveItem>;
+    /**
+     * Next Ts
+     */
+    next_ts: number | null;
 };
 
 /**
@@ -792,35 +796,39 @@ export type FinishPlayerMoveApiPlayersMoveFinishPostResponses = {
 
 export type FinishPlayerMoveApiPlayersMoveFinishPostResponse = FinishPlayerMoveApiPlayersMoveFinishPostResponses[keyof FinishPlayerMoveApiPlayersMoveFinishPostResponses];
 
-export type GetPlayerMovesApiPlayersPlayerSlugMovesGetData = {
+export type GetPlayerMovesApiPlayersMovesGetData = {
     body?: never;
-    path: {
+    path?: never;
+    query: {
         /**
          * Player Slug
          */
-        player_slug: string;
+        player_slug: string | null;
+        /**
+         * Start Ts
+         */
+        start_ts: number | null;
     };
-    query?: never;
-    url: '/api/players/{player_slug}/moves';
+    url: '/api/players/moves';
 };
 
-export type GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors = {
+export type GetPlayerMovesApiPlayersMovesGetErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetPlayerMovesApiPlayersPlayerSlugMovesGetError = GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetErrors];
+export type GetPlayerMovesApiPlayersMovesGetError = GetPlayerMovesApiPlayersMovesGetErrors[keyof GetPlayerMovesApiPlayersMovesGetErrors];
 
-export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses = {
+export type GetPlayerMovesApiPlayersMovesGetResponses = {
     /**
      * Successful Response
      */
     200: PlayerMovesResponse;
 };
 
-export type GetPlayerMovesApiPlayersPlayerSlugMovesGetResponse = GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses[keyof GetPlayerMovesApiPlayersPlayerSlugMovesGetResponses];
+export type GetPlayerMovesApiPlayersMovesGetResponse = GetPlayerMovesApiPlayersMovesGetResponses[keyof GetPlayerMovesApiPlayersMovesGetResponses];
 
 export type SetPlayerSkinsApiPlayersSkinsPostData = {
     body: PlayerChangeSkinRequest;

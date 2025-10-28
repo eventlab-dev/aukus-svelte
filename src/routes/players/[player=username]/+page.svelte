@@ -13,12 +13,12 @@
 	import EditPanel from './components/EditPanel.svelte'
 
 	const { playersMovesStore, playersBySlug, canvasStore } = getAppManagerContext()
-	const { playerMoves, playerSlug: movesPlayerSlug } = playersMovesStore
+	const { playerMoves, queryParams: movesQueryParams } = playersMovesStore
 	const { playerSlug: canvasPlayerSlug, editMode } = canvasStore
 
 	$effect(() => {
 		if (!page.params.player) return
-		movesPlayerSlug.set(page.params.player)
+		movesQueryParams.set({ player_slug: page.params.player, start_ts: null })
 		canvasPlayerSlug.set(page.params.player)
 	})
 

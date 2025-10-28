@@ -1,19 +1,24 @@
 import { AukusBaseUrl } from '$lib/client'
-import { getPlayerMovesApiPlayersPlayerSlugMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+import type { GetPlayerMovesApiPlayersMovesGetData } from '$lib/heyapi/aukus/types.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { derived, writable } from 'svelte/store'
 
+type QueryParams = GetPlayerMovesApiPlayersMovesGetData['query']
+
 export function createPlayerMovesStore() {
-	const playerSlug = writable('')
+	const queryParams = writable<QueryParams>({
+		player_slug: null,
+		start_ts: null
+	})
 
 	const movesQuery = createQuery(
-		derived(playerSlug, ($playerSlug) => {
+		derived(queryParams, ($queryParams) => {
 			return {
-				...getPlayerMovesApiPlayersPlayerSlugMovesGetOptions({
+				...getPlayerMovesApiPlayersMovesGetOptions({
 					baseUrl: AukusBaseUrl,
-					path: { player_slug: $playerSlug }
-				}),
-				enabled: !!$playerSlug
+					query: $queryParams
+				})
 			}
 		})
 	)
@@ -25,7 +30,7 @@ export function createPlayerMovesStore() {
 	)
 
 	return {
-		playerSlug,
+		queryParams,
 		movesQuery,
 		playerMoves,
 		otherPlayersMoves
