@@ -168,7 +168,7 @@
 				{:else}
 					<div class="flex flex-col gap-10">
 						{#if !(selectedEvent && selectedEvent !== 'aukus4')}
-							<div class="p-0 text-3xl">Аукус 4</div>
+							<div class="p-0 text-center text-3xl">Аукус 4</div>
 							{#if aukus4Games.length === 0}
 								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
 							{:else}
@@ -180,9 +180,11 @@
 							{/if}
 						{/if}
 						{#if !(selectedEvent && selectedEvent !== 'aukus3')}
-							<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
-								Аукус 3
-							</Button>
+							<div class="flex justify-center">
+								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
+									Аукус 3
+								</Button>
+							</div>
 							{#if aukus3Games.length === 0}
 								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
 							{:else}
@@ -194,9 +196,11 @@
 							{/if}
 						{/if}
 						{#if !(selectedEvent && selectedEvent !== 'aukus2')}
-							<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
-								Аукус 2
-							</Button>
+							<div class="flex justify-center">
+								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
+									Аукус 2
+								</Button>
+							</div>
 							{#if aukus2Games.length === 0}
 								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
 							{:else}
@@ -208,9 +212,11 @@
 							{/if}
 						{/if}
 						{#if !(selectedEvent && selectedEvent !== 'aukus1')}
-							<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
-								Аукус 1
-							</Button>
+							<div class="flex justify-center">
+								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
+									Аукус 1
+								</Button>
+							</div>
 							{#if aukus1Games.length === 0}
 								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
 							{:else}
