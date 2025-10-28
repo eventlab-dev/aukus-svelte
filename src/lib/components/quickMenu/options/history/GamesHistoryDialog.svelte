@@ -16,9 +16,16 @@
 	import X from '@lucide/svelte/icons/x'
 	import { type EventName } from '$lib/heyapi/eventlab/types.gen'
 	import { EventTitles } from '$lib/constants'
+	import { Button } from '$lib/components/ui/button'
 
 	const { gamesHistoryStore, players, playersBySlug } = getAppManagerContext()
-	const { gamesHistory, searchParams, historyQuery } = gamesHistoryStore
+	const { gamesHistoryByEvent, searchParams, historyQuery } = gamesHistoryStore
+
+	const hasNoGames = $derived(Object.keys($gamesHistoryByEvent).length === 0)
+
+	const aukus3Games = $derived($gamesHistoryByEvent['aukus3'] ?? [])
+	const aukus2Games = $derived($gamesHistoryByEvent['aukus2'] ?? [])
+	const aukus1Games = $derived($gamesHistoryByEvent['aukus1'] ?? [])
 
 	let timer: number = 0
 	const debounceSearch = (v: string) => {
@@ -55,6 +62,20 @@
 		} else {
 			searchParams.update((p) => ({ ...p, events: [event] }))
 		}
+	}
+
+	function openLink(event: 'aukus1' | 'aukus2' | 'aukus3') {
+		let url = ''
+		if (event === 'aukus1') {
+			url =
+				'https://docs.google.com/spreadsheets/d/1iGjS41dpxbgjtMTGODZ-j3OG9eMDaZh5kBRiWH-FPk0/edit?gid=1235582040#gid=1235582040'
+		} else if (event === 'aukus2') {
+			url =
+				'https://docs.google.com/spreadsheets/d/16JxvqzWmZgigHVBhsxHQsP4ElpXZ2sl3XbslmkW-m88/edit?gid=1235582040#gid=1235582040'
+		} else if (event === 'aukus3') {
+			url = 'https://aukus3.eventlab.dev'
+		}
+		window.open(url, '_blank noopener noreferrer')
 	}
 </script>
 
@@ -110,7 +131,7 @@
 		</div>
 		<ScrollArea class="h-full w-full flex-1" type="always">
 			<div class="mt-10 mb-80">
-				{#if $gamesHistory.length === 0}
+				{#if hasNoGames}
 					{#if $historyQuery.isPending}
 						<div class="mt-40 flex justify-center">
 							<LoaderCircle class="inline size-20 animate-spin" />
@@ -120,11 +141,42 @@
 					{/if}
 				{:else}
 					<div class="flex flex-col gap-10">
-						{#each $gamesHistory as game (game.id)}
-							{#if $playersBySlug[game.player_name] !== undefined}
-								<GameCard {game} />
-							{/if}
-						{/each}
+						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
+							Аукус 3
+						</Button>
+						{#if aukus3Games.length === 0}
+							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+						{:else}
+							{#each aukus3Games as game (game.id)}
+								{#if $playersBySlug[game.player_name] !== undefined}
+									<GameCard {game} />
+								{/if}
+							{/each}
+						{/if}
+						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
+							Аукус 2
+						</Button>
+						{#if aukus2Games.length === 0}
+							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+						{:else}
+							{#each aukus2Games as game (game.id)}
+								{#if $playersBySlug[game.player_name] !== undefined}
+									<GameCard {game} />
+								{/if}
+							{/each}
+						{/if}
+						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
+							Аукус 1
+						</Button>
+						{#if aukus1Games.length === 0}
+							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+						{:else}
+							{#each aukus1Games as game (game.id)}
+								{#if $playersBySlug[game.player_name] !== undefined}
+									<GameCard {game} />
+								{/if}
+							{/each}
+						{/if}
 					</div>
 				{/if}
 			</div>

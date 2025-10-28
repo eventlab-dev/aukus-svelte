@@ -1,6 +1,6 @@
 import { EventlabBaseUrl } from '$lib/client'
 import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
-import type { EventName } from '$lib/heyapi/eventlab/types.gen'
+import type { EventName, GameHistoryItem } from '$lib/heyapi/eventlab/types.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { derived, writable } from 'svelte/store'
 
@@ -30,9 +30,26 @@ export function createGamesHistoryStore() {
 
 	const gamesHistory = derived(historyQuery, ($historyQuery) => $historyQuery.data?.games || [])
 
+	const gamesHistoryByEvent = derived(gamesHistory, ($gamesHistory) => {
+		const byEvent: Record<EventName, GameHistoryItem[]> = {} as Record<
+			EventName,
+			typeof $gamesHistory
+		>
+		$gamesHistory.forEach((game) => {
+			const event = game.event_name
+			if (!byEvent[event]) {
+				byEvent[event] = []
+			}
+
+			byEvent[event].push(game)
+		})
+		return byEvent
+	})
+
 	return {
 		searchParams,
 		historyQuery,
-		gamesHistory
+		gamesHistory,
+		gamesHistoryByEvent
 	}
 }

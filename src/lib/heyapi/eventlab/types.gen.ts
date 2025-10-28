@@ -62,7 +62,7 @@ export type DiceType = '1d4' | '2d4' | '1d6' | '2d6' | '3d6' | '2d8';
 /**
  * EventName
  */
-export type EventName = 'aukus1' | 'aukus2' | 'aukus3' | 'aukus4' | 'igropolius';
+export type EventName = 'aukus1' | 'aukus2' | 'aukus3' | 'aukus4' | 'igropolius' | 'MGE';
 
 /**
  * GameCompletionStatus
@@ -81,10 +81,7 @@ export type GameHistoryItem = {
      * Player Name
      */
     player_name: string;
-    /**
-     * Event Name
-     */
-    event_name: string;
+    event_name: EventName;
     /**
      * Game Title
      */

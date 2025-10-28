@@ -138,8 +138,8 @@ export const finishPlayerMoveApiPlayersMoveFinishPost = <ThrowOnError extends bo
 /**
  * Get Player Moves
  */
-export const getPlayerMovesApiPlayersMovesGet = <ThrowOnError extends boolean = false>(options: Options<GetPlayerMovesApiPlayersMovesGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetPlayerMovesApiPlayersMovesGetResponses, GetPlayerMovesApiPlayersMovesGetErrors, ThrowOnError>({
+export const getPlayerMovesApiPlayersMovesGet = <ThrowOnError extends boolean = false>(options?: Options<GetPlayerMovesApiPlayersMovesGetData, ThrowOnError>) => {
+    return (options?.client ?? client).get<GetPlayerMovesApiPlayersMovesGetResponses, GetPlayerMovesApiPlayersMovesGetErrors, ThrowOnError>({
         url: '/api/players/moves',
         ...options
     });

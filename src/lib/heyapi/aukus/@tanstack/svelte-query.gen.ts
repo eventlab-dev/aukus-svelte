@@ -168,12 +168,12 @@ export const finishPlayerMoveApiPlayersMoveFinishPostMutation = (options?: Parti
     return mutationOptions;
 };
 
-export const getPlayerMovesApiPlayersMovesGetQueryKey = (options: Options<GetPlayerMovesApiPlayersMovesGetData>) => createQueryKey('getPlayerMovesApiPlayersMovesGet', options);
+export const getPlayerMovesApiPlayersMovesGetQueryKey = (options?: Options<GetPlayerMovesApiPlayersMovesGetData>) => createQueryKey('getPlayerMovesApiPlayersMovesGet', options);
 
 /**
  * Get Player Moves
  */
-export const getPlayerMovesApiPlayersMovesGetOptions = (options: Options<GetPlayerMovesApiPlayersMovesGetData>) => {
+export const getPlayerMovesApiPlayersMovesGetOptions = (options?: Options<GetPlayerMovesApiPlayersMovesGetData>) => {
     return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await getPlayerMovesApiPlayersMovesGet({

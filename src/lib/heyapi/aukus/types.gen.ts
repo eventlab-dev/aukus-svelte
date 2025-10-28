@@ -799,15 +799,15 @@ export type FinishPlayerMoveApiPlayersMoveFinishPostResponse = FinishPlayerMoveA
 export type GetPlayerMovesApiPlayersMovesGetData = {
     body?: never;
     path?: never;
-    query: {
+    query?: {
         /**
          * Player Slug
          */
-        player_slug: string | null;
+        player_slug?: string | null;
         /**
          * Start Ts
          */
-        start_ts: number | null;
+        start_ts?: number | null;
     };
     url: '/api/players/moves';
 };
