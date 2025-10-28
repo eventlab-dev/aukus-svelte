@@ -57,7 +57,7 @@
 		return null
 	})
 
-	const eventsList: EventName[] = ['aukus1', 'aukus2', 'aukus3']
+	const eventsList: EventName[] = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
 
 	function selectEvent(_: boolean, event: EventName) {
 		if (selectedEvent === event) {
