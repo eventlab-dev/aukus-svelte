@@ -9,7 +9,8 @@ type QueryParams = GetPlayerMovesApiPlayersMovesGetData['query']
 export function createPlayerMovesStore() {
 	const queryParams = writable<QueryParams>({
 		player_slug: null,
-		start_ts: null
+		start_ts: null,
+		search: null
 	})
 
 	const movesQuery = createQuery(

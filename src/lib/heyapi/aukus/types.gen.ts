@@ -808,6 +808,10 @@ export type GetPlayerMovesApiPlayersMovesGetData = {
          * Start Ts
          */
         start_ts?: number | null;
+        /**
+         * Search
+         */
+        search?: string | null;
     };
     url: '/api/players/moves';
 };

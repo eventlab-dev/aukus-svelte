@@ -34,6 +34,7 @@
 		if (v.length >= 3 || v.length === 0) {
 			timer = setTimeout(() => {
 				searchParams.update((p) => ({ ...p, title_search: v }))
+				aukus4QueryParams.update((p) => ({ ...p, search: v }))
 			}, 500)
 		}
 	}
@@ -91,9 +92,7 @@
 		})
 	})
 
-	const hasNoGames = $derived(
-		Object.keys($gamesHistoryByEvent).length === 0 && aukus4Games.length === 0
-	)
+	const isLoading = $derived($historyQuery.isPending || $movesQuery.isPending)
 
 	function openLink(event: 'aukus1' | 'aukus2' | 'aukus3') {
 		let url = ''
@@ -162,14 +161,10 @@
 		</div>
 		<ScrollArea class="h-full w-full flex-1" type="always">
 			<div class="mt-10 mb-80">
-				{#if hasNoGames}
-					{#if $historyQuery.isPending || $movesQuery.isPending}
-						<div class="mt-40 flex justify-center">
-							<LoaderCircle class="inline size-20 animate-spin" />
-						</div>
-					{:else}
-						<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-					{/if}
+				{#if isLoading}
+					<div class="mt-40 flex justify-center">
+						<LoaderCircle class="inline size-20 animate-spin" />
+					</div>
 				{:else}
 					<div class="flex flex-col gap-10">
 						{#if !(selectedEvent && selectedEvent !== 'aukus4')}
