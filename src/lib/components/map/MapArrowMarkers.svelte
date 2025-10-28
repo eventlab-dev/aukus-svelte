@@ -1,12 +1,12 @@
 <script lang="ts">
-	const baseColor = 'rgba(0,0,0,0.2)';
-	const greenColor = 'rgba(0,255,0,0.5)';
-	const redColor = 'rgba(255,0,0,0.5)';
+	const baseColor = 'rgba(0,0,0,0.2)'
+	const greenColor = 'rgba(0,255,0,0.5)'
+	const redColor = 'rgba(255,0,0,0.5)'
 
-	const arrowPoints = '0 0, 6 2, 0 4';
+	const arrowPoints = '0 0, 6 2, 0 4'
 </script>
 
-<svg style="height: 0, display: block">
+<svg style="height: 0">
 	<defs>
 		<marker
 			id="green-arrow-start"
