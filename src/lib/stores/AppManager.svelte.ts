@@ -15,10 +15,10 @@ import { createCanvasStore } from './CanvasStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
-	const gamesHistoryStore = createGamesHistoryStore()
 	const eventDataStore = createEventDataStore()
 	const playersMovesStore = createPlayerMovesStore()
 	const statsStore = createStatsStore()
+	const gamesHistoryStore = createGamesHistoryStore({ eventDataStore })
 
 	const frontendState = writable<TurnState>(null)
 

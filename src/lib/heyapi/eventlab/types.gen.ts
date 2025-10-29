@@ -466,9 +466,9 @@ export type GetGamesApiGamesHistoryGetData = {
          */
         events?: Array<EventName>;
         /**
-         * Player Name
+         * Players
          */
-        player_name?: string | null;
+        players?: Array<string>;
         /**
          * Title Search
          */

@@ -7,27 +7,38 @@ import type {
 } from '$lib/heyapi/eventlab/types.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { derived, get, writable } from 'svelte/store'
+import type { EventDataStore } from './EventDataStore.svelte'
 
 type QueryParams = GetGamesApiGamesHistoryGetData['query']
 
-export function createGamesHistoryStore() {
+export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
 	const searchIdFrom = writable<number | null>(null)
+
+	const fullPlayersList = derived(eventDataStore.players, ($players) => $players.map((p) => p.slug))
 
 	const searchParams = writable<QueryParams>({
 		events: [],
-		player_name: null,
+		players: [],
 		title_search: null
 	})
 
 	const historyQuery = createQuery(
-		derived([searchParams, searchIdFrom], ([$search, $searchIdFrom]) => {
-			const params = getGamesApiGamesHistoryGetOptions({
-				baseUrl: EventlabBaseUrl,
-				query: { ...$search, start_id: $searchIdFrom }
-			})
-			params['placeholderData'] = (data) => data
-			return params
-		})
+		derived(
+			[searchParams, searchIdFrom, fullPlayersList],
+			([$search, $searchIdFrom, $fullPlayersList]) => {
+				let playersFilter = $fullPlayersList
+				if ($search?.players && $search.players.length > 0) {
+					playersFilter = $search.players
+				}
+				const params = getGamesApiGamesHistoryGetOptions({
+					baseUrl: EventlabBaseUrl,
+					query: { ...$search, start_id: $searchIdFrom, players: playersFilter }
+				})
+				params.placeholderData = (data) => data
+				params.enabled = playersFilter.length > 0
+				return params
+			}
+		)
 	)
 
 	const allLoadedGames = writable<GameHistoryItem[]>([])
