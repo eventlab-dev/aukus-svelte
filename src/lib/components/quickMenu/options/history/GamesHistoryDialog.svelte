@@ -15,12 +15,21 @@
 	import { Toggle } from '$lib/components/ui/toggle'
 	import X from '@lucide/svelte/icons/x'
 	import { type EventName } from '$lib/heyapi/eventlab/types.gen'
-	import { DifficultyTitle, EventTitles } from '$lib/constants'
+	import { EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
 	import type { CommonGameItem } from '$lib/types'
+	import { playerMoveToCommonGame } from '$lib/utils'
 
 	const { gamesHistoryStore, players, playersBySlug, playersMovesStore } = getAppManagerContext()
-	const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
+	const {
+		gamesHistoryByEvent,
+		searchParams,
+		historyQuery,
+		hasMore,
+		loadMore,
+		gamesMatchParams,
+		gamesMatched
+	} = gamesHistoryStore
 
 	const aukus3Games = $derived($gamesHistoryByEvent['aukus3'] ?? [])
 	const aukus2Games = $derived($gamesHistoryByEvent['aukus2'] ?? [])
@@ -72,27 +81,27 @@
 		if (selectedEvent !== 'aukus4' && selectedEvent !== null) {
 			return []
 		}
-		return $playerMoves.map((move) => {
-			const item: CommonGameItem = {
-				id: move.id,
-				player_name: move.player_slug,
-				event_name: 'aukus4',
-				game_title: move.item_title,
-				completion_status: move.type,
-				timestamp: move.created_at,
-				difficulty: DifficultyTitle[move.difficulty_level],
-				review: move.item_review,
-				rating: `${move.item_rating}/10`,
-				game_id: move.game_id,
-				game_time: move.item_duration,
-				game_cover: move.cover_image_url ?? '',
-				game_link: ''
-			}
-			return item
-		})
+		return $playerMoves.map(playerMoveToCommonGame)
 	})
 
-	const isLoading = $derived($historyQuery.isFetching || $movesQuery.isFetching)
+	$effect(() => {
+		const gamesTitles = new Set(
+			[...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
+				.map((game) => game.game_title)
+				.slice(0, 50)
+		)
+		const gamesIds = [...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
+			.map((game) => game.id)
+			.slice(0, 50)
+		gamesMatchParams.set({ titles: [...gamesTitles], exclude_ids: gamesIds })
+	})
+
+	const isLoading = $derived($historyQuery.isFetching)
+
+	// $inspect(isLoading, 'GamesHistoryDialog isLoading')
+	// $inspect($historyQuery.isFetching, ' historyQuery isFetching')
+	// $inspect($movesQuery.isFetching, ' movesQuery isFetching')
+
 	const noGames = $derived.by(() => {
 		return (
 			aukus1Games.length === 0 &&
@@ -183,7 +192,10 @@
 							<div class="p-0 text-center text-3xl">Аукус 4</div>
 							{#each aukus4Games as game (game.id)}
 								{#if $playersBySlug[game.player_name] !== undefined}
-									<GameCard {game} />
+									{@const matches = $gamesMatched.filter(
+										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+									)}
+									<GameCard {game} matchedGames={matches} />
 								{/if}
 							{/each}
 						{/if}
@@ -196,7 +208,10 @@
 							</div>
 							{#each aukus3Games as game (game.id)}
 								{#if $playersBySlug[game.player_name] !== undefined}
-									<GameCard {game} />
+									{@const matches = $gamesMatched.filter(
+										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+									)}
+									<GameCard {game} matchedGames={matches} />
 								{/if}
 							{/each}
 						{/if}
@@ -209,7 +224,10 @@
 							</div>
 							{#each aukus2Games as game (game.id)}
 								{#if $playersBySlug[game.player_name] !== undefined}
-									<GameCard {game} />
+									{@const matches = $gamesMatched.filter(
+										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+									)}
+									<GameCard {game} matchedGames={matches} />
 								{/if}
 							{/each}
 						{/if}
@@ -222,7 +240,10 @@
 							</div>
 							{#each aukus1Games as game (game.id)}
 								{#if $playersBySlug[game.player_name] !== undefined}
-									<GameCard {game} />
+									{@const matches = $gamesMatched.filter(
+										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+									)}
+									<GameCard {game} matchedGames={matches} />
 								{/if}
 							{/each}
 						{/if}

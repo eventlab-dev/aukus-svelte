@@ -104,9 +104,19 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 		})
 	)
 
-	const gamesMatched = derived(gamesMatchQuery, ($gamesFilteredQuery) => {
-		return $gamesFilteredQuery.data?.games || []
-	})
+	const gamesMatched = derived(
+		[gamesMatchQuery, allLoadedGames],
+		([$gamesFilteredQuery, $allLoadedGames]) => {
+			// merge two lists, avoiding duplicates
+			const mergedGames: GameHistoryItem[] = [...$allLoadedGames]
+			$gamesFilteredQuery.data?.games.forEach((game) => {
+				if (!mergedGames.some((g) => g.id === game.id)) {
+					mergedGames.push(game)
+				}
+			})
+			return mergedGames
+		}
+	)
 
 	return {
 		searchParams,
