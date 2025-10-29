@@ -39,14 +39,14 @@
 		}
 	}
 
-	const selectedPlayer = $derived($searchParams?.player_name)
+	const selectedPlayer = $derived($searchParams?.players?.[0] ?? null)
 
 	function selectPlayer(_: boolean, slug: string) {
 		if (selectedPlayer === slug) {
-			searchParams.update((p) => ({ ...p, player_name: null }))
+			searchParams.update((p) => ({ ...p, players: [] }))
 			aukus4QueryParams.update((p) => ({ ...p, player_slug: null }))
 		} else {
-			searchParams.update((p) => ({ ...p, player_name: slug }))
+			searchParams.update((p) => ({ ...p, players: [slug] }))
 			aukus4QueryParams.update((p) => ({ ...p, player_slug: slug }))
 		}
 	}

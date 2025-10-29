@@ -10,6 +10,10 @@ import { derived, get, writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
 
 type QueryParams = GetGamesApiGamesHistoryGetData['query']
+type MatchParams = {
+	exclude_ids: number[]
+	titles: string[]
+}
 
 export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
 	const searchIdFrom = writable<number | null>(null)
@@ -34,7 +38,7 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 					baseUrl: EventlabBaseUrl,
 					query: { ...$search, start_id: $searchIdFrom, players: playersFilter }
 				})
-				params.placeholderData = (data) => data
+				// params.placeholderData = (data) => data
 				params.enabled = playersFilter.length > 0
 				return params
 			}
@@ -85,11 +89,32 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 		}
 	}
 
+	const gamesMatchParams = writable<MatchParams>({
+		exclude_ids: [],
+		titles: []
+	})
+	const gamesMatchQuery = createQuery(
+		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
+			const params = getGamesApiGamesHistoryGetOptions({
+				baseUrl: EventlabBaseUrl,
+				query: { ...$gamesMatchParams, start_id: null, players: $fullPlayersList }
+			})
+			params['enabled'] = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
+			return params
+		})
+	)
+
+	const gamesMatched = derived(gamesMatchQuery, ($gamesFilteredQuery) => {
+		return $gamesFilteredQuery.data?.games || []
+	})
+
 	return {
 		searchParams,
 		historyQuery,
 		gamesHistoryByEvent,
 		hasMore,
-		loadMore
+		loadMore,
+		gamesMatchParams,
+		gamesMatched
 	}
 }

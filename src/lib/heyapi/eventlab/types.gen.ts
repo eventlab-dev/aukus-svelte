@@ -470,6 +470,10 @@ export type GetGamesApiGamesHistoryGetData = {
          */
         players?: Array<string>;
         /**
+         * Titles
+         */
+        titles?: Array<string>;
+        /**
          * Title Search
          */
         title_search?: string | null;
@@ -485,6 +489,10 @@ export type GetGamesApiGamesHistoryGetData = {
          * Limit
          */
         limit?: number;
+        /**
+         * Exclude Ids
+         */
+        exclude_ids?: Array<number>;
     };
     url: '/api/games-history';
 };
