@@ -92,7 +92,15 @@
 		})
 	})
 
-	const isLoading = $derived($historyQuery.isPending || $movesQuery.isPending)
+	const isLoading = $derived($historyQuery.isFetching || $movesQuery.isFetching)
+	const noGames = $derived.by(() => {
+		return (
+			aukus1Games.length === 0 &&
+			aukus2Games.length === 0 &&
+			aukus3Games.length === 0 &&
+			aukus4Games.length === 0
+		)
+	})
 
 	function openLink(event: 'aukus1' | 'aukus2' | 'aukus3') {
 		let url = ''
@@ -167,65 +175,56 @@
 					</div>
 				{:else}
 					<div class="flex flex-col gap-10">
-						{#if !(selectedEvent && selectedEvent !== 'aukus4')}
-							<div class="p-0 text-center text-3xl">Аукус 4</div>
-							{#if aukus4Games.length === 0}
-								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-							{:else}
-								{#each aukus4Games as game (game.id)}
-									{#if $playersBySlug[game.player_name] !== undefined}
-										<GameCard {game} />
-									{/if}
-								{/each}
-							{/if}
+						{#if noGames}
+							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
 						{/if}
-						{#if !(selectedEvent && selectedEvent !== 'aukus3')}
+
+						{#if aukus4Games.length !== 0}
+							<div class="p-0 text-center text-3xl">Аукус 4</div>
+							{#each aukus4Games as game (game.id)}
+								{#if $playersBySlug[game.player_name] !== undefined}
+									<GameCard {game} />
+								{/if}
+							{/each}
+						{/if}
+
+						{#if aukus3Games.length !== 0}
 							<div class="flex justify-center">
 								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
 									Аукус 3
 								</Button>
 							</div>
-							{#if aukus3Games.length === 0}
-								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-							{:else}
-								{#each aukus3Games as game (game.id)}
-									{#if $playersBySlug[game.player_name] !== undefined}
-										<GameCard {game} />
-									{/if}
-								{/each}
-							{/if}
+							{#each aukus3Games as game (game.id)}
+								{#if $playersBySlug[game.player_name] !== undefined}
+									<GameCard {game} />
+								{/if}
+							{/each}
 						{/if}
-						{#if !(selectedEvent && selectedEvent !== 'aukus2')}
+
+						{#if aukus2Games.length !== 0}
 							<div class="flex justify-center">
 								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
 									Аукус 2
 								</Button>
 							</div>
-							{#if aukus2Games.length === 0}
-								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-							{:else}
-								{#each aukus2Games as game (game.id)}
-									{#if $playersBySlug[game.player_name] !== undefined}
-										<GameCard {game} />
-									{/if}
-								{/each}
-							{/if}
+							{#each aukus2Games as game (game.id)}
+								{#if $playersBySlug[game.player_name] !== undefined}
+									<GameCard {game} />
+								{/if}
+							{/each}
 						{/if}
-						{#if !(selectedEvent && selectedEvent !== 'aukus1')}
+
+						{#if aukus1Games.length !== 0}
 							<div class="flex justify-center">
 								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
 									Аукус 1
 								</Button>
 							</div>
-							{#if aukus1Games.length === 0}
-								<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-							{:else}
-								{#each aukus1Games as game (game.id)}
-									{#if $playersBySlug[game.player_name] !== undefined}
-										<GameCard {game} />
-									{/if}
-								{/each}
-							{/if}
+							{#each aukus1Games as game (game.id)}
+								{#if $playersBySlug[game.player_name] !== undefined}
+									<GameCard {game} />
+								{/if}
+							{/each}
 						{/if}
 
 						{#if $hasMore}
