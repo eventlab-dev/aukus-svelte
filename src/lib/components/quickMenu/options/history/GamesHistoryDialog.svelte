@@ -35,7 +35,7 @@
 	const aukus2Games = $derived($gamesHistoryByEvent['aukus2'] ?? [])
 	const aukus1Games = $derived($gamesHistoryByEvent['aukus1'] ?? [])
 
-	const { queryParams: aukus4QueryParams, playerMoves, movesQuery } = playersMovesStore
+	const { queryParams: aukus4QueryParams, playerMoves } = playersMovesStore
 
 	let timer: number = 0
 	const debounceSearch = (v: string) => {
@@ -173,6 +173,7 @@
 				type="text"
 				placeholder="Поиск по названию (3+ символов)"
 				class="mb-4 w-full rounded-[4px] bg-muted"
+				value={$searchParams?.title_search ?? ''}
 				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 			/>
 		</div>
