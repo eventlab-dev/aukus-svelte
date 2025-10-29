@@ -10,9 +10,15 @@
 	import { gameLengthRanges } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
-	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
+	import {
+		formatDateTime,
+		formatMs,
+		getMoveTypeStyles,
+		playerMoveToCommonGame,
+		renderToHTML
+	} from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
-	import PopoverMoveCard from './PopoverMoveCard.svelte'
+	import PopoverGameCard from './PopoverGameCard.svelte'
 
 	type Props = {
 		move: PlayerMoveItem
@@ -27,7 +33,7 @@
 	const { myUser } = usersStore
 
 	const otherMovesForSameGame = $derived(
-		$otherPlayersMoves.filter((m) => m.game_id === move.game_id)
+		$otherPlayersMoves.filter((m) => m.item_title === move.item_title)
 	)
 
 	const player = $derived($playersBySlug[move.player_slug])
@@ -195,7 +201,7 @@
 		</Toggle>
 		<div>
 			{#each otherMovesForSameGame as move (move.id)}
-				<PopoverMoveCard {move} eventName="Аукус 4" />
+				<PopoverGameCard game={playerMoveToCommonGame(move)} />
 			{/each}
 		</div>
 	</div>

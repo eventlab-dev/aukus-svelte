@@ -1,12 +1,13 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { LastMapPosition, transliterationMap } from './constants'
+import { DifficultyTitle, LastMapPosition, transliterationMap } from './constants'
 import type { BadgeVariant } from './components/ui/badge'
 import { renderToHTMLString } from '@tiptap/static-renderer'
 import { initExtensions } from './tiptapExtensions/enabledExtensions'
 import dompurify from 'dompurify'
-import type { PlayerMoveType, PlayerStatsItem } from './heyapi/aukus/types.gen'
+import type { PlayerMoveItem, PlayerMoveType, PlayerStatsItem } from './heyapi/aukus/types.gen'
 import type { JSONContent } from '@tiptap/core'
+import type { CommonGameItem } from './types'
 
 const enabledExtensions = initExtensions()
 
@@ -258,4 +259,22 @@ export function formatDuration(timestamp: number, params: { includeSeconds?: boo
 		return `${hours}ч ${minutes}м`
 	}
 	return `${hours}ч ${minutes}м ${seconds}с`
+}
+
+export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {
+	return {
+		id: move.id,
+		player_name: move.player_slug,
+		event_name: 'aukus4',
+		game_title: move.item_title,
+		completion_status: move.type,
+		timestamp: move.created_at,
+		difficulty: DifficultyTitle[move.difficulty_level],
+		review: move.item_review,
+		rating: `${move.item_rating}/10`,
+		game_id: move.game_id,
+		game_time: move.item_duration,
+		game_cover: move.cover_image_url ?? '',
+		game_link: ''
+	}
 }

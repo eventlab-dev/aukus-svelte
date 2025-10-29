@@ -2,23 +2,22 @@
 	import { Badge } from '$lib/components/ui/badge'
 	import { buttonVariants } from '$lib/components/ui/button'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
-	import { gameLengthRanges } from '$lib/constants'
+	import { EventTitles } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import type { CommonGameItem } from '$lib/types'
 	import { formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 
 	type Props = {
-		move: PlayerMoveItem
-		eventName: string
+		game: CommonGameItem
 	}
 
-	const { move, eventName }: Props = $props()
+	const { game }: Props = $props()
 
 	const { playersBySlug } = getAppManagerContext()
 
-	const parsedReview = $derived(renderToHTML(move.item_review || ''))
-	const player = $derived($playersBySlug[move.player_slug])
-	const moveTypeStyles = $derived(getMoveTypeStyles(move.type))
+	const parsedReview = $derived(renderToHTML(game.review || ''))
+	const player = $derived($playersBySlug[game.player_name])
+	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
 
 	let open = $state(false)
 
@@ -50,22 +49,19 @@
 		onmouseenter={handleMouseEnter}
 		onmouseleave={handleMouseLeave}
 	>
-		<div class="font-bold">{move.item_title}</div>
+		<div class="font-bold">{game.game_title}</div>
 		<div class="text-sm leading-[18px] font-medium text-muted-foreground">
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			{@html parsedReview}
 		</div>
 		<div class="flex gap-1.5">
-			<Badge variant="blue">{eventName}</Badge>
+			<Badge variant="blue">{EventTitles[game.event_name]}</Badge>
 			<Badge variant={moveTypeStyles.variant}>
 				{moveTypeStyles.text}
 			</Badge>
-			{#if move.item_length}
-				<Badge variant="secondary">{gameLengthRanges[move.item_length]} HLTB</Badge>
-			{/if}
-			<Badge variant="secondary" class="w-full shrink py-0"
-				>Играл {formatDuration(move.item_duration)}</Badge
-			>
+			<Badge variant="secondary" class="w-full shrink py-0">
+				Играл {formatDuration(game.game_time)}
+			</Badge>
 		</div>
 	</PopoverContent>
 </Popover>
