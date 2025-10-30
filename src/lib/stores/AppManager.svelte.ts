@@ -12,6 +12,7 @@ import { createNotificationStore } from './NotificationStore.svelte'
 import type { PlayerStatsItem } from '$lib/heyapi/aukus/types.gen'
 import { getPlayerScore } from '$lib/utils'
 import { createCanvasStore } from './CanvasStore.svelte'
+import { createGamesMatchesStore } from './GamesMatchesStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -19,6 +20,7 @@ export function createAppManager() {
 	const playersMovesStore = createPlayerMovesStore()
 	const statsStore = createStatsStore()
 	const gamesHistoryStore = createGamesHistoryStore({ eventDataStore })
+	const gamesMatchesStore = createGamesMatchesStore({ eventDataStore })
 
 	const frontendState = writable<TurnState>(null)
 
@@ -148,7 +150,8 @@ export function createAppManager() {
 		eventFinished,
 		playersInOrder,
 		playersCompletedMap,
-		canvasStore
+		canvasStore,
+		gamesMatchesStore
 	}
 }
 

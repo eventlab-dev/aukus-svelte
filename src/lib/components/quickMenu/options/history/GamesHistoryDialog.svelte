@@ -20,22 +20,34 @@
 	import type { CommonGameItem } from '$lib/types'
 	import { playerMoveToCommonGame } from '$lib/utils'
 
-	const { gamesHistoryStore, players, playersBySlug, playersMovesStore } = getAppManagerContext()
-	const {
-		gamesHistoryByEvent,
-		searchParams,
-		historyQuery,
-		hasMore,
-		loadMore,
-		gamesMatchParams,
-		gamesMatched
-	} = gamesHistoryStore
+	const { gamesHistoryStore, players, playersBySlug, playersMovesStore, gamesMatchesStore } =
+		getAppManagerContext()
+	const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
+	const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
 	const aukus3Games = $derived($gamesHistoryByEvent['aukus3'] ?? [])
 	const aukus2Games = $derived($gamesHistoryByEvent['aukus2'] ?? [])
 	const aukus1Games = $derived($gamesHistoryByEvent['aukus1'] ?? [])
 
 	const { queryParams: aukus4QueryParams, playerMoves } = playersMovesStore
+
+	$effect(() => {
+		const allTitles = new Set<string>(
+			[...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games].map(
+				(game) => game.game_title
+			)
+		)
+
+		const historyIds: number[] = [...aukus3Games, ...aukus2Games, ...aukus1Games].map(
+			(game) => game.id
+		)
+		const movesIds: number[] = $playerMoves.map((move) => move.id)
+		gamesMatchParams.set({
+			exclude_ids_history: historyIds,
+			exclude_ids_moves: movesIds,
+			titles: [...allTitles]
+		})
+	})
 
 	let timer: number = 0
 	const debounceSearch = (v: string) => {
@@ -77,11 +89,13 @@
 		}
 	}
 
-	const aukus4Games = $derived.by<CommonGameItem[]>(() => {
+	const aukus4Games = $derived($playerMoves.map(playerMoveToCommonGame))
+
+	const aukus4GamesDisplay = $derived.by<CommonGameItem[]>(() => {
 		if (selectedEvent !== 'aukus4' && selectedEvent !== null) {
 			return []
 		}
-		return $playerMoves.map(playerMoveToCommonGame)
+		return aukus4Games
 	})
 
 	$effect(() => {
@@ -90,10 +104,15 @@
 				.map((game) => game.game_title)
 				.slice(0, 50)
 		)
-		const gamesIds = [...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
+		const gamesIdsHistory = [...aukus3Games, ...aukus2Games, ...aukus1Games]
 			.map((game) => game.id)
 			.slice(0, 50)
-		gamesMatchParams.set({ titles: [...gamesTitles], exclude_ids: gamesIds })
+		const gamesIdsMoves = aukus4Games.map((game) => game.id).slice(0, 50)
+		gamesMatchParams.set({
+			titles: [...gamesTitles],
+			exclude_ids_moves: gamesIdsMoves,
+			exclude_ids_history: gamesIdsHistory
+		})
 	})
 
 	const isLoading = $derived($historyQuery.isFetching)
@@ -107,9 +126,17 @@
 			aukus1Games.length === 0 &&
 			aukus2Games.length === 0 &&
 			aukus3Games.length === 0 &&
-			aukus4Games.length === 0
+			aukus4GamesDisplay.length === 0
 		)
 	})
+
+	const gameMatchedMergedWithOthers = $derived([
+		...aukus4Games,
+		...aukus3Games,
+		...aukus2Games,
+		...aukus1Games,
+		...$gamesMatched
+	])
 
 	function openLink(event: 'aukus1' | 'aukus2' | 'aukus3') {
 		let url = ''
@@ -189,11 +216,11 @@
 							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
 						{/if}
 
-						{#if aukus4Games.length !== 0}
+						{#if aukus4GamesDisplay.length !== 0}
 							<div class="p-0 text-center text-3xl">Аукус 4</div>
-							{#each aukus4Games as game (game.id)}
+							{#each aukus4GamesDisplay as game (game.id)}
 								{#if $playersBySlug[game.player_name] !== undefined}
-									{@const matches = $gamesMatched.filter(
+									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
 									<GameCard {game} matchedGames={matches} />
@@ -209,7 +236,7 @@
 							</div>
 							{#each aukus3Games as game (game.id)}
 								{#if $playersBySlug[game.player_name] !== undefined}
-									{@const matches = $gamesMatched.filter(
+									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
 									<GameCard {game} matchedGames={matches} />
@@ -225,7 +252,7 @@
 							</div>
 							{#each aukus2Games as game (game.id)}
 								{#if $playersBySlug[game.player_name] !== undefined}
-									{@const matches = $gamesMatched.filter(
+									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
 									<GameCard {game} matchedGames={matches} />
@@ -241,7 +268,7 @@
 							</div>
 							{#each aukus1Games as game (game.id)}
 								{#if $playersBySlug[game.player_name] !== undefined}
-									{@const matches = $gamesMatched.filter(
+									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
 									<GameCard {game} matchedGames={matches} />

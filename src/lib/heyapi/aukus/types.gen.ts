@@ -395,10 +395,6 @@ export type PlayerMovesResponse = {
      */
     moves: Array<PlayerMoveItem>;
     /**
-     * Other Players
-     */
-    other_players: Array<PlayerMoveItem>;
-    /**
      * Next Ts
      */
     next_ts: number | null;
@@ -801,17 +797,25 @@ export type GetPlayerMovesApiPlayersMovesGetData = {
     path?: never;
     query?: {
         /**
-         * Player Slug
+         * Players
          */
-        player_slug?: string | null;
+        players?: Array<string>;
         /**
          * Start Ts
          */
         start_ts?: number | null;
         /**
-         * Search
+         * Search Title
          */
-        search?: string | null;
+        search_title?: string | null;
+        /**
+         * Titles
+         */
+        titles?: Array<string>;
+        /**
+         * Exclude Ids
+         */
+        exclude_ids?: Array<number>;
     };
     url: '/api/players/moves';
 };

@@ -10,10 +10,6 @@ import { derived, get, writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
 
 type QueryParams = GetGamesApiGamesHistoryGetData['query']
-type MatchParams = {
-	exclude_ids: number[]
-	titles: string[]
-}
 
 export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
 	const searchIdFrom = writable<number | null>(null)
@@ -89,47 +85,11 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 		}
 	}
 
-	const gamesMatchParams = writable<MatchParams>({
-		exclude_ids: [],
-		titles: []
-	})
-	const gamesMatchQuery = createQuery(
-		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
-			const params = getGamesApiGamesHistoryGetOptions({
-				baseUrl: EventlabBaseUrl,
-				query: {
-					...$gamesMatchParams,
-					start_id: null,
-					players: $fullPlayersList,
-					events: ['aukus1', 'aukus2', 'aukus3']
-				}
-			})
-			params['enabled'] = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
-			return params
-		})
-	)
-
-	const gamesMatched = derived(
-		[gamesMatchQuery, allLoadedGames],
-		([$gamesFilteredQuery, $allLoadedGames]) => {
-			// merge two lists, avoiding duplicates
-			const mergedGames: GameHistoryItem[] = [...$allLoadedGames]
-			$gamesFilteredQuery.data?.games.forEach((game) => {
-				if (!mergedGames.some((g) => g.id === game.id)) {
-					mergedGames.push(game)
-				}
-			})
-			return mergedGames
-		}
-	)
-
 	return {
 		searchParams,
 		historyQuery,
 		gamesHistoryByEvent,
 		hasMore,
-		loadMore,
-		gamesMatchParams,
-		gamesMatched
+		loadMore
 	}
 }

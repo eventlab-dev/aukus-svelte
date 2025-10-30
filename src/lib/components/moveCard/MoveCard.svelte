@@ -10,31 +10,22 @@
 	import { gameLengthRanges } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
-	import {
-		formatDateTime,
-		formatMs,
-		getMoveTypeStyles,
-		playerMoveToCommonGame,
-		renderToHTML
-	} from '$lib/utils'
+	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
 	import PopoverGameCard from './PopoverGameCard.svelte'
+	import type { CommonGameItem } from '$lib/types'
 
 	type Props = {
 		move: PlayerMoveItem
 		isCurrentMove?: boolean
 		withUsername?: boolean
+		matchedGames: CommonGameItem[]
 	}
 
-	const { move, isCurrentMove = false, withUsername = false }: Props = $props()
+	const { move, isCurrentMove = false, withUsername = false, matchedGames }: Props = $props()
 
-	const { playersMovesStore, playersBySlug, myPlayer, usersStore } = getAppManagerContext()
-	const { otherPlayersMoves } = playersMovesStore
+	const { playersBySlug, myPlayer, usersStore } = getAppManagerContext()
 	const { myUser } = usersStore
-
-	const otherMovesForSameGame = $derived(
-		$otherPlayersMoves.filter((m) => m.item_title === move.item_title)
-	)
 
 	const player = $derived($playersBySlug[move.player_slug])
 	const canEdit = $derived.by(() => {
@@ -200,8 +191,8 @@
 			Записи
 		</Toggle>
 		<div>
-			{#each otherMovesForSameGame as move (move.id)}
-				<PopoverGameCard game={playerMoveToCommonGame(move)} />
+			{#each matchedGames as game (game.id)}
+				<PopoverGameCard {game} />
 			{/each}
 		</div>
 	</div>

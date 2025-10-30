@@ -12,14 +12,26 @@
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
 
-	const { playersMovesStore, playersBySlug, canvasStore } = getAppManagerContext()
+	const { playersMovesStore, playersBySlug, canvasStore, gamesMatchesStore } =
+		getAppManagerContext()
 	const { playerMoves, queryParams: movesQueryParams } = playersMovesStore
 	const { playerSlug: canvasPlayerSlug, editMode } = canvasStore
+	const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
 	$effect(() => {
 		if (!page.params.player) return
-		movesQueryParams.set({ player_slug: page.params.player, start_ts: null })
+		movesQueryParams.set({ players: [page.params.player], start_ts: null })
 		canvasPlayerSlug.set(page.params.player)
+	})
+
+	$effect(() => {
+		if ($playerMoves.length > 0) {
+			gamesMatchParams.set({
+				titles: $playerMoves.map((move) => move.item_title),
+				exclude_ids_moves: $playerMoves.map((move) => move.game_id).filter(Boolean) as number[],
+				exclude_ids_history: []
+			})
+		}
 	})
 
 	const player = $derived($playersBySlug[page.params.player!])
@@ -134,7 +146,10 @@
 					/>
 				{/if} -->
 						{#each filteredMoves as move (move.id)}
-							<MoveCard {move} />
+							{@const matchedGames = $gamesMatched.filter(
+								(game) => game.game_title === move.item_title
+							)}
+							<MoveCard {move} {matchedGames} />
 						{/each}
 					</div>
 

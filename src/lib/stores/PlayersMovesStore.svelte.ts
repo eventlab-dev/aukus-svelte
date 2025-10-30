@@ -8,9 +8,9 @@ type QueryParams = GetPlayerMovesApiPlayersMovesGetData['query']
 
 export function createPlayerMovesStore() {
 	const queryParams = writable<QueryParams>({
-		player_slug: null,
+		players: [],
 		start_ts: null,
-		search: null
+		search_title: null
 	})
 
 	const movesQuery = createQuery(
@@ -25,15 +25,10 @@ export function createPlayerMovesStore() {
 	)
 
 	const playerMoves = derived(movesQuery, ($movesQuery) => $movesQuery.data?.moves ?? [])
-	const otherPlayersMoves = derived(
-		movesQuery,
-		($movesQuery) => $movesQuery.data?.other_players ?? []
-	)
 
 	return {
 		queryParams,
 		movesQuery,
-		playerMoves,
-		otherPlayersMoves
+		playerMoves
 	}
 }
