@@ -31,23 +31,10 @@
 
 	const { queryParams: aukus4QueryParams, playerMoves } = playersMovesStore
 
-	$effect(() => {
-		const allTitles = new Set<string>(
-			[...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games].map(
-				(game) => game.game_title
-			)
-		)
+	const aukus4Games = $derived($playerMoves.map(playerMoveToCommonGame))
 
-		const historyIds: number[] = [...aukus3Games, ...aukus2Games, ...aukus1Games].map(
-			(game) => game.id
-		)
-		const movesIds: number[] = $playerMoves.map((move) => move.id)
-		gamesMatchParams.set({
-			exclude_ids_history: historyIds,
-			exclude_ids_moves: movesIds,
-			titles: [...allTitles]
-		})
-	})
+	// $inspect(gamesHistoryByEvent, 'gamesHistoryByEvent in GamesHistoryDialog')
+	// $inspect(aukus4Games, 'aukus4Games in GamesHistoryDialog')
 
 	let timer: number = 0
 	const debounceSearch = (v: string) => {
@@ -88,8 +75,6 @@
 			searchParams.update((p) => ({ ...p, events: [event] }))
 		}
 	}
-
-	const aukus4Games = $derived($playerMoves.map(playerMoveToCommonGame))
 
 	const aukus4GamesDisplay = $derived.by<CommonGameItem[]>(() => {
 		if (selectedEvent !== 'aukus4' && selectedEvent !== null) {

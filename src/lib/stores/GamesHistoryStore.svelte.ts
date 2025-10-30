@@ -22,6 +22,8 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 		title_search: null
 	})
 
+	const resetLoadedGames = writable(false)
+
 	const historyQuery = createQuery(
 		derived(
 			[searchParams, searchIdFrom, fullPlayersList],
@@ -42,10 +44,15 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 	)
 
 	const allLoadedGames = writable<GameHistoryItem[]>([])
+
 	historyQuery.subscribe(($historyQuery) => {
 		if ($historyQuery.data?.games) {
 			allLoadedGames.update((current) => {
-				const newGames = $historyQuery.data!.games.filter(
+				if (get(resetLoadedGames)) {
+					resetLoadedGames.set(false)
+					return $historyQuery.data.games
+				}
+				const newGames = $historyQuery.data.games.filter(
 					(newGame) => !current.some((existingGame) => existingGame.id === newGame.id)
 				)
 				return [...current, ...newGames]
@@ -54,8 +61,7 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 	})
 
 	searchParams.subscribe(() => {
-		allLoadedGames.set([])
-		searchIdFrom.set(null)
+		resetLoadedGames.set(true)
 	})
 
 	const gamesHistoryByEvent = derived(allLoadedGames, ($allLoadedGames) => {
