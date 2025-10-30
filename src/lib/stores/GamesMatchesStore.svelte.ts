@@ -32,7 +32,8 @@ export function createGamesMatchesStore({ eventDataStore }: { eventDataStore: Ev
 					events: ['aukus1', 'aukus2', 'aukus3']
 				}
 			})
-			params['enabled'] = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
+			params.enabled = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
+			params.refetchOnWindowFocus = false
 			return params
 		})
 	)
@@ -48,7 +49,8 @@ export function createGamesMatchesStore({ eventDataStore }: { eventDataStore: Ev
 					players: $fullPlayersList
 				}
 			})
-			params['enabled'] = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
+			params.enabled = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
+			params.refetchOnWindowFocus = false
 			return params
 		})
 	)

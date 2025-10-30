@@ -38,6 +38,7 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 				})
 				// params.placeholderData = (data) => data
 				params.enabled = playersFilter.length > 0
+				params.refetchOnWindowFocus = false
 				return params
 			}
 		)
