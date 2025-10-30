@@ -97,7 +97,12 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
 			const params = getGamesApiGamesHistoryGetOptions({
 				baseUrl: EventlabBaseUrl,
-				query: { ...$gamesMatchParams, start_id: null, players: $fullPlayersList }
+				query: {
+					...$gamesMatchParams,
+					start_id: null,
+					players: $fullPlayersList,
+					events: ['aukus1', 'aukus2', 'aukus3']
+				}
 			})
 			params['enabled'] = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
 			return params
