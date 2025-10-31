@@ -21,18 +21,18 @@ export function createGamesMatchesStore({ eventDataStore }: { eventDataStore: Ev
 		titles: []
 	})
 	const historyMatchQuery = createQuery(
-		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
+		derived([gamesMatchParams], ([$gamesMatchParams]) => {
 			const params = getGamesApiGamesHistoryGetOptions({
 				baseUrl: EventlabBaseUrl,
 				query: {
 					titles: $gamesMatchParams.titles,
 					exclude_ids: $gamesMatchParams.exclude_ids_history,
-					start_id: null,
-					players: $fullPlayersList,
-					events: ['aukus1', 'aukus2', 'aukus3']
+					start_id: null
+					// players: $fullPlayersList
+					// events: ['aukus1', 'aukus2', 'aukus3']
 				}
 			})
-			params.enabled = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
+			params.enabled = $gamesMatchParams.titles.length > 0
 			params.refetchOnWindowFocus = false
 			return params
 		})

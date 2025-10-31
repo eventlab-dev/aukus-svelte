@@ -16,7 +16,7 @@
 	const { playersBySlug } = getAppManagerContext()
 
 	const parsedReview = $derived(renderToHTML(game.review || ''))
-	const player = $derived($playersBySlug[game.player_name])
+	const playerName = $derived($playersBySlug[game.player_name]?.username ?? game.player_name)
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
 
 	let open = $state(false)
@@ -42,7 +42,7 @@
 		onmouseleave={handleMouseLeave}
 		class={[buttonVariants({ variant: 'secondary', size: 'sm' }), 'data-[state=open]:bg-primary']}
 	>
-		{player.username}
+		{playerName}
 	</PopoverTrigger>
 	<PopoverContent
 		class="w-[375px] space-y-3"
