@@ -180,20 +180,27 @@
 	</div>
 
 	<div class="mt-3 flex justify-between" transition:slide>
-		<Toggle
-			size="sm"
-			class="w-[105px]"
-			bind:pressed={isVodsShown}
-			style={isVodsShown
-				? 'background-color: var(--primary); color: var(--primary-foreground);'
-				: 'background-color: var(--secondary); color: var(--secondary-foreground);'}
-		>
-			Записи
-		</Toggle>
-		<div>
-			{#each matchedGames as game (game.id)}
-				<PopoverGameCard {game} />
-			{/each}
-		</div>
+		{#if vodLinks.trim().length > 0}
+			<Toggle
+				size="sm"
+				class="w-[105px]"
+				bind:pressed={isVodsShown}
+				style={isVodsShown
+					? 'background-color: var(--primary); color: var(--primary-foreground);'
+					: 'background-color: var(--secondary); color: var(--secondary-foreground);'}
+			>
+				Записи
+			</Toggle>
+		{/if}
+		{#if matchedGames.length > 0}
+			<div class="mt-3 flex w-full items-center justify-end gap-3" transition:slide>
+				Также играли:
+				<div>
+					{#each matchedGames as game (game.id)}
+						<PopoverGameCard {game} />
+					{/each}
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>
