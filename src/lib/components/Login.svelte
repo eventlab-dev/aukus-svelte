@@ -18,7 +18,7 @@
 	}
 </script>
 
-<div class="w-[390px] space-y-[50px] rounded-xl bg-card p-3">
+<div class="flex w-full flex-col gap-5 rounded-xl bg-card p-3">
 	<div class="mx-auto w-fit space-y-2">
 		<Profile2Icon class="mx-auto" />
 		<div class="text-xl leading-6 font-bold">Войти в аккаунт</div>

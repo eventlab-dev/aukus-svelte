@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import storable from '$lib/stores/LocalStore.svelte'
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
@@ -13,6 +12,7 @@
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import { Button } from '../ui/button'
 	import GamesHistoryDialog from './options/history/GamesHistoryDialog.svelte'
+	import LoginDialog from './options/LoginDialog.svelte'
 	import PunishmentCalculator from './options/PunishmentCalculator.svelte'
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
@@ -49,10 +49,6 @@
 	// 	isTimelapseShown = true
 	// 	collapsed.value = true
 	// }
-
-	function openLogin() {
-		goto('/login')
-	}
 </script>
 
 {#key $myUser?.slug}
@@ -96,7 +92,7 @@
 				</CollapsibleGroup>
 			{:else}
 				<CollapsibleGroup>
-					<Button onclick={openLogin}><ProfileIcon />Логин</Button>
+					<LoginDialog />
 				</CollapsibleGroup>
 			{/if}
 		</CollapsibleContent>
