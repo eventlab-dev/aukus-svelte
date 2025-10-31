@@ -80,7 +80,7 @@
 		<div class="mt-3 flex items-center justify-end gap-3" transition:slide>
 			Также играли:
 			<div>
-				{#each matchedGames as game (`${game.id}-${game.event_name}`)}
+				{#each matchedGames as game (`${game.event_name}-${game.id}`)}
 					<PopoverGameCard {game} />
 				{/each}
 			</div>

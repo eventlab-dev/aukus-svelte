@@ -18,7 +18,7 @@
 	import { EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
 	import type { CommonGameItem } from '$lib/types'
-	import { playerMoveToCommonGame } from '$lib/utils'
+	import { playerMoveToCommonGame, uniqBy } from '$lib/utils'
 
 	const { gamesHistoryStore, players, playersBySlug, playersMovesStore, gamesMatchesStore } =
 		getAppManagerContext()
@@ -115,13 +115,12 @@
 		)
 	})
 
-	const gameMatchedMergedWithOthers = $derived([
-		...aukus4Games,
-		...aukus3Games,
-		...aukus2Games,
-		...aukus1Games,
-		...$gamesMatched
-	])
+	const gameMatchedMergedWithOthers = $derived.by(() => {
+		return uniqBy(
+			[...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games, ...$gamesMatched],
+			(g) => `${g.event_name}-${g.id}`
+		)
+	})
 
 	function openLink(event: 'aukus1' | 'aukus2' | 'aukus3') {
 		let url = ''

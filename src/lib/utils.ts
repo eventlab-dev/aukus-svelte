@@ -170,6 +170,10 @@ export function debounce<T extends (...args: any[]) => any>(
 	}
 }
 
+function safeText(text: string) {
+	return text?.normalize('NFC') ?? ''
+}
+
 export function renderToHTML(content: string) {
 	if (!content) return ''
 
@@ -182,7 +186,19 @@ export function renderToHTML(content: string) {
 			content: [
 				{
 					type: 'paragraph',
-					content: [{ type: 'text', text: content }]
+					content: [{ type: 'text', text: safeText(content) }]
+				}
+			]
+		}
+	}
+
+	if (typeof parsed === 'string') {
+		parsed = {
+			type: 'doc',
+			content: [
+				{
+					type: 'paragraph',
+					content: [{ type: 'text', text: safeText(content) }]
 				}
 			]
 		}
@@ -277,4 +293,14 @@ export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {
 		game_cover: move.cover_image_url ?? '',
 		game_link: ''
 	}
+}
+
+export function uniqBy<T, K>(arr: T[], fn: (item: T) => K): T[] {
+	const seen = new Set<K>()
+	return arr.filter((item) => {
+		const key = fn(item)
+		if (seen.has(key)) return false
+		seen.add(key)
+		return true
+	})
 }
