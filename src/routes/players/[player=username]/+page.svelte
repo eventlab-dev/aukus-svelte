@@ -6,8 +6,6 @@
 	import MoveCard from '../../../lib/components/moveCard/MoveCard.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { page } from '$app/state'
-	import SearchIcon from '$lib/components/icons/SearchIcon.svelte'
-	import { Input } from '$lib/components/ui/input'
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
@@ -45,18 +43,6 @@
 		vkLiveLink: player.vk_stream_link || '',
 		kickLink: player.kick_stream_link || ''
 	})
-
-	let filterValue = $state('')
-
-	const filteredMoves = $derived(
-		$playerMoves.filter((move) => {
-			const filterText = filterValue.toLowerCase()
-			return (
-				move.item_title.toLowerCase().includes(filterText) ||
-				(move.item_review && move.item_review.toLowerCase().includes(filterText))
-			)
-		})
-	)
 
 	let contentContainer = $state<HTMLDivElement | null>(null)
 	let contentCenter = $state(0)
@@ -119,19 +105,6 @@
 					/>
 				</div>
 
-				<div class="relative w-full">
-					<SearchIcon
-						class="absolute top-1/2 left-3 size-[19px] -translate-y-1/2 text-muted-foreground"
-					/>
-					<Input
-						id="moves-search"
-						class="w-full pl-[43px]"
-						type="text"
-						placeholder="Поиск среди игр всех аукусов"
-						bind:value={filterValue}
-					/>
-				</div>
-
 				<div class="mt-5 space-y-[200px]">
 					<div class="space-y-5">
 						<!-- {#if $player.current_game}
@@ -145,7 +118,7 @@
 						isCurrentMove
 					/>
 				{/if} -->
-						{#each filteredMoves as move (move.id)}
+						{#each $playerMoves as move (move.id)}
 							{@const matchedGames = $gamesMatched.filter(
 								(game) => game.game_title === move.item_title
 							)}
