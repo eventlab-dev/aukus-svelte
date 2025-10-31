@@ -13,7 +13,7 @@
 	const { playersMovesStore, playersBySlug, canvasStore, gamesMatchesStore } =
 		getAppManagerContext()
 	const { playerMoves, queryParams: movesQueryParams } = playersMovesStore
-	const { playerSlug: canvasPlayerSlug, editMode } = canvasStore
+	const { playerSlug: canvasPlayerSlug, editMode, canvasWidth } = canvasStore
 	const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
 	$effect(() => {
@@ -48,24 +48,35 @@
 	let contentCenter = $state(0)
 	let contentHeight = $state(0)
 
+	function handleResize() {
+		if (contentContainer) {
+			const contentSize = Math.max($canvasWidth, contentContainer.clientWidth)
+			contentCenter = contentSize / 2
+
+			const left = (contentSize - window.innerWidth) / 2
+			document.getElementById('canvas-container')?.scrollTo({ left, behavior: 'instant' })
+
+			contentHeight = contentContainer.clientHeight
+		}
+	}
+
 	$effect(() => {
 		if (contentContainer) {
 			const observer = new ResizeObserver(() => {
-				if (contentContainer) {
-					contentCenter = contentContainer.clientWidth / 2
-					contentHeight = contentContainer.clientHeight
-				}
+				handleResize()
 			})
-
 			observer.observe(contentContainer)
-
 			// Initial measure
-			contentCenter = contentContainer.clientWidth / 2
-			contentHeight = contentContainer.clientHeight
-
+			handleResize()
 			return () => observer.disconnect()
 		}
 	})
+
+	// $inspect('StaticCanvas', $displayImages)
+	// $inspect('StaticCanvas width', canvasWidth)
+	// $inspect('content center', contentCenter)
+
+	const widthStyle = $derived($canvasWidth > 0 ? `width: ${$canvasWidth}px;` : '')
 </script>
 
 <svelte:head>
@@ -75,15 +86,22 @@
 </svelte:head>
 
 {#if player}
-	<div class="relative min-h-screen">
-		<EditPanel playerSlug={player.slug} />
-		{#if $editMode}
-			<Canvas {contentCenter} {contentHeight} />
-		{:else}
-			<StaticCanvas {contentCenter} />
-		{/if}
-		<div class="relative pt-20" bind:this={contentContainer}>
-			<div class="mx-auto flex w-fit flex-col items-center" in:fade>
+	<div
+		class="relative min-h-screen overflow-x-auto"
+		id="canvas-container"
+		bind:this={contentContainer}
+	>
+		<div class="mx-auto" style={widthStyle}>
+			<EditPanel playerSlug={player.slug} />
+			{#if $editMode}
+				<Canvas {contentCenter} {contentHeight} />
+			{:else}
+				<StaticCanvas {contentCenter} />
+			{/if}
+			<div
+				class="relative mx-auto flex w-full flex-col items-center justify-center overflow-auto pt-20"
+				in:fade
+			>
 				<PlayerAvatar
 					src={player.avatar_link ?? ''}
 					name={player.username}

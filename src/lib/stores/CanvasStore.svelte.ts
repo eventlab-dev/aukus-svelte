@@ -108,6 +108,24 @@ export function createCanvasStore() {
 		})
 	}
 
+	const canvasWidth = derived(displayImages, ($displayImages) => {
+		let maxLeftX = 0
+		let maxRightX = 0
+		for (const img of $displayImages) {
+			if (img.x < 0) {
+				if (-img.x > maxLeftX) {
+					maxLeftX = -img.x
+				}
+			} else {
+				const rightX = img.x + img.width
+				if (rightX > maxRightX) {
+					maxRightX = rightX
+				}
+			}
+		}
+		return Math.max(maxLeftX, maxRightX) * 2
+	})
+
 	return {
 		playerSlug,
 		canvasQuery,
@@ -121,6 +139,7 @@ export function createCanvasStore() {
 		deleteImage,
 		updateCanvasMutation,
 		saveCanvasChanges,
-		discardCanvasChanges
+		discardCanvasChanges,
+		canvasWidth
 	}
 }
