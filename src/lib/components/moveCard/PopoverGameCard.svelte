@@ -13,10 +13,11 @@
 
 	const { game }: Props = $props()
 
-	const { playersBySlug } = getAppManagerContext()
+	const { usersStore } = getAppManagerContext()
+	const { usersBySlug } = usersStore
 
 	const parsedReview = $derived(renderToHTML(game.review || ''))
-	const playerName = $derived($playersBySlug[game.player_name]?.username ?? game.player_name)
+	const playerName = $derived($usersBySlug.get(game.player_name)?.username ?? game.player_name)
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
 
 	let open = $state(false)
