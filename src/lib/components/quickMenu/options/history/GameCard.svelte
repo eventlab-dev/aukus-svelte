@@ -7,7 +7,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { CommonGameItem } from '$lib/types'
 	import { formatDateTime, formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
-	import { fade, slide } from 'svelte/transition'
+	import { fade } from 'svelte/transition'
 
 	type Props = {
 		game: CommonGameItem
@@ -77,7 +77,7 @@
 	</div>
 
 	{#if matchedGames.length > 0}
-		<div class="mt-3 flex items-center justify-end gap-3" transition:slide>
+		<div class="mt-3 flex items-center justify-end gap-3">
 			Также играли:
 			<div>
 				{#each matchedGames as game (`${game.event_name}-${game.id}`)}
