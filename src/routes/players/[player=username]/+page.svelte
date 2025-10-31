@@ -86,13 +86,13 @@
 </svelte:head>
 
 {#if player}
+	<EditPanel playerSlug={player.slug} />
 	<div
 		class="relative min-h-screen overflow-x-auto"
 		id="canvas-container"
 		bind:this={contentContainer}
 	>
 		<div class="mx-auto" style={widthStyle}>
-			<EditPanel playerSlug={player.slug} />
 			{#if $editMode}
 				<Canvas {contentCenter} {contentHeight} />
 			{:else}
