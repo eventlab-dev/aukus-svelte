@@ -62,6 +62,12 @@
 	function getEditMode() {
 		return isEditMode
 	}
+
+	const difficultyText: { [key: number]: string } = {
+		'-1': 'На легком',
+		1: 'На сложном',
+		2: 'На очень сложном'
+	}
 </script>
 
 <div
@@ -104,29 +110,13 @@
 							{gameLengthRanges[move.item_length]} HLTB
 						</Badge>
 					{/if}
+					{#if move.difficulty_level !== 0}
+						<Badge variant="secondary">
+							{difficultyText[move.difficulty_level]}
+						</Badge>
+					{/if}
 				{/if}
 			</div>
-
-			{#if canEdit}
-				<Toggle
-					size="sm"
-					class="ml-1.5"
-					bind:pressed={getEditMode, setEditMode}
-					style={isCurrentMove
-						? 'background-color: var(--white); color: var(--white-foreground);'
-						: isEditMode
-							? 'background-color: var(--primary); color: var(--primary-foreground);'
-							: ''}
-				>
-					{#if isEditMode}
-						<TickCircleIcon />
-						Сохранить
-					{:else}
-						<EditIcon />
-						Изменить
-					{/if}
-				</Toggle>
-			{/if}
 		</div>
 		<div
 			class="absolute top-3 right-3 text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground"
@@ -183,13 +173,33 @@
 		{#if vodLinks.trim().length > 0}
 			<Toggle
 				size="sm"
-				class="w-[105px]"
+				class="mr-4 w-[105px]"
 				bind:pressed={isVodsShown}
 				style={isVodsShown
 					? 'background-color: var(--primary); color: var(--primary-foreground);'
 					: 'background-color: var(--secondary); color: var(--secondary-foreground);'}
 			>
 				Записи
+			</Toggle>
+		{/if}
+		{#if canEdit}
+			<Toggle
+				size="sm"
+				class="p-2"
+				bind:pressed={getEditMode, setEditMode}
+				style={isCurrentMove
+					? 'background-color: var(--white); color: var(--white-foreground);'
+					: isEditMode
+						? 'background-color: var(--primary); color: var(--primary-foreground);'
+						: ''}
+			>
+				{#if isEditMode}
+					<TickCircleIcon />
+					Сохранить
+				{:else}
+					<EditIcon />
+					Изменить
+				{/if}
 			</Toggle>
 		{/if}
 		{#if matchedGames.length > 0}
