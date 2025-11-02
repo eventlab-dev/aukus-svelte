@@ -17,12 +17,10 @@
 
 	type Props = {
 		move: PlayerMoveItem
-		isCurrentMove?: boolean
-		withUsername?: boolean
 		matchedGames: CommonGameItem[]
 	}
 
-	const { move, isCurrentMove = false, withUsername = false, matchedGames }: Props = $props()
+	const { move, matchedGames }: Props = $props()
 
 	const { playersBySlug, myPlayer, usersStore } = getAppManagerContext()
 	const { myUser } = usersStore
@@ -71,50 +69,40 @@
 </script>
 
 <div
-	class="group relative flex w-[800px] flex-col rounded-xl bg-card p-3 data-[current=true]:bg-primary data-[current=true]:selection:bg-foreground data-[current=true]:selection:text-primary"
-	data-current={isCurrentMove}
+	class="group relative flex w-[800px] flex-col rounded-xl bg-card p-3"
 	id={`move-card-${move.id}`}
 >
 	<div class="flex justify-between">
 		<div class="flex">
 			<div class="flex gap-1.5">
-				{#if withUsername && player}
-					<Badge variant="secondary" style="background-color: {player.color}">
-						{player.username}
+				<Badge variant={moveTypeStyles.variant}>
+					{moveTypeStyles.text}
+				</Badge>
+				<Badge variant="secondary">
+					Кубик: {move.dice_roll}
+				</Badge>
+				<Badge variant="secondary">
+					Ход {move.cell_from}
+					->
+					{move.cell_to}
+				</Badge>
+				<Tooltip>
+					<TooltipTrigger>
+						<Badge variant="secondary" class="h-full">
+							Играл {categoryDuration}
+						</Badge>
+					</TooltipTrigger>
+					<TooltipContent>Примерное время по категории стрима</TooltipContent>
+				</Tooltip>
+				{#if move.item_length}
+					<Badge variant="secondary">
+						{gameLengthRanges[move.item_length]} HLTB
 					</Badge>
 				{/if}
-				{#if isCurrentMove}
-					<Badge variant="white">Выпало на ауке</Badge>
-				{:else}
-					<Badge variant={withUsername ? 'secondary' : moveTypeStyles.variant}>
-						{moveTypeStyles.text}
-					</Badge>
+				{#if move.difficulty_level !== 0}
 					<Badge variant="secondary">
-						Кубик: {move.dice_roll}
+						{difficultyText[move.difficulty_level]}
 					</Badge>
-					<Badge variant="secondary">
-						Ход {move.cell_from}
-						->
-						{move.cell_to}
-					</Badge>
-					<Tooltip>
-						<TooltipTrigger>
-							<Badge variant="secondary" class="h-full">
-								Играл {categoryDuration}
-							</Badge>
-						</TooltipTrigger>
-						<TooltipContent>Примерное время по категории стрима</TooltipContent>
-					</Tooltip>
-					{#if move.item_length}
-						<Badge variant="secondary">
-							{gameLengthRanges[move.item_length]} HLTB
-						</Badge>
-					{/if}
-					{#if move.difficulty_level !== 0}
-						<Badge variant="secondary">
-							{difficultyText[move.difficulty_level]}
-						</Badge>
-					{/if}
 				{/if}
 			</div>
 		</div>
@@ -155,15 +143,11 @@
 						bind:value={vodLinks}
 					/>
 				</div>
-			{:else if !isCurrentMove}
+			{:else}
 				<div class="font-medium text-muted-foreground [&>*]:inline" in:fade>
 					<span>{move.item_rating}/10 — </span>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html parsedReview}
-				</div>
-			{:else}
-				<div class="font-medium" in:fade>
-					Время в игре — {categoryDuration}
 				</div>
 			{/if}
 		</div>
@@ -187,11 +171,9 @@
 				size="sm"
 				class="p-2"
 				bind:pressed={getEditMode, setEditMode}
-				style={isCurrentMove
-					? 'background-color: var(--white); color: var(--white-foreground);'
-					: isEditMode
-						? 'background-color: var(--primary); color: var(--primary-foreground);'
-						: ''}
+				style={isEditMode
+					? 'background-color: var(--primary); color: var(--primary-foreground);'
+					: ''}
 			>
 				{#if isEditMode}
 					<TickCircleIcon />

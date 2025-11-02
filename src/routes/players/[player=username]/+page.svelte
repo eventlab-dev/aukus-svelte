@@ -9,6 +9,7 @@
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
+	import CurrentGameCard from '$lib/components/moveCard/CurrentGameCard.svelte'
 
 	const { playersMovesStore, playersBySlug, canvasStore, gamesMatchesStore } =
 		getAppManagerContext()
@@ -125,17 +126,7 @@
 
 				<div class="mt-5 space-y-[200px]">
 					<div class="space-y-5">
-						<!-- {#if $player.current_game}
-					<MoveCard
-						move={{
-							item_title: player.current_game,
-							item_image: player.current_game_image || '',
-							stream_title_category_duration: player.current_game_duration || 0,
-							created_at: player.current_game_updated_at
-						}}
-						isCurrentMove
-					/>
-				{/if} -->
+						<CurrentGameCard playerSlug={player.slug} />
 						{#each $playerMoves as move (move.id)}
 							{@const matchedGames = $gamesMatched.filter(
 								(game) => game.game_title === move.item_title
@@ -143,28 +134,6 @@
 							<MoveCard {move} {matchedGames} />
 						{/each}
 					</div>
-
-					<!-- {#if aukus2FilteredGames?.length > 0}
-				<div class="flex flex-col items-center gap-5">
-					<Button href="" variant="link" class="mb-[50px] text-2xl font-semibold text-foreground">
-						Аукус Сезон 2 (2023)
-					</Button>
-					{#each aukus2FilteredGames as move}
-						<OldMoveCard {move} />
-					{/each}
-				</div>
-			{/if}
-
-			{#if aukus1FilteredGames?.length > 0}
-				<div class="flex flex-col items-center gap-5">
-					<Button href="" variant="link" class="mb-[50px] text-2xl font-semibold text-foreground">
-						Аукус Сезон 1 (2022)
-					</Button>
-					{#each aukus1FilteredGames as move}
-						<OldMoveCard {move} />
-					{/each}
-				</div>
-			{/if} -->
 				</div>
 			</div>
 		</div>
