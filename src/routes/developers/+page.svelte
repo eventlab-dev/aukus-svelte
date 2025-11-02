@@ -18,8 +18,24 @@
 		{
 			name: 'lepayy',
 			description: 'Дизайн интерфейсов'
+		},
+		{
+			name: 'Grib0nya',
+			description: 'Скины, логотип'
+		},
+		{
+			name: 'Rvg',
+			description: 'Карта, скины'
+		},
+		{
+			name: 'esouqu',
+			description: 'Фронтенд'
+		},
+		{
+			name: 'Pechenka',
+			description: 'Тестирование'
 		}
-	]
+	].sort((a, b) => a.name.localeCompare(b.name))
 
 	type Sponsor = {
 		name: string
