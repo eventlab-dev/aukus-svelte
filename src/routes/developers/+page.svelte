@@ -34,6 +34,10 @@
 		{
 			name: 'Pechenka',
 			description: 'Тестирование'
+		},
+		{
+			name: 'CorruptedMushroom',
+			description: 'Бекенд'
 		}
 	].sort((a, b) => a.name.localeCompare(b.name))
 
