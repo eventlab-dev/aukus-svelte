@@ -161,6 +161,44 @@ export type CreatePlayerMoveResponse = {
 export type DiceOption = '1d4' | '1d6' | '2d6' | '3d6';
 
 /**
+ * DonationItem
+ */
+export type DonationItem = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Name
+     */
+    name: string;
+    type: DonationType;
+    /**
+     * Message
+     */
+    message: string | null;
+    /**
+     * Created At
+     */
+    created_at: number;
+};
+
+/**
+ * DonationType
+ */
+export type DonationType = 'small' | 'big';
+
+/**
+ * DonationsResponse
+ */
+export type DonationsResponse = {
+    /**
+     * Donations
+     */
+    donations: Array<DonationItem>;
+};
+
+/**
  * EventDataResponse
  */
 export type EventDataResponse = {
@@ -707,6 +745,22 @@ export type GetEventDataApiEventDataGetResponses = {
 };
 
 export type GetEventDataApiEventDataGetResponse = GetEventDataApiEventDataGetResponses[keyof GetEventDataApiEventDataGetResponses];
+
+export type GetDonationsApiDonationsGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/donations';
+};
+
+export type GetDonationsApiDonationsGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: DonationsResponse;
+};
+
+export type GetDonationsApiDonationsGetResponse = GetDonationsApiDonationsGetResponses[keyof GetDonationsApiDonationsGetResponses];
 
 export type PlayerStatsApiPlayersStatsGetData = {
     body?: never;

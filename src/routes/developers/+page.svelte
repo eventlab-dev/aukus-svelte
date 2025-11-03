@@ -1,5 +1,8 @@
 <script lang="ts">
+	import { AukusBaseUrl } from '$lib/client'
 	import { Button } from '$lib/components/ui/button'
+	import { getDonationsApiDonationsGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
+	import { createQuery } from '@tanstack/svelte-query'
 
 	type Developer = {
 		name: string
@@ -41,24 +44,13 @@
 		}
 	].sort((a, b) => a.name.localeCompare(b.name))
 
-	type Sponsor = {
-		name: string
-		message: string
-		type: 'big' | 'small'
-	}
+	const sponsorsQuery = createQuery(
+		getDonationsApiDonationsGetOptions({
+			baseUrl: AukusBaseUrl
+		})
+	)
 
-	const sponsors: Sponsor[] = [
-		{
-			name: 'Donator1',
-			message: 'Спасибо за ваш труд!',
-			type: 'big'
-		},
-		{
-			name: 'Donator2',
-			message: 'Отличный проект!',
-			type: 'small'
-		}
-	]
+	const sponsors = $derived($sponsorsQuery.data?.donations ?? [])
 
 	function openLink(link: 'boosty' | 'tg' | 'eventlab') {
 		let url = ''
@@ -91,7 +83,10 @@
 			<div class="mt-[20px] flex flex-col gap-5">
 				{#each sponsors as sponsor (sponsor.name)}
 					<span>
-						<strong>{sponsor.name}</strong> — {sponsor.message}
+						<strong>{sponsor.name}</strong>
+						{#if sponsor.message}
+							— {sponsor.message}
+						{/if}
 					</span>
 				{/each}
 			</div>
