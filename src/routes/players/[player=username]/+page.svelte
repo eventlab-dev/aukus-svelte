@@ -46,6 +46,7 @@
 	})
 
 	let contentContainer = $state<HTMLDivElement | null>(null)
+	let contentWidth = $state(0)
 	let contentCenter = $state(0)
 	let contentHeight = $state(0)
 
@@ -58,6 +59,7 @@
 			document.getElementById('canvas-container')?.scrollTo({ left, behavior: 'instant' })
 
 			contentHeight = contentContainer.clientHeight
+			contentWidth = contentContainer.clientWidth
 		}
 	}
 
@@ -77,7 +79,7 @@
 	// $inspect('StaticCanvas width', canvasWidth)
 	// $inspect('content center', contentCenter)
 
-	const widthStyle = $derived($canvasWidth > 0 ? `width: ${$canvasWidth}px;` : '')
+	const widthStyle = $derived($canvasWidth > contentWidth ? `width: ${$canvasWidth}px;` : '')
 </script>
 
 <svelte:head>
