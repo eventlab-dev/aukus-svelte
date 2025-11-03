@@ -5,7 +5,12 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerStatsItem } from '$lib/heyapi/aukus/types.gen'
 
-	type StatItem = PlayerStatsItem & { username: string; avatarLink: string; currentGame: string }
+	type StatItem = PlayerStatsItem & {
+		username: string
+		avatarLink: string
+		currentGame: string
+		position: number
+	}
 
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
@@ -15,13 +20,14 @@
 
 	const statsWithPlayerInfo = $derived.by(() => {
 		if (!$stats) return []
-		return $stats.players.map((playerStat) => {
+		return $stats.players.map((playerStat, idx) => {
 			const playerInfo = $playersBySlug[playerStat.player_slug]
 			return {
 				...playerStat,
 				username: playerInfo ? playerInfo.username : playerStat.player_slug,
 				avatarLink: playerInfo?.avatar_link ?? '',
-				currentGame: playerInfo?.current_game ?? '<Нет игры>'
+				currentGame: playerInfo?.current_game ?? '<Нет игры>',
+				position: idx + 1
 			}
 		})
 	})
@@ -30,6 +36,7 @@
 	// const moveStatData = generateMoveStatData(12)
 
 	const leaderboardHeaders: LeaderboardHeadersType = [
+		{ key: 'position', name: '№', width: 20 },
 		{ key: 'avatarLink', name: '', width: 27 },
 		{ key: 'username', name: 'Стример', width: 137 },
 		{ key: 'map_position', name: 'Позиция', width: 114 },
