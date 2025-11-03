@@ -59,15 +59,32 @@
 			type: 'small'
 		}
 	]
+
+	function openLink(link: 'boosty' | 'tg' | 'eventlab') {
+		let url = ''
+		if (link === 'boosty') {
+			url = 'https://boosty.to/aukus'
+		} else if (link === 'tg') {
+			url = 'https://t.me/eventlabdev'
+		} else if (link === 'eventlab') {
+			url = 'https://eventlab.dev/'
+		}
+		window.open(url, '_blank', 'noopener,noreferrer')
+	}
 </script>
 
 <div class="flex justify-center">
 	<div class="mt-[100px] w-[700px]">
 		<div class="text-5xl">Разработчиков можно поддержать на Boosty</div>
 		<div class="my-[40px] flex gap-4">
-			<Button class="flex-1 bg-[#FF881E]">-> Поддержать на бусти</Button>
-			<Button class="flex-1" variant="secondary">Наш телеграм</Button>
-			<Button class="flex-1" variant="secondary">Сайт EventLab</Button>
+			<Button class="flex-1 bg-[#FF881E]" onclick={() => openLink('boosty')}
+				>-> Поддержать на бусти</Button
+			>
+			<Button class="flex-1" variant="secondary" onclick={() => openLink('tg')}>Наш телеграм</Button
+			>
+			<Button class="flex-1" variant="secondary" onclick={() => openLink('eventlab')}
+				>Сайт EventLab</Button
+			>
 		</div>
 		<div>
 			<div class="text-4xl">Наши споносры</div>
