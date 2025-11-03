@@ -13,13 +13,22 @@ export function createStatsStore() {
 
 	const stats = derived(statsQuery, ($query) => {
 		if ($query.isSuccess) {
-			return $query.data
+			return $query.data?.players || []
 		}
-		return null
+		return []
+	})
+
+	const statsBySlug = derived(stats, ($stats) => {
+		const map: Record<string, (typeof $stats)[0]> = {}
+		$stats.forEach((stat) => {
+			map[stat.player_slug] = stat
+		})
+		return map
 	})
 
 	return {
 		statsQuery,
-		stats
+		stats,
+		statsBySlug
 	}
 }

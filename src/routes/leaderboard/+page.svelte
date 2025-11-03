@@ -15,18 +15,18 @@
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
 
-	const { statsStore, playersBySlug } = getAppManagerContext()
-	const { stats } = statsStore
+	const { statsStore, playersInOrder } = getAppManagerContext()
+	const { statsBySlug } = statsStore
 
 	const statsWithPlayerInfo = $derived.by(() => {
-		if (!$stats) return []
-		return $stats.players.map((playerStat, idx) => {
-			const playerInfo = $playersBySlug[playerStat.player_slug]
+		return $playersInOrder.map((player, idx) => {
+			const playerStat = $statsBySlug[player.slug]
 			return {
+				...player,
 				...playerStat,
-				username: playerInfo ? playerInfo.username : playerStat.player_slug,
-				avatarLink: playerInfo?.avatar_link ?? '',
-				currentGame: playerInfo?.current_game ?? '<Нет игры>',
+				username: player.username,
+				avatarLink: player.avatar_link ?? '',
+				currentGame: player.current_game ?? '<Нет игры>',
 				position: idx + 1
 			}
 		})
@@ -62,7 +62,7 @@
 	]
 </script>
 
-{#if $stats}
+{#if statsWithPlayerInfo}
 	<div in:fade>
 		<div class="mt-[100px] flex flex-col items-center space-y-[50px]">
 			<div class="text-[40px] leading-12 font-bold">Таблица лидеров</div>

@@ -34,21 +34,16 @@ export function createAppManager() {
 
 	const { users, myUser } = usersStore
 	const { players: playersData } = eventDataStore
-	const { stats } = statsStore
+	const { statsBySlug } = statsStore
 
 	const players: Readable<PlayerData[]> = derived(
-		[users, playersData, stats],
-		([$users, $players, $stats]) => {
-			const statsBySlug: Record<string, PlayerStatsItem> = {}
-			$stats?.players.forEach((stat) => {
-				statsBySlug[stat.player_slug] = stat
-			})
-
+		[users, playersData, statsBySlug],
+		([$users, $players, $statsBySlug]) => {
 			const list: PlayerData[] = []
 			for (const player of $players) {
 				const slug = player.slug
 				const user = $users.find((u) => u.slug === slug)
-				const stats = statsBySlug[slug]
+				const stats = $statsBySlug[slug]
 				if (!user || !stats) continue
 				list.push({
 					...user,
@@ -109,6 +104,9 @@ export function createAppManager() {
 		([$players, $playersCompletedMap]) => {
 			const playersNotCompletedMap = $players.filter((p) => p.map_position <= LastMapPosition)
 			playersNotCompletedMap.sort((a, b) => {
+				if (a.total_score === b.total_score) {
+					return b.map_position - a.map_position
+				}
 				return b.total_score - a.total_score
 			})
 			return [...$playersCompletedMap, ...playersNotCompletedMap]
