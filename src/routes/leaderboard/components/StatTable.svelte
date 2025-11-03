@@ -89,7 +89,7 @@
 					{:else}
 						<TableCell
 							class="data-[active=true]:text-foreground data-[bright=true]:text-foreground"
-							data-bright={key === 'name'}
+							data-bright={key === 'username'}
 							data-active={sortByKey === key}
 						>
 							{player[key]}

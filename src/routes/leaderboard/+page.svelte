@@ -31,7 +31,7 @@
 
 	const leaderboardHeaders: LeaderboardHeadersType = [
 		{ key: 'avatarLink', name: '', width: 27 },
-		{ key: 'username', name: 'Имя', width: 137 },
+		{ key: 'username', name: 'Стример', width: 137 },
 		{ key: 'map_position', name: 'Позиция', width: 114 },
 		// { key: 'score', name: 'Очки', width: 86 },
 		{ key: 'games_completed', name: 'Пройдено', width: 120 },
@@ -44,7 +44,7 @@
 
 	const moveStatHeaders: MoveStatHeadersType = [
 		{ key: 'avatarLink', name: '', width: 27 },
-		{ key: 'username', name: 'Имя', width: 137 },
+		{ key: 'username', name: 'Стример', width: 137 },
 		{ key: 'total_moves', name: 'Ходов', width: 90 },
 		{ key: 'ladders', name: 'Лестниц', width: 104 },
 		{ key: 'snakes', name: 'Змеек', width: 88 },
