@@ -79,7 +79,7 @@
 				item_length: form.hltbTime || null,
 				item_title: form.title,
 				game_id: selectedGame?.id || null,
-				cover_image_url: selectedGame?.cover || null,
+				cover_image_url: selectedGame?.cover || fallbackPoster,
 				// TODO: fill these fields
 				difficulty: 0
 			}
@@ -161,7 +161,7 @@
 						}}
 						simple
 					/>
-					<div class="absolute right-1.5 bottom-1.5 flex flex-col">
+					<div class="absolute bottom-1.5 right-1.5 flex flex-col">
 						<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
 							<WandIcon class="size-6" />
 						</Button>
@@ -177,9 +177,9 @@
 		</div>
 
 		<DialogClose
-			class="absolute top-3 right-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"
+			class="absolute right-3 top-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"
 		>
-			<X class="size-5 stroke-4" />
+			<X class="stroke-4 size-5" />
 		</DialogClose>
 	</DialogContent>
 </Dialog>
