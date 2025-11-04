@@ -123,6 +123,7 @@
 						gameName={player.current_game || ''}
 						gameImage={player.current_game_cover || ''}
 						gameDuration={player.current_game_duration || 0}
+						mainPlatform={player.main_platform}
 					/>
 				</div>
 

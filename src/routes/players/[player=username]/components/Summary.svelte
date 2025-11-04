@@ -8,9 +8,25 @@
 		gameName: string;
 		gameImage: string;
 		gameDuration: number;
+		mainPlatform: string | null;
 	};
 
-	const { totalScore, gamesCompleted, gameName, gameImage, gameDuration }: Props = $props();
+	const { totalScore, gamesCompleted, gameName, gameImage, gameDuration, mainPlatform }: Props = $props();
+
+	function getPlatformName(platform: string | null): string {
+		switch (platform?.toLowerCase()) {
+			case 'twitch':
+				return 'Твич';
+			case 'vk':
+				return 'VK Play';
+			case 'kick':
+				return 'Кик';
+			default:
+				return 'Твич';
+		}
+	}
+
+	const platformName = $derived(getPlatformName(mainPlatform));
 </script>
 
 <div class="flex gap-3">
@@ -24,7 +40,7 @@
 	</div>
 	<div class="flex w-[476px] flex-col gap-3 rounded-xl bg-card p-3">
 		<div class="flex justify-between text-sm leading-[17px] font-semibold text-muted-foreground">
-			<div>Стримит на Твич</div>
+			<div>Стримит на {platformName}</div>
 			<div>{formatMs(gameDuration * 1000)}</div>
 		</div>
 		<div class="flex gap-2">
