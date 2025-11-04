@@ -25,6 +25,11 @@
 	import type { GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
 	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'
 	import { LastMapPosition } from '$lib/constants'
+	import { EventlabBaseUrl } from '$lib/client'
+	import { getGameDurationApiStreamsGameDurationGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
+	import { defaultAuth } from '$lib/utils'
+	import { createQuery } from '@tanstack/svelte-query'
+	import { derived } from 'svelte/store'
 
 	type FormType = {
 		title: string
@@ -32,6 +37,13 @@
 		hltbTime?: GameLength
 		rating: number | null
 		review: string
+	}
+
+	type GameDurationResponse = {
+		duration: number
+		sessions_count: number
+		event_slug?: string
+		error?: string
 	}
 
 	const { usersStore, eventDataStore, myPlayer, frontendState } = getAppManagerContext()
@@ -50,6 +62,35 @@
 	let selectedGame: IgdbGameSummary | null = $state(null)
 	let isDialogOpen = $state(false)
 	let editorState: { editor: Editor | null } = $state({ editor: null })
+
+	const gameDurationQuery = createQuery(
+		derived([myPlayer], ([$myPlayer]) => {
+			const options = getGameDurationApiStreamsGameDurationGetOptions({
+				baseUrl: EventlabBaseUrl,
+				auth: defaultAuth,
+				query: {
+					slug: $myPlayer?.slug || '',
+					game_name: selectedGame?.name || ''
+				}
+			})
+			options.enabled = Boolean(selectedGame && $myPlayer)
+			return options
+		})
+	)
+
+	$effect(() => {
+		if (selectedGame && $myPlayer) {
+			$gameDurationQuery.refetch()
+		}
+	})
+
+	const gameDuration = $derived.by(() => {
+		const response = $gameDurationQuery.data as GameDurationResponse | undefined
+		if (response?.duration && response.duration > 0) {
+			return response.duration
+		}
+		return $myPlayer?.current_game_duration
+	})
 
 	const { isFormFilled, buttonText } = $derived.by(() => {
 		if (!form.title) return { isFormFilled: false, buttonText: 'Введи название игры' }
@@ -135,10 +176,7 @@
 				<GameTitle bind:value={form.title} bind:selectedGame />
 
 				<div class="flex gap-3">
-					<GameStatusSelector
-						gameDuration={$myPlayer?.current_game_duration}
-						bind:value={form.status}
-					/>
+					<GameStatusSelector {gameDuration} bind:value={form.status} />
 					<HltbTimeSelector bind:value={form.hltbTime} disabled={form.status !== 'completed'} />
 					<HltbLink gameTitle={form.title} />
 				</div>
