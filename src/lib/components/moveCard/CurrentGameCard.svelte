@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 	import { formatDateTime, formatDuration } from '$lib/utils'
 	import { fade } from 'svelte/transition'
 	import ImageLoader from '../ImageLoader.svelte'
@@ -30,7 +31,7 @@
 	</div>
 	<div class="mt-3 flex gap-3">
 		<ImageLoader
-			src={player.current_game_cover ?? ''}
+			src={player.current_game_cover || FALLBACK_GAME_POSTER}
 			alt="game cover"
 			class="h-[140px] w-[105px]"
 		/>

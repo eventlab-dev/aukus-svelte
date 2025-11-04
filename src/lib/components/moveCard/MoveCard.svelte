@@ -7,7 +7,7 @@
 	import { Textarea } from '$lib/components/ui/textarea'
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
-	import { gameLengthRanges } from '$lib/constants'
+	import { FALLBACK_GAME_POSTER, gameLengthRanges } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
@@ -115,7 +115,7 @@
 
 	<div class="mt-3 flex gap-3">
 		<ImageLoader
-			src={move.cover_image_url || ''}
+			src={move.cover_image_url || FALLBACK_GAME_POSTER}
 			alt={move.item_title || ''}
 			class="h-[140px] w-[105px]"
 		/>

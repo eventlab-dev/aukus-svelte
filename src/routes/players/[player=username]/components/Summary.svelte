@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ImageLoader from '$lib/components/ImageLoader.svelte';
+	import { FALLBACK_GAME_POSTER } from '$lib/constants';
 	import { formatMs } from '$lib/utils';
 
 	type Props = {
@@ -44,7 +45,7 @@
 			<div>{formatMs(gameDuration * 1000)}</div>
 		</div>
 		<div class="flex gap-2">
-			<ImageLoader src={gameImage} alt={gameName} class="h-[58px] w-[43px] overflow-hidden" />
+			<ImageLoader src={gameImage || FALLBACK_GAME_POSTER} alt={gameName} class="h-[58px] w-[43px] overflow-hidden" />
 			<div class="text-2xl leading-[29px] font-bold">
 				{gameName}
 			</div>
