@@ -14,12 +14,14 @@
 	import { searchIgdbGamesGetApiIgdbGamesSearchGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 	import { EventlabBaseUrl } from '$lib/client'
 	import { derived, writable } from 'svelte/store'
+	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'
 
 	type Props = {
 		value: string
+		selectedGame: IgdbGameSummary | null
 	}
 
-	let { value = $bindable('') }: Props = $props()
+	let { value = $bindable(''), selectedGame = $bindable(null) }: Props = $props()
 
 	const { myPlayer } = getAppManagerContext()
 
@@ -53,6 +55,9 @@
 	onMount(() => {
 		if ($myPlayer) {
 			value = $myPlayer.current_game || ''
+			if (value) {
+				searchQuery.set(value)
+			}
 		}
 	})
 
@@ -61,8 +66,9 @@
 		searchQuery.set(val)
 	}, 400)
 
-	function onGameClick(gameTitle: string) {
-		value = gameTitle
+	function onGameClick(game: IgdbGameSummary) {
+		value = game.name
+		selectedGame = game
 		searchQuery.set('')
 	}
 
@@ -105,7 +111,7 @@
 							<Button
 								variant="secondary"
 								class="bg-unset h-auto w-full justify-start gap-3 rounded-none p-2 text-start hover:bg-hover"
-								onmousedown={() => onGameClick(game.name)}
+								onmousedown={() => onGameClick(game)}
 							>
 								<ImageLoader
 									src={game.cover || FALLBACK_GAME_POSTER}
@@ -130,7 +136,10 @@
 				variant="ghost"
 				size="icon"
 				class="bg-unset hover:bg-unset rounded-full opacity-70 hover:opacity-100"
-				onclick={() => (value = '')}
+				onclick={() => {
+					value = ''
+					selectedGame = null
+				}}
 			>
 				<X class="size-4 stroke-3" />
 			</Button>

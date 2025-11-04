@@ -23,6 +23,7 @@
 	import X from '@lucide/svelte/icons/x'
 	import WandIcon from '../icons/WandIcon.svelte'
 	import type { GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
+	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'
 	import { LastMapPosition } from '$lib/constants'
 
 	type FormType = {
@@ -46,6 +47,7 @@
 		review: ''
 	})
 
+	let selectedGame: IgdbGameSummary | null = $state(null)
 	let isDialogOpen = $state(false)
 	let editorState: { editor: Editor | null } = $state({ editor: null })
 
@@ -76,9 +78,9 @@
 				item_rating: form.rating,
 				item_length: form.hltbTime || null,
 				item_title: form.title,
+				game_id: selectedGame?.id || null,
+				cover_image_url: selectedGame?.cover || null,
 				// TODO: fill these fields
-				game_id: null,
-				cover_image_url: null,
 				difficulty: 0
 			}
 		})
@@ -97,6 +99,7 @@
 				rating: null,
 				review: ''
 			}
+			selectedGame = null
 		}, 500)
 	}
 
@@ -123,9 +126,13 @@
 		</DialogHeader>
 
 		<div class="flex gap-3">
-			<ImageLoader src={fallbackPoster} alt="game poster" class="h-[176px] w-[132px]" />
+			<ImageLoader
+				src={selectedGame?.cover || fallbackPoster}
+				alt="game poster"
+				class="h-[176px] w-[132px]"
+			/>
 			<div class="flex w-full flex-col gap-3">
-				<GameTitle bind:value={form.title} />
+				<GameTitle bind:value={form.title} bind:selectedGame />
 
 				<div class="flex gap-3">
 					<GameStatusSelector
