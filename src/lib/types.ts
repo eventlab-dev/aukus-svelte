@@ -45,6 +45,9 @@ export type PlayerUrl =
 	| 'timofey'
 	| 'keliq_q'
 	| 'unclebjorn'
+	| 'vk_user'
+	| 'kick_user'
+	| 'twitch_user'
 
 export const ColorByUrlHandle: { [key in PlayerUrl]: string } = {
 	lasqa: Color.blue,
@@ -59,7 +62,10 @@ export const ColorByUrlHandle: { [key in PlayerUrl]: string } = {
 	vovapain: Color.red,
 	timofey: Color.greenLight,
 	keliq_q: Color.biege,
-	unclebjorn: Color.pinkLight
+	unclebjorn: Color.pinkLight,
+	vk_user: Color.blue,
+	kick_user: Color.green,
+	twitch_user: Color.red
 }
 
 export const ColorNameByUrlHandle: {
@@ -77,7 +83,10 @@ export const ColorNameByUrlHandle: {
 	vovapain: 'customRed',
 	timofey: 'customGreenLight',
 	keliq_q: 'customBiege',
-	unclebjorn: 'customPinkLight'
+	unclebjorn: 'customPinkLight',
+	vk_user: 'customBlue',
+	kick_user: 'customGreen',
+	twitch_user: 'customRed'
 }
 
 export type TableHeaderType<T> = {
