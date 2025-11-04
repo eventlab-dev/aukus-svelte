@@ -88,7 +88,7 @@
 
 	const gameDuration = $derived.by(() => {
 		const response = $gameDurationQuery.data as GameDurationResponse | undefined
-		if (response?.duration && response.duration > 0 && selectedGame) {
+		if (selectedGame && response && response.duration !== undefined) {
 			return response.duration
 		}
 		return $myPlayer?.current_game_duration
