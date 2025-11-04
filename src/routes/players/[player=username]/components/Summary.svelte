@@ -25,7 +25,7 @@
 	<div class="flex w-[476px] flex-col gap-3 rounded-xl bg-card p-3">
 		<div class="flex justify-between text-sm leading-[17px] font-semibold text-muted-foreground">
 			<div>Стримит на Твич</div>
-			<div>{formatMs(gameDuration)}</div>
+			<div>{formatMs(gameDuration * 1000)}</div>
 		</div>
 		<div class="flex gap-2">
 			<ImageLoader src={gameImage} alt={gameName} class="h-[58px] w-[43px] overflow-hidden" />
