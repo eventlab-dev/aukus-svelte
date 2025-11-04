@@ -46,7 +46,7 @@
 		{ key: 'rerolls', name: 'Реролы', width: 102 },
 		{ key: 'movies', name: 'Фильмы', width: 104 },
 		{ key: 'sheikh_moments', name: 'Шейхи', width: 104 },
-		{ key: 'currentGame', name: 'Выпало на ауке', width: 242 }
+		{ key: 'currentGame', name: 'Игра на стриме', width: 242 }
 	]
 
 	const moveStatHeaders: MoveStatHeadersType = [

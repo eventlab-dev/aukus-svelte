@@ -22,7 +22,7 @@
 >
 	<div class="flex justify-between">
 		<div class="flex gap-1.5">
-			<Badge variant="white">Выпало на ауке</Badge>
+			<Badge variant="white">Игра на стриме</Badge>
 			<Badge variant="white">Играет {formatDuration(player.current_game_duration)}</Badge>
 		</div>
 		{#if player.current_game_updated_at}
