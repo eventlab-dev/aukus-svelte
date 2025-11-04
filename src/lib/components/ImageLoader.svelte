@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
 	import { scale } from 'svelte/transition'
 	import { Skeleton } from './ui/skeleton'
 	import type { HTMLAttributes } from 'svelte/elements'
@@ -13,7 +12,11 @@
 
 	let loadedSrc: string | undefined = $state()
 
-	onMount(() => {
+	$effect(() => {
+		loadedSrc = undefined
+		
+		if (!src) return
+
 		loadImage(src)
 			.then((img) => (loadedSrc = img.src))
 			.catch((error) => console.error(error))
