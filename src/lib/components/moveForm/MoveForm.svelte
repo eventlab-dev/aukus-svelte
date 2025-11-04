@@ -91,7 +91,7 @@
 		if (selectedGame && response && response.duration !== undefined) {
 			return response.duration
 		}
-		return $myPlayer?.current_game_duration
+		return undefined
 	})
 
 	const { isFormFilled, buttonText } = $derived.by(() => {
