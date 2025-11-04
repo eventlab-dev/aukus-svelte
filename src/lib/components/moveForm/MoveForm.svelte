@@ -29,7 +29,7 @@
 	import { getGameDurationApiStreamsGameDurationGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 	import { defaultAuth } from '$lib/utils'
 	import { createQuery } from '@tanstack/svelte-query'
-	import { derived } from 'svelte/store'
+	import { derived, writable } from 'svelte/store'
 
 	type FormType = {
 		title: string
@@ -63,17 +63,23 @@
 	let isDialogOpen = $state(false)
 	let editorState: { editor: Editor | null } = $state({ editor: null })
 
+	const selectedGameStore = writable<IgdbGameSummary | null>(null)
+	
+	$effect(() => {
+		selectedGameStore.set(selectedGame)
+	})
+
 	const gameDurationQuery = createQuery(
-		derived([myPlayer], ([$myPlayer]) => {
+		derived([myPlayer, selectedGameStore], ([$myPlayer, $selectedGame]) => {
 			const options = getGameDurationApiStreamsGameDurationGetOptions({
 				baseUrl: EventlabBaseUrl,
 				auth: defaultAuth,
 				query: {
 					slug: $myPlayer?.slug || '',
-					game_name: selectedGame?.name || ''
+					game_name: $selectedGame?.name || ''
 				}
 			})
-			options.enabled = Boolean(selectedGame && $myPlayer)
+			options.enabled = Boolean($selectedGame && $myPlayer)
 			return options
 		})
 	)
