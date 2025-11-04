@@ -1,16 +1,8 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
 	import StatTable from './components/StatTable.svelte'
-	import type { TableHeaderType } from '$lib/types'
+	import type { StatItem, TableHeaderType } from '$lib/types'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import type { PlayerStatsItem } from '$lib/heyapi/aukus/types.gen'
-
-	type StatItem = PlayerStatsItem & {
-		username: string
-		avatarLink: string
-		currentGame: string
-		position: number
-	}
 
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
@@ -40,7 +32,7 @@
 		{ key: 'avatarLink', name: '', width: 27 },
 		{ key: 'username', name: 'Стример', width: 137 },
 		{ key: 'map_position', name: 'Позиция', width: 114 },
-		// { key: 'score', name: 'Очки', width: 86 },
+		{ key: 'total_score', name: 'Очки', width: 86 },
 		{ key: 'games_completed', name: 'Пройдено', width: 120 },
 		{ key: 'games_dropped', name: 'Дропы', width: 94 },
 		{ key: 'rerolls', name: 'Реролы', width: 102 },

@@ -1,4 +1,4 @@
-import type { PlayerItem, PlayerMoveType } from './heyapi/aukus/types.gen'
+import type { PlayerItem, PlayerMoveType, PlayerStatsItem } from './heyapi/aukus/types.gen'
 import type { GameHistoryItem, UserItem } from './heyapi/eventlab/types.gen'
 
 export const Color = {
@@ -116,4 +116,12 @@ export type PlayerMovementState = {
 
 export type CommonGameItem = Omit<GameHistoryItem, 'completion_status'> & {
 	completion_status: PlayerMoveType
+}
+
+export type StatItem = PlayerStatsItem & {
+	username: string
+	avatarLink: string
+	currentGame: string
+	position: number
+	total_score: number
 }

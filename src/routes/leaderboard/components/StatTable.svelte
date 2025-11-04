@@ -1,4 +1,4 @@
-<script lang="ts" generics="T extends { username: string; avatarLink: string }">
+<script lang="ts" generics="T extends StatItem">
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import {
 		Table,
@@ -8,7 +8,9 @@
 		TableHeader,
 		TableRow
 	} from '$lib/components/ui/table'
-	import type { TableHeaderType } from '$lib/types'
+	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
+	import type { StatItem, TableHeaderType } from '$lib/types'
+	import { getPlayerScoreDescription } from '$lib/utils'
 
 	type Props = {
 		data: T[]
@@ -85,6 +87,20 @@
 								alt={player.username}
 								class="size-[27px] !rounded-full"
 							/>
+						</TableCell>
+					{:else if key === 'total_score'}
+						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
+							<Tooltip>
+								<TooltipTrigger class="w-full text-left">
+									{player[key]}
+								</TooltipTrigger>
+								<TooltipContent>
+									{@const description = getPlayerScoreDescription(player)}
+									{#each description as item (item)}
+										<p>{item}</p>
+									{/each}
+								</TooltipContent>
+							</Tooltip>
 						</TableCell>
 					{:else}
 						<TableCell

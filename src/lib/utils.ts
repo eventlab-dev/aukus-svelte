@@ -261,9 +261,24 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 			stats.short_games * 1 +
 			stats.medium_games * 1.5 +
 			stats.long_games * 2 -
-			stats.games_dropped) *
+			stats.games_dropped -
+			stats.sheikh_moments) *
 		row
 	return Math.max(0, Math.floor(score))
+}
+
+export function getPlayerScoreDescription(stats: PlayerStatsItem) {
+	const row = cellRow(stats.map_position)
+	const shortTotal = stats.tiny_games + stats.short_games
+	return [
+		`Короткие игры: ${shortTotal} * 1`,
+		`Средние игры: ${stats.medium_games} * 1.5`,
+		`Долгие игры: ${stats.long_games} * 2`,
+		`Дропы: -${stats.games_dropped}`,
+		`Шейх-дропы: -${stats.sheikh_moments}`,
+		`Ряд: ${row}`,
+		`Всего: (${shortTotal} + ${stats.medium_games * 1.5} + ${stats.long_games * 2} - ${stats.games_dropped} - ${stats.sheikh_moments}) * ${row}`
+	]
 }
 
 export function formatDuration(timestamp: number, params: { includeSeconds?: boolean } = {}) {
