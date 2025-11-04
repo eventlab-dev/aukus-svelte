@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { scale } from 'svelte/transition'
 	import { Skeleton } from './ui/skeleton'
 	import type { HTMLAttributes } from 'svelte/elements'
 
 	type Props = HTMLAttributes<HTMLDivElement> & {
 		src: string
 		alt: string
+		animate?: boolean
 	}
 
-	const { src, alt, class: className, ...props }: Props = $props()
+	const { src, alt, class: className, animate, ...props }: Props = $props()
 
 	let loadedSrc: string | undefined = $state()
 
 	$effect(() => {
 		loadedSrc = undefined
-		
+
 		if (!src) return
 
 		loadImage(src)
@@ -30,6 +30,8 @@
 			img.src = url
 		})
 	}
+
+	let transitionProps = animate ? { 'in:scale': { start: 0.9, opacity: 0 } } : {}
 </script>
 
 <div class={['relative flex shrink-0 overflow-hidden rounded-md', className]} {...props}>
@@ -39,7 +41,7 @@
 			src={loadedSrc}
 			class="w-full object-cover"
 			{alt}
-			in:scale={{ start: 0.9, opacity: 0 }}
+			{...transitionProps}
 		/>
 	{:else}
 		<Skeleton class="h-full w-full" />
