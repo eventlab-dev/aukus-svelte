@@ -59,6 +59,9 @@
 				searchQuery.set(value)
 			}
 		}
+		setTimeout(() => {
+			inputRef?.focus()
+		}, 100)
 	})
 
 	const debouncedInput = debounce((val: string) => {
