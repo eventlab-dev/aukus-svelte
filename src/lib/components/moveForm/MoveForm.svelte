@@ -80,19 +80,15 @@
 				}
 			})
 			options.enabled = Boolean($selectedGame && $myPlayer)
+			options.staleTime = 0
+			options.gcTime = 0
 			return options
 		})
 	)
 
-	$effect(() => {
-		if (selectedGame && $myPlayer) {
-			$gameDurationQuery.refetch()
-		}
-	})
-
 	const gameDuration = $derived.by(() => {
 		const response = $gameDurationQuery.data as GameDurationResponse | undefined
-		if (response?.duration && response.duration > 0) {
+		if (response?.duration && response.duration > 0 && selectedGame) {
 			return response.duration
 		}
 		return $myPlayer?.current_game_duration
