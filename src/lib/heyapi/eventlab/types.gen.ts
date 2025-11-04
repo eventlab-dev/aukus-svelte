@@ -557,7 +557,16 @@ export type GetRollByIdApiDiceRollsRollIdGetData = {
          */
         roll_id: number;
     };
-    query?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
     url: '/api/dice-rolls/{roll_id}';
 };
 
@@ -620,6 +629,112 @@ export type SearchIgdbGamesGetApiIgdbGamesSearchGetResponses = {
 };
 
 export type SearchIgdbGamesGetApiIgdbGamesSearchGetResponse = SearchIgdbGamesGetApiIgdbGamesSearchGetResponses[keyof SearchIgdbGamesGetApiIgdbGamesSearchGetResponses];
+
+export type RefreshStreamsApiStreamsRefreshPostData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/streams/refresh';
+};
+
+export type RefreshStreamsApiStreamsRefreshPostResponses = {
+    /**
+     * Response Refresh Streams Api Streams Refresh Post
+     * Successful Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type RefreshStreamsApiStreamsRefreshPostResponse = RefreshStreamsApiStreamsRefreshPostResponses[keyof RefreshStreamsApiStreamsRefreshPostResponses];
+
+export type GetGameDurationApiStreamsGameDurationGetData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Slug
+         */
+        slug: string;
+        /**
+         * Game Name
+         */
+        game_name: string;
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/streams/game-duration';
+};
+
+export type GetGameDurationApiStreamsGameDurationGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetGameDurationApiStreamsGameDurationGetError = GetGameDurationApiStreamsGameDurationGetErrors[keyof GetGameDurationApiStreamsGameDurationGetErrors];
+
+export type GetGameDurationApiStreamsGameDurationGetResponses = {
+    /**
+     * Response Get Game Duration Api Streams Game Duration Get
+     * Successful Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type GetGameDurationApiStreamsGameDurationGetResponse = GetGameDurationApiStreamsGameDurationGetResponses[keyof GetGameDurationApiStreamsGameDurationGetResponses];
+
+export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostData = {
+    /**
+     * Request
+     */
+    body: {
+        [key: string]: unknown;
+    };
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/streams/close-game-categories';
+};
+
+export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostError = CloseGameCategoriesApiStreamsCloseGameCategoriesPostErrors[keyof CloseGameCategoriesApiStreamsCloseGameCategoriesPostErrors];
+
+export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses = {
+    /**
+     * Response Close Game Categories Api Streams Close Game Categories Post
+     * Successful Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponse = CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses[keyof CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses];
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8300' | (string & {});
