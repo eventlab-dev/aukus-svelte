@@ -37,7 +37,7 @@
 	})
 </script>
 
-<div>
+<div class="relative">
 	<img
 		src={PlayerBaseModelUrl}
 		alt="player-model"

@@ -16,7 +16,7 @@
 
 <Button
 	onclick={handleClick}
-	class="data-[selected=false]:bg-background data-[selected=true]:bg-primary"
+	class="data-[selected=false]:bg-secondary data-[selected=true]:bg-primary"
 	data-selected={selected}
 >
 	{@render children()}

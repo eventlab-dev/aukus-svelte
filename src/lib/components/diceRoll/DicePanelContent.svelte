@@ -6,6 +6,10 @@
 	import ToggleButtonGroup from './ToggleButtonGroup.svelte'
 	import type { PlayerData } from '$lib/types'
 	import { normalizeSteps } from '$lib/utils'
+	import PlayerModel from '../map/PlayerModel.svelte'
+	import { Separator } from '../ui/separator'
+	import ImageLoader from '../ImageLoader.svelte'
+	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
@@ -158,27 +162,46 @@
 	}
 </script>
 
-<div>
-	<div class="flex flex-col gap-2">
-		<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
-		<div class="flex gap-2">
-			<div class="rounded-2xl bg-card p-3">
-				<p class="mb-3">Шанс на лестницу</p>
-				<p class="text-center text-4xl font-bold">{ladderChance.toFixed(1)}%</p>
-			</div>
-			<div class="rounded-2xl bg-card p-3">
-				<p class="mb-3">Шанс на змейку</p>
-				<p class="text-center text-4xl font-bold">{snakeChance.toFixed(1)}%</p>
+{#if canRollDice}
+	<Button
+		class="w-full"
+		onclick={handleThrowDice}
+		loading={$rollDice.isPending || $finishMove.isPending}
+	>
+		Бросить кубики {selectedDiceOption === 'drop' ? dropDiceText() : selectedDiceOption}
+	</Button>
+{:else}
+	<div class="flex rounded-3xl bg-card">
+		<div class="flex flex-col gap-3 p-4">
+			<div class="text-xl font-bold">{player.username}</div>
+			<div class="text-sm font-semibold text-muted-foreground">Выпало на ауке</div>
+			<div class="flex gap-2">
+				<ImageLoader
+					class="h-[90px]"
+					alt="poster"
+					src={player.current_game_cover || FALLBACK_GAME_POSTER}
+				/>
+				<div class="font-bold">{player.current_game}</div>
 			</div>
 		</div>
-		{#if canRollDice}
-			<Button
-				class="w-full"
-				onclick={handleThrowDice}
-				loading={$rollDice.isPending || $finishMove.isPending}
-			>
-				Бросить кубики {selectedDiceOption === 'drop' ? dropDiceText() : selectedDiceOption}
-			</Button>
-		{/if}
+		<Separator orientation="vertical" />
+		<div class="flex items-center">
+			<PlayerModel {player} variant="big" />
+		</div>
+		<Separator orientation="vertical" />
+		<div class="flex flex-col gap-3 p-4 font-bold">
+			<div class="font-semibold text-muted-foreground">Варианты хода</div>
+			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
+			<div class="flex w-full gap-2">
+				<div class="flex-1 rounded-2xl bg-secondary p-3">
+					<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
+					<p class="text-left text-2xl font-bold">{ladderChance.toFixed(1)}%</p>
+				</div>
+				<div class="flex-1 rounded-2xl bg-secondary p-3">
+					<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
+					<p class="text-left text-2xl font-bold">{snakeChance.toFixed(1)}%</p>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
+{/if}
