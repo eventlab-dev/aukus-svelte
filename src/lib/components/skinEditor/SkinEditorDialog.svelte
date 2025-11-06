@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PlayerBaseModelUrl } from '$lib/constants'
 	import type { SkinItem, SkinSlot } from '$lib/heyapi/aukus/types.gen'
 	import X from '@lucide/svelte/icons/x'
 	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte'
@@ -10,6 +9,7 @@
 	import Button from '../ui/button/button.svelte'
 	import { getSkinIconUrl } from '$lib/utils'
 	import { SvelteSet } from 'svelte/reactivity'
+	import PlayerModel from '../map/PlayerModel.svelte'
 
 	const { eventDataStore, myPlayer, usersStore } = getAppManagerContext()
 	const { skinsById, eventDataQuery } = eventDataStore
@@ -110,28 +110,9 @@
 		</DialogHeader>
 		<div class="flex w-full justify-center">
 			<div class="relative w-fit">
-				<img src={PlayerBaseModelUrl} alt="Base Model" class="h-[150px] w-auto" />
-				{#each selectedSkinItems as skin (skin.id)}
-					{#if skin.slot === 'head'}
-						<img
-							src={skin.image_url}
-							alt="Head Skin"
-							class="absolute top-[0px] left-1/2 z-20 h-[150px] w-auto -translate-x-1/2"
-						/>
-					{:else if skin.slot === 'body'}
-						<img
-							src={skin.image_url}
-							alt="Body Skin"
-							class="absolute top-[0px] left-1/2 z-10 h-[150px] w-auto max-w-none -translate-x-1/2"
-						/>
-					{:else if skin.slot === 'item'}
-						<img
-							src={skin.image_url}
-							alt="Side Skin"
-							class="absolute top-0 left-1/2 h-[150px] w-auto -translate-x-1/2"
-						/>
-					{/if}
-				{/each}
+				{#if $myPlayer}
+					<PlayerModel player={$myPlayer} selectedSkins={selectedSkinItems} variant="big" />
+				{/if}
 			</div>
 		</div>
 		<div class="flex w-full justify-center gap-5">

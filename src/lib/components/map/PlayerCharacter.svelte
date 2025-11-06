@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { LastMapPosition, PlayerBaseModelUrl } from '$lib/constants'
+	import { LastMapPosition } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { getCellPosition, getWinnerPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
 	import { onMount } from 'svelte'
+	import PlayerModel from './PlayerModel.svelte'
 
 	type Props = {
 		player: PlayerData
@@ -20,7 +21,7 @@
 		playersCompletedMap,
 		frontendState
 	} = getAppManagerContext()
-	const { skinsById, playersBySlug } = eventDataStore
+	const { playersBySlug } = eventDataStore
 	const { selectedPlayer } = movementStore
 
 	let element: HTMLDivElement
@@ -91,10 +92,6 @@
 	const finalTop = $derived(cellPosition.y + cellOffsetY)
 	const finalLeft = $derived(cellPosition.x + cellOffsetX)
 
-	const skins = $derived.by(() => {
-		return player.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
-	})
-
 	$effect(() => {
 		if (element && $turnState === 'selecting-dice' && player.slug === $myPlayer?.slug) {
 			// scroll to element
@@ -154,27 +151,7 @@
 				<p class="relative left-1/2 -translate-x-1/2">{player.username}</p>
 			</div>
 		{:else}
-			<img src={PlayerBaseModelUrl} alt="player-model" class="player-shadow h-[80px] w-auto" />
-			{#each skins as skin (skin.id)}
-				{#if skin.slot === 'head'}
-					<img
-						src={skin.image_url}
-						alt="player-skin"
-						class="absolute top-[0px] left-1/2 z-25 h-[80px] w-auto -translate-x-1/2"
-					/>
-				{:else if skin.slot === 'body'}
-					<img
-						src={skin.image_url}
-						alt="player-skin"
-						class="absolute top-[0px] left-1/2 z-20 h-[80px] w-auto -translate-x-1/2"
-					/>
-				{:else if skin.slot === 'item'}
-					<img src={skin.image_url} alt="player-skin" class="absolute top-0 h-[80px]" />
-				{/if}
-			{/each}
-			<div class="relative flex h-[10px] w-full justify-center">
-				<p class="absolute top-[-20px] z-50">{player.username}</p>
-			</div>
+			<PlayerModel {player} showUsername variant="small" />
 		{/if}
 	</button>
 </div>
