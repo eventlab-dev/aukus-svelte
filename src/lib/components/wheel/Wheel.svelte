@@ -40,7 +40,8 @@
 	let isSpinning = $state(false)
 	let radius = $state(size ? size / 2 : 0)
 
-	let rotation = $state(0)
+	// random rotation angle in degrees
+	let rotation = $state(Math.random() * 360)
 	let images: Record<string, HTMLImageElement> = $state({})
 	let winner: EntryWithAngles | null = $state(null)
 
