@@ -170,7 +170,7 @@
 					<Toggle
 						variant="outline"
 						bind:pressed={() => eventName === selectedEvent, (v) => selectEvent(v, eventName)}
-						class="cursor-pointer"
+						class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-primary"
 					>
 						{EventTitles[eventName]}
 						{#if selectedEvent === eventName}
