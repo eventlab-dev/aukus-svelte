@@ -129,7 +129,7 @@
 
 				<div class="mt-5 space-y-[200px]">
 					<div class="space-y-5">
-						<CurrentGameCard playerSlug={player.slug} />
+						<!-- <CurrentGameCard playerSlug={player.slug} /> -->
 						{#each $playerMoves as move (move.id)}
 							{@const matchedGames = $gamesMatched.filter(
 								(game) => game.game_title === move.item_title
