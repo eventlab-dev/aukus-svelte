@@ -22,7 +22,7 @@
 	} from '../ui/dialog'
 	import X from '@lucide/svelte/icons/x'
 	import WandIcon from '../icons/WandIcon.svelte'
-	import type { GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
+	import type { GameDifficulty, GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
 	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'
 	import { LastMapPosition } from '$lib/constants'
 	import { EventlabBaseUrl } from '$lib/client'
@@ -30,6 +30,8 @@
 	import { defaultAuth } from '$lib/utils'
 	import { createQuery } from '@tanstack/svelte-query'
 	import { derived, writable } from 'svelte/store'
+	import DifficultySelector from './components/DifficultySelector.svelte'
+	import type { Difficulty } from '$lib/types'
 
 	type FormType = {
 		title: string
@@ -37,6 +39,7 @@
 		hltbTime?: GameLength
 		rating: number | null
 		review: string
+		difficulty: Difficulty
 	}
 
 	type GameDurationResponse = {
@@ -56,7 +59,8 @@
 		status: undefined,
 		hltbTime: undefined,
 		rating: null,
-		review: ''
+		review: '',
+		difficulty: 'normal'
 	})
 
 	let selectedGame: IgdbGameSummary | null = $state(null)
@@ -114,6 +118,27 @@
 	})
 
 	async function saveReview() {
+		let difficulty: GameDifficulty = 0
+		switch (form.difficulty) {
+			case 'easy':
+				difficulty = -1
+				break
+			case 'normal':
+				difficulty = 0
+				break
+			case 'hard':
+				difficulty = 1
+				break
+			case 'very-hard':
+				difficulty = 2
+				break
+			default: {
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				const _exhaustiveCheck: never = form.difficulty
+				break
+			}
+		}
+
 		await $saveMoveForm.mutateAsync({
 			body: {
 				type: form.status!,
@@ -123,8 +148,7 @@
 				item_title: form.title,
 				game_id: selectedGame?.id || null,
 				cover_image_url: selectedGame?.cover || fallbackPoster,
-				// TODO: fill these fields
-				difficulty: 0
+				difficulty
 			}
 		})
 
@@ -140,7 +164,8 @@
 				status: undefined,
 				hltbTime: undefined,
 				rating: null,
-				review: ''
+				review: '',
+				difficulty: 'normal'
 			}
 			selectedGame = null
 		}, 500)
@@ -180,6 +205,7 @@
 				<div class="flex gap-3">
 					<GameStatusSelector {gameDuration} bind:value={form.status} />
 					<HltbTimeSelector bind:value={form.hltbTime} disabled={form.status !== 'completed'} />
+					<DifficultySelector bind:value={form.difficulty} />
 					<HltbLink gameTitle={form.title} />
 				</div>
 

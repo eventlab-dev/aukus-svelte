@@ -125,3 +125,5 @@ export type StatItem = PlayerStatsItem & {
 	position: number
 	total_score: number
 }
+
+export type Difficulty = 'easy' | 'normal' | 'hard' | 'very-hard'
