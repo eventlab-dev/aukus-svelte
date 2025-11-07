@@ -151,9 +151,9 @@
 			<div class="flex w-full flex-wrap gap-2">
 				{#each $players as player (player.slug)}
 					<Toggle
-						variant="outline"
+						variant="default"
 						bind:pressed={() => player.slug === selectedPlayer, (v) => selectPlayer(v, player.slug)}
-						class="cursor-pointer data-[state=on]:bg-[var(--dynamic-color)]"
+						class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-[var(--dynamic-color)]"
 						style={`--dynamic-color: ${player.color}`}
 					>
 						{player.username}
