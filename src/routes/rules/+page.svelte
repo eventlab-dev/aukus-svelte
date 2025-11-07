@@ -71,7 +71,7 @@
 				Для участников
 			</Button>
 			<Button
-				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E]"
 				onclick={() => (category = 'donations')}
 				data-active={category === 'donations'}
 			>
