@@ -184,7 +184,7 @@
 			<Input
 				type="text"
 				placeholder="Поиск по названию (3+ символов)"
-				class="mb-4 w-full rounded-[4px] bg-muted"
+				class="mb-4 w-full rounded-lg bg-muted"
 				value={$searchParams?.title_search ?? ''}
 				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 			/>
