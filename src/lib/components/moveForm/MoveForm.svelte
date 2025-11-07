@@ -118,9 +118,6 @@
 		return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
 	})
 
-	$inspect(form)
-	$inspect(isFormFilled, buttonText)
-
 	async function saveReview() {
 		let difficulty: GameDifficulty = 0
 		switch (form.difficulty) {

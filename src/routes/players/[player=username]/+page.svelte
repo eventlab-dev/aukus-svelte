@@ -9,7 +9,6 @@
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
-	import CurrentGameCard from '$lib/components/moveCard/CurrentGameCard.svelte'
 
 	const { playersMovesStore, playersBySlug, canvasStore, gamesMatchesStore } =
 		getAppManagerContext()
