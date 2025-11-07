@@ -89,7 +89,7 @@
 		frontendState.set(null)
 	}
 
-	const { ladderChance, snakeChance, maxRoll } = $derived.by(() => {
+	const { ladderChance, snakeChance, maxRoll, ladders, snakes } = $derived.by(() => {
 		let maxRoll = 0
 		switch (selectedDiceOption) {
 			case '1d6':
@@ -120,22 +120,24 @@
 				throw new Error(`Unsupported dice option: ${error}`)
 			}
 		}
-		let ladders = 0
-		let snakes = 0
+		const ladders = []
+		const snakes = []
 		const absMaxRoll = Math.abs(maxRoll)
 		for (let i = 1; i <= absMaxRoll; i++) {
 			const cellId = player.map_position + i * moveDirection
 			if (laddersByCell[cellId]) {
-				ladders++
+				ladders.push(cellId)
 			}
 			if (snakesByCell[cellId]) {
-				snakes++
+				snakes.push(cellId)
 			}
 		}
 		return {
-			ladderChance: (ladders / absMaxRoll) * 100,
-			snakeChance: (snakes / absMaxRoll) * 100,
-			maxRoll
+			ladderChance: (ladders.length / absMaxRoll) * 100,
+			snakeChance: (snakes.length / absMaxRoll) * 100,
+			maxRoll,
+			snakes,
+			ladders
 		}
 	})
 
@@ -163,13 +165,37 @@
 </script>
 
 {#if canRollDice}
-	<Button
-		class="w-full"
-		onclick={handleThrowDice}
-		loading={$rollDice.isPending || $finishMove.isPending}
-	>
-		Бросить кубики {selectedDiceOption === 'drop' ? dropDiceText() : selectedDiceOption}
-	</Button>
+	<div class="flex min-w-[400px] flex-col gap-3 rounded-3xl bg-card p-3">
+		<div class="font-semibold text-muted-foreground">Варианты хода</div>
+		<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
+		<div class="flex gap-3">
+			<div class="flex-1 rounded-2xl bg-secondary p-3">
+				<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
+				<p class="text-left text-2xl font-bold">
+					{ladderChance.toFixed(1)}%
+					{#if ladders.length > 0}
+						<span class="text-muted-foreground">— {ladders.join(', ')}</span>
+					{/if}
+				</p>
+			</div>
+			<div class="flex-1 rounded-2xl bg-secondary p-3">
+				<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
+				<p class="text-left text-2xl font-bold">
+					{snakeChance.toFixed(1)}%
+					{#if snakes.length > 0}
+						<span class="text-muted-foreground">— {snakes.join(', ')}</span>
+					{/if}
+				</p>
+			</div>
+		</div>
+		<Button
+			class="w-full"
+			onclick={handleThrowDice}
+			loading={$rollDice.isPending || $finishMove.isPending}
+		>
+			Бросить кубики — {selectedDiceOption === 'drop' ? dropDiceText() : selectedDiceOption}
+		</Button>
+	</div>
 {:else}
 	<div class="flex rounded-3xl bg-card">
 		<div class="flex flex-col gap-3 p-4">
@@ -195,11 +221,15 @@
 			<div class="flex w-full gap-2">
 				<div class="flex-1 rounded-2xl bg-secondary p-3">
 					<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
-					<p class="text-left text-2xl font-bold">{ladderChance.toFixed(1)}%</p>
+					<p class="text-left text-2xl font-bold">
+						{ladderChance.toFixed(1)}%
+					</p>
 				</div>
 				<div class="flex-1 rounded-2xl bg-secondary p-3">
 					<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
-					<p class="text-left text-2xl font-bold">{snakeChance.toFixed(1)}%</p>
+					<p class="text-left text-2xl font-bold">
+						{snakeChance.toFixed(1)}%
+					</p>
 				</div>
 			</div>
 		</div>
