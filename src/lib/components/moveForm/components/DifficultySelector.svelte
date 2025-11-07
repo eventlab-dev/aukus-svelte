@@ -4,18 +4,31 @@
 
 	type Props = {
 		disabled?: boolean
-		value: Difficulty
+		value?: Difficulty
 	}
 
 	let { disabled, value = $bindable() }: Props = $props()
+
+	type ItemType = {
+		value: Difficulty
+		label: string
+	}
+
+	const items: ItemType[] = [
+		{ value: 'easy', label: 'Легкая' },
+		{ value: 'normal', label: 'Нормальная' },
+		{ value: 'hard', label: 'Сложная' },
+		{ value: 'very-hard', label: 'Очень сложная' }
+	]
+
+	const trigger = $derived(items.find((f) => f.value === value)?.label ?? 'Сложность')
 </script>
 
 <Select type="single" {disabled} bind:value>
-	<SelectTrigger class="w-full">Сложность</SelectTrigger>
+	<SelectTrigger class="w-full">{trigger}</SelectTrigger>
 	<SelectContent>
-		<SelectItem value="easy">Легкая</SelectItem>
-		<SelectItem value="normal">Нормальная</SelectItem>
-		<SelectItem value="hard">Сложная</SelectItem>
-		<SelectItem value="very-hard">Очень сложная</SelectItem>
+		{#each items as item (item.value)}
+			<SelectItem value={item.value}>{item.label}</SelectItem>
+		{/each}
 	</SelectContent>
 </Select>

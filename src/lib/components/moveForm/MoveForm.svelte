@@ -39,7 +39,7 @@
 		hltbTime?: GameLength
 		rating: number | null
 		review: string
-		difficulty: Difficulty
+		difficulty?: Difficulty
 	}
 
 	type GameDurationResponse = {
@@ -60,7 +60,7 @@
 		hltbTime: undefined,
 		rating: null,
 		review: '',
-		difficulty: 'normal'
+		difficulty: undefined
 	})
 
 	let selectedGame: IgdbGameSummary | null = $state(null)
@@ -104,6 +104,7 @@
 		if (!form.review) return { isFormFilled: false, buttonText: 'Напиши отзыв' }
 		if (form.status === 'reroll') return { isFormFilled: true, buttonText: 'Рерольнуть игру' }
 		if (form.rating === null) return { isFormFilled: false, buttonText: 'Поставь оценку' }
+		if (!form.difficulty) return { isFormFilled: false, buttonText: 'Выбери сложность' }
 		if (form.status === 'drop' || form.status === 'sheikh_moment') {
 			return { isFormFilled: true, buttonText: 'Дропнуть игру' }
 		}
@@ -116,6 +117,9 @@
 		}
 		return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
 	})
+
+	$inspect(form)
+	$inspect(isFormFilled, buttonText)
 
 	async function saveReview() {
 		let difficulty: GameDifficulty = 0
@@ -131,6 +135,9 @@
 				break
 			case 'very-hard':
 				difficulty = 2
+				break
+			case undefined:
+				difficulty = 0
 				break
 			default: {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -165,7 +172,7 @@
 				hltbTime: undefined,
 				rating: null,
 				review: '',
-				difficulty: 'normal'
+				difficulty: undefined
 			}
 			selectedGame = null
 		}, 500)
@@ -200,13 +207,15 @@
 				class="h-[176px] w-[132px]"
 			/>
 			<div class="flex w-full flex-col gap-3">
-				<GameTitle bind:value={form.title} bind:selectedGame />
+				<div class="flex gap-3">
+					<GameTitle bind:value={form.title} bind:selectedGame />
+					<HltbLink gameTitle={form.title} />
+				</div>
 
 				<div class="flex gap-3">
 					<GameStatusSelector {gameDuration} bind:value={form.status} />
 					<HltbTimeSelector bind:value={form.hltbTime} disabled={form.status !== 'completed'} />
 					<DifficultySelector bind:value={form.difficulty} />
-					<HltbLink gameTitle={form.title} />
 				</div>
 
 				<div class="space-y-2.5">

@@ -84,7 +84,7 @@
 	}
 </script>
 
-<div class="relative">
+<div class="relative w-full">
 	<Input
 		bind:ref={inputRef}
 		id="game-title"

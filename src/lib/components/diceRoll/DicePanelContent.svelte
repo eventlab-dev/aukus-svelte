@@ -165,7 +165,7 @@
 </script>
 
 {#if canRollDice}
-	<div class="flex min-w-[400px] flex-col gap-3 rounded-3xl bg-card p-3">
+	<div class="flex min-w-[500px] flex-col gap-3 rounded-3xl bg-card p-3">
 		<div class="font-semibold text-muted-foreground">Варианты хода</div>
 		<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
 		<div class="flex gap-3">
