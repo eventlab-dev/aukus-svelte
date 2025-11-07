@@ -44,7 +44,7 @@
 	</div>
 	<div class="flex flex-col items-center justify-center gap-1.5">
 		<Button
-			class="w-full rounded-b-[4px]"
+			class="w-full rounded-xl"
 			disabled={!isValid}
 			onclick={login}
 			loading={$loginMutation.isPending}>Войти</Button
