@@ -64,7 +64,7 @@
 	let editorState: { editor: Editor | null } = $state({ editor: null })
 
 	const selectedGameStore = writable<IgdbGameSummary | null>(null)
-	
+
 	$effect(() => {
 		selectedGameStore.set(selectedGame)
 	})
@@ -192,7 +192,7 @@
 
 				<div class="relative">
 					<TiptapEditor
-						class="pr-8"
+						class="px-3 py-2"
 						content={form.review}
 						bind:editorState
 						bind:value={form.review}
@@ -201,7 +201,7 @@
 						}}
 						simple
 					/>
-					<div class="absolute bottom-1.5 right-1.5 flex flex-col">
+					<div class="absolute right-1.5 bottom-1.5 flex flex-col">
 						<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
 							<WandIcon class="size-6" />
 						</Button>
@@ -217,9 +217,9 @@
 		</div>
 
 		<DialogClose
-			class="absolute right-3 top-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"
+			class="absolute top-3 right-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"
 		>
-			<X class="stroke-4 size-5" />
+			<X class="size-5 stroke-4" />
 		</DialogClose>
 	</DialogContent>
 </Dialog>
