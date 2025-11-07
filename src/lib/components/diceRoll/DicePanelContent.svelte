@@ -10,6 +10,7 @@
 	import { Separator } from '../ui/separator'
 	import ImageLoader from '../ImageLoader.svelte'
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
+	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
@@ -199,7 +200,13 @@
 {:else}
 	<div class="flex rounded-3xl bg-card">
 		<div class="flex flex-col gap-3 p-4">
-			<div class="text-xl font-bold">{player.username}</div>
+			<div class="flex gap-2">
+				<Avatar class="size-[27px]">
+					<AvatarImage src="https://github.com/shadcn.png" />
+					<AvatarFallback class="uppercase">{player.username.slice(0, 2)}</AvatarFallback>
+				</Avatar>
+				<div class="text-xl font-bold">{player.username}</div>
+			</div>
 			<div class="text-sm font-semibold text-muted-foreground">Выпало на ауке</div>
 			<div class="flex gap-2">
 				<ImageLoader
