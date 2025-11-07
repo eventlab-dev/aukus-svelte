@@ -67,7 +67,7 @@
 
 <div class="flex justify-center">
 	<div class="mt-[100px] w-[700px]">
-		<div class="text-5xl">Разработчиков можно поддержать на Boosty</div>
+		<div class="text-5xl font-bold">Разработчиков можно поддержать на Boosty</div>
 		<div class="my-[40px] flex gap-4">
 			<Button class="flex-1 bg-[#FF881E]" onclick={() => openLink('boosty')}
 				>-> Поддержать на бусти</Button
@@ -79,7 +79,7 @@
 			>
 		</div>
 		<div>
-			<div class="text-4xl">Наши споносры</div>
+			<div class="text-4xl font-bold">Наши споносры</div>
 			<div class="mt-[20px] flex flex-col gap-5">
 				{#each sponsors as sponsor (sponsor.name)}
 					<span>
@@ -90,7 +90,7 @@
 					</span>
 				{/each}
 			</div>
-			<div class="mt-[40px] text-4xl">Команда разработчиков</div>
+			<div class="mt-[40px] text-4xl font-bold">Команда разработчиков</div>
 			<div class="mt-[20px] flex flex-col gap-5">
 				{#each developers as developer (developer.name)}
 					<span>
