@@ -26,7 +26,7 @@
 </script>
 
 <div
-	class="group relative flex w-full flex-col rounded-xl bg-card data-[current=true]:bg-primary data-[current=true]:selection:bg-foreground data-[current=true]:selection:text-primary"
+	class="group relative flex w-full flex-col rounded-xl bg-[#2c2c2c] p-3 data-[current=true]:bg-primary data-[current=true]:selection:bg-foreground data-[current=true]:selection:text-primary"
 	id={`game-card-${game.id}`}
 >
 	<div class="flex justify-between">

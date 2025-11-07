@@ -142,7 +142,7 @@
 		<SearchIcon /> История игр
 	</DialogTrigger>
 	<DialogContent
-		class="flex h-[80vh] w-[750px] flex-col overflow-hidden text-primary-foreground selection:bg-foreground selection:text-background"
+		class="flex h-[80vh] w-[750px] flex-col overflow-hidden bg-[#222222] text-primary-foreground selection:bg-foreground selection:text-background"
 	>
 		<DialogHeader class="gap-3">
 			<DialogTitle class="text-2xl font-bold">История игр</DialogTitle>
@@ -196,7 +196,7 @@
 						<LoaderCircle class="inline size-20 animate-spin" />
 					</div>
 				{:else}
-					<div class="flex flex-col gap-10">
+					<div class="flex flex-col gap-5">
 						{#if noGames}
 							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
 						{/if}
