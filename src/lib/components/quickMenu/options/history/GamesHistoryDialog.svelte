@@ -153,7 +153,8 @@
 					<Toggle
 						variant="outline"
 						bind:pressed={() => player.slug === selectedPlayer, (v) => selectPlayer(v, player.slug)}
-						class="cursor-pointer"
+						class="cursor-pointer data-[state=on]:bg-[var(--dynamic-color)]"
+						style={`--dynamic-color: ${player.color}`}
 					>
 						{player.username}
 						{#if selectedPlayer === player.slug}
