@@ -20,54 +20,23 @@
 
 	const modelsParams: ModelParams[] = $derived.by(() => {
 		if ($turnState === 'dice-animation' || $turnState === 'dice-results') {
-			if ($movementState.rollValues.length === 1) {
-				return [
-					{
-						position: [0, 0, -5] as const,
-						scale: 3,
-						value: $movementState.rollValues[0],
-						valuePosition: [-0.8, 1, -5] as const
-					}
-				]
-			}
-			if ($movementState.rollValues.length === 2) {
-				return [
-					{
-						position: [-5, 0, -5] as const,
-						scale: 3,
-						value: $movementState.rollValues[0],
-						valuePosition: [-6, 1, -5] as const
-					},
-					{
-						position: [5, 0, -5] as const,
-						scale: 3,
-						value: $movementState.rollValues[1],
-						valuePosition: [4.5, 1, -5] as const
-					}
-				]
-			}
-			if ($movementState.rollValues.length === 3) {
-				return [
-					{
-						position: [-7, 0, -5] as const,
-						scale: 2.5,
-						value: $movementState.rollValues[0],
-						valuePosition: [-8.2, 1, -5] as const
-					},
-					{
-						position: [0, 0, -5] as const,
-						scale: 2.8,
-						value: $movementState.rollValues[1],
-						valuePosition: [-0.8, 1, -5] as const
-					},
-					{
-						position: [7, 0, -5] as const,
-						scale: 2.5,
-						value: $movementState.rollValues[2],
-						valuePosition: [6.5, 1, -5] as const
-					}
-				]
-			}
+			const n = $movementState.rollValues.length
+			const baseZ = -5
+			const spread = 7
+			const centerOffset = (n - 1) / 2
+
+			return $movementState.rollValues.map((v, i) => {
+				const x = (i - centerOffset) * spread
+				const z = baseZ - Math.abs(i - centerOffset) * 0.5 // push side dice slightly back
+				const scale = 2.8 - Math.abs(i - centerOffset) * 0.2
+
+				return {
+					position: [x, 0, z] as const,
+					scale,
+					value: v,
+					valuePosition: [x - 0.8, 1, z] as const
+				}
+			})
 		}
 		return []
 	})

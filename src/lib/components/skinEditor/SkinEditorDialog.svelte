@@ -10,6 +10,7 @@
 	import { getSkinIconUrl } from '$lib/utils'
 	import { SvelteSet } from 'svelte/reactivity'
 	import PlayerModel from '../map/PlayerModel.svelte'
+	import DicePreview from './DicePreview.svelte'
 
 	const { eventDataStore, myPlayer, usersStore } = getAppManagerContext()
 	const { skinsById, eventDataQuery } = eventDataStore
@@ -108,11 +109,14 @@
 		<DialogHeader>
 			<DialogTitle>Кастомизация персонажа</DialogTitle>
 		</DialogHeader>
-		<div class="flex w-full justify-center">
+		<div class="relative flex w-full justify-center">
 			<div class="relative w-fit">
 				{#if $myPlayer}
 					<PlayerModel player={$myPlayer} selectedSkins={selectedSkinItems} variant="big" />
 				{/if}
+			</div>
+			<div class="absolute right-30 bottom-5">
+				<DicePreview />
 			</div>
 		</div>
 		<div class="flex w-full justify-center gap-5">
