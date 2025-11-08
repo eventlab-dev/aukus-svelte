@@ -29,6 +29,10 @@
 		}
 	})
 
+	const modelStyle = $derived(
+		`background-color: ${player.color}; --mask-url: url(${PlayerBaseModelUrl})`
+	)
+
 	const skins = $derived.by(() => {
 		if (selectedSkins) {
 			return selectedSkins
@@ -38,12 +42,19 @@
 </script>
 
 <div class="relative">
-	<img
+	<!-- <img
 		src={PlayerBaseModelUrl}
 		alt="player-model"
 		class="player-shadow h-[80px] w-auto"
 		style={sizeStyle}
-	/>
+	/> -->
+	<div class="player-shadow">
+		<div
+			class="player-model data-[variant=big]:h-[150px] data-[variant=big]:w-[137px] data-[variant=small]:h-[80px] data-[variant=small]:w-[73px]"
+			data-variant={variant}
+			style={modelStyle}
+		></div>
+	</div>
 	{#each skins as skin (skin.id)}
 		{#if skin.slot === 'head'}
 			<img
@@ -74,3 +85,16 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	:global(.player-model) {
+		-webkit-mask: var(--mask-url) no-repeat center / contain;
+		mask: var(--mask-url) no-repeat center / contain;
+		position: relative;
+	}
+
+	:global(.player-shadow) {
+		filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 1));
+		display: inline-block;
+	}
+</style>

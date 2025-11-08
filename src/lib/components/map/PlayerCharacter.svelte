@@ -155,9 +155,3 @@
 		{/if}
 	</button>
 </div>
-
-<style>
-	:global(.player-shadow) {
-		filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.9));
-	}
-</style>

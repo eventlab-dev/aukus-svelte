@@ -34,7 +34,7 @@
 					position: [x, 0, z] as const,
 					scale,
 					value: v,
-					valuePosition: [x - 0.8, 1, z] as const
+					valuePosition: [x - 0.8, 1, z + 1] as const
 				}
 			})
 		}
