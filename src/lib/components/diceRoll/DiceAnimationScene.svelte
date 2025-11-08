@@ -15,8 +15,20 @@
 		valuePosition: Vector3
 	}
 
-	const { turnState, movementStore } = getAppManagerContext()
+	const { turnState, movementStore, eventDataStore, myPlayer } = getAppManagerContext()
 	const { movementState } = movementStore
+	const { skinsById } = eventDataStore
+
+	const diceSkin = $derived.by(() => {
+		if ($myPlayer?.equipped_skins) {
+			const skins = $myPlayer.equipped_skins
+				.map((s) => $skinsById.get(s))
+				.filter((s) => s !== undefined)
+			const diceSkin = skins.find((s) => s.slot === 'dice')
+			return diceSkin ?? null
+		}
+		return null
+	})
 
 	const modelsParams: ModelParams[] = $derived.by(() => {
 		if ($turnState === 'dice-animation' || $turnState === 'dice-results') {
@@ -44,32 +56,32 @@
 	let rotation = $state({ x: 0, y: 0, z: 0 })
 
 	const loader = new GLTFLoader()
-
-	const textureUrl = DefaultDiceTexture
-
 	let loadedMesh: THREE.Mesh | null = $state(null)
 
-	loader.load(DiceModelUrl, (gltf: GLTF) => {
-		// Assume the mesh is the first child of the scene
-		const mesh = gltf.scene.children[0] as THREE.Mesh
+	$effect(() => {
+		const textureUrl = diceSkin?.image_url ?? DefaultDiceTexture
+		loader.load(DiceModelUrl, (gltf: GLTF) => {
+			// Assume the mesh is the first child of the scene
+			const mesh = gltf.scene.children[0] as THREE.Mesh
 
-		// Load the paintable texture
-		const texture: THREE.Texture = new THREE.TextureLoader().load(textureUrl)
-		texture.flipY = false
-		texture.needsUpdate = true
+			// Load the paintable texture
+			const texture: THREE.Texture = new THREE.TextureLoader().load(textureUrl)
+			texture.flipY = false
+			texture.needsUpdate = true
 
-		const newMaterial = new THREE.MeshBasicMaterial({
-			map: texture
-			// flatShading: true
+			const newMaterial = new THREE.MeshBasicMaterial({
+				map: texture
+				// flatShading: true
+			})
+
+			// Apply the texture
+			if (Array.isArray(mesh.material)) {
+				mesh.material = (mesh.material as THREE.Material[]).map(() => newMaterial.clone())
+			} else {
+				mesh.material = newMaterial
+			}
+			loadedMesh = mesh
 		})
-
-		// Apply the texture
-		if (Array.isArray(mesh.material)) {
-			mesh.material = (mesh.material as THREE.Material[]).map(() => newMaterial.clone())
-		} else {
-			mesh.material = newMaterial
-		}
-		loadedMesh = mesh
 	})
 
 	$effect(() => {
