@@ -630,6 +630,34 @@ export type SearchIgdbGamesGetApiIgdbGamesSearchGetResponses = {
 
 export type SearchIgdbGamesGetApiIgdbGamesSearchGetResponse = SearchIgdbGamesGetApiIgdbGamesSearchGetResponses[keyof SearchIgdbGamesGetApiIgdbGamesSearchGetResponses];
 
+export type StartIgdbUpdateApiIgdbUpdateStartGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Force
+         */
+        force?: boolean;
+    };
+    url: '/api/igdb/update/start';
+};
+
+export type StartIgdbUpdateApiIgdbUpdateStartGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type StartIgdbUpdateApiIgdbUpdateStartGetError = StartIgdbUpdateApiIgdbUpdateStartGetErrors[keyof StartIgdbUpdateApiIgdbUpdateStartGetErrors];
+
+export type StartIgdbUpdateApiIgdbUpdateStartGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
 export type RefreshStreamsApiStreamsRefreshPostData = {
     body?: never;
     path?: never;
