@@ -200,12 +200,14 @@
 {:else}
 	<div class="flex rounded-3xl bg-card">
 		<div class="flex w-[380px] flex-col gap-3 p-4">
-			<div class="flex gap-2">
+			<div class="flex items-center gap-2">
 				<Avatar class="size-[27px]">
 					<AvatarImage src="https://github.com/shadcn.png" />
 					<AvatarFallback class="uppercase">{player.username.slice(0, 2)}</AvatarFallback>
 				</Avatar>
-				<div class="text-xl font-bold">{player.username}</div>
+				<Button variant="link" class="p-0" href={`/players/${player.slug}`}>
+					<div class="text-xl font-bold text-foreground">{player.username}</div>
+				</Button>
 			</div>
 			<div class="text-sm font-semibold text-muted-foreground">Выпало на ауке</div>
 			<div class="flex gap-2">
@@ -218,7 +220,7 @@
 			</div>
 		</div>
 		<Separator orientation="vertical" />
-		<div class="flex w-fit items-center">
+		<div class="flex items-center">
 			<PlayerModel {player} variant="big" />
 		</div>
 		<Separator orientation="vertical" />

@@ -14,7 +14,12 @@
 	<title>Aukus</title>
 </svelte:head>
 
-<div class="mt-[20px]">
+<!-- <div class="absolute top-[-40px] flex w-full justify-center">
+	<img src="/logo2.png" class="absolute top-[100px] w-[300px]" alt="logo" />
+	<img src="/logo-background.png" alt="back" />
+</div> -->
+
+<div class="">
 	<MapComponent />
 </div>
 
