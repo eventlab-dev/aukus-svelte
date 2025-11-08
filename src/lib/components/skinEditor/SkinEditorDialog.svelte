@@ -50,6 +50,8 @@
 		return $myPlayer.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
 	})
 
+	const selectedDiceSkin = $derived(selectedSkinItems.find((s) => s.slot === 'dice'))
+
 	let filter = $state<SkinSlot | null>(null)
 
 	function selectFilter(part: SkinSlot) {
@@ -117,7 +119,7 @@
 				{/if}
 			</div>
 			<div class="absolute right-30 bottom-5">
-				<DicePreview />
+				<DicePreview textureUrl={selectedDiceSkin?.image_url} />
 			</div>
 		</div>
 		<div class="flex w-full justify-center gap-5">

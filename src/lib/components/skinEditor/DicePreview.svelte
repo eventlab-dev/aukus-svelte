@@ -4,33 +4,40 @@
 	import { GLTFLoader, type GLTF } from 'three/examples/jsm/Addons.js'
 	import * as THREE from 'three'
 
-	const loader = new GLTFLoader()
+	type Props = {
+		textureUrl?: string
+	}
 
-	const textureUrl = DefaultDiceTexture
+	const { textureUrl }: Props = $props()
+
+	const loader = new GLTFLoader()
 
 	let loadedMesh: THREE.Mesh | null = $state(null)
 
-	loader.load(DiceModelUrl, (gltf: GLTF) => {
-		// Assume the mesh is the first child of the scene
-		const mesh = gltf.scene.children[0] as THREE.Mesh
+	$effect(() => {
+		const url = textureUrl ?? DefaultDiceTexture
+		loader.load(DiceModelUrl, (gltf: GLTF) => {
+			// Assume the mesh is the first child of the scene
+			const mesh = gltf.scene.children[0] as THREE.Mesh
 
-		// Load the paintable texture
-		const texture: THREE.Texture = new THREE.TextureLoader().load(textureUrl)
-		texture.flipY = false
-		texture.needsUpdate = true
+			// Load the paintable texture
+			const texture: THREE.Texture = new THREE.TextureLoader().load(url)
+			texture.flipY = false
+			texture.needsUpdate = true
 
-		const newMaterial = new THREE.MeshBasicMaterial({
-			map: texture
-			// flatShading: true
+			const newMaterial = new THREE.MeshBasicMaterial({
+				map: texture
+				// flatShading: true
+			})
+
+			// Apply the texture
+			if (Array.isArray(mesh.material)) {
+				mesh.material = (mesh.material as THREE.Material[]).map(() => newMaterial.clone())
+			} else {
+				mesh.material = newMaterial
+			}
+			loadedMesh = mesh
 		})
-
-		// Apply the texture
-		if (Array.isArray(mesh.material)) {
-			mesh.material = (mesh.material as THREE.Material[]).map(() => newMaterial.clone())
-		} else {
-			mesh.material = newMaterial
-		}
-		loadedMesh = mesh
 	})
 
 	let rotation = $state({ x: 0, y: 0, z: 0 })
