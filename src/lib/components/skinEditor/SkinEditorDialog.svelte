@@ -176,7 +176,7 @@
 								<div class="dice-preview-container">
 									<div
 										class="dice-preview"
-										style="background-image: url('{getSkinIconUrl(skin.image_url)}');"
+										style="background-image: url('{skin.image_url}');"
 									></div>
 								</div>
 							{:else}
