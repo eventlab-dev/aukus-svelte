@@ -76,6 +76,7 @@
 		"prosemirror-state": "^1.4.3",
 		"prosemirror-view": "^1.41.3",
 		"svelte-konva": "^1.0.1",
-		"three": "^0.180.0"
+		"three": "^0.180.0",
+		"twallpaper": "^2.1.2"
 	}
 }

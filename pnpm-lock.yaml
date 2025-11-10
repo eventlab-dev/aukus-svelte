@@ -50,6 +50,9 @@ importers:
       three:
         specifier: ^0.180.0
         version: 0.180.0
+      twallpaper:
+        specifier: ^2.1.2
+        version: 2.1.2
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.5
@@ -2115,6 +2118,9 @@ packages:
   tw-animate-css@1.3.7:
     resolution: {integrity: sha512-lvLb3hTIpB5oGsk8JmLoAjeCHV58nKa2zHYn8yWOoG5JJusH3bhJlF2DLAZ/5NmJ+jyH3ssiAx/2KmbhavJy/A==}
 
+  twallpaper@2.1.2:
+    resolution: {integrity: sha512-au6EKb5h7PClCrYvv3RwcI5VeqS+Pa3eUoXSRbhkblKtbBI5IF9l4jZbA0V9Gp86KRfi8fIqQpDkzBl+H0Lpaw==}
+
   tweakpane@3.1.10:
     resolution: {integrity: sha512-rqwnl/pUa7+inhI2E9ayGTqqP0EPOOn/wVvSWjZsRbZUItzNShny7pzwL3hVlaN4m9t/aZhsP0aFQ9U5VVR2VQ==}
 
@@ -4078,6 +4084,8 @@ snapshots:
   tslib@2.8.1: {}
 
   tw-animate-css@1.3.7: {}
+
+  twallpaper@2.1.2: {}
 
   tweakpane@3.1.10: {}
 
