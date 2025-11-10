@@ -1,4 +1,5 @@
 <script lang="ts">
+	// @ts-expect-error types not found
 	import { TWallpaper } from 'twallpaper'
 	import 'twallpaper/css'
 	import { flip } from 'svelte/animate'
