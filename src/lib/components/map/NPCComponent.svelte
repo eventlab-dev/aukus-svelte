@@ -38,7 +38,7 @@
 	})
 </script>
 
-<div class="absolute" style="left: {position.x + 20}px; top: {position.y}px;" bind:this={container}>
+<div class="absolute" style="left: {position.x + 10}px; top: {position.y}px;" bind:this={container}>
 	<img src={npc.imageUrl} alt="npc" class="h-[130px] w-auto" />
 	{#if message}
 		<div
