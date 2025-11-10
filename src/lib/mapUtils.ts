@@ -80,13 +80,14 @@ export const ladders: Array<Ladder> = [
 	{ cellFrom: 1, cellTo: 20 },
 	{ cellFrom: 4, cellTo: 25 },
 	{ cellFrom: 13, cellTo: 46 },
+	{ cellFrom: 17, cellTo: 35 },
 	{ cellFrom: 33, cellTo: 49 },
 	{ cellFrom: 42, cellTo: 63 },
 	{ cellFrom: 44, cellTo: 68 },
 	{ cellFrom: 50, cellTo: 69 },
-	{ cellFrom: 62, cellTo: 81 },
-	{ cellFrom: 71, cellTo: 90 },
-	{ cellFrom: 74, cellTo: 92 }
+	{ cellFrom: 62, cellTo: 78 },
+	{ cellFrom: 71, cellTo: 85 },
+	{ cellFrom: 74, cellTo: 88 }
 ]
 
 export const laddersByCell = ladders.reduce(
@@ -105,11 +106,11 @@ export const snakes: Array<Snake> = [
 	{ cellFrom: 54, cellTo: 31 },
 	{ cellFrom: 66, cellTo: 45 },
 	{ cellFrom: 76, cellTo: 58 },
-	{ cellFrom: 89, cellTo: 53 },
-	{ cellFrom: 94, cellTo: 67 },
-	{ cellFrom: 96, cellTo: 84 },
-	{ cellFrom: 97, cellTo: 85 },
-	{ cellFrom: 99, cellTo: 41 }
+	{ cellFrom: 89, cellTo: 72 },
+	{ cellFrom: 94, cellTo: 73 },
+	{ cellFrom: 96, cellTo: 80 },
+	{ cellFrom: 97, cellTo: 83 },
+	{ cellFrom: 99, cellTo: 70 }
 ]
 
 export const snakesByCell = snakes.reduce(
