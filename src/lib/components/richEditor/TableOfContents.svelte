@@ -68,7 +68,7 @@
 	class="fixed h-fit w-fit rounded-2xl bg-card p-5"
 	style="top: {pos.top}px; left: {pos.left - elementWidth - 30}px"
 >
-	<ScrollArea class="max-h-[70vh]" type="auto">
+	<ScrollArea class="h-auto max-h-[70vh] overflow-y-auto" type="auto">
 		<div class="mb-5 flex justify-between">
 			<div>Быстрые ссылки</div>
 			<Button variant="link" class="m-0 mr-3 h-fit w-fit p-0" onclick={scrollToTop}>Наверх</Button>
