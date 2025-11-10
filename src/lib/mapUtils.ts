@@ -1,4 +1,4 @@
-import { LastMapPosition } from './constants'
+import { CDN_URL_BASE, LastMapPosition } from './constants'
 
 type CellId = number
 
@@ -191,30 +191,57 @@ export function getWinnerPosition(place: number) {
 }
 
 export type NPC = {
+	cellId: number
 	imageUrl: string
-	top: number
-	left: number
 }
 
 export const NPCList: NPC[] = [
 	{
-		imageUrl: '/bard.png',
-		top: 530,
-		left: 990
+		cellId: 27,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/black_mage.avif`
 	},
 	{
-		imageUrl: '/maps/npc2.png',
-		top: 700,
-		left: 400
+		cellId: 21,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/beer_golem.avif`
 	},
 	{
-		imageUrl: '/maps/npc3.png',
-		top: 700,
-		left: 650
+		cellId: 43,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/lizard.avif`
+	},
+	{
+		cellId: 47,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/sans.avif`
+	},
+	{
+		cellId: 54,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/ghost.avif`
+	},
+	{
+		cellId: 66,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/zombie_prime.avif`
+	},
+	{
+		cellId: 76,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/smork.avif`
+	},
+	{
+		cellId: 89,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/vampress.avif`
+	},
+	{
+		cellId: 94,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/papich.avif`
+	},
+	{
+		cellId: 96,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/snake.avif`
+	},
+	{
+		cellId: 97,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/mud_golem.avif`
+	},
+	{
+		cellId: 99,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/cell99.avif`
 	}
-	// {
-	// 	imageUrl: '/maps/npc4.png',
-	// 	top: 300,
-	// 	left: 150
-	// }
 ]

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { NPC } from '$lib/mapUtils'
+	import { getCellPosition, type NPC } from '$lib/mapUtils'
 	import { fade } from 'svelte/transition'
 
 	type Props = {
@@ -8,6 +8,8 @@
 	}
 
 	const { npc, message }: Props = $props()
+
+	const position = getCellPosition(npc.cellId)
 
 	let container = $state<HTMLDivElement | null>(null)
 	let messageElement = $state<HTMLDivElement | null>(null)
@@ -36,8 +38,8 @@
 	})
 </script>
 
-<div class="absolute" style="left: {npc.left}px; top: {npc.top}px;" bind:this={container}>
-	<img src={npc.imageUrl} alt="npc" class="h-[120px] w-auto" />
+<div class="absolute" style="left: {position.x + 20}px; top: {position.y}px;" bind:this={container}>
+	<img src={npc.imageUrl} alt="npc" class="h-[130px] w-auto" />
 	{#if message}
 		<div
 			bind:this={messageElement}
