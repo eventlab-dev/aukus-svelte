@@ -134,3 +134,6 @@ export const DifficultyTitle: { [k in GameDifficulty]: string } = {
 	1: 'Сложный',
 	2: 'Очень сложный'
 }
+
+export const LOGO_URL = `${CDN_URL_BASE}/map/logo.avif`
+export const LOGO_BG_URL = `${CDN_URL_BASE}/map/logo-background.avif`
