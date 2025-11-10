@@ -248,7 +248,7 @@ export const NPCList: NPC[] = [
 	// ladders
 	{
 		cellId: 1,
-		imageUrl: `${CDN_URL_BASE}/map/ladders/joker.avif`
+		imageUrl: `${CDN_URL_BASE}/map/ladders/jocker.avif`
 	},
 	{
 		cellId: 4,

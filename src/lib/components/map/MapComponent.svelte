@@ -46,11 +46,11 @@
 			{#each mapCellsSorted as cell (cell.id)}
 				<CellNumber cellId={cell.id} />
 			{/each}
+			<MapCharacters />
 			<MovementMarkers />
 			{#each $players as player (player.slug)}
 				<PlayerCharacter {player} />
 			{/each}
-			<MapCharacters />
 		</button>
 	</div>
 </div>
