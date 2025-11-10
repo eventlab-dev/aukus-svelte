@@ -3,6 +3,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
 	import CellNumber from './CellNumber.svelte'
+	import CharacterMessages from './CharacterMessages.svelte'
 	import MapArrow from './MapArrow.svelte'
 	import MapArrowMarkers from './MapArrowMarkers.svelte'
 	import MovementMarkers from './MovementMarkers.svelte'
@@ -45,6 +46,7 @@
 			{#each $players as player (player.slug)}
 				<PlayerCharacter {player} />
 			{/each}
+			<CharacterMessages />
 		</button>
 	</div>
 </div>

@@ -52,6 +52,8 @@ export function createEventDataStore() {
 		return map
 	})
 
+	const chatMessages = derived(eventData, ($eventData) => $eventData?.chat_messages ?? [])
+
 	return {
 		eventDataQuery,
 		players,
@@ -61,7 +63,8 @@ export function createEventDataStore() {
 		achievements,
 		achievementsById,
 		eventSettings,
-		diceOptions
+		diceOptions,
+		chatMessages
 	}
 }
 

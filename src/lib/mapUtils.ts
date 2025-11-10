@@ -188,3 +188,32 @@ export function getWinnerPosition(place: number) {
 		}
 	}
 }
+
+export type NPC = {
+	imageUrl: string
+	top: number
+	left: number
+}
+
+export const NPCList: NPC[] = [
+	{
+		imageUrl: '/bard.png',
+		top: 530,
+		left: 990
+	},
+	{
+		imageUrl: '/maps/npc2.png',
+		top: 700,
+		left: 400
+	},
+	{
+		imageUrl: '/maps/npc3.png',
+		top: 700,
+		left: 650
+	}
+	// {
+	// 	imageUrl: '/maps/npc4.png',
+	// 	top: 300,
+	// 	left: 150
+	// }
+]

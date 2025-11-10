@@ -117,6 +117,24 @@ export type CanvasUpdateRequest = {
 };
 
 /**
+ * ChatMessageItem
+ */
+export type ChatMessageItem = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Text
+     */
+    text: string;
+    /**
+     * Created At
+     */
+    created_at: number;
+};
+
+/**
  * CreatePlayerMoveRequest
  */
 export type CreatePlayerMoveRequest = {
@@ -224,6 +242,10 @@ export type EventDataResponse = {
      * Dice Options
      */
     dice_options: Array<DiceOption>;
+    /**
+     * Chat Messages
+     */
+    chat_messages: Array<ChatMessageItem>;
 };
 
 /**
