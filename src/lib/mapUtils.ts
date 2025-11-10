@@ -243,5 +243,55 @@ export const NPCList: NPC[] = [
 	{
 		cellId: 99,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/cell99.avif`
+	},
+
+	// ladders
+	{
+		cellId: 1,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/joker.avif`
+	},
+	{
+		cellId: 4,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/tree.avif`
+	},
+	{
+		cellId: 13,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/fae.avif`
+	},
+	{
+		cellId: 17,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/gnome.avif`
+	},
+	{
+		cellId: 33,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/bard.avif`
+	},
+	{
+		cellId: 42,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/paladin.avif`
+	},
+	{
+		cellId: 44,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/mage.avif`
+	},
+	{
+		cellId: 50,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/alchemist.avif`
+	},
+	{
+		cellId: 62,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/elf_girl.avif`
+	},
+	{
+		cellId: 68,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/mage_portal.avif`
+	},
+	{
+		cellId: 71,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/tree_ladder.avif`
+	},
+	{
+		cellId: 74,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/smith.avif`
 	}
 ]
