@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { LastMapPosition, MAP_IMAGE } from '$lib/constants'
+	import { LastMapPosition, LOGO_BG_URL, LOGO_URL, MAP_IMAGE } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
 	import CellNumber from './CellNumber.svelte'
@@ -28,6 +28,10 @@
 
 <div class="flex justify-center">
 	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
+		<div class="relative flex w-full justify-center">
+			<img src={LOGO_URL} class="absolute top-[100px] w-[300px]" alt="logo" />
+			<img src={LOGO_BG_URL} alt="back" />
+		</div>
 		<button id={MapContainerId} class="relative h-[2000px] w-[1700px]" onclick={handleClick}>
 			<img class="h-[2000] w-[1700px] bg-center bg-no-repeat" src={MAP_IMAGE} alt="map" />
 			<MapArrowMarkers />
