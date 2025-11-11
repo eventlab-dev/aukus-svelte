@@ -69,7 +69,7 @@
 	<div class="mt-[100px] w-[700px]">
 		<div class="text-5xl font-bold">Разработчиков можно поддержать на Boosty</div>
 		<div class="my-[40px] flex gap-4">
-			<Button class="flex-1 bg-[#FF881E]" onclick={() => openLink('boosty')}
+			<Button class="w-[250px] bg-[#FF881E]" onclick={() => openLink('boosty')}
 				>-> Поддержать на бусти</Button
 			>
 			<Button class="flex-1" variant="secondary" onclick={() => openLink('tg')}>Наш телеграм</Button

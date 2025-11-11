@@ -122,9 +122,9 @@
 				<DicePreview textureUrl={selectedDiceSkin?.image_url} />
 			</div>
 		</div>
-		<div class="flex w-full justify-center gap-5">
+		<div class="flex w-full justify-center gap-2">
 			<Toggle
-				class="cursor-pointer"
+				class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-primary"
 				pressed={filter === 'head'}
 				onPressedChange={() => selectFilter('head')}
 			>
@@ -136,7 +136,7 @@
 				{/if}
 			</Toggle>
 			<Toggle
-				class="cursor-pointer"
+				class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-primary"
 				pressed={filter === 'body'}
 				onPressedChange={() => selectFilter('body')}
 			>
@@ -148,12 +148,24 @@
 				{/if}
 			</Toggle>
 			<Toggle
-				class="cursor-pointer"
+				class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-primary"
 				pressed={filter === 'item'}
 				onPressedChange={() => selectFilter('item')}
 			>
 				Аксессуар
 				{#if filter === 'item'}
+					<span class="rounded bg-white/20 p-0.5">
+						<X class="stroke-4" />
+					</span>
+				{/if}
+			</Toggle>
+			<Toggle
+				class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-primary"
+				pressed={filter === 'dice'}
+				onPressedChange={() => selectFilter('dice')}
+			>
+				Кубик
+				{#if filter === 'dice'}
 					<span class="rounded bg-white/20 p-0.5">
 						<X class="stroke-4" />
 					</span>
