@@ -2,24 +2,19 @@
 	// @ts-expect-error types not found
 	import { TWallpaper } from 'twallpaper'
 	import 'twallpaper/css'
-	import { flip } from 'svelte/animate'
 	import Footer from './Footer.svelte'
 	import Navigation from './Navigation.svelte'
-	import PlayerCard from './player/PlayerCard.svelte'
 	import QuickMenu from './quickMenu/QuickMenu.svelte'
 	import { ScrollArea } from './ui/scroll-area'
 	import { createAppManager } from '$lib/stores/AppManager.svelte'
 	import { setAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { onMount } from 'svelte'
+	import PlayersList from './player/PlayersList.svelte'
 
 	let { children } = $props()
 
 	const appManager = createAppManager()
 	setAppManagerContext(appManager)
-
-	const { players } = appManager
-
-	const sortedPlayers = $derived([...$players].sort((a, b) => b.map_position - a.map_position))
 
 	onMount(() => {
 		const container = document.getElementById('wallpaper') as HTMLElement
@@ -52,11 +47,7 @@
 		</div>
 
 		<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
-			{#each sortedPlayers as player (player.slug)}
-				<div animate:flip={{ duration: 300 }}>
-					<PlayerCard {player} />
-				</div>
-			{/each}
+			<PlayersList />
 		</div>
 
 		<Navigation />

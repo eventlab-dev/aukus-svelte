@@ -16,12 +16,12 @@
 
 <Button
 	href="/players/{player.slug}"
-	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-xl bg-card p-0 text-foreground select-none hover:no-underline"
+	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-xl bg-card p-0! text-foreground select-none hover:no-underline"
 	onmouseenter={() => (isHovered = true)}
 	onmouseleave={() => (isHovered = false)}
 >
 	<div
-		class="relative flex h-full w-full flex-col gap-[5px] p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 group-hover:after:opacity-100"
+		class="relative flex h-full w-full flex-col gap-[5px] p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 hover:after:opacity-100"
 	>
 		<div class="flex w-full justify-between gap-[5px]">
 			<div class="flex items-center gap-2">
