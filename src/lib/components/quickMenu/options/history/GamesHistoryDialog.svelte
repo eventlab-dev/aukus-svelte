@@ -52,10 +52,10 @@
 	function selectPlayer(_: boolean, slug: string) {
 		if (selectedPlayer === slug) {
 			searchParams.update((p) => ({ ...p, players: [] }))
-			aukus4QueryParams.update((p) => ({ ...p, player_slug: null }))
+			aukus4QueryParams.update((p) => ({ ...p, players: [] }))
 		} else {
 			searchParams.update((p) => ({ ...p, players: [slug] }))
-			aukus4QueryParams.update((p) => ({ ...p, player_slug: slug }))
+			aukus4QueryParams.update((p) => ({ ...p, players: [slug] }))
 		}
 	}
 
