@@ -198,11 +198,11 @@ export type NPC = {
 
 export const NPCList: NPC[] = [
 	{
-		cellId: 97,
+		cellId: 96,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/black_mage.avif`
 	},
 	{
-		cellId: 99,
+		cellId: 97,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/beer_golem.avif`,
 		mirror: true
 	},
@@ -223,7 +223,7 @@ export const NPCList: NPC[] = [
 		imageUrl: `${CDN_URL_BASE}/map/snakes/zombie_prime.avif`
 	},
 	{
-		cellId: 96,
+		cellId: 94,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/smork.avif`
 	},
 	{
@@ -244,7 +244,7 @@ export const NPCList: NPC[] = [
 		imageUrl: `${CDN_URL_BASE}/map/snakes/mud_golem.avif`
 	},
 	{
-		cellId: 94,
+		cellId: 99,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/cell99.avif`
 	},
 
@@ -269,8 +269,9 @@ export const NPCList: NPC[] = [
 		mirror: true
 	},
 	{
-		cellId: 33,
-		imageUrl: `${CDN_URL_BASE}/map/ladders/bard.avif`
+		cellId: 13,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/bard.avif`,
+		mirror: true
 	},
 	{
 		cellId: 42,
@@ -293,8 +294,9 @@ export const NPCList: NPC[] = [
 		imageUrl: `${CDN_URL_BASE}/map/ladders/mage_portal.avif`
 	},
 	{
-		cellId: 13,
-		imageUrl: `${CDN_URL_BASE}/map/ladders/tree_ladder.avif`
+		cellId: 33,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/tree_ladder.avif`,
+		mirror: true
 	},
 	{
 		cellId: 74,

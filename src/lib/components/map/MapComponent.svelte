@@ -35,6 +35,11 @@
 	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
 		<button id={MapContainerId} class="relative h-[2000px] w-[1700px]" onclick={handleClick}>
 			<img class="h-[2000] w-[1700px] bg-center bg-no-repeat" src={MAP_IMAGE} alt="map" />
+			<CellNumber cellId={0} />
+			<CellNumber cellId={LastMapPosition} />
+			{#each mapCellsSorted as cell (cell.id)}
+				<CellNumber cellId={cell.id} />
+			{/each}
 			<MapArrowMarkers />
 			{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
 				<MapArrow {from} {to} />
@@ -42,11 +47,7 @@
 			{#each snakes as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
 				<MapArrow {from} {to} />
 			{/each}
-			<CellNumber cellId={0} />
-			<CellNumber cellId={LastMapPosition} />
-			{#each mapCellsSorted as cell (cell.id)}
-				<CellNumber cellId={cell.id} />
-			{/each}
+
 			<MapCharacters />
 			<MovementMarkers />
 			{#each $players as player (player.slug)}
