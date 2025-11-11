@@ -193,19 +193,21 @@ export function getWinnerPosition(place: number) {
 export type NPC = {
 	cellId: number
 	imageUrl: string
+	mirror?: boolean
 }
 
 export const NPCList: NPC[] = [
 	{
-		cellId: 27,
+		cellId: 97,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/black_mage.avif`
 	},
 	{
-		cellId: 21,
-		imageUrl: `${CDN_URL_BASE}/map/snakes/beer_golem.avif`
+		cellId: 99,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/beer_golem.avif`,
+		mirror: true
 	},
 	{
-		cellId: 43,
+		cellId: 76,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/lizard.avif`
 	},
 	{
@@ -221,27 +223,28 @@ export const NPCList: NPC[] = [
 		imageUrl: `${CDN_URL_BASE}/map/snakes/zombie_prime.avif`
 	},
 	{
-		cellId: 76,
+		cellId: 96,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/smork.avif`
 	},
 	{
-		cellId: 89,
+		cellId: 43,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/vampress.avif`
 	},
 	{
-		cellId: 94,
+		cellId: 21,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/papich.avif`
 	},
 	{
-		cellId: 96,
-		imageUrl: `${CDN_URL_BASE}/map/snakes/snake.avif`
+		cellId: 27,
+		imageUrl: `${CDN_URL_BASE}/map/snakes/snake.avif`,
+		mirror: true
 	},
 	{
-		cellId: 97,
+		cellId: 89,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/mud_golem.avif`
 	},
 	{
-		cellId: 99,
+		cellId: 94,
 		imageUrl: `${CDN_URL_BASE}/map/snakes/cell99.avif`
 	},
 
@@ -252,15 +255,18 @@ export const NPCList: NPC[] = [
 	},
 	{
 		cellId: 4,
-		imageUrl: `${CDN_URL_BASE}/map/ladders/tree.avif`
+		imageUrl: `${CDN_URL_BASE}/map/ladders/tree.avif`,
+		mirror: true
 	},
 	{
-		cellId: 13,
-		imageUrl: `${CDN_URL_BASE}/map/ladders/fae.avif`
+		cellId: 44,
+		imageUrl: `${CDN_URL_BASE}/map/ladders/fae.avif`,
+		mirror: true
 	},
 	{
 		cellId: 17,
-		imageUrl: `${CDN_URL_BASE}/map/ladders/gnome.avif`
+		imageUrl: `${CDN_URL_BASE}/map/ladders/gnome.avif`,
+		mirror: true
 	},
 	{
 		cellId: 33,
@@ -271,7 +277,7 @@ export const NPCList: NPC[] = [
 		imageUrl: `${CDN_URL_BASE}/map/ladders/paladin.avif`
 	},
 	{
-		cellId: 44,
+		cellId: 71,
 		imageUrl: `${CDN_URL_BASE}/map/ladders/mage.avif`
 	},
 	{
@@ -283,15 +289,17 @@ export const NPCList: NPC[] = [
 		imageUrl: `${CDN_URL_BASE}/map/ladders/elf_girl.avif`
 	},
 	{
-		cellId: 68,
+		cellId: 85,
 		imageUrl: `${CDN_URL_BASE}/map/ladders/mage_portal.avif`
 	},
 	{
-		cellId: 71,
+		cellId: 13,
 		imageUrl: `${CDN_URL_BASE}/map/ladders/tree_ladder.avif`
 	},
 	{
 		cellId: 74,
 		imageUrl: `${CDN_URL_BASE}/map/ladders/smith.avif`
 	}
-]
+	// sort by cellId descending,
+	// to make chat messages from below not be covered by NPCs
+].sort((a, b) => b.cellId - a.cellId)
