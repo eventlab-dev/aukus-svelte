@@ -26,12 +26,12 @@
 	}
 </script>
 
-<div class="relative flex w-full justify-center">
-	<img src={LOGO_URL} class="absolute top-[100px] w-[300px]" alt="logo" />
-	<img src={LOGO_BG_URL} alt="back" />
+<div class="relative mt-[-60px] flex w-full justify-center">
+	<img src={LOGO_URL} class="absolute top-[170px] z-10 h-auto w-[300px]" alt="logo" />
+	<img src={LOGO_BG_URL} alt="back" class="absolute h-auto w-[1700px] max-w-[2000px]" />
 </div>
 
-<div class="flex justify-center">
+<div class="mt-[310px] flex justify-center">
 	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
 		<button id={MapContainerId} class="relative h-[2000px] w-[1700px]" onclick={handleClick}>
 			<img class="h-[2000] w-[1700px] bg-center bg-no-repeat" src={MAP_IMAGE} alt="map" />
