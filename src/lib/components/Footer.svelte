@@ -31,7 +31,7 @@
 	]
 </script>
 
-<footer class="mt-[100px] flex justify-center rounded-xl bg-card px-[120px] py-[50px]">
+<footer class="mt-[200px] flex justify-center rounded-xl bg-card px-[120px] py-[50px]">
 	<div class="flex w-[700px] justify-between">
 		{#each sections as { title, items } (title)}
 			<div class="space-y-[25px]">
