@@ -1,5 +1,6 @@
 <script lang="ts" generics="T extends StatItem">
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
+	import { Button } from '$lib/components/ui/button'
 	import {
 		Table,
 		TableBody,
@@ -102,12 +103,21 @@
 								</TooltipContent>
 							</Tooltip>
 						</TableCell>
-					{:else}
+					{:else if key === 'username'}
 						<TableCell
-							class="data-[active=true]:text-foreground data-[bright=true]:text-foreground"
-							data-bright={key === 'username'}
+							class="text-foreground data-[active=true]:text-foreground"
 							data-active={sortByKey === key}
 						>
+							<Button
+								variant="link"
+								class="text-foreground no-underline"
+								href={`/players/${player.player_slug}`}
+							>
+								{player[key]}
+							</Button>
+						</TableCell>
+					{:else}
+						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
 							{player[key]}
 						</TableCell>
 					{/if}
