@@ -27,7 +27,7 @@
 			scrollAnimate: false,
 			colors: ['#1c1c1c', '#1c1c1c', '#1c1c1c', '#1c1c1c'],
 			pattern: {
-				image: 'https://twallpaper.js.org/patterns/games.svg',
+				image: 'https://twallpaper.js.org/patterns/snowflakes.svg',
 				background: '#0c0c0c',
 				blur: 0,
 				size: '470px',
