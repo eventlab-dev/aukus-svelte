@@ -194,6 +194,7 @@ export type NPC = {
 	cellId: number
 	imageUrl: string
 	mirror?: boolean
+	cantSpeak?: boolean
 }
 
 export const NPCList: NPC[] = [
@@ -291,12 +292,14 @@ export const NPCList: NPC[] = [
 	},
 	{
 		cellId: 85,
-		imageUrl: `${CDN_URL_BASE}/map/ladders/mage_portal.avif`
+		imageUrl: `${CDN_URL_BASE}/map/ladders/mage_portal.avif`,
+		cantSpeak: true
 	},
 	{
 		cellId: 33,
 		imageUrl: `${CDN_URL_BASE}/map/ladders/tree_ladder.avif`,
-		mirror: true
+		mirror: true,
+		cantSpeak: true
 	},
 	{
 		cellId: 74,
