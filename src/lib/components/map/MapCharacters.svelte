@@ -9,7 +9,7 @@
 		displayTime: number
 	}
 
-	const MESSAGE_DISPLAY_MIN = 4000
+	const MESSAGE_DISPLAY_MIN = 6000
 	const MESSAGE_DISPLAY_MAX = 10000
 	const START_DELAY = 1000
 	const BETWEEN_DELAY_MIN = 3000
