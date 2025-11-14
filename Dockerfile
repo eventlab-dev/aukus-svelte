@@ -16,6 +16,10 @@ COPY . .
 
 RUN pnpm build:prod
 
+RUN rm -f build/version.json && \
+    VERSION=$(node -p "require('./package.json').version") && \
+    echo "{ \"version\": \"$VERSION\" }" > build/version.json
+
 FROM nginx:stable-alpine
 WORKDIR /usr/share/nginx/html
 
