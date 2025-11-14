@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getCellPosition, type NPC } from '$lib/mapUtils'
 	import { fade } from 'svelte/transition'
+	import { parseMessageWithEmotes } from '$lib/utils/emoteParser'
 
 	type Props = {
 		npc: NPC
@@ -8,6 +9,8 @@
 	}
 
 	const { npc, message }: Props = $props()
+
+	const messageParts = $derived(message ? parseMessageWithEmotes(message) : [])
 
 	const position = getCellPosition(npc.cellId)
 
@@ -53,7 +56,20 @@
 			in:fade={{ duration: 500 }}
 			out:fade={{ duration: 500 }}
 		>
-			{message}
+			<div class="inline-flex flex-wrap items-center justify-center gap-1">
+				{#each messageParts as part}
+					{#if part.type === 'text'}
+						<span>{part.content}</span>
+					{:else if part.type === 'emote'}
+						<img 
+							src={part.url} 
+							alt={part.name} 
+							class="inline-block h-6 w-auto align-middle"
+							title={part.name}
+						/>
+					{/if}
+				{/each}
+			</div>
 		</div>
 	{/if}
 </div>
