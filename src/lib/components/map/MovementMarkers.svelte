@@ -35,8 +35,6 @@
 			$turnState === 'player-map-animation' ||
 			$selectedPlayer
 	)
-
-	$inspect(showMarkers, 'showMarkers in MovementMarkers', $turnState)
 </script>
 
 {#if cells && showMarkers}

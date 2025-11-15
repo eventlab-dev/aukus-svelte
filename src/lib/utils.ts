@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { DifficultyTitle, LastMapPosition, transliterationMap } from './constants'
+import { DifficultyTitle, LastMapPosition } from './constants'
 import type { BadgeVariant } from './components/ui/badge'
 import { renderToHTMLString } from '@tiptap/static-renderer'
 import { initExtensions } from './tiptapExtensions/enabledExtensions'
@@ -49,45 +49,6 @@ export function formatMs(diffMs: number) {
 	}
 
 	return `${hours}ч ${minutes}м`
-}
-
-// Recursive function to generate all combinations of transliterated strings
-function generateCombinations(
-	variants: string[][],
-	index: number,
-	current: string,
-	results: string[]
-) {
-	if (index === variants.length) {
-		results.push(current)
-		return
-	}
-
-	// Loop through all possible phonetic variants for the current character
-	for (const variant of variants[index]) {
-		generateCombinations(variants, index + 1, current + variant, results)
-	}
-}
-
-// Function to transliterate a Russian string to all possible phonetically similar English strings
-export function transliterateRussianToEnglishVariants(russianText: string): string[] {
-	const results: string[] = []
-	const variants: string[][] = []
-
-	// Convert Russian text into arrays of possible phonetic matches
-	for (const char of russianText.toLocaleLowerCase().split('')) {
-		const variant = transliterationMap[char]
-		if (variant) {
-			variants.push([char, ...variant])
-		} else {
-			variants.push([char])
-		}
-	}
-
-	// Generate all possible combinations of the transliterations
-	generateCombinations(variants, 0, '', results)
-
-	return results
 }
 
 export function formatDateTime(timestamp: number, options: { onlyHourMinute?: boolean } = {}) {
