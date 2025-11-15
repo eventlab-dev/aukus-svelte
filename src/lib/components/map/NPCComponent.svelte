@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getCellPosition, type NPC } from '$lib/mapUtils'
 	import { fade } from 'svelte/transition'
-	import { parseMessageWithEmotes } from '$lib/utils/emoteParser'
+	import { parseMessageWithEmotes, type MessagePart } from '$lib/utils/emoteParser'
 
 	type Props = {
 		npc: NPC
@@ -11,6 +11,45 @@
 	const { npc, message }: Props = $props()
 
 	const messageParts = $derived(message ? parseMessageWithEmotes(message) : [])
+
+	type EmoteGroup = 
+		| { type: 'text'; content: string }
+		| { type: 'emote-group'; base: { name: string; url: string }; overlays: Array<{ name: string; url: string }> }
+
+	/**
+	 * Groups emotes with their overlay (zero-width) emotes
+	 * Zero-width emotes are added to the previous emote's container
+	 */
+	function groupEmotesWithOverlays(parts: MessagePart[]): EmoteGroup[] {
+		const groups: EmoteGroup[] = []
+
+		for (let i = 0; i < parts.length; i++) {
+			const part = parts[i]
+
+			if (part.type === 'text') {
+				groups.push({ type: 'text', content: part.content })
+			} else if (part.type === 'emote') {
+				if (part.isZeroWidth) {
+					// Zero-width emote should be added to the previous emote group
+					const lastGroup = groups[groups.length - 1]
+					if (lastGroup && lastGroup.type === 'emote-group') {
+						// Add to previous emote's overlays
+						lastGroup.overlays.push({ name: part.name, url: part.url })
+					}
+					// If there's no previous emote group, skip this overlay (shouldn't happen normally)
+				} else {
+					// Regular emote - create a new group
+					groups.push({
+						type: 'emote-group',
+						base: { name: part.name, url: part.url },
+						overlays: []
+					})
+				}
+			}
+		}
+
+		return groups
+	}
 
 	const position = getCellPosition(npc.cellId)
 
@@ -57,29 +96,35 @@
 			out:fade={{ duration: 500 }}
 		>
 			<div class="inline-flex flex-wrap items-center justify-center gap-1">
-				{#each messageParts as part, index}
-					{#if part.type === 'text'}
-						<span>{part.content}</span>
-					{:else if part.type === 'emote'}
-						{#if part.isZeroWidth && index > 0}
-							<!-- Zero-width (overlay) emote - will be positioned absolutely over previous element -->
+				{#each groupEmotesWithOverlays(messageParts) as group}
+					{#if group.type === 'text'}
+						<span>{group.content}</span>
+					{:else if group.type === 'emote-group'}
+						<!-- Emote group: base emote + optional overlay emotes -->
+						<span class="emote-container">
+							<!-- Base emote -->
 							<img 
-								src={part.url} 
-								alt={part.name} 
-								class="emote-overlay"
-								title={part.name}
+								src={group.base.url} 
+								alt={group.base.name} 
+								class="emote-image"
+								title={group.base.name}
 							/>
-						{:else}
-							<!-- Regular emote or first emote in message -->
-							<span class="emote-container">
+							<!-- Overlay (zero-width) emotes -->
+							{#each group.overlays as overlay}
 								<img 
-									src={part.url} 
-									alt={part.name} 
-									class="inline-block h-6 w-auto align-middle"
-									title={part.name}
+									src={overlay.url} 
+									alt={overlay.name} 
+									class="emote-image emote-overlay"
+									title={overlay.name}
+									onload={(e) => {
+										e.currentTarget.classList.add('emote-overlay-loaded')
+									}}
+									onerror={(e) => {
+										e.currentTarget.classList.remove('emote-overlay')
+									}}
 								/>
-							</span>
-						{/if}
+							{/each}
+						</span>
 					{/if}
 				{/each}
 			</div>
@@ -106,25 +151,34 @@
 		backdrop-filter: blur(8px);
 	}
 
-	/* Container for emotes to support overlay positioning */
+	/* 
+	 * Container for emotes with overlay support
+	 * Uses CSS Grid to stack emotes on top of each other
+	 */
 	:global(.emote-container) {
-		position: relative;
-		display: inline-block;
-		height: 1.5rem; /* 24px, h-6 */
+		display: inline-grid;
+		place-items: center;
+		vertical-align: middle;
+		z-index: 0;
 	}
 
-	/* Zero-width overlay emotes */
-	:global(.emote-overlay) {
-		position: absolute;
-		top: 0;
-		left: 0;
+	/* All emotes in the container occupy the same grid cell = overlay effect */
+	:global(.emote-container > .emote-image) {
+		grid-area: 1 / 1;
 		height: 1.5rem; /* 24px, h-6 */
 		width: auto;
+		vertical-align: middle;
+	}
+
+	/* Zero-width overlay emotes start invisible and fade in */
+	:global(.emote-overlay) {
+		opacity: 0;
+		transition: opacity 0.2s ease-in-out;
 		pointer-events: none;
-		/* Overlay on top of the previous element */
-		z-index: 1;
-		/* Move back to overlay on previous element */
-		transform: translateX(-100%);
-		margin-left: -0.25rem; /* Compensate for gap-1 */
+	}
+
+	/* Show overlay after image loads (handled by onload event) */
+	:global(.emote-overlay-loaded) {
+		opacity: 1;
 	}
 </style>
