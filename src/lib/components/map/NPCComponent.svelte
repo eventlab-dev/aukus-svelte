@@ -18,7 +18,11 @@
 
 	/**
 	 * Groups emotes with their overlay (zero-width) emotes
-	 * Zero-width emotes are added to the previous emote's container
+	 * 
+	 * Logic:
+	 * - If zero-width has a regular emote before it (ignoring whitespace text), it overlays on it
+	 * - Multiple zero-width emotes in a row all overlay on the same base emote
+	 * - If zero-width has no regular emote before it, it becomes a regular emote itself
 	 */
 	function groupEmotesWithOverlays(parts: MessagePart[]): EmoteGroup[] {
 		const groups: EmoteGroup[] = []
@@ -27,16 +31,37 @@
 			const part = parts[i]
 
 			if (part.type === 'text') {
-				groups.push({ type: 'text', content: part.content })
+				// Only non-whitespace text breaks emote grouping
+				if (part.content.trim()) {
+					groups.push({ type: 'text', content: part.content })
+				}
 			} else if (part.type === 'emote') {
 				if (part.isZeroWidth) {
-					// Zero-width emote should be added to the previous emote group
-					const lastGroup = groups[groups.length - 1]
-					if (lastGroup && lastGroup.type === 'emote-group') {
-						// Add to previous emote's overlays
-						lastGroup.overlays.push({ name: part.name, url: part.url })
+					// Find the last emote group (skip whitespace text)
+					let lastEmoteGroup: EmoteGroup | null = null
+					for (let j = groups.length - 1; j >= 0; j--) {
+						const group = groups[j]
+						if (group.type === 'emote-group') {
+							lastEmoteGroup = group
+							break
+						}
+						// Stop if we hit non-whitespace text
+						if (group.type === 'text' && group.content.trim()) {
+							break
+						}
 					}
-					// If there's no previous emote group, skip this overlay (shouldn't happen normally)
+
+					if (lastEmoteGroup && lastEmoteGroup.type === 'emote-group') {
+						// Add to previous emote's overlays
+						lastEmoteGroup.overlays.push({ name: part.name, url: part.url })
+					} else {
+						// No previous emote - zero-width becomes a regular emote
+						groups.push({
+							type: 'emote-group',
+							base: { name: part.name, url: part.url },
+							overlays: []
+						})
+					}
 				} else {
 					// Regular emote - create a new group
 					groups.push({
@@ -174,7 +199,7 @@
 	:global(.emote-overlay) {
 		opacity: 0;
 		transition: opacity 0.2s ease-in-out;
-		pointer-events: none;
+		pointer-events: none; /* Don't block clicks on base emote */
 	}
 
 	/* Show overlay after image loads (handled by onload event) */
