@@ -1,7 +1,7 @@
 import { createQuery } from '@tanstack/svelte-query'
-import { derived } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
 import { getEventDataApiEventDataGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
-import type { SkinItem } from '$lib/heyapi/aukus/types.gen'
+import { type PlayerItem, type SkinItem } from '$lib/heyapi/aukus/types.gen'
 import { SvelteMap } from 'svelte/reactivity'
 import { AukusBaseUrl } from '$lib/client'
 import { defaultAuth } from '$lib/utils'
@@ -22,7 +22,11 @@ export function createEventDataStore() {
 		return null
 	})
 
-	const players = derived(eventData, ($eventData) => $eventData?.players ?? [])
+	const players = writable<PlayerItem[]>([])
+	const updatedPlayers = derived(eventData, ($eventData) => $eventData?.players ?? [])
+
+	// const players = derived(eventData, ($eventData) => $eventData?.players ?? [])
+
 	const skins = derived(eventData, ($eventData) => $eventData?.skins ?? [])
 	const achievements = derived(eventData, ($eventData) => $eventData?.achievements ?? [])
 	const eventSettings = derived(eventData, ($eventData) => $eventData?.event_settings ?? {})
@@ -58,6 +62,7 @@ export function createEventDataStore() {
 		eventDataQuery,
 		players,
 		playersBySlug,
+		updatedPlayers,
 		skins,
 		skinsById,
 		achievements,

@@ -12,13 +12,17 @@
 
 	const messageParts = $derived(message ? parseMessageWithEmotes(message) : [])
 
-	type EmoteGroup = 
+	type EmoteGroup =
 		| { type: 'text'; content: string }
-		| { type: 'emote-group'; base: { name: string; url: string }; overlays: Array<{ name: string; url: string }> }
+		| {
+				type: 'emote-group'
+				base: { name: string; url: string }
+				overlays: Array<{ name: string; url: string }>
+		  }
 
 	/**
 	 * Groups emotes with their overlay (zero-width) emotes
-	 * 
+	 *
 	 * Logic:
 	 * - If zero-width has a regular emote before it (ignoring whitespace text), it overlays on it
 	 * - Multiple zero-width emotes in a row all overlay on the same base emote
@@ -121,24 +125,24 @@
 			out:fade={{ duration: 500 }}
 		>
 			<div class="inline-flex flex-wrap items-center justify-center gap-1">
-				{#each groupEmotesWithOverlays(messageParts) as group}
+				{#each groupEmotesWithOverlays(messageParts) as group, idx (idx)}
 					{#if group.type === 'text'}
 						<span>{group.content}</span>
 					{:else if group.type === 'emote-group'}
 						<!-- Emote group: base emote + optional overlay emotes -->
 						<span class="emote-container">
 							<!-- Base emote -->
-							<img 
-								src={group.base.url} 
-								alt={group.base.name} 
+							<img
+								src={group.base.url}
+								alt={group.base.name}
 								class="emote-image"
 								title={group.base.name}
 							/>
 							<!-- Overlay (zero-width) emotes -->
-							{#each group.overlays as overlay}
-								<img 
-									src={overlay.url} 
-									alt={overlay.name} 
+							{#each group.overlays as overlay, idx (idx)}
+								<img
+									src={overlay.url}
+									alt={overlay.name}
 									class="emote-image emote-overlay"
 									title={overlay.name}
 									onload={(e) => {
@@ -176,7 +180,7 @@
 		backdrop-filter: blur(8px);
 	}
 
-	/* 
+	/*
 	 * Container for emotes with overlay support
 	 * Uses CSS Grid to stack emotes on top of each other
 	 */

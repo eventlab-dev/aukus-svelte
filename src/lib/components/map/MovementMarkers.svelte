@@ -4,10 +4,10 @@
 	import { getCellPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
 
 	const { movementStore, turnState } = getAppManagerContext()
-	const { movementState, selectedPlayer } = movementStore
+	const { myMovementState, selectedPlayer } = movementStore
 
 	const cells = $derived.by(() => {
-		const { startCell, steps } = $movementState
+		const { startCell, steps } = $myMovementState
 		const cells = []
 		for (let i = 1; i <= Math.abs(steps); i++) {
 			cells.push(steps > 0 ? startCell + i : startCell - i)
@@ -17,7 +17,7 @@
 			.map((cell) => ({ id: cell, position: getCellPosition(cell) }))
 	})
 
-	const showMinus = $derived($movementState.steps < 0)
+	const showMinus = $derived($myMovementState.steps < 0)
 
 	function cellType(cellId: number) {
 		if (snakesByCell[cellId]) {
@@ -35,6 +35,8 @@
 			$turnState === 'player-map-animation' ||
 			$selectedPlayer
 	)
+
+	$inspect(showMarkers, 'showMarkers in MovementMarkers', $turnState)
 </script>
 
 {#if cells && showMarkers}

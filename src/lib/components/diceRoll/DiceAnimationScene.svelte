@@ -16,7 +16,7 @@
 	}
 
 	const { turnState, movementStore, eventDataStore, myPlayer } = getAppManagerContext()
-	const { movementState } = movementStore
+	const { myMovementState } = movementStore
 	const { skinsById } = eventDataStore
 
 	const diceSkin = $derived.by(() => {
@@ -32,12 +32,12 @@
 
 	const modelsParams: ModelParams[] = $derived.by(() => {
 		if ($turnState === 'dice-animation' || $turnState === 'dice-results') {
-			const n = $movementState.rollValues.length
+			const n = $myMovementState.rollValues.length
 			const baseZ = -5
 			const spread = 7
 			const centerOffset = (n - 1) / 2
 
-			return $movementState.rollValues.map((v, i) => {
+			return $myMovementState.rollValues.map((v, i) => {
 				const x = (i - centerOffset) * spread
 				const z = baseZ - Math.abs(i - centerOffset) * 0.5 // push side dice slightly back
 				const scale = 2.8 - Math.abs(i - centerOffset) * 0.2
@@ -100,7 +100,7 @@
 		}
 	})
 
-	const totalSum = $derived($movementState.rollValues.reduce((a, b) => a + b, 0))
+	const totalSum = $derived($myMovementState.rollValues.reduce((a, b) => a + b, 0))
 </script>
 
 {#if modelsParams.length > 0}

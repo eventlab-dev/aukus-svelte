@@ -23,7 +23,13 @@ export function createAppManager() {
 
 	const frontendState = writable<TurnState>(null)
 
-	const movementStore = createMovementStore({ eventDataStore, frontendTurnState: frontendState })
+	const { users, myUser } = usersStore
+
+	const movementStore = createMovementStore({
+		eventDataStore,
+		frontendTurnState: frontendState,
+		usersStore
+	})
 
 	const notificationStore = createNotificationStore({ eventDataStore })
 	const canvasStore = createCanvasStore()
@@ -31,7 +37,6 @@ export function createAppManager() {
 	const soundManager = new SoundManager()
 	soundManager.preloadSounds(SOUNDS)
 
-	const { users, myUser } = usersStore
 	const { players: playersData } = eventDataStore
 	const { statsBySlug } = statsStore
 

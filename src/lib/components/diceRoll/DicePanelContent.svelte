@@ -31,7 +31,7 @@
 		getAppManagerContext()
 	const { finishMove, rollDice } = usersStore
 	const { eventDataQuery } = eventDataStore
-	const { movementState } = movementStore
+	const { myMovementState } = movementStore
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions = [
@@ -80,7 +80,8 @@
 		await movementStore.moveToCell({
 			playerSlug: $myPlayer!.slug,
 			steps: steps,
-			moveResponse: moveParams
+			moveResponse: moveParams,
+			updatePlayerPosition: true
 		})
 		if (moveParams.unlocked_achievements.length > 0) {
 			await new Promise((resolve) => setTimeout(resolve, 500))
@@ -143,7 +144,7 @@
 	})
 
 	$effect(() => {
-		movementState.set({
+		myMovementState.set({
 			rollValues: [],
 			startCell: player.map_position,
 			steps: normalizeSteps(player.map_position, maxRoll)
