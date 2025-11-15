@@ -1,3 +1,5 @@
+import type { GameDifficulty, GameLength } from './heyapi/aukus/types.gen'
+
 export const EMOTES_SEARCH_API_URL = 'https://api4.rhhhhhhh.live/search_emotes'
 export const SEVENTV_EMOTE_BASE_URL = 'https://starege.rhhhhhhh.live/https://cdn.7tv.app/emote'
 export const FALLBACK_GAME_POSTER =
@@ -36,64 +38,12 @@ export const playerColors = {
 	brightPink: '#FF2D55'
 } as const
 
-// Mapping of Russian characters to arrays of phonetically similar English characters (lowercase only)
-export const transliterationMap: { [key: string]: string[] } = {
-	а: ['a', 'u', 'ia'],
-	б: ['b', 'v'],
-	в: ['v', 'w'],
-	г: ['g', 'h'],
-	д: ['d', 'j'],
-	е: ['e', 'ye', 'a'],
-	ё: ['yo', 'io'],
-	ж: ['zh', 'j'],
-	з: ['z', 's'],
-	и: ['i', 'y', 'ee'],
-	й: ['y'],
-	к: ['k', 'c'],
-	л: ['l'],
-	м: ['m'],
-	н: ['n'],
-	о: ['o'],
-	п: ['p'],
-	р: ['r'],
-	с: ['s'],
-	т: ['t'],
-	у: ['u', 'oo'],
-	ф: ['f', 'v'],
-	х: ['kh', 'h', 'ch'],
-	ц: ['ts', 'c'],
-	ч: ['ch', 'tch'],
-	ш: ['sh'],
-	щ: ['shch'],
-	ы: ['y', 'i'],
-	э: ['e', 'a'],
-	ю: ['yu', 'iu'],
-	я: ['ya', 'ia']
-}
-
 export const gameLengthRanges: Record<GameLength, string> = {
 	'0-3': '0-3ч',
 	'3-15': '3-15ч',
 	'15-30': '15-30ч',
 	'30+': '30+ч'
 }
-
-import ARMY_SOUND_URL from '$lib/assets/sounds/army-roll.mp3'
-import INDIAN_ROLL_URL from '$lib/assets/sounds/indian-roll.mp3'
-import DRUM_SOUND_URL from '$lib/assets/sounds/baraban.mp3'
-import MAX_SOUND_URL from '$lib/assets/sounds/max-roll2.mp3'
-import DASBOOT_SOUND_URL from '$lib/assets/sounds/dasboot-roll.mp3'
-import DVAR_SOUND_URL from '$lib/assets/sounds/dvar-roll.mp3'
-import type { GameDifficulty, GameLength } from './heyapi/aukus/types.gen'
-
-export const SOUNDS = [
-	{ key: 'army', url: ARMY_SOUND_URL },
-	{ key: 'indian', url: INDIAN_ROLL_URL },
-	{ key: 'drum', url: DRUM_SOUND_URL },
-	{ key: 'max', url: MAX_SOUND_URL },
-	{ key: 'dasboot', url: DASBOOT_SOUND_URL },
-	{ key: 'dvar', url: DVAR_SOUND_URL }
-]
 
 export const CDN_URL_BASE = 'https://storage.yandexcloud.net/eventlab/assets/aukus4'
 
@@ -116,6 +66,24 @@ export const AchievementBackgroundUrl = `${CDN_URL_BASE}/utils/achievement_backg
 
 export const DiceModelUrl = `${CDN_URL_BASE}/dice_skins/dice_model.glb`
 export const DefaultDiceTexture = `${CDN_URL_BASE}/dice_skins/default_texture.png`
+
+const SOUNDS_URL_BASE = `https://storage.yandexcloud.net/eventlab/assets/eventlab/wheel/sounds`
+
+const ARMY_SOUND_URL = `${SOUNDS_URL_BASE}/army-roll.mp3`
+const INDIAN_ROLL_URL = `${SOUNDS_URL_BASE}/indian-roll.mp3`
+const DRUM_SOUND_URL = `${SOUNDS_URL_BASE}/baraban.mp3`
+const MAX_SOUND_URL = `${SOUNDS_URL_BASE}/max-roll.mp3`
+const DASBOOT_SOUND_URL = `${SOUNDS_URL_BASE}/dasboot-roll.mp3`
+const DVAR_SOUND_URL = `${SOUNDS_URL_BASE}/dvar-roll.mp3`
+
+export const SOUNDS = [
+	{ key: 'army', url: ARMY_SOUND_URL },
+	{ key: 'indian', url: INDIAN_ROLL_URL },
+	{ key: 'drum', url: DRUM_SOUND_URL },
+	{ key: 'max', url: MAX_SOUND_URL },
+	{ key: 'dasboot', url: DASBOOT_SOUND_URL },
+	{ key: 'dvar', url: DVAR_SOUND_URL }
+]
 
 export const LastMapPosition = 101
 

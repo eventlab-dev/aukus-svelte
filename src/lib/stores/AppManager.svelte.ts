@@ -35,7 +35,12 @@ export function createAppManager() {
 	const canvasStore = createCanvasStore()
 
 	const soundManager = new SoundManager()
-	soundManager.preloadSounds(SOUNDS)
+
+	myUser.subscribe((user) => {
+		if (user) {
+			soundManager.preloadSounds(SOUNDS)
+		}
+	})
 
 	const { players: playersData } = eventDataStore
 	const { statsBySlug } = statsStore
