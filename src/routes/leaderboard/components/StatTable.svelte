@@ -105,19 +105,23 @@
 						</TableCell>
 					{:else if key === 'username'}
 						<TableCell
-							class="text-foreground data-[active=true]:text-foreground"
+							class="py-0 text-foreground data-[active=true]:text-foreground"
 							data-active={sortByKey === key}
 						>
 							<Button
 								variant="link"
-								class="text-foreground no-underline"
 								href={`/players/${player.player_slug}`}
+								class="p-0 text-foreground no-underline hover:text-[var(--player-color)]"
+								style="--player-color: {player.color}"
 							>
 								{player[key]}
 							</Button>
 						</TableCell>
 					{:else}
-						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
+						<TableCell
+							class="py-0 data-[active=true]:text-foreground"
+							data-active={sortByKey === key}
+						>
 							{player[key]}
 						</TableCell>
 					{/if}

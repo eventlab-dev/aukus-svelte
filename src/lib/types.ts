@@ -124,6 +124,7 @@ export type StatItem = PlayerStatsItem & {
 	currentGame: string
 	position: number
 	total_score: number
+	color: string
 }
 
 export type Difficulty = 'easy' | 'normal' | 'hard' | 'very-hard'
