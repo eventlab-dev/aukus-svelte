@@ -57,16 +57,29 @@
 			out:fade={{ duration: 500 }}
 		>
 			<div class="inline-flex flex-wrap items-center justify-center gap-1">
-				{#each messageParts as part}
+				{#each messageParts as part, index}
 					{#if part.type === 'text'}
 						<span>{part.content}</span>
 					{:else if part.type === 'emote'}
-						<img 
-							src={part.url} 
-							alt={part.name} 
-							class="inline-block h-6 w-auto align-middle"
-							title={part.name}
-						/>
+						{#if part.isZeroWidth && index > 0}
+							<!-- Zero-width (overlay) emote - will be positioned absolutely over previous element -->
+							<img 
+								src={part.url} 
+								alt={part.name} 
+								class="emote-overlay"
+								title={part.name}
+							/>
+						{:else}
+							<!-- Regular emote or first emote in message -->
+							<span class="emote-container">
+								<img 
+									src={part.url} 
+									alt={part.name} 
+									class="inline-block h-6 w-auto align-middle"
+									title={part.name}
+								/>
+							</span>
+						{/if}
 					{/if}
 				{/each}
 			</div>
@@ -91,5 +104,27 @@
 		border-right: 14px solid transparent;
 		border-top: 12px solid rgba(0, 0, 0, 0.7); /* same color as the box */
 		backdrop-filter: blur(8px);
+	}
+
+	/* Container for emotes to support overlay positioning */
+	:global(.emote-container) {
+		position: relative;
+		display: inline-block;
+		height: 1.5rem; /* 24px, h-6 */
+	}
+
+	/* Zero-width overlay emotes */
+	:global(.emote-overlay) {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 1.5rem; /* 24px, h-6 */
+		width: auto;
+		pointer-events: none;
+		/* Overlay on top of the previous element */
+		z-index: 1;
+		/* Move back to overlay on previous element */
+		transform: translateX(-100%);
+		margin-left: -0.25rem; /* Compensate for gap-1 */
 	}
 </style>

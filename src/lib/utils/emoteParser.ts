@@ -1,18 +1,19 @@
 export type MessagePart = 
 	| { type: 'text'; content: string }
-	| { type: 'emote'; name: string; url: string }
+	| { type: 'emote'; name: string; url: string; isZeroWidth: boolean }
 
 /**
  * Parses a message string that may contain emotes in the format:
- * [emote_name=NAME,emote_url=URL]
+ * [emote_name=NAME,emote_url=URL] or [emote_name=NAME,emote_url=URL,emote_zw=True]
  * 
  * Returns an array of message parts (text segments and emotes)
  */
 export function parseMessageWithEmotes(text: string): MessagePart[] {
 	const parts: MessagePart[] = []
 	
-	// Regex to match emote pattern: [emote_name=...,emote_url=...]
-	const emoteRegex = /\[emote_name=([^,]+),emote_url=([^\]]+)\]/g
+	// Regex to match emote pattern with optional zero-width flag
+	// Matches: [emote_name=...,emote_url=...] or [emote_name=...,emote_url=...,emote_zw=True]
+	const emoteRegex = /\[emote_name=([^,]+),emote_url=([^\],]+)(?:,emote_zw=(True|False))?\]/g
 	
 	let lastIndex = 0
 	let match: RegExpExecArray | null
@@ -29,7 +30,14 @@ export function parseMessageWithEmotes(text: string): MessagePart[] {
 		// Add the emote
 		const emoteName = match[1]
 		const emoteUrl = match[2]
-		parts.push({ type: 'emote', name: emoteName, url: emoteUrl })
+		const isZeroWidth = match[3] === 'True'
+		
+		parts.push({ 
+			type: 'emote', 
+			name: emoteName, 
+			url: emoteUrl,
+			isZeroWidth 
+		})
 		
 		lastIndex = emoteRegex.lastIndex
 	}
