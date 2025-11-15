@@ -258,7 +258,8 @@ export function createMovementStore({
 				!element ||
 				!previousPlayer ||
 				!last_move ||
-				previousPlayer.map_position === player.map_position
+				previousPlayer.map_position === player.map_position ||
+				player.map_position > LastMapPosition
 			) {
 				setPlayerItem(player)
 				return
