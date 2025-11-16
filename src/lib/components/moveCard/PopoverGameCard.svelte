@@ -60,9 +60,11 @@
 			<Badge variant={moveTypeStyles.variant}>
 				{moveTypeStyles.text}
 			</Badge>
-			<Badge variant="default">
-				{game.rating}
-			</Badge>
+			{#if game.rating.length > 0}
+				<Badge variant="default">
+					{game.rating}
+				</Badge>
+			{/if}
 			{#if game.game_time > 0}
 				<Badge variant="secondary" class="w-full shrink py-0">
 					Играл
