@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
+	import { page } from '$app/state'
 	import { AukusBaseUrl } from '$lib/client'
 	import TiptapEditor from '$lib/components/richEditor/TiptapEditor.svelte'
 	import { Button } from '$lib/components/ui/button'
@@ -18,6 +20,12 @@
 	)
 
 	let category = $state<RulesCategory>('general')
+
+	$effect(() => {
+		if (page.url.pathname === '/rules/donators') {
+			category = 'donations'
+		}
+	})
 
 	const rulesQuery = createQuery(
 		getCurrentRulesVersionApiRulesCurrentGetOptions({ baseUrl: AukusBaseUrl })
@@ -58,6 +66,11 @@
 			}
 		)
 	}
+
+	function setCategory(newCategory: RulesCategory) {
+		category = newCategory
+		goto(newCategory === 'general' ? '/rules' : '/rules/donators')
+	}
 </script>
 
 <div class="mt-[100px] flex w-full justify-center">
@@ -65,14 +78,14 @@
 		<div class="flex gap-3">
 			<Button
 				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
-				onclick={() => (category = 'general')}
+				onclick={() => setCategory('general')}
 				data-active={category === 'general'}
 			>
 				Для участников
 			</Button>
 			<Button
 				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E]"
-				onclick={() => (category = 'donations')}
+				onclick={() => setCategory('donations')}
 				data-active={category === 'donations'}
 			>
 				Для донатеров

@@ -7,7 +7,12 @@
 	const GAP = 3
 	const BASE_WIDTH = 180
 
-	const currentRouteIndex = $derived(routes.findIndex((route) => route.url === page.url.pathname))
+	const currentRouteIndex = $derived.by(() => {
+		if (page.url.pathname === '/rules/donators') {
+			return routes.findIndex((route) => route.url === '/rules')
+		}
+		return routes.findIndex((route) => route.url === page.url.pathname)
+	})
 
 	let itemsSizes: (HTMLElement | null)[] = $state(new Array(routes.length).fill(null))
 	let prevWidthSum = $derived(
