@@ -60,9 +60,15 @@
 			<Badge variant={moveTypeStyles.variant}>
 				{moveTypeStyles.text}
 			</Badge>
-			<Badge variant="secondary" class="w-full shrink py-0">
-				Играл {formatDuration(game.game_time)}
+			<Badge variant="default">
+				{game.rating}
 			</Badge>
+			{#if game.game_time > 0}
+				<Badge variant="secondary" class="w-full shrink py-0">
+					Играл
+					{formatDuration(game.game_time)}
+				</Badge>
+			{/if}
 		</div>
 	</PopoverContent>
 </Popover>
