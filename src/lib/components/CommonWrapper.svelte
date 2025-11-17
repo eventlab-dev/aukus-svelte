@@ -10,6 +10,7 @@
 	import { setAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { onMount } from 'svelte'
 	import PlayersList from './player/PlayersList.svelte'
+	import MobilePage from './mobile/MobilePage.svelte'
 
 	let { children } = $props()
 
@@ -42,7 +43,7 @@
 </script>
 
 {#if $isMobile}
-	<div>Mobile version</div>
+	<MobilePage />
 {:else}
 	<ScrollArea class="h-screen" type="always" id="main-scroll-area">
 		<div id="wallpaper"></div>
