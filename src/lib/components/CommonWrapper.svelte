@@ -37,23 +37,29 @@
 		})
 		wallpaper.init()
 	})
+
+	const { isMobile } = appManager
 </script>
 
-<ScrollArea class="h-screen" type="always" id="main-scroll-area">
-	<div id="wallpaper"></div>
-	<div class="py-3">
-		<div class="absolute top-3 left-3 z-10">
-			<QuickMenu />
-		</div>
+{#if $isMobile}
+	<div>Mobile version</div>
+{:else}
+	<ScrollArea class="h-screen" type="always" id="main-scroll-area">
+		<div id="wallpaper"></div>
+		<div class="py-3">
+			<div class="absolute top-3 left-3 z-10">
+				<QuickMenu />
+			</div>
 
-		<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
-			<PlayersList />
-		</div>
+			<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+				<PlayersList />
+			</div>
 
-		<Navigation />
-		{@render children?.()}
-		<div class="px-3">
-			<Footer />
+			<Navigation />
+			{@render children?.()}
+			<div class="px-3">
+				<Footer />
+			</div>
 		</div>
-	</div>
-</ScrollArea>
+	</ScrollArea>
+{/if}

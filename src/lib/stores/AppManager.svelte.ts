@@ -1,5 +1,5 @@
 import { LastMapPosition, SOUNDS } from '$lib/constants'
-import { derived, writable, type Readable } from 'svelte/store'
+import { derived, readable, writable, type Readable } from 'svelte/store'
 import { createEventDataStore } from './EventDataStore.svelte'
 import { createGamesHistoryStore } from './GamesHistoryStore.svelte'
 import { createPlayerMovesStore } from './PlayersMovesStore.svelte'
@@ -139,6 +139,16 @@ export function createAppManager() {
 		}
 	)
 
+	const isMobile = readable(false, (set) => {
+		const query = window.matchMedia('(max-width: 768px)')
+		set(query.matches)
+
+		const listener = (e: MediaQueryListEvent) => set(e.matches)
+		query.addEventListener('change', listener)
+
+		return () => query.removeEventListener('change', listener)
+	})
+
 	return {
 		usersStore,
 		gamesHistoryStore,
@@ -158,7 +168,8 @@ export function createAppManager() {
 		playersInOrder,
 		playersCompletedMap,
 		canvasStore,
-		gamesMatchesStore
+		gamesMatchesStore,
+		isMobile
 	}
 }
 
