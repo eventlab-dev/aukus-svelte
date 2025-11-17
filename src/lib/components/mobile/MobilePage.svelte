@@ -1,6 +1,7 @@
 <script lang="ts">
 	import MobileMap from './MobileMap.svelte'
 	import MobileMenu from './MobileMenu.svelte'
+	import MobileRules from './MobileRules.svelte'
 	import type { MobilePage } from './types'
 
 	let page = $state<MobilePage>('map')
@@ -16,7 +17,7 @@
 	{:else if page === 'table'}
 		Mobile Table
 	{:else if page === 'rules'}
-		Mobile Rules
+		<MobileRules />
 	{:else if page === 'player'}
 		Mobile Player
 	{:else if page === 'about'}
