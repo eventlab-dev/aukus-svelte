@@ -9,7 +9,7 @@
 	let { page = $bindable() }: Props = $props()
 </script>
 
-<div class="flex gap-2 p-2">
+<div class="sticky top-2 z-1000 flex gap-2 p-2">
 	<Button
 		class="flex-1 rounded-xl"
 		variant={page === 'map' ? 'default' : 'secondary'}
