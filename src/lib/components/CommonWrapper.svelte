@@ -39,7 +39,7 @@
 	})
 </script>
 
-<ScrollArea class="h-screen px-3" type="always" id="main-scroll-area">
+<ScrollArea class="h-screen" type="always" id="main-scroll-area">
 	<div id="wallpaper"></div>
 	<div class="py-3">
 		<div class="absolute top-3 left-3 z-10">
@@ -52,6 +52,8 @@
 
 		<Navigation />
 		{@render children?.()}
-		<Footer />
+		<div class="px-3">
+			<Footer />
+		</div>
 	</div>
 </ScrollArea>
