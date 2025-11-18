@@ -57,7 +57,7 @@ export type DiceRollResponse = {
 /**
  * DiceType
  */
-export type DiceType = '1d2' | '1d4' | '2d4' | '1d6' | '2d6' | '3d6' | '2d8';
+export type DiceType = '1d2' | '1d4' | '2d4' | '3d4' | '1d6' | '2d6' | '3d6' | '2d8';
 
 /**
  * EmoteItem
