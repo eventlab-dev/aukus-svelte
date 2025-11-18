@@ -231,15 +231,16 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 
 export function getPlayerScoreDescription(stats: PlayerStatsItem) {
 	const row = cellRow(stats.map_position)
-	const shortTotal = stats.tiny_games + stats.short_games
 	return [
-		`Короткие игры: ${shortTotal} * 1`,
-		`Средние игры: ${stats.medium_games} * 1.5`,
-		`Долгие игры: ${stats.long_games} * 2`,
-		`Дропы: -${stats.games_dropped}`,
-		`Шейх-дропы: -${stats.sheikh_moments}`,
+		`Игры 0-4: ${stats.games_0_4} * 1`,
+		`Игры 5-10: ${stats.games_5_10} * 1.5`,
+		`Игры 11-16: ${stats.games_11_16} * 2`,
+		`Игры 17-24: ${stats.games_17_24} * 2.5`,
+		`Игры 25+: ${stats.games_25_plus} * 3`,
+		`Дропы: -${stats.games_dropped} * 2`,
+		`Шейх-дропы: -${stats.sheikh_moments} * 2`,
 		`Ряд: ${row}`,
-		`Всего: (${shortTotal} + ${stats.medium_games * 1.5} + ${stats.long_games * 2} - ${stats.games_dropped} - ${stats.sheikh_moments}) * ${row}`
+		`Всего: (${stats.games_0_4} + ${stats.games_5_10 * 1.5} + ${stats.games_11_16 * 2} + ${stats.games_17_24 * 2.5} + ${stats.games_25_plus * 3} - ${stats.games_dropped * 2} - ${stats.sheikh_moments * 2}) * ${row}`
 	]
 }
 
