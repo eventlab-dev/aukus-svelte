@@ -218,12 +218,13 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 	// («Пройденные игры до 15ч» * 1 + «Пройденные игры до 30ч» * 1,5 + «Пройденные игры от 30ч» * 2 - дропнутые игры)*ряд
 	const row = cellRow(stats.map_position)
 	const score =
-		(stats.tiny_games * 1 +
-			stats.short_games * 1 +
-			stats.medium_games * 1.5 +
-			stats.long_games * 2 -
-			stats.games_dropped -
-			stats.sheikh_moments) *
+		(stats.games_0_4 * 1 +
+			stats.games_5_10 * 1.5 +
+			stats.games_11_16 * 2 +
+			stats.games_17_24 * 2.5 +
+			stats.games_25_plus * 3 -
+			stats.games_dropped * 2 -
+			stats.sheikh_moments * 2) *
 		row
 	return Math.max(0, Math.floor(score))
 }
