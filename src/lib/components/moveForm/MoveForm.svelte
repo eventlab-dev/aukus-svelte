@@ -11,6 +11,7 @@
 	import { Editor } from '@tiptap/core'
 	import GameTitle from './components/GameTitle.svelte'
 	import EmotesPopover from './components/EmotesPopover.svelte'
+	import type { EmoteItem } from '$lib/api/emotes'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import {
 		Dialog,
@@ -175,8 +176,8 @@
 		}, 500)
 	}
 
-	function handleEmoteClick(emote: string) {
-		editorState.editor?.chain().focus().setImage({ src: emote }).run()
+	function handleEmoteClick(emote: EmoteItem) {
+		editorState.editor?.chain().focus().setImage({ src: emote.cdn_url }).run()
 	}
 
 	function toggleSpoiler() {

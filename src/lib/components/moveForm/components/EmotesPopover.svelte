@@ -7,41 +7,44 @@
 	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import EmojiIcon from '$lib/components/icons/EmojiIcon.svelte'
+	import { searchEmotes, type EmoteItem } from '$lib/api/emotes'
 
 	type Props = {
-		onEmoteClick: (emote: string) => void
+		onEmoteClick: (emote: EmoteItem) => void
 	}
 
 	const { onEmoteClick }: Props = $props()
 
-	const emoteData = {
-		emotes: [
-			'https://cdn.7tv.app/emote/01F6N31ETR0004P7N4A9PKS5X9/1x.avif',
-			'https://cdn.7tv.app/emote/01JTVCAPVDNDBCT44MCMTYH5T0/1x.avif',
-			'https://cdn.7tv.app/emote/01J8DX4H6G000C93G7AYMMN99D/1x.avif',
-			'https://cdn.7tv.app/emote/01K1KQ1X1M8K7XME2MZVDRMKRS/1x.avif',
-			'https://cdn.7tv.app/emote/01JDBDSNMQCZ7Z89PRZ712RM5N/1x.avif',
-			'https://cdn.7tv.app/emote/01JQJ1T4ZQKECNYSA1K47RMPQR/1x.avif',
-			'https://cdn.7tv.app/emote/01G4ZTECKR0002P97QQ94BDSP4/1x.avif',
-			'https://cdn.7tv.app/emote/01FZ975PV8000B4AWRZNMVNEXN/1x.avif',
-			'https://cdn.7tv.app/emote/01F7M225F8000AWSXNQ65M4PKG/1x.avif',
-			'https://cdn.7tv.app/emote/01HYJN039G000396FKBWMCE2WR/1x.avif',
-			'https://cdn.7tv.app/emote/01F6MA6Y100002B6P5MWZ5D916/1x.avif',
-			'https://cdn.7tv.app/emote/01F6MMZW3R00012ZP6HJJ38G2E/1x.avif',
-			'https://cdn.7tv.app/emote/01FBDZWBCG00072B7YSZWSNQNK/1x.avif',
-			'https://cdn.7tv.app/emote/01F85F0A28000E14C9J6VJDGKD/1x.avif'
-		]
-	}
-
+	let emotes = $state<EmoteItem[]>([])
 	let searchQuery = $state('')
 	let isFetching = $state(false)
 	let searchInputRef: HTMLInputElement | undefined = $state()
 
-	const debouncedInput = debounce((val: string) => {
+	async function fetchEmotes(query: string) {
+		isFetching = true
+		try {
+			const response = await searchEmotes({
+				search_term: query,
+				limit: 28
+			})
+			emotes = response.emotes
+		} catch (error) {
+			console.error('Failed to fetch emotes:', error)
+			emotes = []
+		} finally {
+			isFetching = false
+		}
+	}
+
+	const debouncedFetch = debounce(async (val: string) => {
 		searchQuery = val
+		await fetchEmotes(val)
 	}, 400)
 
-	onMount(() => searchInputRef?.focus())
+	onMount(() => {
+		searchInputRef?.focus()
+		fetchEmotes('')
+	})
 </script>
 
 <Popover>
@@ -58,27 +61,32 @@
 				ref={searchInputRef}
 				id="emotes-search"
 				type="text"
-				class="mb-2 w-full bg-muted"
+				class="bg-muted mb-2 w-full"
 				placeholder="Поиск смайлов..."
 				value={searchQuery}
-				oninput={(e) => debouncedInput(e.currentTarget.value)}
+				oninput={(e) => debouncedFetch(e.currentTarget.value)}
 			/>
 
 			<div class="h-[calc(4_*_48px)] w-[calc(7_*_48px)]">
-				{#if isFetching && searchQuery.length >= 2}
+				{#if isFetching}
 					<div class="flex h-full w-full items-center justify-center">
-						<LoaderCircleIcon class="size-6 animate-spin text-primary" />
+						<LoaderCircleIcon class="text-primary size-6 animate-spin" />
 					</div>
-				{:else if emoteData?.emotes && emoteData.emotes.length > 0}
+				{:else if emotes && emotes.length > 0}
 					<div class="grid grid-cols-[repeat(7,48px)] grid-rows-[repeat(4,48px)]">
-						{#each emoteData.emotes as emoteUrl (emoteUrl)}
+						{#each emotes as emote (emote.id)}
 							<Button
 								variant="ghost"
 								size="icon"
 								class="h-full w-full p-1.5"
-								onclick={() => onEmoteClick(emoteUrl)}
+								onclick={() => onEmoteClick(emote)}
+								title={emote.name}
 							>
-								<ImageLoader src={emoteUrl} alt="emote" class="h-full w-full overflow-visible" />
+								<ImageLoader
+									src={emote.cdn_url}
+									alt={emote.name}
+									class="h-full w-full overflow-visible"
+								/>
 							</Button>
 						{/each}
 					</div>
