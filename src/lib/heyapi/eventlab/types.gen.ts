@@ -57,12 +57,140 @@ export type DiceRollResponse = {
 /**
  * DiceType
  */
-export type DiceType = '1d4' | '2d4' | '1d6' | '2d6' | '3d6' | '2d8';
+export type DiceType = '1d2' | '1d4' | '2d4' | '1d6' | '2d6' | '3d6' | '2d8';
+
+/**
+ * EmoteItem
+ */
+export type EmoteItem = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Owner Username
+     */
+    owner_username: string | null;
+    /**
+     * Listed
+     */
+    listed: boolean;
+    /**
+     * Cdn Url
+     */
+    cdn_url: string;
+};
+
+/**
+ * EmoteSearchRequest
+ */
+export type EmoteSearchRequest = {
+    /**
+     * Search Term
+     */
+    search_term?: string;
+    /**
+     * Limit
+     */
+    limit?: number;
+    /**
+     * Page
+     */
+    page?: number;
+};
+
+/**
+ * EmoteSearchResponse
+ */
+export type EmoteSearchResponse = {
+    /**
+     * Emotes
+     */
+    emotes: Array<EmoteItem>;
+};
+
+/**
+ * EventItem
+ */
+export type EventItem = {
+    /**
+     * Organizer Id
+     */
+    organizer_id: number;
+    /**
+     * Slug
+     */
+    slug: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Description
+     */
+    description: string | null;
+    /**
+     * Start Timestamp
+     */
+    start_timestamp: number;
+    /**
+     * End Timestamp
+     */
+    end_timestamp: number | null;
+    /**
+     * Participants
+     */
+    participants: Array<EventParticipantItem>;
+    /**
+     * Link
+     */
+    link: string | null;
+    /**
+     * Banner Url
+     */
+    banner_url: string;
+    /**
+     * Logo Url
+     */
+    logo_url: string;
+    /**
+     * Developer Slug
+     */
+    developer_slug: string;
+};
 
 /**
  * EventName
  */
 export type EventName = 'aukus1' | 'aukus2' | 'aukus3' | 'aukus4' | 'igropolius' | 'MGE';
+
+/**
+ * EventParticipantItem
+ */
+export type EventParticipantItem = {
+    /**
+     * User Slug
+     */
+    user_slug: string;
+    /**
+     * Placement
+     */
+    placement: number | null;
+};
+
+/**
+ * EventsResponse
+ */
+export type EventsResponse = {
+    /**
+     * Events
+     */
+    events: Array<EventItem>;
+};
 
 /**
  * GameCompletionStatus
@@ -205,6 +333,10 @@ export type LoginResponse = {
  * UserItem
  */
 export type UserItem = {
+    /**
+     * Id
+     */
+    id: number;
     /**
      * Slug
      */
@@ -677,6 +809,25 @@ export type RefreshStreamsApiStreamsRefreshPostResponses = {
 
 export type RefreshStreamsApiStreamsRefreshPostResponse = RefreshStreamsApiStreamsRefreshPostResponses[keyof RefreshStreamsApiStreamsRefreshPostResponses];
 
+export type RefreshAvatarsApiStreamsRefreshAvatarsPostData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/streams/refresh-avatars';
+};
+
+export type RefreshAvatarsApiStreamsRefreshAvatarsPostResponses = {
+    /**
+     * Response Refresh Avatars Api Streams Refresh Avatars Post
+     * Successful Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type RefreshAvatarsApiStreamsRefreshAvatarsPostResponse = RefreshAvatarsApiStreamsRefreshAvatarsPostResponses[keyof RefreshAvatarsApiStreamsRefreshAvatarsPostResponses];
+
 export type GetGameDurationApiStreamsGameDurationGetData = {
     body?: never;
     path?: never;
@@ -763,6 +914,47 @@ export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses = {
 };
 
 export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponse = CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses[keyof CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses];
+
+export type GetEventsApiEventsGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/events';
+};
+
+export type GetEventsApiEventsGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: EventsResponse;
+};
+
+export type GetEventsApiEventsGetResponse = GetEventsApiEventsGetResponses[keyof GetEventsApiEventsGetResponses];
+
+export type SearchEmotesApiEmotesSearchPostData = {
+    body: EmoteSearchRequest;
+    path?: never;
+    query?: never;
+    url: '/api/emotes/search';
+};
+
+export type SearchEmotesApiEmotesSearchPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SearchEmotesApiEmotesSearchPostError = SearchEmotesApiEmotesSearchPostErrors[keyof SearchEmotesApiEmotesSearchPostErrors];
+
+export type SearchEmotesApiEmotesSearchPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: EmoteSearchResponse;
+};
+
+export type SearchEmotesApiEmotesSearchPostResponse = SearchEmotesApiEmotesSearchPostResponses[keyof SearchEmotesApiEmotesSearchPostResponses];
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8300' | (string & {});
