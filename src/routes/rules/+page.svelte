@@ -14,9 +14,10 @@
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 
-	const { myPlayer } = getAppManagerContext()
+	const { usersStore } = getAppManagerContext()
+	const { myUser } = usersStore
 	const canEdit = $derived(
-		$myPlayer?.roles.includes('admin') || $myPlayer?.roles.includes('rules.edit')
+		$myUser?.roles.includes('admin') || $myUser?.roles.includes('rules.edit')
 	)
 
 	let category = $state<RulesCategory>('general')
