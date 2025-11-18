@@ -25,6 +25,16 @@ export type AchievementItem = {
 export type AchievementVisibility = 'visible' | 'hidden';
 
 /**
+ * AddShitRequest
+ */
+export type AddShitRequest = {
+    /**
+     * Amount
+     */
+    amount: number;
+};
+
+/**
  * Body_upload_canvas_image_api_canvas__player_slug__upload_post
  */
 export type BodyUploadCanvasImageApiCanvasPlayerSlugUploadPost = {
@@ -176,7 +186,7 @@ export type CreatePlayerMoveResponse = {
 /**
  * DiceOption
  */
-export type DiceOption = '1d4' | '1d6' | '2d6' | '3d6';
+export type DiceOption = '1d2' | '1d4' | '2d4' | '3d4' | '1d6' | '2d6' | '3d6';
 
 /**
  * DonationItem
@@ -288,7 +298,7 @@ export type GameDifficulty = -1 | 0 | 1 | 2;
 /**
  * GameLength
  */
-export type GameLength = '0-3' | '3-15' | '15-30' | '30+';
+export type GameLength = '0-4' | '5-10' | '11-16' | '17-24' | '25+';
 
 /**
  * HTTPValidationError
@@ -298,6 +308,31 @@ export type HttpValidationError = {
      * Detail
      */
     detail?: Array<ValidationError>;
+};
+
+/**
+ * KickRequest
+ */
+export type KickRequest = {
+    /**
+     * Target Player Slug
+     */
+    target_player_slug: string;
+    /**
+     * Success
+     */
+    success: boolean;
+};
+
+/**
+ * KickResponse
+ */
+export type KickResponse = {
+    /**
+     * Dice Result
+     */
+    dice_result: number;
+    result_type: PlayerKickResult;
 };
 
 /**
@@ -350,7 +385,20 @@ export type PlayerItem = {
      */
     color: string;
     last_move: PlayerMoveItem | null;
+    /**
+     * Shield Stacks
+     */
+    shield_stacks: number | null;
+    /**
+     * Shit Stacks
+     */
+    shit_stacks: number | null;
 };
+
+/**
+ * PlayerKickResult
+ */
+export type PlayerKickResult = 'shield_removed' | 'lose' | 'lose_with_shield' | 'win' | 'out_of_shit';
 
 /**
  * PlayerMoveItem
@@ -444,7 +492,7 @@ export type PlayerMoveItem = {
 /**
  * PlayerMoveType
  */
-export type PlayerMoveType = 'completed' | 'reroll' | 'drop' | 'movie' | 'sheikh_moment';
+export type PlayerMoveType = 'completed' | 'reroll' | 'drop' | 'movie' | 'sheikh_moment' | 'shit_kick';
 
 /**
  * PlayerMovesResponse
@@ -505,21 +553,25 @@ export type PlayerStatsItem = {
      */
     snakes: number;
     /**
-     * Tiny Games
+     * Games 0 4
      */
-    tiny_games: number;
+    games_0_4: number;
     /**
-     * Short Games
+     * Games 5 10
      */
-    short_games: number;
+    games_5_10: number;
     /**
-     * Medium Games
+     * Games 11 16
      */
-    medium_games: number;
+    games_11_16: number;
     /**
-     * Long Games
+     * Games 17 24
      */
-    long_games: number;
+    games_17_24: number;
+    /**
+     * Games 25 Plus
+     */
+    games_25_plus: number;
     /**
      * Average Dice Roll
      */
@@ -940,6 +992,104 @@ export type SetPlayerSkinsApiPlayersSkinsPostErrors = {
 export type SetPlayerSkinsApiPlayersSkinsPostError = SetPlayerSkinsApiPlayersSkinsPostErrors[keyof SetPlayerSkinsApiPlayersSkinsPostErrors];
 
 export type SetPlayerSkinsApiPlayersSkinsPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type KickPlayerApiPlayersKickPostData = {
+    body: KickRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/kick';
+};
+
+export type KickPlayerApiPlayersKickPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type KickPlayerApiPlayersKickPostError = KickPlayerApiPlayersKickPostErrors[keyof KickPlayerApiPlayersKickPostErrors];
+
+export type KickPlayerApiPlayersKickPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: KickResponse;
+};
+
+export type KickPlayerApiPlayersKickPostResponse = KickPlayerApiPlayersKickPostResponses[keyof KickPlayerApiPlayersKickPostResponses];
+
+export type AddShitApiPlayersAddShitPostData = {
+    body: AddShitRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/add-shit';
+};
+
+export type AddShitApiPlayersAddShitPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AddShitApiPlayersAddShitPostError = AddShitApiPlayersAddShitPostErrors[keyof AddShitApiPlayersAddShitPostErrors];
+
+export type AddShitApiPlayersAddShitPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type MakeShieldApiPlayersMakeShieldPostData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/make-shield';
+};
+
+export type MakeShieldApiPlayersMakeShieldPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type MakeShieldApiPlayersMakeShieldPostError = MakeShieldApiPlayersMakeShieldPostErrors[keyof MakeShieldApiPlayersMakeShieldPostErrors];
+
+export type MakeShieldApiPlayersMakeShieldPostResponses = {
     /**
      * Successful Response
      */

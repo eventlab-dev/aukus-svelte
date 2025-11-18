@@ -106,6 +106,15 @@
 			case '1d4':
 				maxRoll = 4
 				break
+			case '2d4':
+				maxRoll = 8
+				break
+			case '3d4':
+				maxRoll = 12
+				break
+			case '1d2':
+				maxRoll = 2
+				break
 			case 'drop': {
 				if (player.map_position >= 81) {
 					maxRoll = -12

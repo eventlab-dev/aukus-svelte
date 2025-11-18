@@ -15,10 +15,11 @@
 	let { value = $bindable(), disabled }: Props = $props()
 
 	const items: ItemType[] = [
-		{ value: '0-3', label: '0 — 3 часов' },
-		{ value: '3-15', label: '3 — 15 часов' },
-		{ value: '15-30', label: '15 — 30 часов' },
-		{ value: '30+', label: '30+ часов' }
+		{ value: '0-4', label: '0 — 4 часов' },
+		{ value: '5-10', label: '5 — 10 часов' },
+		{ value: '11-16', label: '11 — 16 часов' },
+		{ value: '17-24', label: '17 — 24 часов' },
+		{ value: '25+', label: '25+ часов' }
 	]
 
 	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Время по HLTB')
