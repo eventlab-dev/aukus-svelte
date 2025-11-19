@@ -63,6 +63,7 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 
 	searchParams.subscribe(() => {
 		resetLoadedGames.set(true)
+		searchIdFrom.set(null)
 	})
 
 	const gamesHistoryByEvent = derived(allLoadedGames, ($allLoadedGames) => {

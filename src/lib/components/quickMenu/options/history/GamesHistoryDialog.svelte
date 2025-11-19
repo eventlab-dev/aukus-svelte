@@ -25,6 +25,8 @@
 	const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
 	const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
+	let dialogOpen = $state(false)
+
 	const aukus3Games = $derived($gamesHistoryByEvent['aukus3'] ?? [])
 	const aukus2Games = $derived($gamesHistoryByEvent['aukus2'] ?? [])
 	const aukus1Games = $derived($gamesHistoryByEvent['aukus1'] ?? [])
@@ -33,8 +35,19 @@
 
 	const aukus4Games = $derived($playerMoves.map(playerMoveToCommonGame))
 
-	// $inspect(gamesHistoryByEvent, 'gamesHistoryByEvent in GamesHistoryDialog')
-	// $inspect(aukus4Games, 'aukus4Games in GamesHistoryDialog')
+	$effect(() => {
+		if (dialogOpen) {
+			searchParams.set({
+				events: [],
+				players: [],
+				title_search: null
+			})
+			aukus4QueryParams.set({
+				players: [],
+				search: null
+			})
+		}
+	})
 
 	let timer: number = 0
 	const debounceSearch = (v: string) => {
@@ -137,7 +150,7 @@
 	}
 </script>
 
-<Dialog>
+<Dialog bind:open={dialogOpen}>
 	<DialogTrigger>
 		<SearchIcon /> История игр
 	</DialogTrigger>
