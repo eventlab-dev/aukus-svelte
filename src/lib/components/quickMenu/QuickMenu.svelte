@@ -69,7 +69,9 @@
 			<CollapsibleGroup>
 				<AchievementsDialog />
 				<GamesHistoryDialog />
-				<div><TwitchIcon /> Мультитрансляция</div>
+				<Button onclick={() => window.open('/streams', '_blank')}>
+					<TwitchIcon /> Мультитрансляция
+				</Button>
 			</CollapsibleGroup>
 
 			{#if $myPlayer}
