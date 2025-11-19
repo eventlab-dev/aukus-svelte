@@ -4,6 +4,7 @@
 	import DicePanel from '$lib/components/diceRoll/DicePanel.svelte'
 	import MapComponent from '$lib/components/map/MapComponent.svelte'
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte'
+	import EventStatusBanner from '$lib/components/EventStatusBanner.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	const { turnState, movementStore, myPlayer } = getAppManagerContext()
@@ -44,3 +45,5 @@
 {#if $myPlayer}
 	<AchievementsNotifications />
 {/if}
+
+<EventStatusBanner />

@@ -124,11 +124,22 @@ export function createAppManager() {
 		}
 	)
 
-	const eventFinished = derived(eventDataStore.eventSettings, ($settings) => {
-		if ($settings?.event_end_time) {
-			return Number($settings?.event_end_time) * 1000 >= Date.now()
+	const eventNotStarted = derived(eventDataStore.eventSettings, ($settings) => {
+		if ($settings?.event_start_time) {
+			return Number($settings?.event_start_time) * 1000 > Date.now()
 		}
 		return false
+	})
+
+	const eventFinished = derived(eventDataStore.eventSettings, ($settings) => {
+		if ($settings?.event_end_time) {
+			return Number($settings?.event_end_time) * 1000 < Date.now()
+		}
+		return false
+	})
+
+	const eventActive = derived([eventNotStarted, eventFinished], ([$notStarted, $finished]) => {
+		return !$notStarted && !$finished
 	})
 
 	const winners = derived(
@@ -168,6 +179,8 @@ export function createAppManager() {
 		statsStore,
 		winners,
 		eventFinished,
+		eventNotStarted,
+		eventActive,
 		playersInOrder,
 		playersCompletedMap,
 		canvasStore,

@@ -50,7 +50,7 @@
 		error?: string
 	}
 
-	const { usersStore, eventDataStore, myPlayer, frontendState } = getAppManagerContext()
+	const { usersStore, eventDataStore, myPlayer, frontendState, eventActive } = getAppManagerContext()
 
 	const { saveMoveForm } = usersStore
 	const { eventDataQuery } = eventDataStore
@@ -188,7 +188,7 @@
 <Dialog bind:open={isDialogOpen}>
 	<DialogTrigger>
 		{#snippet child({ props })}
-			<Button {...props} class="w-80">Сделать ход</Button>
+			<Button {...props} class="w-80" disabled={!$eventActive}>Сделать ход</Button>
 		{/snippet}
 	</DialogTrigger>
 	<DialogContent class="gap-3 overflow-hidden p-3 sm:max-w-[800px]" showCloseButton={false}>

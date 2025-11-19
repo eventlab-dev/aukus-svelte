@@ -5,7 +5,7 @@
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
-	const { eventDataStore, movementStore, myPlayer, turnState } = getAppManagerContext()
+	const { eventDataStore, movementStore, myPlayer, turnState, eventActive } = getAppManagerContext()
 	const { diceOptions } = eventDataStore
 	const { selectedPlayer } = movementStore
 
@@ -31,7 +31,7 @@
 			}
 			return {
 				playerToShow: $myPlayer,
-				canRollDice: true,
+				canRollDice: $eventActive,
 				diceOptinos: options
 			}
 		}
