@@ -44,7 +44,7 @@
 			})
 			aukus4QueryParams.set({
 				players: [],
-				search: null
+				search_title: null
 			})
 		}
 	})
@@ -55,7 +55,7 @@
 		if (v.length >= 3 || v.length === 0) {
 			timer = setTimeout(() => {
 				searchParams.update((p) => ({ ...p, title_search: v }))
-				aukus4QueryParams.update((p) => ({ ...p, search: v }))
+				aukus4QueryParams.update((p) => ({ ...p, search_title: v }))
 			}, 500)
 		}
 	}
