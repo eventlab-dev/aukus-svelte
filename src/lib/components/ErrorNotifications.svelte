@@ -7,9 +7,11 @@
 	const { notifications, removeError } = errorNotificationStore
 </script>
 
-<div class="fixed bottom-0 left-0 right-0 z-50 flex flex-col-reverse gap-2 p-4">
+<div class="fixed bottom-0 left-0 right-0 z-50 flex flex-col-reverse gap-2 p-4" class:pointer-events-none={$notifications.length === 0}>
 	{#each $notifications as notification (notification.id)}
-		<ErrorNotificationItem {notification} onRemove={() => removeError(notification.id)} />
+		<div class="pointer-events-auto">
+			<ErrorNotificationItem {notification} onRemove={() => removeError(notification.id)} />
+		</div>
 	{/each}
 </div>
 
