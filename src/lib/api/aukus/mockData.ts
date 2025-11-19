@@ -3,6 +3,7 @@ import type { PlayerData } from '$lib/types'
 import { randomInt } from '../../utils'
 
 const playerLasqa: PlayerData = {
+	id: 1,
 	username: 'Lasqa',
 	slug: 'lasqa',
 	twitch_stream_link: '',
@@ -28,10 +29,13 @@ const playerLasqa: PlayerData = {
 	unlocked_achievements: [],
 	available_skins: [],
 	last_move: null,
-	moder_for: []
+	moder_for: [],
+	shield_stacks: 0,
+	shit_stacks: 0
 }
 
 const playerSegall: PlayerData = {
+	id: 2,
 	username: 'Segall',
 	slug: 'segall',
 	total_score: 700,
@@ -57,10 +61,13 @@ const playerSegall: PlayerData = {
 	unlocked_achievements: [],
 	available_skins: [],
 	last_move: null,
-	moder_for: []
+	moder_for: [],
+	shield_stacks: 0,
+	shit_stacks: 0
 }
 
 const playerRoadhouse: PlayerData = {
+	id: 3,
 	username: 'Roadhouse',
 	slug: 'roadhouse',
 	total_score: 600,
@@ -87,10 +94,13 @@ const playerRoadhouse: PlayerData = {
 	unlocked_achievements: [],
 	available_skins: [],
 	last_move: null,
-	moder_for: []
+	moder_for: [],
+	shield_stacks: 0,
+	shit_stacks: 0
 }
 
 const playerPraden: PlayerData = {
+	id: 4,
 	username: 'Praden',
 	slug: 'praden',
 	total_score: 500,
@@ -116,7 +126,9 @@ const playerPraden: PlayerData = {
 	unlocked_achievements: [],
 	available_skins: [],
 	last_move: null,
-	moder_for: []
+	moder_for: [],
+	shield_stacks: 0,
+	shit_stacks: 0
 }
 
 export const playersMock = [playerLasqa, playerSegall, playerRoadhouse, playerPraden].toSorted(
@@ -148,7 +160,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '15-30',
+		item_length: '5-10',
 		item_duration: 11285,
 		cover_image_url: 'https://howlongtobeat.com/games/38029_Nier_Automata.jpg?width=250',
 		vod_links:
@@ -176,7 +188,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '15-30',
+		item_length: '11-16',
 		item_duration: 11285,
 		cover_image_url: 'https://howlongtobeat.com/games/38029_Nier_Automata.jpg?width=250',
 		vod_links:
@@ -203,7 +215,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '3-15',
+		item_length: '5-10',
 		item_duration: 11285,
 		cover_image_url: 'https://howlongtobeat.com/games/38029_Nier_Automata.jpg?width=250',
 		vod_links:
@@ -231,7 +243,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '30+',
+		item_length: '25+',
 		item_duration: 11285,
 		cover_image_url: 'https://static-cdn.jtvnw.net/ttv-boxart/Valheim-{width}x{height}.jpg',
 		vod_links:
@@ -259,7 +271,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '15-30',
+		item_length: '17-24',
 		item_duration: 11285,
 		cover_image_url: 'https://static-cdn.jtvnw.net/ttv-boxart/Valheim-{width}x{height}.jpg',
 		vod_links:
@@ -287,7 +299,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '15-30',
+		item_length: '17-24',
 		item_duration: 11285,
 		cover_image_url: 'https://static-cdn.jtvnw.net/ttv-boxart/Valheim-{width}x{height}.jpg',
 		vod_links:
@@ -314,7 +326,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '15-30',
+		item_length: '17-24',
 		item_duration: 11285,
 		cover_image_url: 'https://static-cdn.jtvnw.net/ttv-boxart/Valheim-{width}x{height}.jpg',
 		vod_links:
@@ -341,7 +353,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '15-30',
+		item_length: '17-24',
 		item_duration: 11285,
 		cover_image_url: 'https://static-cdn.jtvnw.net/ttv-boxart/Valheim-{width}x{height}.jpg',
 		vod_links:
@@ -368,7 +380,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '15-30',
+		item_length: '17-24',
 		item_duration: 11285,
 		cover_image_url: 'https://static-cdn.jtvnw.net/ttv-boxart/Valheim-{width}x{height}.jpg',
 		vod_links:
