@@ -49,7 +49,10 @@ export function createUsersStore() {
 
 	const isAdmin = derived(myUser, ($myUser) => $myUser?.roles.includes('admin'))
 
+	const loginError = writable<string | null>(null)
+
 	const login = (username: string, password: string) => {
+		loginError.set(null)
 		get(loginMutation)
 			.mutateAsync({ body: { username, password } })
 			.then((response) => {
@@ -62,6 +65,22 @@ export function createUsersStore() {
 							goto('/')
 						})
 				}
+			})
+			.catch((error) => {
+				let statusCode = 0
+				
+				if (error && typeof error === 'object') {
+					const errorObj = error as Record<string, unknown>
+					if ('response' in errorObj && errorObj.response instanceof Response) {
+						statusCode = errorObj.response.status
+					}
+				}
+				
+				const errorMessage = statusCode === 401 
+					? 'Неверный логин или пароль'
+					: `Неизвестная ошибка при входе (${statusCode})`
+				
+				loginError.set(errorMessage)
 			})
 	}
 
@@ -127,6 +146,7 @@ export function createUsersStore() {
 		isAdmin,
 		login,
 		loginMutation,
+		loginError,
 		logout,
 		users,
 		usersQuery,

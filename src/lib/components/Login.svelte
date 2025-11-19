@@ -6,7 +6,7 @@
 	import { Input } from './ui/input'
 
 	const { usersStore } = getAppManagerContext()
-	const { loginMutation } = usersStore
+	const { loginMutation, loginError } = usersStore
 
 	let name = $state('')
 	let password = $state('')
@@ -15,6 +15,10 @@
 
 	function login() {
 		usersStore.login(name, password)
+	}
+
+	function clearError() {
+		loginError.set(null)
 	}
 </script>
 
@@ -32,6 +36,7 @@
 			class="rounded-b-[4px] bg-muted"
 			bind:value={name}
 			onkeypress={(e) => e.key === 'Enter' && isValid && login()}
+			oninput={clearError}
 		/>
 		<Input
 			id="password"
@@ -40,7 +45,13 @@
 			class="rounded-t-[4px] bg-muted"
 			bind:value={password}
 			onkeypress={(e) => e.key === 'Enter' && isValid && login()}
+			oninput={clearError}
 		/>
+		{#if $loginError}
+			<div class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+				{$loginError}
+			</div>
+		{/if}
 	</div>
 	<div class="flex flex-col items-center justify-center gap-1.5">
 		<Button
