@@ -42,7 +42,7 @@
 		{/each}
 		{#if currentRouteIndex > -1}
 			<span
-				class="pointer-events-none absolute top-0 left-0 z-10 h-full translate-y-1/2 rounded-md bg-primary py-2 transition-all duration-300 ease-in-out"
+				class="pointer-events-none absolute top-0 left-0 z-10 h-full rounded-md bg-primary py-2 transition-all duration-300 ease-in-out"
 				style="width: {spanWidth}px; translate: {prevWidthSum}px 0;"
 				transition:fade={{ duration: 200 }}
 			></span>
