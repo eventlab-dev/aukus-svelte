@@ -7,12 +7,14 @@
 	import { Textarea } from '$lib/components/ui/textarea'
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
+	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { FALLBACK_GAME_POSTER, gameLengthRanges } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
 	import PopoverGameCard from './PopoverGameCard.svelte'
+	import DiceRollInfo from './DiceRollInfo.svelte'
 	import type { CommonGameItem } from '$lib/types'
 
 	type Props = {
@@ -78,9 +80,22 @@
 				<Badge variant={moveTypeStyles.variant}>
 					{moveTypeStyles.text}
 				</Badge>
-				<Badge variant="secondary">
-					Кубик: {move.dice_roll}
-				</Badge>
+				{#if move.dice_roll_id}
+					<Popover>
+						<PopoverTrigger>
+							<Badge variant="secondary" class="cursor-pointer hover:bg-secondary/80">
+								Кубик: {move.dice_roll}
+							</Badge>
+						</PopoverTrigger>
+						<PopoverContent>
+							<DiceRollInfo diceRollId={move.dice_roll_id} />
+						</PopoverContent>
+					</Popover>
+				{:else}
+					<Badge variant="secondary">
+						Кубик: {move.dice_roll}
+					</Badge>
+				{/if}
 				<Badge variant="secondary">
 					Ход {move.cell_from}
 					->

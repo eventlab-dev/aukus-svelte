@@ -109,12 +109,6 @@ export const makeDiceRollApiDiceRollsPost = <ThrowOnError extends boolean = fals
  */
 export const getRollByIdApiDiceRollsRollIdGet = <ThrowOnError extends boolean = false>(options: Options<GetRollByIdApiDiceRollsRollIdGetData, ThrowOnError>) => {
     return (options.client ?? client).get<GetRollByIdApiDiceRollsRollIdGetResponses, GetRollByIdApiDiceRollsRollIdGetErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
         url: '/api/dice-rolls/{roll_id}',
         ...options
     });
