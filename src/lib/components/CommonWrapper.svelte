@@ -13,11 +13,14 @@
 	import MobilePage from './mobile/MobilePage.svelte'
 	import ErrorNotifications from './ErrorNotifications.svelte'
 	import { setErrorCallback } from '$lib/client'
+	import { initializeClientInterceptors } from '$lib/clientInterceptors'
 
 	let { children } = $props()
 
 	const appManager = createAppManager()
 	setAppManagerContext(appManager)
+
+	initializeClientInterceptors()
 
 	setErrorCallback((path, statusCode, message) => {
 		appManager.errorNotificationStore.addError(path, statusCode, message)

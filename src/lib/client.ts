@@ -15,7 +15,9 @@ function handleError(error: unknown, url?: string, contextData?: Record<string, 
 	let statusCode = 0
 	let message = 'Unknown error'
 
-	if (typeof error === 'object' && error !== null) {
+	if (typeof error === 'string') {
+		message = error
+	} else if (typeof error === 'object' && error !== null) {
 		const errorObj = error as Record<string, unknown>
 
 		if ('request' in errorObj && errorObj.request instanceof Request) {
@@ -42,8 +44,14 @@ function handleError(error: unknown, url?: string, contextData?: Record<string, 
 					if (details.length > 0 && details[0].msg) {
 						message = details[0].msg
 					}
+				} else {
+					message = JSON.stringify(errorBody)
 				}
 			}
+		}
+
+		if ('detail' in errorObj && typeof errorObj.detail === 'string' && message === 'Unknown error') {
+			message = errorObj.detail
 		}
 
 		if ('message' in errorObj && typeof errorObj.message === 'string' && message === 'Unknown error') {
