@@ -178,8 +178,7 @@
 
 {#if canRollDice}
 	<div class="flex min-w-[500px] flex-col gap-3 rounded-3xl bg-card p-3">
-		<div class="font-semibold text-muted-foreground">Варианты хода</div>
-		<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
+		<div class="font-semibold text-muted-foreground">Бросок кубика</div>
 		<div class="flex gap-3">
 			<div class="flex-1 rounded-2xl bg-secondary p-3">
 				<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
