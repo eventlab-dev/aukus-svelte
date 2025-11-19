@@ -69,6 +69,10 @@ function handleError(error: unknown, url?: string, contextData?: Record<string, 
 		}
 	}
 
+	if (statusCode === 401 && path.includes('/api/login')) {
+		return
+	}
+
 	errorCallback(path, statusCode, message)
 }
 
