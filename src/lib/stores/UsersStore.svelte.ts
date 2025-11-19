@@ -1,5 +1,6 @@
 import { goto } from '$app/navigation'
 import { AukusBaseUrl, EventlabBaseUrl } from '$lib/client'
+import { setTokenInvalidatedCallback } from '$lib/clientInterceptors'
 import {
 	createPlayerMoveApiPlayersMovePostMutation,
 	finishPlayerMoveApiPlayersMoveFinishPostMutation,
@@ -15,16 +16,27 @@ import type { UserItem } from '$lib/heyapi/eventlab/types.gen'
 import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
-import { derived, get } from 'svelte/store'
+import { derived, get, writable } from 'svelte/store'
 
 export function createUsersStore() {
-	const myUserQuery = createQuery({
-		...fetchCurrentUserApiUsersCurrentGetOptions({
-			baseUrl: EventlabBaseUrl,
-			auth: defaultAuth
-		}),
-		retry: false
+	const accessToken = writable<string | null>(
+		typeof localStorage !== 'undefined' ? localStorage.getItem('auth_token') : null
+	)
+
+	setTokenInvalidatedCallback(() => {
+		accessToken.set(null)
 	})
+
+	const myUserQuery = createQuery(
+		derived(accessToken, ($token) => ({
+			...fetchCurrentUserApiUsersCurrentGetOptions({
+				baseUrl: EventlabBaseUrl,
+				auth: defaultAuth
+			}),
+			retry: false,
+			enabled: Boolean($token)
+		}))
+	)
 
 	const loginMutation = createMutation(loginApiLoginPostMutation({ baseUrl: EventlabBaseUrl }))
 
@@ -43,6 +55,7 @@ export function createUsersStore() {
 			.then((response) => {
 				if (response.token) {
 					localStorage.setItem('auth_token', response.token)
+					accessToken.set(response.token)
 					get(myUserQuery)
 						.refetch()
 						.then(() => {
@@ -54,7 +67,7 @@ export function createUsersStore() {
 
 	const logout = () => {
 		localStorage.removeItem('auth_token')
-		get(myUserQuery).refetch()
+		accessToken.set(null)
 	}
 
 	const usersQuery = createQuery({
@@ -121,7 +134,8 @@ export function createUsersStore() {
 		saveMoveForm,
 		finishMove,
 		rollDice,
-		setSkins
+		setSkins,
+		accessToken
 	}
 }
 
