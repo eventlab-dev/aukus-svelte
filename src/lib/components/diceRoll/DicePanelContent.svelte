@@ -210,7 +210,7 @@
 	</div>
 {:else}
 	<div class="flex rounded-3xl bg-card">
-		<div class="flex w-[380px] flex-col gap-3 p-4">
+		<div class="flex w-[450px] flex-col gap-3 p-4">
 			<div class="flex items-center gap-2">
 				<Avatar class="size-[27px]">
 					<AvatarImage src="https://github.com/shadcn.png" />
@@ -235,7 +235,7 @@
 			<PlayerModel {player} variant="big" />
 		</div>
 		<Separator orientation="vertical" />
-		<div class="flex w-[380px] flex-col gap-3 p-4 font-bold">
+		<div class="flex w-[450px] flex-col gap-3 p-4 font-bold">
 			<div class="font-semibold text-muted-foreground">Варианты хода</div>
 			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
 			<div class="flex w-full gap-2">
