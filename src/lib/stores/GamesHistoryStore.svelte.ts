@@ -63,7 +63,7 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 
 	let previousSearchParams: QueryParams | null = null
 	searchParams.subscribe((current) => {
-		if (previousSearchParams !== null) {
+		if (previousSearchParams && current) {
 			const hasChanged =
 				JSON.stringify(previousSearchParams.events) !== JSON.stringify(current.events) ||
 				JSON.stringify(previousSearchParams.players) !== JSON.stringify(current.players) ||
@@ -74,7 +74,11 @@ export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: Ev
 				searchIdFrom.set(null)
 			}
 		}
-		previousSearchParams = { ...current }
+		if (current) {
+			previousSearchParams = { ...current }
+		} else {
+			previousSearchParams = null
+		}
 	})
 
 	const gamesHistoryByEvent = derived(allLoadedGames, ($allLoadedGames) => {
