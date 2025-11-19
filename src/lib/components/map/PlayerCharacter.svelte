@@ -22,7 +22,7 @@
 		frontendState
 	} = getAppManagerContext()
 	const { playersBySlug } = eventDataStore
-	const { selectedPlayer } = movementStore
+	const { selectedPlayer, hoveredPlayer } = movementStore
 
 	let element: HTMLDivElement
 
@@ -94,10 +94,18 @@
 
 	$effect(() => {
 		if (element && $turnState === 'selecting-dice' && player.slug === $myPlayer?.slug) {
-			// scroll to element
 			element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
 		}
 	})
+
+	$effect(() => {
+		if (element && $hoveredPlayer === player.slug) {
+			element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+		}
+	})
+
+	const isHighlighted = $derived($hoveredPlayer === player.slug)
+	const isDimmed = $derived($hoveredPlayer !== null && $hoveredPlayer !== player.slug)
 
 	const onCharacterClick = (e: MouseEvent) => {
 		if ($selectedPlayer?.slug === player.slug) {
@@ -139,12 +147,14 @@
 	})
 </script>
 
-<div bind:this={element} class="absolute" style="top: {finalTop}px; left: {finalLeft}px">
+<div bind:this={element} class="absolute transition-opacity duration-300" 
+     style="top: {finalTop}px; left: {finalLeft}px; opacity: {isDimmed ? '0.3' : '1'}; z-index: {isHighlighted ? '50' : 'auto'}">
 	<button
 		onclick={onCharacterClick}
 		class="relative isolate cursor-pointer
-         rounded-full transition data-[active=false]:hover:bg-yellow-200/80 data-[active=true]:bg-yellow-200/80"
+        rounded-full transition data-[active=false]:hover:bg-yellow-200/80 data-[active=true]:bg-yellow-200/80 data-[highlighted=true]:ring-4 data-[highlighted=true]:ring-yellow-400 data-[highlighted=true]:bg-yellow-200/90"
 		data-active={$selectedPlayer?.slug === player.slug}
+		data-highlighted={isHighlighted}
 	>
 		{#if onlyName}
 			<div class="flex w-full justify-center p-1">

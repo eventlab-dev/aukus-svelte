@@ -4,21 +4,34 @@
 	import { Button } from '../ui/button'
 	import PlayerAvatar from './PlayerAvatar.svelte'
 	import type { PlayerData } from '$lib/types'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type Props = {
 		player: PlayerData
 	}
 
 	const { player }: Props = $props()
+	const { movementStore } = getAppManagerContext()
+	const { hoveredPlayer } = movementStore
 
 	let isHovered = $state(false)
+
+	function handleMouseEnter() {
+		isHovered = true
+		hoveredPlayer.set(player.slug)
+	}
+
+	function handleMouseLeave() {
+		isHovered = false
+		hoveredPlayer.set(null)
+	}
 </script>
 
 <Button
 	href="/players/{player.slug}"
 	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-xl bg-card p-0! text-foreground select-none hover:no-underline"
-	onmouseenter={() => (isHovered = true)}
-	onmouseleave={() => (isHovered = false)}
+	onmouseenter={handleMouseEnter}
+	onmouseleave={handleMouseLeave}
 >
 	<div
 		class="relative flex h-full w-full flex-col gap-[5px] p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 hover:after:opacity-100"

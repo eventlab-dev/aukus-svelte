@@ -239,6 +239,7 @@ export function createMovementStore({
 	}
 
 	const selectedPlayer = writable<PlayerData | null>(null)
+	const hoveredPlayer = writable<string | null>(null)
 
 	eventDataStore.updatedPlayers.subscribe(($players) => {
 		const previous = get(eventDataStore.players)
@@ -295,6 +296,7 @@ export function createMovementStore({
 		moveToWinPosition,
 		myMovementState,
 		doRollAnimation,
-		selectedPlayer
+		selectedPlayer,
+		hoveredPlayer
 	}
 }
