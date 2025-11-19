@@ -34,13 +34,14 @@
 	const { myMovementState } = movementStore
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
-		const allOptions = [
+		const allOptions: Option[] = [
 			{ label: 'Дроп', value: 'drop' },
+			{ label: '1d2', value: '1d2' },
 			{ label: '1d4', value: '1d4' },
-			{ label: '1d6', value: '1d6' },
+			{ label: '2d4', value: '2d4' },
 			{ label: '2d6', value: '2d6' },
 			{ label: '3d6', value: '3d6' }
-		] as const
+		]
 		return allOptions.filter((option) => diceOptions.includes(option.value))
 	})
 
