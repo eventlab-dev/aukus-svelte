@@ -52,7 +52,9 @@
 	)
 
 	const expandedStreamIndex = $derived(
-		expandedStreamId ? filteredStreamers.findIndex((player) => player.slug === expandedStreamId) : null
+		expandedStreamId
+			? filteredStreamers.findIndex((player) => player.slug === expandedStreamId)
+			: null
 	)
 
 	function handleToggleExpand(playerId: string) {
@@ -128,9 +130,7 @@
 				return
 			}
 
-			const expandedElementIndex = $onlineStreamers.findIndex(
-				(p) => p.slug === expandedPlayer.slug
-			)
+			const expandedElementIndex = $onlineStreamers.findIndex((p) => p.slug === expandedPlayer.slug)
 			const expandedElement = streamRefs[expandedElementIndex]
 			const container = containerRef
 
@@ -223,9 +223,12 @@
 </script>
 
 {#if $onlineStreamers.length === 0}
-	<div class="fixed inset-0 z-[99999] bg-[#282828] overflow-auto">
+	<div class="fixed inset-0 z-[99999] overflow-auto bg-[#282828]">
 		<div class="container mx-auto px-4 py-8">
-			<button onclick={handleGoHome} class="mb-6 rounded bg-transparent px-4 py-2 text-white hover:bg-white/10">
+			<button
+				onclick={handleGoHome}
+				class="mb-6 rounded bg-transparent px-4 py-2 text-white hover:bg-white/10"
+			>
 				Аукус
 			</button>
 			<div class="py-12 text-center">
@@ -235,10 +238,13 @@
 		</div>
 	</div>
 {:else}
-	<div class="fixed inset-0 z-[99999] bg-[#282828] overflow-hidden">
+	<div class="fixed inset-0 z-[99999] overflow-hidden bg-[#282828]">
 		<div class="px-4 py-4">
 			<div class="mb-4 flex items-center gap-4">
-				<button onclick={handleGoHome} class="rounded bg-transparent px-4 py-2 text-white hover:bg-white/10">
+				<button
+					onclick={handleGoHome}
+					class="rounded bg-transparent px-4 py-2 text-white hover:bg-white/10"
+				>
 					Аукус
 				</button>
 
@@ -254,7 +260,9 @@
 					{#each $onlineStreamers as player (player.slug)}
 						<button
 							onclick={() => handleTogglePlayer(player.slug)}
-							class="rounded px-3 py-1.5 text-sm text-white transition-colors {visiblePlayers.has(player.slug) && !showAllPlayers
+							class="rounded px-3 py-1.5 text-sm text-white transition-colors {visiblePlayers.has(
+								player.slug
+							) && !showAllPlayers
 								? 'bg-[#8B5CF6]'
 								: 'border border-white/20 bg-transparent hover:bg-white/10'}"
 						>
@@ -280,8 +288,9 @@
 		<div bind:this={containerRef} class="relative w-full">
 			<div class="grid gap-2" style="grid-template-columns: repeat({columnsCount}, 1fr)">
 				{#each filteredStreamers as player, index (player.slug)}
+					{@const refIndex = $onlineStreamers.findIndex((p) => p.slug === player.slug)}
 					<div
-						bind:this={streamRefs[$onlineStreamers.findIndex((p) => p.slug === player.slug)]}
+						bind:this={streamRefs[refIndex]}
 						class="aspect-video"
 					>
 						<StreamPlayer

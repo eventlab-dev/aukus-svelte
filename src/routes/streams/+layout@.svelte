@@ -24,8 +24,9 @@
 		* {
 			box-sizing: border-box;
 		}
-		
-		html, body {
+
+		html,
+		body {
 			margin: 0 !important;
 			padding: 0 !important;
 			overflow: hidden !important;
@@ -42,7 +43,7 @@
 		#wallpaper,
 		nav,
 		footer,
-		[class*="scroll-area"] {
+		[class*='scroll-area'] {
 			display: none !important;
 		}
 	</style>
@@ -51,4 +52,3 @@
 <QueryClientProvider client={queryClient}>
 	{@render children?.()}
 </QueryClientProvider>
-
