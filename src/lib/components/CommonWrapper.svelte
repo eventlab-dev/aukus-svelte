@@ -11,11 +11,17 @@
 	import { onMount } from 'svelte'
 	import PlayersList from './player/PlayersList.svelte'
 	import MobilePage from './mobile/MobilePage.svelte'
+	import ErrorNotifications from './ErrorNotifications.svelte'
+	import { setErrorCallback } from '$lib/client'
 
 	let { children } = $props()
 
 	const appManager = createAppManager()
 	setAppManagerContext(appManager)
+
+	setErrorCallback((path, statusCode, message) => {
+		appManager.errorNotificationStore.addError(path, statusCode, message)
+	})
 
 	onMount(() => {
 		const container = document.getElementById('wallpaper') as HTMLElement
@@ -39,8 +45,10 @@
 		wallpaper.init()
 	})
 
-	const { isMobile } = appManager
+	const { isMobile, errorNotificationStore } = appManager
 </script>
+
+<ErrorNotifications {errorNotificationStore} />
 
 {#if $isMobile}
 	<MobilePage />
