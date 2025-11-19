@@ -7,42 +7,52 @@
 	type Developer = {
 		name: string
 		description: string
+		isFounder?: boolean
+	}
+
+	const founder: Developer = {
+		name: 'Lasqa',
+		description: 'Организатор и автор идеи',
+		isFounder: true
 	}
 
 	const developers: Developer[] = [
-		{
-			name: 'mapcar',
-			description: 'Огранизация, фронтенд, бекенд'
-		},
-		{
-			name: 'olegsvs',
-			description: 'Сайт, сервера, бекенд'
-		},
-		{
-			name: 'lepayy',
-			description: 'Дизайн интерфейсов'
-		},
-		{
-			name: 'Grib0nya',
-			description: 'Скины, логотип'
-		},
-		{
-			name: 'Rvg',
-			description: 'Карта, скины'
-		},
-		{
-			name: 'esouqu',
-			description: 'Фронтенд'
-		},
-		{
-			name: 'Pechenka',
-			description: 'Тестирование'
-		},
-		{
-			name: 'CorruptedMushroom',
-			description: 'Бекенд'
-		}
-	].sort((a, b) => a.name.localeCompare(b.name))
+		founder,
+		...[
+			{
+				name: 'mapcar',
+				description: 'Огранизация, фронтенд, бекенд'
+			},
+			{
+				name: 'olegsvs',
+				description: 'Сайт, сервера, бекенд'
+			},
+			{
+				name: 'lepayy',
+				description: 'Дизайн интерфейсов'
+			},
+			{
+				name: 'Grib0nya',
+				description: 'Скины, логотип'
+			},
+			{
+				name: 'Rvg',
+				description: 'Карта, скины'
+			},
+			{
+				name: 'esouqu',
+				description: 'Фронтенд'
+			},
+			{
+				name: 'Pechenka',
+				description: 'Тестирование'
+			},
+			{
+				name: 'CorruptedMushroom',
+				description: 'Бекенд'
+			}
+		].sort((a, b) => a.name.localeCompare(b.name))
+	]
 
 	const sponsorsQuery = createQuery(
 		getDonationsApiDonationsGetOptions({
@@ -94,7 +104,7 @@
 			<div class="mt-[20px] flex flex-col gap-5">
 				{#each developers as developer (developer.name)}
 					<span>
-						<strong>{developer.name}</strong> — {developer.description}
+						<strong class={developer.isFounder ? 'text-[#FF881E]' : ''}>{developer.name}</strong> — {developer.description}
 					</span>
 				{/each}
 			</div>
