@@ -40,8 +40,8 @@ export function createUsersStore() {
 
 	const loginMutation = createMutation(loginApiLoginPostMutation({ baseUrl: EventlabBaseUrl }))
 
-	const myUser = derived(myUserQuery, ($query) => {
-		if ($query.isSuccess) {
+	const myUser = derived([myUserQuery, accessToken], ([$query, $token]) => {
+		if ($query.isSuccess && $token) {
 			return $query.data
 		}
 		return null
