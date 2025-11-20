@@ -210,4 +210,12 @@
 		margin-top: 0px;
 		margin-bottom: 0px;
 	}
+
+	:global(.tiptap-section br.ProseMirror-trailingBreak) {
+		display: none;
+	}
+
+	:global(.tiptap-section p:has(.ProseMirror-trailingBreak)) {
+		display: none;
+	}
 </style>

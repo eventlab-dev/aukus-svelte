@@ -76,8 +76,17 @@ export function createSectionPlugin(params: { mode: 'full' | 'parse-only' } = { 
 						newSections.push(section.create({}, buffer))
 					}
 
-					const emptyParagraph = schema.nodes.paragraph.create()
-					newSections.push(emptyParagraph)
+					// if last item already empty paragraph, skip adding another
+					if (newSections.length > 0) {
+						const lastNode = newSections[newSections.length - 1]
+						if (lastNode.type === schema.nodes.paragraph && lastNode.content.size === 0) {
+							// pass
+						} else {
+							const emptyParagraph = schema.nodes.paragraph.create()
+							newSections.push(emptyParagraph)
+						}
+					}
+
 					const newDoc = schema.topNodeType.create(null, newSections)
 
 					// console.log('flag 3 new', newDoc.toJSON(), doc.toJSON())
