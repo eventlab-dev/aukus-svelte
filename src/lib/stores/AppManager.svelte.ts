@@ -55,7 +55,10 @@ export function createAppManager() {
 				const slug = player.slug
 				const user = $users.find((u) => u.slug === slug)
 				const stats = $statsBySlug[slug]
-				if (!user || !stats) continue
+				if (!user || !stats) {
+					console.warn('Missing data for player:', slug, user, stats)
+					continue
+				}
 				list.push({
 					...user,
 					...player,
