@@ -45,7 +45,6 @@ class SoundManager {
 		if (this._sounds.has(key)) {
 			return
 		}
-		console.log('fetching', key)
 
 		try {
 			const response = await fetch(url)
