@@ -17,7 +17,10 @@
 	const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
 	$effect(() => {
-		if (!page.params.player) return
+		if (!page.params.player) {
+			console.log('No player param', page.params)
+			return
+		}
 		movesQueryParams.set({ players: [page.params.player], start_ts: null })
 		canvasPlayerSlug.set(page.params.player)
 	})
@@ -30,6 +33,10 @@
 				exclude_ids_history: []
 			})
 		}
+	})
+
+	$effect(() => {
+		console.log('players', $playersBySlug)
 	})
 
 	const player = $derived($playersBySlug[page.params.player!])
