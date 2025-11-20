@@ -181,7 +181,7 @@
 			<div class="flex w-full flex-wrap gap-2">
 				{#each eventsList as eventName (eventName)}
 					<Toggle
-						variant="outline"
+						variant="default"
 						bind:pressed={() => eventName === selectedEvent, (v) => selectEvent(v, eventName)}
 						class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-primary"
 					>
