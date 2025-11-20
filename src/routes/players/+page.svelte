@@ -10,14 +10,6 @@
 <div class="mx-auto mt-[100px] max-w-[800px]" in:fade>
 	<div class="space-y-[100px]">
 		{#each $players as player (player.slug)}
-			{@const socials = {
-				twitchLink: player?.twitch_stream_link || '',
-				donationAlertsLink: player?.donation_link || '',
-				telegramLink: player?.telegram_link || '',
-				vkLiveLink: player?.vk_stream_link || '',
-				kickLink: player?.kick_stream_link || ''
-			}}
-
 			<div class="flex flex-col items-center gap-5">
 				<PlayerAvatar
 					src={player.avatar_link ?? ''}
@@ -28,7 +20,7 @@
 				<div class="text-5xl leading-[58px] font-bold">
 					{player.first_name} «{player.username}»
 				</div>
-				<Socials {...socials} />
+				<Socials {player} />
 			</div>
 		{/each}
 	</div>

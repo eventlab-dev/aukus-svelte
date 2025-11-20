@@ -5,48 +5,46 @@
 	import TelegramIcon from '$lib/components/icons/TelegramIcon.svelte'
 	import VkLiveIcon from '$lib/components/icons/VKLiveIcon.svelte'
 	import KickIcon from '$lib/components/icons/KickIcon.svelte'
+	import type { PlayerData } from '$lib/types'
 
 	type Props = {
-		twitchLink?: string
-		donationAlertsLink?: string
-		telegramLink?: string
-		vkLiveLink?: string
-		kickLink?: string
+		player: PlayerData
 		colored?: boolean
 	}
 
-	const {
-		twitchLink,
-		donationAlertsLink,
-		telegramLink,
-		vkLiveLink,
-		kickLink,
-		colored = true
-	}: Props = $props()
+	const { player, colored = true }: Props = $props()
+
+	const socials = $derived({
+		twitchLink: player.twitch_stream_link || '',
+		donationAlertsLink: player.donation_link || '',
+		telegramLink: player.telegram_link || '',
+		vkLiveLink: player.vk_stream_link || '',
+		kickLink: player.kick_stream_link || ''
+	})
 
 	const items = $derived([
 		{
-			href: twitchLink,
+			href: socials.twitchLink,
 			Icon: TwitchIcon,
 			color: 'bg-custom-purple'
 		},
 		{
-			href: donationAlertsLink,
+			href: socials.donationAlertsLink,
 			Icon: DonationAlertsIcon,
 			color: 'bg-custom-orange'
 		},
 		{
-			href: telegramLink,
+			href: socials.telegramLink,
 			Icon: TelegramIcon,
 			color: 'bg-custom-blue'
 		},
 		{
-			href: vkLiveLink,
+			href: socials.vkLiveLink,
 			Icon: VkLiveIcon,
 			color: 'bg-custom-red'
 		},
 		{
-			href: kickLink,
+			href: socials.kickLink,
 			Icon: KickIcon,
 			color: 'bg-custom-green'
 		}

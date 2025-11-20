@@ -18,7 +18,6 @@
 
 	$effect(() => {
 		if (!page.params.player) {
-			console.log('No player param', page.params)
 			return
 		}
 		movesQueryParams.set({ players: [page.params.player], start_ts: null })
@@ -35,21 +34,13 @@
 		}
 	})
 
-	$effect(() => {
-		console.log('players', $playersBySlug)
+	const player = $derived.by(() => {
+		if (!page.params.player) return null
+		return $playersBySlug[page.params.player] || null
 	})
-
-	const player = $derived($playersBySlug[page.params.player!])
 	const gamesCompleted = $derived(
 		$playerMoves.filter((move) => move.type === 'completed').length || 0
 	)
-	const socials = $derived({
-		twitchLink: player.twitch_stream_link || '',
-		donationAlertsLink: player.donation_link || '',
-		telegramLink: player.telegram_link || '',
-		vkLiveLink: player.vk_stream_link || '',
-		kickLink: player.kick_stream_link || ''
-	})
 
 	let contentContainer = $state<HTMLDivElement | null>(null)
 	let contentWidth = $state(0)
@@ -122,7 +113,7 @@
 					<div class="text-5xl leading-[58px] font-bold">
 						{player.first_name} «{player.username}»
 					</div>
-					<Socials {...socials} />
+					<Socials {player} />
 					<Summary
 						totalScore={player.total_score}
 						{gamesCompleted}
