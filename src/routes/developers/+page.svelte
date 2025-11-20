@@ -91,6 +91,17 @@
 		<div>
 			<div class="text-4xl font-bold">Наши споносры</div>
 			<div class="mt-[20px] flex flex-col gap-5">
+				{#if sponsors.length === 0}
+					<Button
+						variant="link"
+						class="p-0 text-foreground"
+						href="https://boosty.to/aukus"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Стать первым!
+					</Button>
+				{/if}
 				{#each sponsors as sponsor (sponsor.name)}
 					<span>
 						<strong>{sponsor.name}</strong>
