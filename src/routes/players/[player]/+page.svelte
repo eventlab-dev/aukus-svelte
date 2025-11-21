@@ -12,7 +12,7 @@
 
 	const { playersMovesStore, playersBySlug, canvasStore, gamesMatchesStore } =
 		getAppManagerContext()
-	const { playerMoves, queryParams: movesQueryParams } = playersMovesStore
+	const { playerMoves, queryParams: movesQueryParams, movesQuery } = playersMovesStore
 	const { playerSlug: canvasPlayerSlug, editMode, canvasWidth } = canvasStore
 	const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
@@ -31,6 +31,15 @@
 	})
 
 	$effect(() => {
+		if ($movesQuery.isLoading || $movesQuery.isFetching) {
+			gamesMatchParams.set({
+				titles: [],
+				exclude_ids_moves: [],
+				exclude_ids_history: []
+			})
+			return
+		}
+		
 		if ($playerMoves.length > 0) {
 			gamesMatchParams.set({
 				titles: $playerMoves.map((move) => move.item_title),
