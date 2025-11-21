@@ -284,3 +284,8 @@ export function uniqBy<T, K>(arr: T[], fn: (item: T) => K): T[] {
 		return true
 	})
 }
+
+export function getConfirmationText(): string {
+	const options = ['Круто', 'Топ', 'Я рад', 'Спасибо', 'Ахуеньчик']
+	return options[Math.floor(Math.random() * options.length)]
+}
