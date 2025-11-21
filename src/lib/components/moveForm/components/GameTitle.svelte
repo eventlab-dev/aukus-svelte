@@ -67,6 +67,9 @@
 	const debouncedInput = debounce((val: string) => {
 		value = val
 		searchQuery.set(val)
+		if (selectedGame && selectedGame.name !== val) {
+			selectedGame = null
+		}
 	}, 400)
 
 	function onGameClick(game: IgdbGameSummary) {
