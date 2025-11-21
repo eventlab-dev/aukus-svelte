@@ -10,14 +10,13 @@
 
 	const { diceRollId }: Props = $props()
 
-	const diceRollQuery = createQuery(() =>
-		diceRollId
-			? getRollByIdApiDiceRollsRollIdGetOptions({
-					baseUrl: EventlabBaseUrl,
-					path: { roll_id: diceRollId }
-				})
-			: { enabled: false }
-	)
+	const diceRollQuery = createQuery(() => ({
+		...getRollByIdApiDiceRollsRollIdGetOptions({
+			baseUrl: EventlabBaseUrl,
+			path: { roll_id: diceRollId ?? 0 }
+		}),
+		enabled: !!diceRollId
+	}))
 
 	const diceRoll = $derived($diceRollQuery.data)
 	const isLoading = $derived($diceRollQuery.isLoading)
