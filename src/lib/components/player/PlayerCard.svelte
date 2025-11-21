@@ -15,14 +15,24 @@
 	const { hoveredPlayer } = movementStore
 
 	let isHovered = $state(false)
+	let hoverTimeout: ReturnType<typeof setTimeout> | null = null
 
 	function handleMouseEnter() {
 		isHovered = true
-		hoveredPlayer.set(player.slug)
+		
+		hoverTimeout = setTimeout(() => {
+			hoveredPlayer.set(player.slug)
+		}, 400)
 	}
 
 	function handleMouseLeave() {
 		isHovered = false
+		
+		if (hoverTimeout) {
+			clearTimeout(hoverTimeout)
+			hoverTimeout = null
+		}
+		
 		hoveredPlayer.set(null)
 	}
 </script>

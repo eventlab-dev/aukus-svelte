@@ -105,7 +105,6 @@
 	})
 
 	const isHighlighted = $derived($hoveredPlayer === player.slug)
-	const isDimmed = $derived($hoveredPlayer !== null && $hoveredPlayer !== player.slug)
 
 	const onCharacterClick = (e: MouseEvent) => {
 		if ($selectedPlayer?.slug === player.slug) {
@@ -148,7 +147,7 @@
 </script>
 
 <div bind:this={element} class="absolute transition-opacity duration-300" 
-     style="top: {finalTop}px; left: {finalLeft}px; opacity: {isDimmed ? '0.3' : '1'}; z-index: {isHighlighted ? '50' : 'auto'}">
+     style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}">
 	<button
 		onclick={onCharacterClick}
 		class="relative isolate cursor-pointer
