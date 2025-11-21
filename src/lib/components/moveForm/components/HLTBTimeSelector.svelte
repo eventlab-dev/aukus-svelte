@@ -28,6 +28,11 @@
 <Select type="single" bind:value {disabled}>
 	<SelectTrigger class="w-full">{triggerContent}</SelectTrigger>
 	<SelectContent>
+		<div class="px-2 py-1 text-xs text-foreground/90 border-b mb-1 leading-tight">
+			Если игра пройдена быстрее времени<br />
+			на HLTB/youtube/steam, считается<br />
+			время прохождения стримера.
+		</div>
 		{#each items as { value, label } (value)}
 			<SelectItem {value}>{label}</SelectItem>
 		{/each}
