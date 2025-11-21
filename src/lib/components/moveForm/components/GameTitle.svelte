@@ -15,6 +15,7 @@
 	import { EventlabBaseUrl } from '$lib/client'
 	import { derived, writable } from 'svelte/store'
 	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'
+	import Loader from '$lib/components/Loader.svelte'
 
 	type Props = {
 		value: string
@@ -107,7 +108,7 @@
 		>
 			{#if isSearching}
 				<div class="flex items-center justify-center p-4">
-					<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+					<Loader class="mr-2 size-1" />
 					Поиск...
 				</div>
 			{:else if searchResults.length > 0}

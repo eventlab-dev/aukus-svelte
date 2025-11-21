@@ -1,11 +1,12 @@
 <script lang="ts">
-	import SnowflakeIcon from './icons/SnowflakeIcon.svelte';
+	import { cn } from '$lib/utils'
+	import SnowflakeIcon from './icons/SnowflakeIcon.svelte'
 
 	type Props = {
-		class?: string;
-	};
+		class?: string
+	}
 
-	const { class: className }: Props = $props();
+	const { class: className }: Props = $props()
 </script>
 
-<SnowflakeIcon class={['size-12 animate-spin-alt', className]} />
+<SnowflakeIcon class={cn(className, 'animate-spin-alt')} />

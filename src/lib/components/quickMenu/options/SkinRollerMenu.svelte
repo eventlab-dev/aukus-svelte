@@ -1,7 +1,9 @@
 <script lang="ts">
 	import SkinsRoller, { type WeightedOption } from '$lib/components/roller/SkinsRoller.svelte'
 	import { Button } from '$lib/components/ui/button'
+	import { Dialog, DialogContent } from '$lib/components/ui/dialog'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getConfirmationText } from '$lib/utils'
 
 	const { usersStore, myPlayer, eventDataStore } = getAppManagerContext()
 	const { unlockableSkins, unlockableSkinsQuery, unlockSkinQuery } = usersStore
@@ -22,8 +24,13 @@
 		isOpen = true
 	}
 
+	let finishText = $state(getConfirmationText())
+
 	function handleClose() {
 		isOpen = false
+		$eventDataQuery.refetch()
+		$unlockableSkinsQuery.refetch()
+		finishText = getConfirmationText()
 	}
 
 	async function handleRollFinish(winner: WeightedOption) {
@@ -32,22 +39,27 @@
 				skin_id: Number(winner.value)
 			}
 		})
-		$eventDataQuery.refetch()
-		$unlockableSkinsQuery.refetch()
 	}
 </script>
 
 {#if $myPlayer}
-	<Button onclick={handleClick} disabled={$myPlayer.skin_rolls <= 0}
-		>Ролл скинов ({$myPlayer.skin_rolls})</Button
-	>
+	<Button onclick={handleClick}>Ролл скинов ({$myPlayer.skin_rolls})</Button>
 
-	<SkinsRoller
-		autoOpen={isOpen}
-		onClose={handleClose}
-		options={rollOptions}
-		header="Скин за прохождение игры"
-		onRollFinish={handleRollFinish}
-		getWinnerText={() => ''}
-	/>
+	{#if $myPlayer.skin_rolls === 0}
+		<Dialog open={isOpen} onOpenChange={handleClose}>
+			<DialogContent>
+				<div class="p-6">Проходи игры чтобы получить роллы скинов!</div>
+			</DialogContent>
+		</Dialog>
+	{:else}
+		<SkinsRoller
+			autoOpen={isOpen}
+			onClose={handleClose}
+			options={rollOptions}
+			header="Скин за прохождение игры"
+			onRollFinish={handleRollFinish}
+			getWinnerText={() => ''}
+			finishButtonText={finishText}
+		/>
+	{/if}
 {/if}

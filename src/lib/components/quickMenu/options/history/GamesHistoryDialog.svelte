@@ -19,6 +19,7 @@
 	import { Button } from '$lib/components/ui/button'
 	import type { CommonGameItem } from '$lib/types'
 	import { playerMoveToCommonGame, uniqBy } from '$lib/utils'
+	import Loader from '$lib/components/Loader.svelte'
 
 	const { gamesHistoryStore, players, playersBySlug, playersMovesStore, gamesMatchesStore } =
 		getAppManagerContext()
@@ -100,7 +101,7 @@
 		if (!dialogOpen) {
 			return
 		}
-		
+
 		const gamesTitles = new Set(
 			[...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
 				.map((game) => game.game_title)
@@ -210,7 +211,7 @@
 			<div class="mt-10 mb-80">
 				{#if isLoading}
 					<div class="mt-40 flex justify-center">
-						<LoaderCircle class="inline size-20 animate-spin" />
+						<Loader class="inline size-20" />
 					</div>
 				{:else}
 					<div class="flex flex-col gap-5">

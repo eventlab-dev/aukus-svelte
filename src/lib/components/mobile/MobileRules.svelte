@@ -6,6 +6,7 @@
 	import { Button } from '../ui/button'
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import TiptapEditor from '../richEditor/TiptapEditor.svelte'
+	import Loader from '../Loader.svelte'
 
 	let category = $state<RulesCategory>('general')
 
@@ -51,7 +52,7 @@
 </div>
 
 {#if $rulesQuery.isLoading}
-	<LoaderCircle class="inline animate-spin" />
+	<Loader class="inline size-10" />
 {:else}
 	<TiptapEditor
 		class="h-fit w-[700px] border-none"

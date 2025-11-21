@@ -8,6 +8,7 @@
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import EmojiIcon from '$lib/components/icons/EmojiIcon.svelte'
 	import { searchEmotes, type EmoteItem } from '$lib/api/emotes'
+	import Loader from '$lib/components/Loader.svelte'
 
 	type Props = {
 		onEmoteClick: (emote: EmoteItem) => void
@@ -61,7 +62,7 @@
 				ref={searchInputRef}
 				id="emotes-search"
 				type="text"
-				class="bg-muted mb-2 w-full"
+				class="mb-2 w-full bg-muted"
 				placeholder="Поиск смайлов..."
 				value={searchQuery}
 				oninput={(e) => debouncedFetch(e.currentTarget.value)}
@@ -70,7 +71,7 @@
 			<div class="h-[calc(4_*_48px)] w-[calc(7_*_48px)]">
 				{#if isFetching}
 					<div class="flex h-full w-full items-center justify-center">
-						<LoaderCircleIcon class="text-primary size-6 animate-spin" />
+						<Loader class="size-6 text-primary" />
 					</div>
 				{:else if emotes && emotes.length > 0}
 					<div class="grid grid-cols-[repeat(7,48px)] grid-rows-[repeat(4,48px)]">

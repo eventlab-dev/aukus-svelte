@@ -1,8 +1,9 @@
 <script lang="ts" module>
-	import { cn, type WithElementRef } from '$lib/utils.js';
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
-	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-	import { type VariantProps, tv } from 'tailwind-variants';
+	import Loader from '$lib/components/Loader.svelte'
+	import { cn, type WithElementRef } from '$lib/utils.js'
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements'
+	import { type VariantProps, tv } from 'tailwind-variants'
 
 	export const buttonVariants = tv({
 		base: "aria-invalid:ring-destructive/20 aria-invalid:border-destructive inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium outline-none transition-all disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer select-none font-semibold",
@@ -30,17 +31,17 @@
 			variant: 'default',
 			size: 'default'
 		}
-	});
+	})
 
-	export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
-	export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
+	export type ButtonVariant = VariantProps<typeof buttonVariants>['variant']
+	export type ButtonSize = VariantProps<typeof buttonVariants>['size']
 
 	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 		WithElementRef<HTMLAnchorAttributes> & {
-			variant?: ButtonVariant;
-			size?: ButtonSize;
-			loading?: boolean;
-		};
+			variant?: ButtonVariant
+			size?: ButtonSize
+			loading?: boolean
+		}
 </script>
 
 <script lang="ts">
@@ -55,7 +56,7 @@
 		disabled,
 		children,
 		...restProps
-	}: ButtonProps = $props();
+	}: ButtonProps = $props()
 </script>
 
 {#if href}
@@ -71,7 +72,7 @@
 	>
 		{@render children?.()}
 		{#if loading}
-			<LoaderCircle class="inline animate-spin" />
+			<Loader class="inline size-6" />
 		{/if}
 	</a>
 {:else}
@@ -85,7 +86,7 @@
 	>
 		{@render children?.()}
 		{#if loading}
-			<LoaderCircle class="inline animate-spin" />
+			<Loader class="inline size-6" />
 		{/if}
 	</button>
 {/if}

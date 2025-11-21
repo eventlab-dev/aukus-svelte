@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/state'
 	import { AukusBaseUrl } from '$lib/client'
+	import Loader from '$lib/components/Loader.svelte'
 	import TiptapEditor from '$lib/components/richEditor/TiptapEditor.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
@@ -108,7 +109,7 @@
 			{/if}
 		</div>
 		{#if $rulesQuery.isLoading}
-			<LoaderCircle class="inline animate-spin" />
+			<Loader class="inline size-20" />
 		{:else if editorMode}
 			<TiptapEditor
 				class="h-[80vh] w-[700px]"

@@ -507,11 +507,11 @@
 				<Button
 					class="w-[300px] rounded-xl"
 					disabled={isError || isLoading}
+					loading={isLoading}
 					onclick={() => {
 						handleOpenChange(false)
 					}}
 				>
-					{#if isLoading}<Loader />{/if}
 					{#if isError}Ошибка{:else}{finishButtonText}{/if}
 				</Button>
 			</div>
