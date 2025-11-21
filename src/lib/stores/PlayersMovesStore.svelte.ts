@@ -24,7 +24,15 @@ export function createPlayerMovesStore() {
 		})
 	)
 
-	const playerMoves = derived(movesQuery, ($movesQuery) => $movesQuery.data?.moves ?? [])
+	const playerMoves = derived(
+		[movesQuery, queryParams],
+		([$movesQuery, $queryParams]) => {
+			if ($movesQuery.isLoading || $movesQuery.isFetching) {
+				return []
+			}
+			return $movesQuery.data?.moves ?? []
+		}
+	)
 
 	return {
 		queryParams,

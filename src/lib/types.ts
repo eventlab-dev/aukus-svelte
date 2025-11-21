@@ -31,64 +31,6 @@ export type CustomColorOverrides = {
 	[K in keyof typeof Color as CustomColorNames]: true
 }
 
-export type PlayerUrl =
-	| 'lasqa'
-	| 'segall'
-	| 'praden'
-	| 'browjey'
-	| 'uselessmouth'
-	| 'roadhouse'
-	| 'melharucos'
-	| 'maddyson'
-	| 'krabick'
-	| 'vovapain'
-	| 'timofey'
-	| 'keliq_q'
-	| 'unclebjorn'
-	| 'vk_user'
-	| 'kick_user'
-	| 'twitch_user'
-
-export const ColorByUrlHandle: { [key in PlayerUrl]: string } = {
-	lasqa: Color.blue,
-	segall: Color.green,
-	praden: Color.brown,
-	browjey: Color.orange,
-	uselessmouth: Color.pink,
-	roadhouse: Color.purple,
-	melharucos: Color.blueLight,
-	maddyson: Color.yellow,
-	krabick: Color.blueDark,
-	vovapain: Color.red,
-	timofey: Color.greenLight,
-	keliq_q: Color.biege,
-	unclebjorn: Color.pinkLight,
-	vk_user: Color.blue,
-	kick_user: Color.green,
-	twitch_user: Color.red
-}
-
-export const ColorNameByUrlHandle: {
-	[key in PlayerUrl]: CustomColorNames
-} = {
-	lasqa: 'customBlue',
-	segall: 'customGreen',
-	praden: 'customBrown',
-	browjey: 'customOrange',
-	uselessmouth: 'customPink',
-	roadhouse: 'customPurple',
-	melharucos: 'customBlueLight',
-	maddyson: 'customYellow',
-	krabick: 'customBlueDark',
-	vovapain: 'customRed',
-	timofey: 'customGreenLight',
-	keliq_q: 'customBiege',
-	unclebjorn: 'customPinkLight',
-	vk_user: 'customBlue',
-	kick_user: 'customGreen',
-	twitch_user: 'customRed'
-}
-
 export type TableHeaderType<T> = {
 	key: keyof T
 	name: string

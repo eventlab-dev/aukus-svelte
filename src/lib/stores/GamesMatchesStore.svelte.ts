@@ -59,6 +59,14 @@ export function createGamesMatchesStore({ eventDataStore }: { eventDataStore: Ev
 		[historyMatchQuery, movesMatchQuery],
 		([$historyMatchQuery, $movesMatchQuery]) => {
 			// merge two lists
+			if (
+				$historyMatchQuery.isLoading ||
+				$historyMatchQuery.isFetching ||
+				$movesMatchQuery.isLoading ||
+				$movesMatchQuery.isFetching
+			) {
+				return []
+			}
 			const historyGames = $historyMatchQuery.data?.games || []
 			const movesGames = ($movesMatchQuery.data?.moves || []).map(playerMoveToCommonGame)
 			return [...historyGames, ...movesGames]

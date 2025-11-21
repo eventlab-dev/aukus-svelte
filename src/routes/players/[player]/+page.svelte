@@ -20,7 +20,13 @@
 		if (!page.params.player) {
 			return
 		}
-		movesQueryParams.set({ players: [page.params.player], start_ts: null })
+		movesQueryParams.set({ 
+			players: [page.params.player], 
+			start_ts: null,
+			search_title: null,
+			titles: undefined,
+			exclude_ids: undefined
+		})
 		canvasPlayerSlug.set(page.params.player)
 	})
 
@@ -29,6 +35,12 @@
 			gamesMatchParams.set({
 				titles: $playerMoves.map((move) => move.item_title),
 				exclude_ids_moves: $playerMoves.map((move) => move.game_id).filter(Boolean) as number[],
+				exclude_ids_history: []
+			})
+		} else {
+			gamesMatchParams.set({
+				titles: [],
+				exclude_ids_moves: [],
 				exclude_ids_history: []
 			})
 		}
