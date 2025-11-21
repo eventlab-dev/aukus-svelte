@@ -31,7 +31,8 @@ const playerLasqa: PlayerData = {
 	last_move: null,
 	moder_for: [],
 	shield_stacks: 0,
-	shit_stacks: 0
+	shit_stacks: 0,
+	skin_rolls: 0
 }
 
 const playerSegall: PlayerData = {
@@ -63,7 +64,8 @@ const playerSegall: PlayerData = {
 	last_move: null,
 	moder_for: [],
 	shield_stacks: 0,
-	shit_stacks: 0
+	shit_stacks: 0,
+	skin_rolls: 0
 }
 
 const playerRoadhouse: PlayerData = {
@@ -96,7 +98,8 @@ const playerRoadhouse: PlayerData = {
 	last_move: null,
 	moder_for: [],
 	shield_stacks: 0,
-	shit_stacks: 0
+	shit_stacks: 0,
+	skin_rolls: 0
 }
 
 const playerPraden: PlayerData = {
@@ -128,7 +131,8 @@ const playerPraden: PlayerData = {
 	last_move: null,
 	moder_for: [],
 	shield_stacks: 0,
-	shit_stacks: 0
+	shit_stacks: 0,
+	skin_rolls: 0
 }
 
 export const playersMock = [playerLasqa, playerSegall, playerRoadhouse, playerPraden].toSorted(
@@ -243,7 +247,7 @@ export const playerMovesData: PlayerMoveItem[] = [
 		ladder_to: null,
 		snake_from: null,
 		snake_to: null,
-		item_length: '25+',
+		item_length: '25-40',
 		item_duration: 11285,
 		cover_image_url: 'https://static-cdn.jtvnw.net/ttv-boxart/Valheim-{width}x{height}.jpg',
 		vod_links:

@@ -186,7 +186,7 @@ export type CreatePlayerMoveResponse = {
 /**
  * DiceOption
  */
-export type DiceOption = '1d2' | '1d4' | '2d4' | '3d4' | '1d6' | '2d6' | '3d6';
+export type DiceOption = '1d2' | '1d4' | '2d4' | '3d4' | '1d6' | '2d6' | '3d6' | '4d6';
 
 /**
  * DonationItem
@@ -298,7 +298,7 @@ export type GameDifficulty = -1 | 0 | 1 | 2;
 /**
  * GameLength
  */
-export type GameLength = '0-4' | '5-10' | '11-16' | '17-24' | '25+';
+export type GameLength = '0-4' | '5-10' | '11-16' | '17-24' | '25-40' | '40+';
 
 /**
  * HTTPValidationError
@@ -388,11 +388,15 @@ export type PlayerItem = {
     /**
      * Shield Stacks
      */
-    shield_stacks: number | null;
+    shield_stacks: number;
     /**
      * Shit Stacks
      */
-    shit_stacks: number | null;
+    shit_stacks: number;
+    /**
+     * Skin Rolls
+     */
+    skin_rolls: number;
 };
 
 /**
@@ -569,9 +573,13 @@ export type PlayerStatsItem = {
      */
     games_17_24: number;
     /**
-     * Games 25 Plus
+     * Games 25 40
      */
-    games_25_plus: number;
+    games_25_40: number;
+    /**
+     * Games 40 Plus
+     */
+    games_40_plus: number;
     /**
      * Average Dice Roll
      */
@@ -649,6 +657,26 @@ export type SkinItem = {
  * SkinSlot
  */
 export type SkinSlot = 'head' | 'body' | 'item' | 'dice';
+
+/**
+ * UnlockSkinRequest
+ */
+export type UnlockSkinRequest = {
+    /**
+     * Skin Id
+     */
+    skin_id: number;
+};
+
+/**
+ * UnlockableSkinsResponse
+ */
+export type UnlockableSkinsResponse = {
+    /**
+     * Skins
+     */
+    skins: Array<SkinItem>;
+};
 
 /**
  * UnlockedAchievementItem
@@ -1094,6 +1122,72 @@ export type MakeShieldApiPlayersMakeShieldPostResponses = {
      * Successful Response
      */
     200: unknown;
+};
+
+export type GetUnlockableSkinsApiPlayersUnlockableSkinsGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/unlockable-skins';
+};
+
+export type GetUnlockableSkinsApiPlayersUnlockableSkinsGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetUnlockableSkinsApiPlayersUnlockableSkinsGetError = GetUnlockableSkinsApiPlayersUnlockableSkinsGetErrors[keyof GetUnlockableSkinsApiPlayersUnlockableSkinsGetErrors];
+
+export type GetUnlockableSkinsApiPlayersUnlockableSkinsGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: UnlockableSkinsResponse;
+};
+
+export type GetUnlockableSkinsApiPlayersUnlockableSkinsGetResponse = GetUnlockableSkinsApiPlayersUnlockableSkinsGetResponses[keyof GetUnlockableSkinsApiPlayersUnlockableSkinsGetResponses];
+
+export type UnlockSkinApiPlayersUnlockSkinPostData = {
+    body: UnlockSkinRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/players/unlock-skin';
+};
+
+export type UnlockSkinApiPlayersUnlockSkinPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UnlockSkinApiPlayersUnlockSkinPostError = UnlockSkinApiPlayersUnlockSkinPostErrors[keyof UnlockSkinApiPlayersUnlockSkinPostErrors];
+
+export type UnlockSkinApiPlayersUnlockSkinPostResponses = {
+    /**
+     * Successful Response
+     */
+    201: unknown;
 };
 
 export type GetCurrentRulesVersionApiRulesCurrentGetData = {

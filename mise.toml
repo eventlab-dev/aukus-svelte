@@ -2,3 +2,7 @@
 [tasks.start-dev]
 description = "Start development server"
 run = "pnpm run dev --open --port 8381"
+
+[tasks.gen-api]
+description = "Generate api code & types"
+run = "pnpm run gen-api"

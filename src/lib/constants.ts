@@ -43,7 +43,8 @@ export const gameLengthRanges: Record<GameLength, string> = {
 	'5-10': '5-10ч',
 	'11-16': '11-16ч',
 	'17-24': '17-24ч',
-	'25+': '25+ч'
+	'25-40': '25-39ч',
+	'40+': '40+ч'
 }
 
 export const CDN_URL_BASE = 'https://storage.yandexcloud.net/eventlab/assets/aukus4'

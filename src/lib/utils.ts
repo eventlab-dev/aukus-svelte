@@ -218,11 +218,12 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 	// («Пройденные игры до 15ч» * 1 + «Пройденные игры до 30ч» * 1,5 + «Пройденные игры от 30ч» * 2 - дропнутые игры)*ряд
 	const row = cellRow(stats.map_position)
 	const score =
-		(stats.games_0_4 * 1 +
-			stats.games_5_10 * 1.5 +
-			stats.games_11_16 * 2 +
-			stats.games_17_24 * 2.5 +
-			stats.games_25_plus * 3 -
+		(stats.games_0_4 * 0.5 +
+			stats.games_5_10 * 1 +
+			stats.games_11_16 * 1.5 +
+			stats.games_17_24 * 2 +
+			stats.games_25_40 * 3 +
+			stats.games_40_plus * 4 +
 			stats.games_dropped * 2 -
 			stats.sheikh_moments * 2) *
 		row
@@ -232,15 +233,16 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 export function getPlayerScoreDescription(stats: PlayerStatsItem) {
 	const row = cellRow(stats.map_position)
 	return [
-		`Игры 0-4: ${stats.games_0_4} * 1`,
-		`Игры 5-10: ${stats.games_5_10} * 1.5`,
-		`Игры 11-16: ${stats.games_11_16} * 2`,
-		`Игры 17-24: ${stats.games_17_24} * 2.5`,
-		`Игры 25+: ${stats.games_25_plus} * 3`,
+		`Игры 0-4: ${stats.games_0_4} * 0.5`,
+		`Игры 5-10: ${stats.games_5_10} * 1`,
+		`Игры 11-16: ${stats.games_11_16} * 1.5`,
+		`Игры 17-24: ${stats.games_17_24} * 2`,
+		`Игры 25-39: ${stats.games_25_40} * 3`,
+		`Игры 40+: ${stats.games_40_plus} * 4`,
 		`Дропы: -${stats.games_dropped} * 2`,
 		`Шейх-дропы: -${stats.sheikh_moments} * 2`,
 		`Ряд: ${row}`,
-		`Всего: (${stats.games_0_4} + ${stats.games_5_10 * 1.5} + ${stats.games_11_16 * 2} + ${stats.games_17_24 * 2.5} + ${stats.games_25_plus * 3} - ${stats.games_dropped * 2} - ${stats.sheikh_moments * 2}) * ${row}`
+		`Всего: (${stats.games_0_4} + ${stats.games_5_10 * 1.5} + ${stats.games_11_16 * 2} + ${stats.games_17_24 * 2.5} + ${stats.games_25_40 * 3} + ${stats.games_40_plus * 4}  - ${stats.games_dropped * 2} - ${stats.sheikh_moments * 2}) * ${row}`
 	]
 }
 
