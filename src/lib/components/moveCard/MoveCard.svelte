@@ -1,6 +1,7 @@
 <script lang="ts">
 	import EditIcon from '$lib/components/icons/EditIcon.svelte'
 	import TickCircleIcon from '$lib/components/icons/TickCircleIcon.svelte'
+	import InfoIcon from '$lib/components/icons/InfoIcon.svelte'
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import { Badge } from '$lib/components/ui/badge'
 	import Input from '$lib/components/ui/input/input.svelte'
@@ -83,8 +84,9 @@
 				{#if move.dice_roll_id}
 					<Popover>
 						<PopoverTrigger>
-							<Badge variant="secondary" class="cursor-pointer hover:bg-secondary/80">
+							<Badge variant="secondary" class="cursor-pointer hover:bg-secondary/80 flex items-center gap-1">
 								Кубик: {move.dice_roll}
+								<InfoIcon class="w-3 h-3" />
 							</Badge>
 						</PopoverTrigger>
 						<PopoverContent>

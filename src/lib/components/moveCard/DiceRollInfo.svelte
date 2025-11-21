@@ -3,20 +3,31 @@
 	import { getRollByIdApiDiceRollsRollIdGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 	import { Skeleton } from '$lib/components/ui/skeleton'
 	import { EventlabBaseUrl } from '$lib/client'
+	import { writable } from 'svelte/store'
+	import { derived } from 'svelte/store'
 
 	type Props = {
 		diceRollId: number | null
 	}
 
 	const { diceRollId }: Props = $props()
+	
+	const diceRollIdStore = writable(diceRollId)
+	$effect(() => {
+		diceRollIdStore.set(diceRollId)
+	})
 
-	const diceRollQuery = createQuery(() => ({
-		...getRollByIdApiDiceRollsRollIdGetOptions({
-			baseUrl: EventlabBaseUrl,
-			path: { roll_id: diceRollId ?? 0 }
-		}),
-		enabled: !!diceRollId
-	}))
+	const diceRollQuery = createQuery(
+		derived(diceRollIdStore, ($diceRollId) => {
+			return {
+				...getRollByIdApiDiceRollsRollIdGetOptions({
+					baseUrl: EventlabBaseUrl,
+					path: { roll_id: $diceRollId || 0 }
+				}),
+				enabled: !!$diceRollId
+			}
+		})
+	)
 
 	const diceRoll = $derived($diceRollQuery.data)
 	const isLoading = $derived($diceRollQuery.isLoading)
