@@ -9,6 +9,7 @@
 	import { fetchFrontVersion } from '$lib/api/version'
 	import { createUserActivityStore } from '$lib/stores/UserActivityStore.svelte'
 	import FrontVersionInfo from '$lib/components/FrontVersionInfo.svelte'
+	import Metrika from '$lib/components/Metrika.svelte'
 
 	let { children } = $props()
 
@@ -47,4 +48,5 @@
 	</TooltipProvider>
 </QueryClientProvider>
 
+<Metrika />
 <FrontVersionInfo />
