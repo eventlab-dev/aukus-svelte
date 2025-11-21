@@ -97,6 +97,10 @@
 	})
 
 	$effect(() => {
+		if (!dialogOpen) {
+			return
+		}
+		
 		const gamesTitles = new Set(
 			[...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
 				.map((game) => game.game_title)

@@ -31,7 +31,9 @@
 	})
 
 	$effect(() => {
-		if ($movesQuery.isLoading || $movesQuery.isFetching) {
+		const currentPlayer = page.params.player
+		
+		if (!currentPlayer || $movesQuery.isLoading || $movesQuery.isFetching) {
 			gamesMatchParams.set({
 				titles: [],
 				exclude_ids_moves: [],
@@ -40,10 +42,14 @@
 			return
 		}
 		
-		if ($playerMoves.length > 0) {
+		const movesForCurrentPlayer = $playerMoves.filter((move) => 
+			move.player_slug === currentPlayer
+		)
+		
+		if (movesForCurrentPlayer.length > 0) {
 			gamesMatchParams.set({
-				titles: $playerMoves.map((move) => move.item_title),
-				exclude_ids_moves: $playerMoves.map((move) => move.game_id).filter(Boolean) as number[],
+				titles: movesForCurrentPlayer.map((move) => move.item_title),
+				exclude_ids_moves: movesForCurrentPlayer.map((move) => move.game_id).filter(Boolean) as number[],
 				exclude_ids_history: []
 			})
 		} else {
