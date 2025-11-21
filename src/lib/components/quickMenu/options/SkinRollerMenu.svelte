@@ -3,8 +3,9 @@
 	import { Button } from '$lib/components/ui/button'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
-	const { usersStore } = getAppManagerContext()
-	const { unlockableSkins, unlockSkinQuery } = usersStore
+	const { usersStore, myPlayer, eventDataStore } = getAppManagerContext()
+	const { unlockableSkins, unlockableSkinsQuery, unlockSkinQuery } = usersStore
+	const { eventDataQuery } = eventDataStore
 
 	const rollOptions: WeightedOption[] = $derived(
 		$unlockableSkins.map((s) => ({
@@ -31,16 +32,22 @@
 				skin_id: Number(winner.value)
 			}
 		})
+		$eventDataQuery.refetch()
+		$unlockableSkinsQuery.refetch()
 	}
 </script>
 
-<Button onclick={handleClick}>Ролл скинов</Button>
+{#if $myPlayer}
+	<Button onclick={handleClick} disabled={$myPlayer.skin_rolls <= 0}
+		>Ролл скинов ({$myPlayer.skin_rolls})</Button
+	>
 
-<SkinsRoller
-	autoOpen={isOpen}
-	onClose={handleClose}
-	options={rollOptions}
-	header="Скин за прохождение игры"
-	onRollFinish={handleRollFinish}
-	getWinnerText={() => ''}
-/>
+	<SkinsRoller
+		autoOpen={isOpen}
+		onClose={handleClose}
+		options={rollOptions}
+		header="Скин за прохождение игры"
+		onRollFinish={handleRollFinish}
+		getWinnerText={() => ''}
+	/>
+{/if}

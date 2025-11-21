@@ -175,6 +175,7 @@ export function createUsersStore() {
 		rollDice,
 		setSkins,
 		accessToken,
+		unlockableSkinsQuery,
 		unlockableSkins,
 		unlockSkinQuery
 	}
