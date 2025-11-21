@@ -1,11 +1,36 @@
 <script lang="ts">
-	import SkinsRoller from '$lib/components/roller/SkinsRoller.svelte'
+	import SkinsRoller, { type WeightedOption } from '$lib/components/roller/SkinsRoller.svelte'
 	import { Button } from '$lib/components/ui/button'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+
+	const { usersStore } = getAppManagerContext()
+	const { unlockableSkins, unlockSkinQuery } = usersStore
+
+	const rollOptions: WeightedOption[] = $derived(
+		$unlockableSkins.map((s) => ({
+			label: '',
+			weight: 1,
+			value: s.id.toString(),
+			imageUrl: s.image_url
+		}))
+	)
 
 	let isOpen = $state(false)
 
 	function handleClick() {
 		isOpen = true
+	}
+
+	function handleClose() {
+		isOpen = false
+	}
+
+	async function handleRollFinish(winner: WeightedOption) {
+		await $unlockSkinQuery.mutateAsync({
+			body: {
+				skin_id: Number(winner.value)
+			}
+		})
 	}
 </script>
 
@@ -13,27 +38,9 @@
 
 <SkinsRoller
 	autoOpen={isOpen}
-	onClose={() => {
-		isOpen = false
-	}}
-	options={[
-		{
-			label: '1',
-			imageUrl: 'https://storage.yandexcloud.net/eventlab/assets/aukus4/skins/body_chad.png',
-			value: '1',
-			weight: 1
-		},
-		{
-			label: '2',
-			imageUrl: 'https://storage.yandexcloud.net/eventlab/assets/aukus4/skins/head_sonic.png',
-			value: '2',
-			weight: 1
-		}
-	]}
+	onClose={handleClose}
+	options={rollOptions}
 	header="Скин за прохождение игры"
-	onRollFinish={(option) => {
-		console.log('Выбранный скин:', option)
-		return Promise.resolve()
-	}}
-	getWinnerText={(option) => ''}
+	onRollFinish={handleRollFinish}
+	getWinnerText={() => ''}
 />

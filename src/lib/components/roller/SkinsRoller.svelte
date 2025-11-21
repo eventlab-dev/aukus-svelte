@@ -8,6 +8,7 @@
 	import X from '@lucide/svelte/icons/x'
 	import Volume_1 from '@lucide/svelte/icons/volume-1'
 	import VolumeX from '@lucide/svelte/icons/volume-x'
+	import Loader from '../Loader.svelte'
 
 	// --- CONSTANTS (same as original)
 	const FAST_SPIN_DURATION = 2000
@@ -25,7 +26,7 @@
 	const MIN_CARD_IN_ROLL = 75
 
 	// --- utility types (simple)
-	type WeightedOption = {
+	export type WeightedOption = {
 		value: string
 		weight: number
 		label: string
@@ -124,7 +125,7 @@
 		openButtonText?: string
 		finishButtonText?: string
 		onRollFinish: (option: WeightedOption) => Promise<void>
-		onClose?: (option?: WeightedOption) => void
+		onClose?: () => void
 		getWinnerText: (option: WeightedOption) => string
 		getSecondaryText?: (option: WeightedOption) => string | undefined
 		showTrigger?: boolean
@@ -346,11 +347,10 @@
 		} else {
 			if (animationId !== null) cancelAnimationFrame(animationId)
 			sound.stop()
-			const winnerCopy = winner
 			winnerIndex = null
 			animationId = null
 			isIdleRunning = false
-			onClose?.(winnerCopy ?? undefined)
+			onClose?.()
 		}
 	}
 
@@ -506,11 +506,12 @@
 				{/if}
 				<Button
 					class="w-[300px] rounded-xl"
-					disabled={isError}
+					disabled={isError || isLoading}
 					onclick={() => {
 						handleOpenChange(false)
 					}}
 				>
+					{#if isLoading}<Loader />{/if}
 					{#if isError}Ошибка{:else}{finishButtonText}{/if}
 				</Button>
 			</div>

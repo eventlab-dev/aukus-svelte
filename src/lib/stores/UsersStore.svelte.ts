@@ -4,7 +4,9 @@ import { setTokenInvalidatedCallback } from '$lib/clientInterceptors'
 import {
 	createPlayerMoveApiPlayersMovePostMutation,
 	finishPlayerMoveApiPlayersMoveFinishPostMutation,
-	setPlayerSkinsApiPlayersSkinsPostMutation
+	getUnlockableSkinsApiPlayersUnlockableSkinsGetOptions,
+	setPlayerSkinsApiPlayersSkinsPostMutation,
+	unlockSkinApiPlayersUnlockSkinPostMutation
 } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
@@ -68,18 +70,19 @@ export function createUsersStore() {
 			})
 			.catch((error) => {
 				let statusCode = 0
-				
+
 				if (error && typeof error === 'object') {
 					const errorObj = error as Record<string, unknown>
 					if ('response' in errorObj && errorObj.response instanceof Response) {
 						statusCode = errorObj.response.status
 					}
 				}
-				
-				const errorMessage = statusCode === 401 
-					? 'Неверный логин или пароль'
-					: `Неизвестная ошибка при входе (${statusCode})`
-				
+
+				const errorMessage =
+					statusCode === 401
+						? 'Неверный логин или пароль'
+						: `Неизвестная ошибка при входе (${statusCode})`
+
 				loginError.set(errorMessage)
 			})
 	}
@@ -140,6 +143,22 @@ export function createUsersStore() {
 		})
 	)
 
+	const unlockableSkinsQuery = createQuery(
+		getUnlockableSkinsApiPlayersUnlockableSkinsGetOptions({
+			baseUrl: AukusBaseUrl,
+			auth: defaultAuth
+		})
+	)
+
+	const unlockableSkins = derived(unlockableSkinsQuery, ($query) => $query.data?.skins ?? [])
+
+	const unlockSkinQuery = createMutation(
+		unlockSkinApiPlayersUnlockSkinPostMutation({
+			baseUrl: AukusBaseUrl,
+			auth: defaultAuth
+		})
+	)
+
 	return {
 		myUserQuery,
 		myUser,
@@ -155,7 +174,9 @@ export function createUsersStore() {
 		finishMove,
 		rollDice,
 		setSkins,
-		accessToken
+		accessToken,
+		unlockableSkins,
+		unlockSkinQuery
 	}
 }
 
