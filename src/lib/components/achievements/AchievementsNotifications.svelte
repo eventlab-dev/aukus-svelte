@@ -2,7 +2,7 @@
 	import { AchievementBackgroundUrl } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { AchievementItem } from '$lib/heyapi/aukus/types.gen'
-	import { getSkinIconUrl } from '$lib/utils'
+	import { getConfirmationText, getSkinIconUrl } from '$lib/utils'
 	import { Button } from '../ui/button'
 	import { Dialog, DialogClose, DialogContent } from '../ui/dialog'
 
@@ -12,9 +12,12 @@
 
 	const achievement = $derived<AchievementItem | undefined>($achievements[0])
 
+	let buttonText = $state(getConfirmationText())
+
 	const handleOpenChange = (isOpen: boolean) => {
 		if (!isOpen && achievement) {
 			hideNotification(achievement.id)
+			buttonText = getConfirmationText()
 		}
 	}
 </script>
@@ -34,7 +37,7 @@
 				</div>
 				<div>{achievement.description}</div>
 				<DialogClose>
-					<Button>Круто!</Button>
+					<Button>{buttonText}</Button>
 				</DialogClose>
 			</DialogContent>
 		</Dialog>
