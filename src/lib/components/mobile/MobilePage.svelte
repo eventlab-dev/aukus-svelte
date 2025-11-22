@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
+	import MobileAbout from './MobileAbout.svelte'
 	import MobileMap from './MobileMap.svelte'
 	import MobileMenu from './MobileMenu.svelte'
 	import MobileRules from './MobileRules.svelte'
@@ -11,7 +12,7 @@
 <ScrollArea class="h-screen" type="always">
 	<MobileMenu bind:page />
 
-	<div class="p-2">
+	<div class="mb-30 p-2">
 		{#if page === 'map'}
 			<div class="mt-6">
 				<MobileMap />
@@ -23,7 +24,7 @@
 		{:else if page === 'player'}
 			Mobile Player
 		{:else if page === 'about'}
-			About
+			<MobileAbout />
 		{/if}
 	</div>
 </ScrollArea>
