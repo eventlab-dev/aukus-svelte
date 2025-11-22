@@ -12,7 +12,6 @@
 	} from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 	import { type RulesCategory } from '$lib/heyapi/aukus/types.gen'
 	import { defaultAuth } from '$lib/utils'
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 
 	const { usersStore } = getAppManagerContext()

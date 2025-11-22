@@ -4,6 +4,7 @@
 	import { Dialog, DialogContent } from '$lib/components/ui/dialog'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { getConfirmationText } from '$lib/utils'
+	import Gift from '@lucide/svelte/icons/gift'
 
 	const { usersStore, myPlayer, eventDataStore } = getAppManagerContext()
 	const { unlockableSkins, unlockableSkinsQuery, unlockSkinQuery } = usersStore
@@ -43,7 +44,10 @@
 </script>
 
 {#if $myPlayer}
-	<Button onclick={handleClick}>Ролл скинов ({$myPlayer.skin_rolls})</Button>
+	<Button onclick={handleClick}>
+		<Gift />
+		Ролл скинов ({$myPlayer.skin_rolls})
+	</Button>
 
 	{#if $myPlayer.skin_rolls === 0}
 		<Dialog open={isOpen} onOpenChange={handleClose}>

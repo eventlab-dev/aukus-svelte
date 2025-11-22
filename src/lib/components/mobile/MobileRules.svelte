@@ -4,7 +4,6 @@
 	import type { RulesCategory } from '$lib/heyapi/aukus/types.gen'
 	import { createQuery } from '@tanstack/svelte-query'
 	import { Button } from '../ui/button'
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import TiptapEditor from '../richEditor/TiptapEditor.svelte'
 	import Loader from '../Loader.svelte'
 

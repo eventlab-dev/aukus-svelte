@@ -9,7 +9,6 @@
 	} from '$lib/components/ui/dialog'
 	import { Input } from '$lib/components/ui/input'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import GameCard from './GameCard.svelte'
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import { Toggle } from '$lib/components/ui/toggle'

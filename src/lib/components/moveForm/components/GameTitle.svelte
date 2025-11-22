@@ -7,7 +7,6 @@
 	import X from '@lucide/svelte/icons/x'
 	import { fade, slide } from 'svelte/transition'
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import { onMount } from 'svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { createQuery } from '@tanstack/svelte-query'

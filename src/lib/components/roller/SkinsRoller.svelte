@@ -8,7 +8,6 @@
 	import X from '@lucide/svelte/icons/x'
 	import Volume_1 from '@lucide/svelte/icons/volume-1'
 	import VolumeX from '@lucide/svelte/icons/volume-x'
-	import Loader from '../Loader.svelte'
 
 	// --- CONSTANTS (same as original)
 	const FAST_SPIN_DURATION = 2000

@@ -4,7 +4,6 @@
 	import { Input } from '$lib/components/ui/input'
 	import { debounce } from '$lib/utils'
 	import { onMount } from 'svelte'
-	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import EmojiIcon from '$lib/components/icons/EmojiIcon.svelte'
 	import { searchEmotes, type EmoteItem } from '$lib/api/emotes'
