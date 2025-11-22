@@ -1,7 +1,6 @@
 <script lang="ts" module>
 	import Loader from '$lib/components/Loader.svelte'
 	import { cn, type WithElementRef } from '$lib/utils.js'
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle'
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements'
 	import { type VariantProps, tv } from 'tailwind-variants'
 

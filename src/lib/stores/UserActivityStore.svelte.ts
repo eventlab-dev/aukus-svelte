@@ -1,5 +1,3 @@
-import { onDestroy } from 'svelte'
-
 const INACTIVITY_TIMEOUT = 2 * 60 * 1000 // 2 mins
 
 export function createUserActivityStore() {
@@ -59,4 +57,3 @@ export function createUserActivityStore() {
 }
 
 export type UserActivityStore = ReturnType<typeof createUserActivityStore>
-

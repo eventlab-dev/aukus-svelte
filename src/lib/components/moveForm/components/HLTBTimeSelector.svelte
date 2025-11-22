@@ -19,7 +19,8 @@
 		{ value: '5-10', label: '5 — 10 часов' },
 		{ value: '11-16', label: '11 — 16 часов' },
 		{ value: '17-24', label: '17 — 24 часов' },
-		{ value: '25+', label: '25+ часов' }
+		{ value: '25-40', label: '25+ часов' },
+		{ value: '40+', label: '40+ часов' }
 	]
 
 	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Время по HLTB')
@@ -28,7 +29,7 @@
 <Select type="single" bind:value {disabled}>
 	<SelectTrigger class="w-full">{triggerContent}</SelectTrigger>
 	<SelectContent>
-		<div class="px-2 py-1 text-xs text-foreground/90 border-b mb-1 leading-tight">
+		<div class="mb-1 border-b px-2 py-1 text-xs leading-tight text-foreground/90">
 			Если игра пройдена быстрее времени<br />
 			на HLTB/youtube/steam, считается<br />
 			время прохождения стримера.

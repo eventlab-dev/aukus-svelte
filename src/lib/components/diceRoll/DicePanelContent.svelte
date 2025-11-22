@@ -104,6 +104,9 @@
 			case '3d6':
 				maxRoll = 18
 				break
+			case '4d6':
+				maxRoll = 24
+				break
 			case '1d4':
 				maxRoll = 4
 				break
