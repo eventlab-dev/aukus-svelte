@@ -48,7 +48,9 @@
 	<DialogTrigger>
 		<CrownIcon /> Достижения
 	</DialogTrigger>
-	<DialogContent class="text-primary-foreground selection:bg-foreground selection:text-background">
+	<DialogContent
+		class="max-w-[840px]! text-primary-foreground selection:bg-foreground selection:text-background"
+	>
 		<DialogHeader class="gap-3">
 			<DialogTitle class="text-2xl font-bold">Достижения</DialogTitle>
 		</DialogHeader>
