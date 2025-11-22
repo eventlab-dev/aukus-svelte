@@ -58,7 +58,7 @@
 	<DialogTrigger>
 		<LifebuoyIcon /> Колёса
 	</DialogTrigger>
-	<DialogContent showCloseButton={false} class="bg-unset">
+	<DialogContent showCloseButton={false} class="bg-unset shadow-none">
 		<div class="top-3 flex justify-center gap-3">
 			<Button
 				variant={!isMomentType ? 'default' : 'secondary'}
