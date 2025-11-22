@@ -137,9 +137,10 @@
 			gap: 0.25rem;
 			text-decoration: none;
 
-			&::before {
+			/* numbers for items */
+			/*&::before {
 				content: attr(data-item-index) '.';
-			}
+			}*/
 		}
 	}
 </style>
