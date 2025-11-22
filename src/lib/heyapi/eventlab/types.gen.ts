@@ -57,7 +57,7 @@ export type DiceRollResponse = {
 /**
  * DiceType
  */
-export type DiceType = '1d2' | '1d4' | '2d4' | '3d4' | '1d6' | '2d6' | '3d6' | '2d8';
+export type DiceType = '1d2' | '1d4' | '2d4' | '3d4' | '1d6' | '2d6' | '3d6' | '4d6' | '2d8';
 
 /**
  * EmoteItem
@@ -327,6 +327,96 @@ export type LoginResponse = {
      * Token
      */
     token: string;
+};
+
+/**
+ * PlayerMoveNotificationRequest
+ */
+export type PlayerMoveNotificationRequest = {
+    /**
+     * Username
+     */
+    username: string;
+    /**
+     * Slug
+     */
+    slug: string;
+    /**
+     * Move Type
+     */
+    move_type: string;
+    /**
+     * Item Title
+     */
+    item_title: string;
+    /**
+     * Item Review
+     */
+    item_review: string;
+    /**
+     * Item Rating
+     */
+    item_rating: number;
+    /**
+     * Cell From
+     */
+    cell_from: number;
+    /**
+     * Cell To
+     */
+    cell_to: number;
+    /**
+     * Dice Roll Sum
+     */
+    dice_roll_sum?: number | null;
+    /**
+     * Game Id
+     */
+    game_id?: number | null;
+    /**
+     * Cover Image Url
+     */
+    cover_image_url?: string | null;
+};
+
+/**
+ * PlayerOnlineNotificationRequest
+ */
+export type PlayerOnlineNotificationRequest = {
+    /**
+     * Username
+     */
+    username: string;
+    /**
+     * Slug
+     */
+    slug: string;
+    /**
+     * Game Name
+     */
+    game_name?: string | null;
+    /**
+     * Stream Url
+     */
+    stream_url?: string | null;
+    /**
+     * Thumbnail Url
+     */
+    thumbnail_url?: string | null;
+};
+
+/**
+ * SendNotificationRequest
+ */
+export type SendNotificationRequest = {
+    /**
+     * Message
+     */
+    message: string;
+    /**
+     * Parse Mode
+     */
+    parse_mode?: string;
 };
 
 /**
@@ -689,16 +779,7 @@ export type GetRollByIdApiDiceRollsRollIdGetData = {
          */
         roll_id: number;
     };
-    query?: {
-        /**
-         * For Update
-         */
-        for_update?: boolean;
-        /**
-         * Allow Acting
-         */
-        allow_acting?: boolean;
-    };
+    query?: never;
     url: '/api/dice-rolls/{roll_id}';
 };
 
@@ -955,6 +1036,102 @@ export type SearchEmotesApiEmotesSearchPostResponses = {
 };
 
 export type SearchEmotesApiEmotesSearchPostResponse = SearchEmotesApiEmotesSearchPostResponses[keyof SearchEmotesApiEmotesSearchPostResponses];
+
+export type SendNotificationApiNotificationsSendPostData = {
+    body: SendNotificationRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/notifications/send';
+};
+
+export type SendNotificationApiNotificationsSendPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SendNotificationApiNotificationsSendPostError = SendNotificationApiNotificationsSendPostErrors[keyof SendNotificationApiNotificationsSendPostErrors];
+
+export type SendNotificationApiNotificationsSendPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type NotifyPlayerMoveApiNotificationsPlayerMovePostData = {
+    body: PlayerMoveNotificationRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/notifications/player-move';
+};
+
+export type NotifyPlayerMoveApiNotificationsPlayerMovePostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type NotifyPlayerMoveApiNotificationsPlayerMovePostError = NotifyPlayerMoveApiNotificationsPlayerMovePostErrors[keyof NotifyPlayerMoveApiNotificationsPlayerMovePostErrors];
+
+export type NotifyPlayerMoveApiNotificationsPlayerMovePostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type NotifyPlayerOnlineApiNotificationsPlayerOnlinePostData = {
+    body: PlayerOnlineNotificationRequest;
+    path?: never;
+    query?: {
+        /**
+         * For Update
+         */
+        for_update?: boolean;
+        /**
+         * Allow Acting
+         */
+        allow_acting?: boolean;
+    };
+    url: '/api/notifications/player-online';
+};
+
+export type NotifyPlayerOnlineApiNotificationsPlayerOnlinePostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type NotifyPlayerOnlineApiNotificationsPlayerOnlinePostError = NotifyPlayerOnlineApiNotificationsPlayerOnlinePostErrors[keyof NotifyPlayerOnlineApiNotificationsPlayerOnlinePostErrors];
+
+export type NotifyPlayerOnlineApiNotificationsPlayerOnlinePostResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type ClientOptions = {
     baseUrl: 'http://localhost:8300' | (string & {});
