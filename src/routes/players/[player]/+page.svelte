@@ -20,8 +20,8 @@
 		if (!page.params.player) {
 			return
 		}
-		movesQueryParams.set({ 
-			players: [page.params.player], 
+		movesQueryParams.set({
+			players: [page.params.player],
 			start_ts: null,
 			search_title: null,
 			titles: undefined,
@@ -32,31 +32,34 @@
 
 	$effect(() => {
 		const currentPlayer = page.params.player
-		
+
 		if (!currentPlayer || $movesQuery.isLoading || $movesQuery.isFetching) {
 			gamesMatchParams.set({
 				titles: [],
 				exclude_ids_moves: [],
-				exclude_ids_history: []
+				exclude_ids_history: [],
+				exclude_player: null
 			})
 			return
 		}
-		
-		const movesForCurrentPlayer = $playerMoves.filter((move) => 
-			move.player_slug === currentPlayer
-		)
-		
+
+		const movesForCurrentPlayer = $playerMoves.filter((move) => move.player_slug === currentPlayer)
+
 		if (movesForCurrentPlayer.length > 0) {
 			gamesMatchParams.set({
 				titles: movesForCurrentPlayer.map((move) => move.item_title),
-				exclude_ids_moves: movesForCurrentPlayer.map((move) => move.game_id).filter(Boolean) as number[],
-				exclude_ids_history: []
+				exclude_ids_moves: movesForCurrentPlayer
+					.map((move) => move.game_id)
+					.filter(Boolean) as number[],
+				exclude_ids_history: [],
+				exclude_player: currentPlayer
 			})
 		} else {
 			gamesMatchParams.set({
 				titles: [],
 				exclude_ids_moves: [],
-				exclude_ids_history: []
+				exclude_ids_history: [],
+				exclude_player: null
 			})
 		}
 	})

@@ -113,7 +113,8 @@
 		gamesMatchParams.set({
 			titles: [...gamesTitles],
 			exclude_ids_moves: gamesIdsMoves,
-			exclude_ids_history: gamesIdsHistory
+			exclude_ids_history: gamesIdsHistory,
+			exclude_player: null
 		})
 	})
 

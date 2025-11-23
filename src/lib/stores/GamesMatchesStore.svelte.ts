@@ -10,6 +10,7 @@ type MatchParams = {
 	exclude_ids_history: number[]
 	exclude_ids_moves: number[]
 	titles: string[]
+	exclude_player: string | null
 }
 
 export function createGamesMatchesStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
@@ -18,20 +19,23 @@ export function createGamesMatchesStore({ eventDataStore }: { eventDataStore: Ev
 	const gamesMatchParams = writable<MatchParams>({
 		exclude_ids_history: [],
 		exclude_ids_moves: [],
-		titles: []
+		titles: [],
+		exclude_player: null
 	})
 	const historyMatchQuery = createQuery(
-		derived([gamesMatchParams], ([$gamesMatchParams]) => {
+		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
+			console.log('players', $fullPlayersList, $gamesMatchParams)
 			const params = getGamesApiGamesHistoryGetOptions({
 				baseUrl: EventlabBaseUrl,
 				query: {
 					titles: $gamesMatchParams.titles,
 					exclude_ids: $gamesMatchParams.exclude_ids_history,
-					start_id: null
-					// players: $fullPlayersList
+					start_id: null,
+					players: $fullPlayersList.filter((p) => p !== $gamesMatchParams.exclude_player)
 					// events: ['aukus1', 'aukus2', 'aukus3']
 				}
 			})
+			console.log('query params', params)
 			params.enabled = $gamesMatchParams.titles.length > 0
 			params.refetchOnWindowFocus = false
 			return params
