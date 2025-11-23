@@ -13,6 +13,7 @@ import { getPlayerScore } from '$lib/utils'
 import { createCanvasStore } from './CanvasStore.svelte'
 import { createGamesMatchesStore } from './GamesMatchesStore.svelte'
 import { createErrorNotificationStore } from './ErrorNotificationStore.svelte'
+import { createShitStore } from './ShitStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -35,6 +36,7 @@ export function createAppManager() {
 	const notificationStore = createNotificationStore({ eventDataStore })
 	const canvasStore = createCanvasStore()
 	const errorNotificationStore = createErrorNotificationStore()
+	const shitStore = createShitStore()
 
 	const soundManager = new SoundManager()
 
@@ -188,7 +190,8 @@ export function createAppManager() {
 		playersCompletedMap,
 		canvasStore,
 		gamesMatchesStore,
-		isMobile
+		isMobile,
+		shitStore
 	}
 }
 

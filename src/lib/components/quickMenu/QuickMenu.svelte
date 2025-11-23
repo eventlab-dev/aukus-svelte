@@ -14,6 +14,7 @@
 	import GamesHistoryDialog from './options/history/GamesHistoryDialog.svelte'
 	import LoginDialog from './options/LoginDialog.svelte'
 	import PunishmentCalculator from './options/PunishmentCalculator.svelte'
+	import ShitMenu from './options/shitMenu/ShitMenu.svelte'
 	import SkinRollerMenu from './options/SkinRollerMenu.svelte'
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
@@ -81,6 +82,7 @@
 					<SkinRollerMenu />
 					<PunishmentCalculator />
 					<WheelDialog />
+					<ShitMenu />
 				</CollapsibleGroup>
 			{/if}
 
