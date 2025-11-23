@@ -9,17 +9,43 @@
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
+	import { createGamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
+	import { createPlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 
-	const { playersMovesStore, playersBySlug, canvasStore, gamesMatchesStore } =
-		getAppManagerContext()
-	const { playerMoves, queryParams: movesQueryParams, movesQuery } = playersMovesStore
+	const { playersBySlug, canvasStore, eventDataStore } = getAppManagerContext()
 	const { playerSlug: canvasPlayerSlug, editMode, canvasWidth } = canvasStore
-	const { gamesMatchParams, gamesMatched } = gamesMatchesStore
+
+	let gamesMatchesStoreForPlayer = $state(
+		createGamesMatchesStore({ eventDataStore, playerSlug: page.params.player })
+	)
+	let playersMovesStoreForPlayer = $state(
+		createPlayerMovesStore({ playerSlug: page.params.player })
+	)
+
+	const [playerMoves, movesQueryParams, movesQuery] = $derived([
+		playersMovesStoreForPlayer.playerMoves,
+		playersMovesStoreForPlayer.queryParams,
+		playersMovesStoreForPlayer.movesQuery
+	])
+
+	const [gamesMatchParams, gamesMatched] = $derived([
+		gamesMatchesStoreForPlayer.gamesMatchParams,
+		gamesMatchesStoreForPlayer.gamesMatched
+	])
+
+	// const { gamesMatchParams, gamesMatched } = gamesMatchesStoreForPlayer
 
 	$effect(() => {
 		if (!page.params.player) {
 			return
 		}
+		// console.log('creating store for', page.params.player)
+		gamesMatchesStoreForPlayer = createGamesMatchesStore({
+			eventDataStore,
+			playerSlug: page.params.player
+		})
+		playersMovesStoreForPlayer = createPlayerMovesStore({ playerSlug: page.params.player })
+
 		movesQueryParams.set({
 			players: [page.params.player],
 			start_ts: null,
@@ -38,7 +64,7 @@
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
-				exclude_player: null
+				exclude_player: undefined
 			})
 			return
 		}
@@ -59,7 +85,7 @@
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
-				exclude_player: null
+				exclude_player: undefined
 			})
 		}
 	})

@@ -10,21 +10,27 @@ type MatchParams = {
 	exclude_ids_history: number[]
 	exclude_ids_moves: number[]
 	titles: string[]
-	exclude_player: string | null
+	exclude_player?: string
 }
 
-export function createGamesMatchesStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
+export function createGamesMatchesStore({
+	eventDataStore,
+	playerSlug
+}: {
+	eventDataStore: EventDataStore
+	playerSlug?: string
+}) {
 	const fullPlayersList = derived(eventDataStore.players, ($players) => $players.map((p) => p.slug))
 
 	const gamesMatchParams = writable<MatchParams>({
 		exclude_ids_history: [],
 		exclude_ids_moves: [],
 		titles: [],
-		exclude_player: null
+		exclude_player: playerSlug
 	})
 	const historyMatchQuery = createQuery(
 		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
-			console.log('players', $fullPlayersList, $gamesMatchParams)
+			// console.log('query', $gamesMatchParams)
 			const params = getGamesApiGamesHistoryGetOptions({
 				baseUrl: EventlabBaseUrl,
 				query: {
@@ -34,10 +40,12 @@ export function createGamesMatchesStore({ eventDataStore }: { eventDataStore: Ev
 					players: $fullPlayersList.filter((p) => p !== $gamesMatchParams.exclude_player)
 					// events: ['aukus1', 'aukus2', 'aukus3']
 				}
+				// tags: ['abc']
 			})
-			console.log('query params', params)
+			// console.log('query params', params)
 			params.enabled = $gamesMatchParams.titles.length > 0
 			params.refetchOnWindowFocus = false
+			// params.queryKey.push({ _id: 'tag', tags: [playerSlug ?? 'all-players'] })
 			return params
 		})
 	)

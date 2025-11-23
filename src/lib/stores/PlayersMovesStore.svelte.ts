@@ -6,9 +6,9 @@ import { derived, writable } from 'svelte/store'
 
 type QueryParams = GetPlayerMovesApiPlayersMovesGetData['query']
 
-export function createPlayerMovesStore() {
+export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) {
 	const queryParams = writable<QueryParams>({
-		players: [],
+		players: playerSlug ? [playerSlug] : [],
 		start_ts: null,
 		search_title: null
 	})

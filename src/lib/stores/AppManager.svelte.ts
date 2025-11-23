@@ -17,7 +17,7 @@ import { createErrorNotificationStore } from './ErrorNotificationStore.svelte'
 export function createAppManager() {
 	const usersStore = createUsersStore()
 	const eventDataStore = createEventDataStore()
-	const playersMovesStore = createPlayerMovesStore()
+	const playersMovesStore = createPlayerMovesStore({})
 	const statsStore = createStatsStore()
 	const gamesHistoryStore = createGamesHistoryStore({ eventDataStore })
 	const gamesMatchesStore = createGamesMatchesStore({ eventDataStore })
