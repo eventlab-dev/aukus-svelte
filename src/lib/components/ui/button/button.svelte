@@ -56,6 +56,12 @@
 		children,
 		...restProps
 	}: ButtonProps = $props()
+
+	$effect(() => {
+		if (loading) {
+			disabled = true
+		}
+	})
 </script>
 
 {#if href}
