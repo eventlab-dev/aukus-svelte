@@ -27,11 +27,19 @@
 
 	const { player, canRollDice, diceOptions }: Props = $props()
 
-	const { usersStore, eventDataStore, movementStore, myPlayer, frontendState, notificationStore } =
-		getAppManagerContext()
+	const {
+		usersStore,
+		eventDataStore,
+		movementStore,
+		myPlayer,
+		frontendState,
+		notificationStore,
+		shitStore
+	} = getAppManagerContext()
 	const { finishMove, rollDice } = usersStore
 	const { eventDataQuery } = eventDataStore
 	const { myMovementState } = movementStore
+	const { kickPlayer } = shitStore
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions: Option[] = [
@@ -177,6 +185,18 @@
 		}
 		return '1d6'
 	}
+
+	const canKick = $derived(player.slug !== $myPlayer?.slug)
+
+	async function handleKick() {
+		await $kickPlayer.mutateAsync({
+			body: {
+				success: true,
+				target_player_slug: player.slug
+			}
+		})
+		$eventDataQuery.refetch()
+	}
 </script>
 
 {#if canRollDice}
@@ -213,14 +233,21 @@
 {:else}
 	<div class="flex rounded-3xl bg-card">
 		<div class="flex w-[450px] flex-col gap-3 p-4">
-			<div class="flex items-center gap-2">
-				<Avatar class="size-[27px]">
-					<AvatarImage src="https://github.com/shadcn.png" />
-					<AvatarFallback class="uppercase">{player.username.slice(0, 2)}</AvatarFallback>
-				</Avatar>
-				<Button variant="link" class="p-0" href={`/players/${player.slug}`}>
-					<div class="text-xl font-bold text-foreground">{player.username}</div>
-				</Button>
+			<div class="flex justify-between">
+				<div class="flex items-center gap-2">
+					<Avatar class="size-[27px]">
+						<AvatarImage src="https://github.com/shadcn.png" />
+						<AvatarFallback class="uppercase">{player.username.slice(0, 2)}</AvatarFallback>
+					</Avatar>
+					<Button variant="link" class="p-0" href={`/players/${player.slug}`}>
+						<div class="text-xl font-bold text-foreground">{player.username}</div>
+					</Button>
+				</div>
+				{#if canKick}
+					<Button class="ml-10" onclick={handleKick} loading={$kickPlayer.isPending}>
+						Подосрать
+					</Button>
+				{/if}
 			</div>
 			<div class="text-sm font-semibold text-muted-foreground">Выпало на ауке</div>
 			<div class="flex gap-2">

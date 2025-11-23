@@ -56,12 +56,6 @@
 		children,
 		...restProps
 	}: ButtonProps = $props()
-
-	$effect(() => {
-		if (loading) {
-			disabled = true
-		}
-	})
 </script>
 
 {#if href}
@@ -86,7 +80,7 @@
 		data-slot="button"
 		class={cn(buttonVariants({ variant, size }), className)}
 		{type}
-		{disabled}
+		disabled={disabled || loading}
 		{...restProps}
 	>
 		{@render children?.()}
