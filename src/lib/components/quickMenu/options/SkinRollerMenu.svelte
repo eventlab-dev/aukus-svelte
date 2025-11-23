@@ -52,7 +52,10 @@
 	{#if $myPlayer.skin_rolls === 0}
 		<Dialog open={isOpen} onOpenChange={handleClose}>
 			<DialogContent>
-				<div class="p-6">Проходи игры чтобы получить роллы скинов!</div>
+				<div class="p-6 text-3xl">Проходи игры чтобы получить роллы скинов!</div>
+				<div class="flex justify-center">
+					<Button class="w-100" onclick={() => (isOpen = false)}>Согласен</Button>
+				</div>
 			</DialogContent>
 		</Dialog>
 	{:else}
