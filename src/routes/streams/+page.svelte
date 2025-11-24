@@ -5,7 +5,7 @@
 	import StreamChat from '$lib/components/streams/StreamChat.svelte'
 	import { derived } from 'svelte/store'
 	import { onMount } from 'svelte'
-	import type { PlayerData } from '$lib/types'
+	import { SvelteSet } from 'svelte/reactivity'
 
 	const { players } = getAppManagerContext()
 
@@ -20,7 +20,7 @@
 	let columnsCount = $state(4)
 
 	let streamRefs: (HTMLDivElement | null)[] = []
-	let containerRef: HTMLDivElement | null = null
+	let containerRef: HTMLDivElement | null = $state(null)
 	let previousStreams = new Set<string>()
 
 	$effect(() => {
@@ -68,7 +68,7 @@
 	}
 
 	function handleTogglePlayer(playerId: string) {
-		const newVisiblePlayers = new Set(visiblePlayers)
+		const newVisiblePlayers = new SvelteSet(visiblePlayers)
 		if (newVisiblePlayers.has(playerId)) {
 			newVisiblePlayers.delete(playerId)
 		} else {
@@ -289,10 +289,7 @@
 			<div class="grid gap-2" style="grid-template-columns: repeat({columnsCount}, 1fr)">
 				{#each filteredStreamers as player, index (player.slug)}
 					{@const refIndex = $onlineStreamers.findIndex((p) => p.slug === player.slug)}
-					<div
-						bind:this={streamRefs[refIndex]}
-						class="aspect-video"
-					>
+					<div bind:this={streamRefs[refIndex]} class="aspect-video">
 						<StreamPlayer
 							{player}
 							isExpanded={expandedStreamIndex === index}
@@ -309,7 +306,7 @@
 
 			{#if expandedStreamIndex !== null && expandedStreamIndex !== -1}
 				{#if showChat}
-					<div class="fixed right-0 top-0 z-[9999] h-screen w-80 bg-white shadow-lg">
+					<div class="fixed top-0 right-0 z-[9999] h-screen w-80 bg-white shadow-lg">
 						<StreamChat player={filteredStreamers[expandedStreamIndex]} class="h-full" />
 					</div>
 				{/if}
