@@ -34,7 +34,7 @@
 		</DialogTrigger>
 		<DialogContent>
 			<DialogHeader class="text-3xl">
-				Потратить 1 стак из {$myPlayer.shit_stacks} чтобы закинуть игру?
+				Потратить 1/{$myPlayer.shit_stacks} чтобы закинуть 5000 на игру для {player.username}?
 			</DialogHeader>
 			<div class="mt-10 flex justify-center">
 				<Button
