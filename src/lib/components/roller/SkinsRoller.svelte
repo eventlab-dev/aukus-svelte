@@ -5,8 +5,8 @@
 	// import X from '@/components/icons/X.svelte'
 	import { Button } from '../ui/button'
 	import X from '@lucide/svelte/icons/x'
-	import Volume_1 from '@lucide/svelte/icons/volume-1'
-	import VolumeX from '@lucide/svelte/icons/volume-x'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import Volume from '$lib/components/Volume.svelte'
 
 	// --- CONSTANTS (same as original)
 	const FAST_SPIN_DURATION = 2000
@@ -22,6 +22,8 @@
 
 	const IDLE_CARD_COUNT = 21
 	const MIN_CARD_IN_ROLL = 75
+
+	const { soundManager } = getAppManagerContext()
 
 	// --- utility types (simple)
 	export type WeightedOption<T> = {
@@ -72,46 +74,6 @@
 		return available[Math.floor(Math.random() * available.length)]
 	}
 
-	// --- localStorage helper (simple)
-	function useLocalStorage<T>(key: string, initial: T) {
-		let value: T = initial
-		try {
-			const raw = localStorage.getItem(key)
-			if (raw !== null) {
-				value = JSON.parse(raw)
-			}
-		} catch {
-			// ignore
-		}
-		function save(next: T) {
-			value = next
-			try {
-				localStorage.setItem(key, JSON.stringify(value))
-			} catch {
-				// ignore
-			}
-		}
-		function get() {
-			return value
-		}
-		return { get, save }
-	}
-
-	// --- Minimal sound manager (placeholder) ---
-	// Replace with your project's Svelte sound manager if you have one.
-	function createSoundManager() {
-		let playing = false
-		function playRandom() {
-			// placeholder: integrate your audio / random clip playback here
-			playing = true
-		}
-		function stop() {
-			// placeholder
-			playing = false
-		}
-		return { playRandom, stop, isPlaying: () => playing }
-	}
-
 	// ----------------------------
 	// --- component props
 	// ----------------------------
@@ -154,10 +116,6 @@
 	let centerIndex = 0
 	let offset = $state(0)
 	let isIdleRunning = false
-
-	const lsMuted = useLocalStorage<boolean>('roller-sound-muted', false)
-	let isMuted = lsMuted.get()
-	const sound = createSoundManager()
 
 	let winnerIndex: number | null = $state(null)
 	let isOpen = $state(false)
@@ -236,6 +194,8 @@
 		let phase: 'backswing' | 'spin' | 'settle' = 'backswing'
 		let animationStartTime = 0
 
+		soundManager.playRandom({ fadeIn: 1, loop: true })
+
 		function easeSpin(t: number) {
 			// approximate cubic ease
 			// return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
@@ -305,7 +265,7 @@
 			const index = indexReal
 			winnerIndex = index
 			rollPhase = 'finished'
-			sound.stop()
+			soundManager.stop()
 			// call mutation (onRollFinish)
 			isLoading = true
 			isError = false
@@ -347,7 +307,7 @@
 			}
 		} else {
 			if (animationId !== null) cancelAnimationFrame(animationId)
-			sound.stop()
+			soundManager.stop()
 			winnerIndex = null
 			animationId = null
 			isIdleRunning = false
@@ -380,12 +340,6 @@
 		}
 	})
 
-	$effect(() => {
-		if (!isMuted && rollPhase === 'rolling') {
-			sound.playRandom()
-		}
-	})
-
 	function handleRollClick() {
 		// your original used useSystemStore.getState().enableQueries(false);
 		// If you have a store, call it; otherwise omit.
@@ -400,14 +354,17 @@
 	}
 
 	function toggleMute() {
-		if (!isMuted) sound.stop()
-		isMuted = !isMuted
-		lsMuted.save(isMuted)
+		if (!soundManager.isMuted) {
+			soundManager.stop()
+			soundManager.mute()
+		} else {
+			soundManager.unmute()
+		}
 	}
 
 	onDestroy(() => {
 		if (animationId !== null) cancelAnimationFrame(animationId)
-		sound.stop()
+		soundManager.stop()
 	})
 </script>
 
@@ -487,19 +444,12 @@
 			</Button>
 		{/if}
 
-		<Button
-			variant="outline"
-			size="icon"
-			class="absolute z-20 rounded-xl border-0 bg-white/20 hover:bg-white/10"
+		<div
+			class="absolute z-30 rounded-xl border-0 bg-white/20 hover:bg-white/10"
 			style="top:65%; right:20px;"
-			onclick={toggleMute}
 		>
-			{#if isMuted}
-				<VolumeX class="h-4 w-4" />
-			{:else}
-				<Volume_1 class="h-4 w-4" />
-			{/if}
-		</Button>
+			<Volume />
+		</div>
 
 		{#if rollPhase === 'finished'}
 			<div class="absolute bottom-[15%] flex flex-col items-center justify-center gap-4">
