@@ -54,9 +54,18 @@
 	{#if $myPlayer.skin_rolls === 0}
 		<Dialog open={isOpen} onOpenChange={handleClose}>
 			<DialogContent>
-				<div class="p-6 text-3xl">Проходи игры чтобы получить роллы скинов!</div>
+				<div class="p-2 text-3xl">Проходи игры чтобы получить роллы скинов!</div>
 				<div class="flex justify-center">
 					<Button class="w-100" onclick={() => (isOpen = false)}>Согласен</Button>
+				</div>
+			</DialogContent>
+		</Dialog>
+	{:else if rollOptions.length === 0}
+		<Dialog open={isOpen} onOpenChange={handleClose}>
+			<DialogContent>
+				<div class="p-2 text-3xl">Похоже ты собрал все скины!</div>
+				<div class="flex justify-center">
+					<Button class="w-100" onclick={() => (isOpen = false)}>Круто!</Button>
 				</div>
 			</DialogContent>
 		</Dialog>
