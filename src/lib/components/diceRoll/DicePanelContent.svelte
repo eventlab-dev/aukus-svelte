@@ -11,6 +11,7 @@
 	import ImageLoader from '../ImageLoader.svelte'
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+	import KickPlayerDialog from '../quickMenu/options/shitMenu/KickPlayerDialog.svelte'
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
@@ -188,15 +189,6 @@
 	}
 
 	const canKick = $derived(player.slug !== $myPlayer?.slug)
-
-	async function handleKick() {
-		await $kickPlayer.mutateAsync({
-			body: {
-				target_player_slug: player.slug
-			}
-		})
-		$eventDataQuery.refetch()
-	}
 </script>
 
 {#if canRollDice}
@@ -244,9 +236,7 @@
 					</Button>
 				</div>
 				{#if canKick}
-					<Button class="ml-10" onclick={handleKick} loading={$kickPlayer.isPending}>
-						Подосрать
-					</Button>
+					<KickPlayerDialog {player} />
 				{/if}
 			</div>
 			<div class="text-sm font-semibold text-muted-foreground">Выпало на ауке</div>
