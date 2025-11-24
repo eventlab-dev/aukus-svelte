@@ -55,6 +55,11 @@
 		<Dialog open={isOpen} onOpenChange={handleClose}>
 			<DialogContent>
 				<div class="p-2 text-3xl">Проходи игры чтобы получить роллы скинов!</div>
+				<div class="flex flex-col gap-2 p-2">
+					<div>Игры 0-11ч: 1 ролл</div>
+					<div>Игры 12-24ч: 2 ролла</div>
+					<div>Игры 25ч и больше: 3 ролла</div>
+				</div>
 				<div class="flex justify-center">
 					<Button class="w-100" onclick={() => (isOpen = false)}>Согласен</Button>
 				</div>
