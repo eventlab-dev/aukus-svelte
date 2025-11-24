@@ -25,7 +25,7 @@
 </div>
 
 {#if $turnState === 'filling-form' && !$selectedPlayer}
-	<div class="sticky bottom-10 left-1/2 mt-10 flex w-fit -translate-x-1/2 justify-center">
+	<div class="sticky bottom-10 left-1/2 z-100 mt-10 flex w-fit -translate-x-1/2 justify-center">
 		<MoveForm />
 	</div>
 {/if}
@@ -35,7 +35,7 @@
 {/if}
 
 {#if $turnState === 'selecting-dice' || $selectedPlayer}
-	<div class="pointer-events-none sticky bottom-10 mt-10 flex justify-center">
+	<div class="pointer-events-none sticky bottom-10 z-100 mt-10 flex justify-center">
 		<div class="pointer-events-auto flex">
 			<DicePanel />
 		</div>

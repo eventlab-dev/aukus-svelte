@@ -119,7 +119,7 @@
 	{#if message}
 		<div
 			bind:this={messageElement}
-			class="speech-bubble absolute w-max max-w-[300px] -translate-x-1/2 rounded-lg bg-black/70 p-4 text-center text-white backdrop-blur-sm"
+			class="speech-bubble absolute z-50 w-max max-w-[300px] -translate-x-1/2 rounded-lg bg-black/70 p-4 text-center text-white backdrop-blur-sm"
 			style={messageStyle}
 			in:fade={{ duration: 500 }}
 			out:fade={{ duration: 500 }}
