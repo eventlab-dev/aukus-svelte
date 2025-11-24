@@ -6,6 +6,7 @@
 	import MapArrow from './MapArrow.svelte'
 	import MapArrowMarkers from './MapArrowMarkers.svelte'
 	import MapCharacters from './MapCharacters.svelte'
+	import MapCountdowwn from './MapCountdowwn.svelte'
 	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'
 
@@ -53,6 +54,8 @@
 			{#each $players as player (player.slug)}
 				<PlayerCharacter {player} />
 			{/each}
+
+			<MapCountdowwn />
 		</button>
 	</div>
 </div>
