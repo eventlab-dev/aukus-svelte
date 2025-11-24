@@ -48,7 +48,8 @@
 			{ label: '1d4', value: '1d4' },
 			{ label: '2d4', value: '2d4' },
 			{ label: '2d6', value: '2d6' },
-			{ label: '3d6', value: '3d6' }
+			{ label: '3d6', value: '3d6' },
+			{ label: '4d6', value: '4d6' }
 		]
 		return allOptions.filter((option) => diceOptions.includes(option.value))
 	})
@@ -191,7 +192,6 @@
 	async function handleKick() {
 		await $kickPlayer.mutateAsync({
 			body: {
-				success: true,
 				target_player_slug: player.slug
 			}
 		})

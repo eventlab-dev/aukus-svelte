@@ -1,24 +1,35 @@
 import { derived, writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
+import type { AchievementItem, UnlockedAchievementItem } from '$lib/heyapi/aukus/types.gen'
+
+type PersonalAchievement = AchievementItem & { is_first: boolean }
 
 export function createNotificationStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
-	const achievementsIds = writable<number[]>([])
+	const unlockedAchievements = writable<UnlockedAchievementItem[]>([])
 
 	const { achievementsById } = eventDataStore
 
 	const achievements = derived(
-		[achievementsIds, achievementsById],
-		([$achievementsIds, $achievementsById]) => {
-			return $achievementsIds.map((id) => $achievementsById.get(id)).filter((a) => !!a)
+		[achievementsById, unlockedAchievements],
+		([$achievementsById, $unlockedAchievements]) => {
+			return $unlockedAchievements
+				.map((a) => {
+					const achievement = $achievementsById.get(a.id)
+					if (!achievement) {
+						return null
+					}
+					return { ...achievement, is_first: a.is_first }
+				})
+				.filter((a) => !!a) as PersonalAchievement[]
 		}
 	)
 
-	function notify(ids: number[]) {
-		achievementsIds.set(ids)
+	function notify(items: UnlockedAchievementItem[]) {
+		unlockedAchievements.set(items)
 	}
 
 	function hideNotification(id: number) {
-		achievementsIds.update((ids) => ids.filter((i) => i !== id))
+		unlockedAchievements.update((ids) => ids.filter((i) => i.id !== id))
 	}
 
 	return {
