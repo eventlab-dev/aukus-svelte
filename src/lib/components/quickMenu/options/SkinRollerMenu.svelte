@@ -68,7 +68,7 @@
 	{:else if rollOptions.length === 0}
 		<Dialog open={isOpen} onOpenChange={handleClose}>
 			<DialogContent>
-				<div class="p-2 text-3xl">Похоже ты собрал все скины!</div>
+				<div class="p-2 text-center text-3xl">Похоже ты собрал все скины!</div>
 				<div class="flex justify-center">
 					<Button class="w-100" onclick={() => (isOpen = false)}>Круто!</Button>
 				</div>

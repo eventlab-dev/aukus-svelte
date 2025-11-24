@@ -29,7 +29,9 @@
 		</DialogContent>
 	{:else}
 		<DialogContent>
-			<DialogHeader class="text-3xl">Не хватает стаков: {$myPlayer?.shit_stacks}/10</DialogHeader>
+			<DialogHeader class="w-full text-center text-3xl">
+				<div class="w-full text-center">Не хватает стаков: {$myPlayer?.shit_stacks}/10</div>
+			</DialogHeader>
 			<div class="mt-10 flex justify-center">
 				<Button class="w-100" onclick={() => (open = false)}>Согласен</Button>
 			</div>
