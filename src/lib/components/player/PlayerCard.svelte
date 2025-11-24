@@ -5,6 +5,8 @@
 	import PlayerAvatar from './PlayerAvatar.svelte'
 	import type { PlayerData } from '$lib/types'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
+	import FireIcon from '../icons/new/FireIcon.svelte'
 
 	type Props = {
 		player: PlayerData
@@ -19,7 +21,7 @@
 
 	function handleMouseEnter() {
 		isHovered = true
-		
+
 		hoverTimeout = setTimeout(() => {
 			hoveredPlayer.set(player.slug)
 		}, 400)
@@ -27,12 +29,12 @@
 
 	function handleMouseLeave() {
 		isHovered = false
-		
+
 		if (hoverTimeout) {
 			clearTimeout(hoverTimeout)
 			hoverTimeout = null
 		}
-		
+
 		hoveredPlayer.set(null)
 	}
 </script>
@@ -55,9 +57,17 @@
 				/>
 				<div class="font-bold">{player.username}</div>
 			</div>
-			<div class="flex h-fit items-center gap-[2px] text-sm font-semibold text-muted-foreground">
-				{Math.round(player.total_score)}
-				<Star />
+			<div class="flex gap-[8px]">
+				<div class="flex h-fit items-center gap-[2px] font-semibold text-muted-foreground">
+					{player.shit_stacks}<FireIcon />
+				</div>
+				<div class="flex h-fit items-center gap-[2px] font-semibold text-muted-foreground">
+					{player.shield_stacks}<ShieldIcon />
+				</div>
+				<div class="flex h-fit items-center gap-[2px] text-sm font-semibold">
+					{Math.round(player.total_score)}
+					<Star />
+				</div>
 			</div>
 		</div>
 		<div class="grid w-full font-medium text-muted-foreground">
