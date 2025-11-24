@@ -365,11 +365,11 @@
 	// watchers (simulate React effects)
 	$effect(() => {
 		if (rollPhase === 'idle' && cardList.length > 0) {
-			// if (!isIdleRunning) {
-			// 	isIdleRunning = true
-			// 	if (animationId !== null) cancelAnimationFrame(animationId)
-			// 	animationId = requestAnimationFrame(idleAnimate)
-			// }
+			if (!isIdleRunning) {
+				isIdleRunning = true
+				if (animationId !== null) cancelAnimationFrame(animationId)
+				animationId = requestAnimationFrame(idleAnimate)
+			}
 		}
 
 		if (rollPhase === 'rolling' && cardList.length > IDLE_CARD_COUNT && !isRolling) {
