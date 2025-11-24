@@ -20,16 +20,16 @@
 	<DialogTrigger class="w-full">
 		<Button class="w-full">Сделать щит</Button>
 	</DialogTrigger>
-	{#if $myPlayer && $myPlayer?.shit_stacks >= 30}
+	{#if $myPlayer && $myPlayer?.shit_stacks >= 10}
 		<DialogContent>
-			<DialogHeader class="text-3xl">Поменять 30 стаков на 1 стак щита?</DialogHeader>
+			<DialogHeader class="text-3xl">Поменять 10 стаков на 3 стак щита?</DialogHeader>
 			<div class="mt-10 flex justify-center">
 				<Button class="w-100" {onclick} loading={$makeShield.isPending}>Да</Button>
 			</div>
 		</DialogContent>
 	{:else}
 		<DialogContent>
-			<DialogHeader class="text-3xl">Не хватает стаков: {$myPlayer?.shit_stacks}/30</DialogHeader>
+			<DialogHeader class="text-3xl">Не хватает стаков: {$myPlayer?.shit_stacks}/10</DialogHeader>
 			<div class="mt-10 flex justify-center">
 				<Button class="w-100" onclick={() => (open = false)}>Согласен</Button>
 			</div>
