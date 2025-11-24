@@ -588,6 +588,14 @@ export type PlayerStatsItem = {
      * Snakes Moves Sum
      */
     snakes_moves_sum: number;
+    /**
+     * First Achievements
+     */
+    first_achievements: number;
+    /**
+     * Regular Achievements
+     */
+    regular_achievements: number;
 };
 
 /**
