@@ -238,7 +238,8 @@
 
 		function easeSpin(t: number) {
 			// approximate cubic ease
-			return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+			// return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+			return 1 - Math.pow(1 - t, 3) // strong fast start
 		}
 		function easeBack(t: number) {
 			return t * t * (3 - 2 * t)

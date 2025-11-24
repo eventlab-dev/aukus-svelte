@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { AchievementBackgroundUrl } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { getConfirmationText, getSkinIconUrl } from '$lib/utils'
+	import { getConfirmationText } from '$lib/utils'
 	import SkinPreview from '../skinEditor/SkinPreview.svelte'
 	import { Button } from '../ui/button'
 	import { Dialog, DialogClose, DialogContent } from '../ui/dialog'
