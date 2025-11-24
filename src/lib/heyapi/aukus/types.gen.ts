@@ -287,7 +287,7 @@ export type FinishPlayerMoveResponse = {
     /**
      * Unlocked Achievements
      */
-    unlocked_achievements: Array<number>;
+    unlocked_achievements: Array<UnlockedAchievementItem>;
 };
 
 /**
@@ -318,20 +318,12 @@ export type KickRequest = {
      * Target Player Slug
      */
     target_player_slug: string;
-    /**
-     * Success
-     */
-    success: boolean;
 };
 
 /**
  * KickResponse
  */
 export type KickResponse = {
-    /**
-     * Dice Result
-     */
-    dice_result: number;
     result_type: PlayerKickResult;
 };
 
@@ -402,7 +394,7 @@ export type PlayerItem = {
 /**
  * PlayerKickResult
  */
-export type PlayerKickResult = 'shield_removed' | 'lose' | 'lose_with_shield' | 'win' | 'out_of_shit';
+export type PlayerKickResult = 'shield_removed' | 'win' | 'out_of_shit';
 
 /**
  * PlayerMoveItem
@@ -690,6 +682,10 @@ export type UnlockedAchievementItem = {
      * Unlocked At
      */
     unlocked_at: number;
+    /**
+     * Is First
+     */
+    is_first: boolean;
 };
 
 /**
