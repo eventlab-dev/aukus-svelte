@@ -36,7 +36,7 @@
 				description: 'Скины, логотип'
 			},
 			{
-				name: 'Rvg',
+				name: 'Рот в говне (huykakoyto)',
 				description: 'Карта, скины'
 			},
 			{
