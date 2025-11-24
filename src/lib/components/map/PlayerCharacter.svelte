@@ -68,7 +68,7 @@
 		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
 
 		if (player.map_position === 0) {
-			return { x: 160 + 90 * index, y: 20, onlyName: false }
+			return { x: 160 + 100 * index, y: 20, onlyName: false }
 		}
 
 		if (playersOnCell.length === 1) {
@@ -146,12 +146,15 @@
 	})
 </script>
 
-<div bind:this={element} class="absolute transition-opacity duration-300" 
-     style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}">
+<div
+	bind:this={element}
+	class="absolute transition-opacity duration-300"
+	style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}"
+>
 	<button
 		onclick={onCharacterClick}
 		class="relative isolate cursor-pointer
-        rounded-full transition data-[active=false]:hover:bg-yellow-200/80 data-[active=true]:bg-yellow-200/80 data-[highlighted=true]:ring-4 data-[highlighted=true]:ring-yellow-400 data-[highlighted=true]:bg-yellow-200/90"
+        rounded-full transition data-[active=false]:hover:bg-yellow-200/80 data-[active=true]:bg-yellow-200/80 data-[highlighted=true]:bg-yellow-200/90 data-[highlighted=true]:ring-4 data-[highlighted=true]:ring-yellow-400"
 		data-active={$selectedPlayer?.slug === player.slug}
 		data-highlighted={isHighlighted}
 	>
