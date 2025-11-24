@@ -28,19 +28,11 @@
 
 	const { player, canRollDice, diceOptions }: Props = $props()
 
-	const {
-		usersStore,
-		eventDataStore,
-		movementStore,
-		myPlayer,
-		frontendState,
-		notificationStore,
-		shitStore
-	} = getAppManagerContext()
+	const { usersStore, eventDataStore, movementStore, myPlayer, frontendState, notificationStore } =
+		getAppManagerContext()
 	const { finishMove, rollDice } = usersStore
 	const { eventDataQuery } = eventDataStore
 	const { myMovementState } = movementStore
-	const { kickPlayer } = shitStore
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions: Option[] = [
