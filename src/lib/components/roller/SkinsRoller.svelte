@@ -1,7 +1,6 @@
-<script lang="ts">
-	import { onDestroy } from 'svelte'
+<script lang="ts" generics="T">
+	import { onDestroy, type Snippet } from 'svelte'
 	import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
-	import ImageLoader from '../ImageLoader.svelte'
 	// import Volume from '@/components/icons/Volume.svelte'
 	// import X from '@/components/icons/X.svelte'
 	import { Button } from '../ui/button'
@@ -25,16 +24,16 @@
 	const MIN_CARD_IN_ROLL = 75
 
 	// --- utility types (simple)
-	export type WeightedOption = {
+	export type WeightedOption<T> = {
 		value: string
 		weight: number
 		label: string
-		imageUrl: string
 		variant?: 'positive' | 'negative'
+		item: T
 	}
 
 	// --- helper functions (ported)
-	function weightedRandom<T extends WeightedOption>(options: T[]): T {
+	function weightedRandom<X extends WeightedOption<T>>(options: X[]): X {
 		const totalWeight = options.reduce((sum, opt) => sum + (opt.weight ?? 0), 0)
 		let r = Math.random() * totalWeight
 		for (const opt of options) {
@@ -44,14 +43,14 @@
 		return options[options.length - 1]
 	}
 
-	function generateList<T extends WeightedOption>(len: number, options: T[]): T[] {
+	function generateList<X extends WeightedOption<T>>(len: number, options: X[]): X[] {
 		if (options.length === 0) {
 			throw new Error('Need at least 2 options for neighbor constraint.')
 		}
 		if (options.length === 1) {
 			return Array(len).fill(options[0])
 		}
-		const result: T[] = []
+		const result: X[] = []
 		for (let i = 0; i < len; i++) {
 			const available =
 				i === 0 ? options : options.filter((opt) => opt.value !== result[i - 1].value)
@@ -64,7 +63,7 @@
 		return result
 	}
 
-	function getRandomExcept<T extends WeightedOption>(options: T[], exclude: T): T {
+	function getRandomExcept<X extends WeightedOption<T>>(options: X[], exclude: X): X {
 		if (options.length === 0) {
 			throw new Error('Need at least 1 option')
 		}
@@ -117,17 +116,18 @@
 	// --- component props
 	// ----------------------------
 
-	type Props = {
+	type Props<T> = {
 		autoOpen?: boolean
-		options: WeightedOption[]
+		options: WeightedOption<T>[]
 		header: string
 		openButtonText?: string
 		finishButtonText?: string
-		onRollFinish: (option: WeightedOption) => Promise<void>
+		onRollFinish: (option: WeightedOption<T>) => Promise<void>
 		onClose?: () => void
-		getWinnerText: (option: WeightedOption) => string
-		getSecondaryText?: (option: WeightedOption) => string | undefined
+		getWinnerText: (option: WeightedOption<T>) => string
+		getSecondaryText?: (option: WeightedOption<T>) => string | undefined
 		showTrigger?: boolean
+		itemRenderer: Snippet<[T]>
 	}
 
 	let {
@@ -140,8 +140,9 @@
 		onClose,
 		getWinnerText,
 		getSecondaryText,
-		showTrigger
-	}: Props = $props()
+		showTrigger,
+		itemRenderer
+	}: Props<T> = $props()
 
 	// ----------------------------
 	// --- local reactive state
@@ -161,7 +162,7 @@
 	let winnerIndex: number | null = $state(null)
 	let isOpen = $state(false)
 	let rollPhase: 'idle' | 'rolling' | 'finished' = $state('idle')
-	let cardList: WeightedOption[] = $state([])
+	let cardList: WeightedOption<T>[] = $state([])
 	let currentCardIndex = $state(0)
 
 	// states for mutation
@@ -364,11 +365,11 @@
 	// watchers (simulate React effects)
 	$effect(() => {
 		if (rollPhase === 'idle' && cardList.length > 0) {
-			if (!isIdleRunning) {
-				isIdleRunning = true
-				if (animationId !== null) cancelAnimationFrame(animationId)
-				animationId = requestAnimationFrame(idleAnimate)
-			}
+			// if (!isIdleRunning) {
+			// 	isIdleRunning = true
+			// 	if (animationId !== null) cancelAnimationFrame(animationId)
+			// 	animationId = requestAnimationFrame(idleAnimate)
+			// }
 		}
 
 		if (rollPhase === 'rolling' && cardList.length > IDLE_CARD_COUNT && !isRolling) {
@@ -447,18 +448,19 @@
 				{#each cardList as item, idx (idx)}
 					{#key idx}
 						<div class="rounded-xl bg-card">
-							<ImageLoader
-								src={item.imageUrl}
-								alt={item.label}
+							<div
 								class="transition-all duration-400 ease-in-out data-[dimmed=true]:opacity-95 data-[dimmed=true]:brightness-50"
 								data-dimmed={rollPhase === 'finished' && idx !== winnerIndex}
 								style="
                 height: {idx === winnerIndex ? CARD_HEIGHT * 1.25 + 'px' : CARD_HEIGHT + 'px'};
                 width: {idx === winnerIndex ? CARD_WIDTH * 1.25 + 'px' : CARD_WIDTH + 'px'};
                 transition: all 0.4s ease;
-                border-radius: 10px;
-              "
-							/>
+                border-radius: 10px;"
+							>
+								<div class="flex h-full w-full items-center justify-center p-6">
+									{@render itemRenderer(item.item)}
+								</div>
+							</div>
 						</div>
 					{/key}
 				{/each}

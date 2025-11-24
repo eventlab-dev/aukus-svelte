@@ -2,6 +2,7 @@
 	import { AchievementBackgroundUrl } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { getConfirmationText, getSkinIconUrl } from '$lib/utils'
+	import SkinPreview from '../skinEditor/SkinPreview.svelte'
 	import { Button } from '../ui/button'
 	import { Dialog, DialogClose, DialogContent } from '../ui/dialog'
 
@@ -10,6 +11,8 @@
 	const { skinsById } = eventDataStore
 
 	const achievement = $derived<(typeof $achievements)[0] | undefined>($achievements[0])
+
+	const skin = $derived(achievement ? $skinsById.get(achievement.reward_skin_id) : null)
 
 	let buttonText = $state(getConfirmationText())
 
@@ -21,18 +24,16 @@
 	}
 </script>
 
-{#if achievement}
+{#if achievement && skin}
 	{#key achievement.id}
 		<Dialog open onOpenChange={handleOpenChange}>
 			<DialogContent showCloseButton={false} class="w-fit">
 				<div class="mb-0 flex justify-center text-3xl">Достижение разблокировано!</div>
 				<div class="relative flex justify-center">
 					<img class="h-63 rounded-2xl" src={AchievementBackgroundUrl} alt="background" />
-					<img
-						class="absolute top-1/2 left-1/2 h-16 -translate-x-1/2 -translate-y-1/2"
-						src={getSkinIconUrl($skinsById.get(achievement.reward_skin_id)?.image_url ?? '')}
-						alt="skin"
-					/>
+					<div class="absolute top-1/2 left-1/2 h-16 -translate-x-1/2 -translate-y-1/2">
+						<SkinPreview {skin} />
+					</div>
 				</div>
 				<div>{achievement.description}</div>
 				{#if achievement.is_first}

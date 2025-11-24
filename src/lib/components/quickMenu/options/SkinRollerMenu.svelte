@@ -1,8 +1,10 @@
 <script lang="ts">
 	import SkinsRoller, { type WeightedOption } from '$lib/components/roller/SkinsRoller.svelte'
+	import SkinPreview from '$lib/components/skinEditor/SkinPreview.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { Dialog, DialogContent } from '$lib/components/ui/dialog'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { type SkinItem } from '$lib/heyapi/aukus/types.gen'
 	import { getConfirmationText } from '$lib/utils'
 	import Gift from '@lucide/svelte/icons/gift'
 
@@ -10,12 +12,12 @@
 	const { unlockableSkins, unlockableSkinsQuery, unlockSkinQuery } = usersStore
 	const { eventDataQuery } = eventDataStore
 
-	const rollOptions: WeightedOption[] = $derived(
+	const rollOptions: WeightedOption<SkinItem>[] = $derived(
 		$unlockableSkins.map((s) => ({
 			label: '',
 			weight: 1,
 			value: s.id.toString(),
-			imageUrl: s.image_url
+			item: s
 		}))
 	)
 
@@ -34,7 +36,7 @@
 		finishText = getConfirmationText()
 	}
 
-	async function handleRollFinish(winner: WeightedOption) {
+	async function handleRollFinish(winner: WeightedOption<SkinItem>) {
 		await $unlockSkinQuery.mutateAsync({
 			body: {
 				skin_id: Number(winner.value)
@@ -59,6 +61,9 @@
 			</DialogContent>
 		</Dialog>
 	{:else}
+		{#snippet skinImage(skin: SkinItem)}
+			<SkinPreview {skin} />
+		{/snippet}
 		<SkinsRoller
 			autoOpen={isOpen}
 			onClose={handleClose}
@@ -67,6 +72,7 @@
 			onRollFinish={handleRollFinish}
 			getWinnerText={() => ''}
 			finishButtonText={finishText}
+			itemRenderer={skinImage}
 		/>
 	{/if}
 {/if}
