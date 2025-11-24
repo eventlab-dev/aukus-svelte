@@ -22,7 +22,7 @@
 
 <Dialog {open} onOpenChange={(state) => (open = state)}>
 	<DialogTrigger class="w-full">
-		<Button class="w-full">+1</Button>
+		<Button class="w-full bg-secondary">+1</Button>
 	</DialogTrigger>
 	<DialogContent>
 		<DialogHeader class="text-3xl">Добавить стак подсера за донатгол в 5000?</DialogHeader>

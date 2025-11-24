@@ -18,7 +18,7 @@
 
 <Dialog {open} onOpenChange={(state) => (open = state)}>
 	<DialogTrigger class="w-full">
-		<Button class="w-full">Сделать щит</Button>
+		<Button class="w-full bg-secondary">Сделать щит</Button>
 	</DialogTrigger>
 	{#if $myPlayer && $myPlayer?.shit_stacks >= 10}
 		<DialogContent>
