@@ -1,7 +1,7 @@
 <script lang="ts">
-	const baseColor = 'rgba(0,0,0,0.2)'
-	const greenColor = 'rgba(0,255,0,0.5)'
-	const redColor = 'rgba(255,0,0,0.5)'
+	const baseColor = 'rgba(0,0,0,0.5)'
+	const greenColor = 'rgba(0,255,0,0.7)'
+	const redColor = 'rgba(255,0,0,0.7)'
 
 	const arrowPoints = '0 0, 6 2, 0 4'
 </script>
