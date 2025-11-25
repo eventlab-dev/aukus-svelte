@@ -20,21 +20,30 @@
 	<DialogTrigger class="w-full">
 		<Button class="w-full bg-secondary">Сделать щит</Button>
 	</DialogTrigger>
-	{#if $myPlayer && $myPlayer?.shit_stacks >= 10}
-		<DialogContent>
-			<DialogHeader class="text-3xl">Поменять 10 стаков на 3 стак щита?</DialogHeader>
-			<div class="mt-10 flex justify-center">
-				<Button class="w-100" {onclick} loading={$makeShield.isPending}>Да</Button>
-			</div>
-		</DialogContent>
-	{:else}
-		<DialogContent>
-			<DialogHeader class="w-full text-center text-3xl">
-				<div class="w-full text-center">Не хватает стаков: {$myPlayer?.shit_stacks}/10</div>
-			</DialogHeader>
-			<div class="mt-10 flex justify-center">
-				<Button class="w-100" onclick={() => (open = false)}>Согласен</Button>
-			</div>
-		</DialogContent>
+	{#if $myPlayer}
+		{#if $myPlayer.shield_stacks >= 9}
+			<DialogContent>
+				<DialogHeader class="text-3xl">Максимум щитов достигнут!</DialogHeader>
+				<div class="mt-10 flex justify-center">
+					<Button class="w-100" onclick={() => (open = false)}>Согласен</Button>
+				</div>
+			</DialogContent>
+		{:else if $myPlayer?.shit_stacks >= 10}
+			<DialogContent>
+				<DialogHeader class="text-3xl">Поменять 10 стаков на 3 стак щита?</DialogHeader>
+				<div class="mt-10 flex justify-center">
+					<Button class="w-100" {onclick} loading={$makeShield.isPending}>Да</Button>
+				</div>
+			</DialogContent>
+		{:else}
+			<DialogContent>
+				<DialogHeader class="w-full text-center text-3xl">
+					<div class="w-full text-center">Не хватает стаков: {$myPlayer?.shit_stacks}/10</div>
+				</DialogHeader>
+				<div class="mt-10 flex justify-center">
+					<Button class="w-100" onclick={() => (open = false)}>Согласен</Button>
+				</div>
+			</DialogContent>
+		{/if}
 	{/if}
 </Dialog>
