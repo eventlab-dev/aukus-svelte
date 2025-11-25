@@ -2,9 +2,10 @@
 	import EditIcon from '$lib/components/icons/EditIcon.svelte'
 	import TickCircleIcon from '$lib/components/icons/TickCircleIcon.svelte'
 	import InfoIcon from '$lib/components/icons/InfoIcon.svelte'
+	import WandIcon from '$lib/components/icons/WandIcon.svelte'
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import { Badge } from '$lib/components/ui/badge'
-	import Input from '$lib/components/ui/input/input.svelte'
+	import { Button } from '$lib/components/ui/button'
 	import { Textarea } from '$lib/components/ui/textarea'
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
@@ -14,8 +15,14 @@
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
+	import { AukusBaseUrl } from '$lib/client'
 	import PopoverGameCard from './PopoverGameCard.svelte'
 	import DiceRollInfo from './DiceRollInfo.svelte'
+	import Rating from '../moveForm/components/Rating.svelte'
+	import TiptapEditor from '../richEditor/TiptapEditor.svelte'
+	import EmotesPopover from '../moveForm/components/EmotesPopover.svelte'
+	import type { EmoteItem } from '$lib/api/emotes'
+	import type { Editor } from '@tiptap/core'
 	import type { CommonGameItem } from '$lib/types'
 
 	type Props = {
@@ -25,15 +32,16 @@
 
 	const { move, matchedGames }: Props = $props()
 
-	const { playersBySlug, myPlayer, usersStore } = getAppManagerContext()
-	const { myUser } = usersStore
+	const { playersBySlug, myPlayer, usersStore, playersMovesStore } = getAppManagerContext()
+	const { myUser, accessToken } = usersStore
+	const { playerMovesQuery } = playersMovesStore
 
 	const player = $derived($playersBySlug[move.player_slug])
 	const canEdit = $derived.by(() => {
 		if (move.player_slug === $myPlayer?.slug) {
 			return true
 		}
-		if ($myPlayer?.moder_for.includes(player.slug)) {
+		if ($myUser?.moder_for?.includes(move.player_slug)) {
 			return true
 		}
 		if ($myUser?.roles.includes('admin')) {
@@ -47,14 +55,60 @@
 	const moveTypeStyles = $derived(getMoveTypeStyles(move.type))
 	const parsedReview = $derived(renderToHTML(move.item_review || ''))
 
-	let gameTitle = $state(move.item_title)
 	let vodLinks = $state(move.vod_links || '')
+	let review = $state(move.item_review || '')
+	let rating = $state(move.item_rating)
 	let isEditMode = $state(false)
 	let isVodsShown = $state(false)
+	let isSaving = $state(false)
+	let editorState: { editor: Editor | null } = $state({ editor: null })
 
-	function setEditMode(pressed: boolean) {
-		if (!pressed) {
-			console.log('Changes saved')
+	function handleEmoteClick(emote: EmoteItem) {
+		editorState.editor?.chain().focus().setImage({ src: emote.cdn_url }).run()
+	}
+
+	function toggleSpoiler() {
+		editorState.editor?.chain().focus().toggleSpoilerMark().setTextSelection(0).run()
+	}
+
+	async function setEditMode(pressed: boolean) {
+		if (!pressed && isEditMode) {
+			isSaving = true
+			try {
+				const token = $accessToken
+				if (!token) {
+					throw new Error('Not authenticated')
+				}
+
+				const response = await fetch(`${AukusBaseUrl}/api/players/moves/${move.id}`, {
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					},
+					body: JSON.stringify({
+						item_review: review,
+						item_rating: rating,
+						vod_links: vodLinks || null
+					})
+				})
+
+				if (!response.ok) {
+					throw new Error(`Failed to update move: ${response.statusText}`)
+				}
+
+				move.item_review = review
+				move.item_rating = rating
+				move.vod_links = vodLinks
+
+				await $playerMovesQuery?.refetch()
+			} catch (error) {
+				console.error('Failed to save changes:', error)
+				alert('Ошибка при сохранении изменений')
+				return
+			} finally {
+				isSaving = false
+			}
 		}
 
 		isEditMode = pressed
@@ -137,29 +191,56 @@
 			class="h-[100px] w-[75px] flex-shrink-0 md:h-[140px] md:w-[105px]"
 		/>
 		<div class="w-full min-w-0 space-y-3">
-			{#if isEditMode}
-				<div in:fade>
-					<Input
-						id="game-title"
-						type="text"
-						class="w-full border-none bg-muted"
-						bind:value={gameTitle}
-					/>
-				</div>
-			{:else}
-				<div class="text-lg leading-tight font-bold md:text-2xl md:leading-[29px]" in:fade>
-					{move.item_title}
-				</div>
-			{/if}
+			<div class="text-lg leading-tight font-bold md:text-2xl md:leading-[29px]">
+				{move.item_title}
+			</div>
 
-			{#if isEditMode || isVodsShown}
+			{#if isEditMode}
+				<div class="space-y-3" in:fade>
+					<div class="space-y-2.5">
+						<div class="text-xl font-semibold">
+							Оценка — {`${rating === null ? 'не указана' : rating}`}
+						</div>
+						<Rating bind:value={rating} />
+					</div>
+
+					<div class="relative">
+						<TiptapEditor
+							class="px-3 py-2"
+							content={review}
+							bind:editorState
+							bind:value={review}
+							extensions={{
+								placeholderText: 'Отзыв об игре'
+							}}
+							simple
+						/>
+						<div class="absolute right-1.5 bottom-1.5 flex flex-col">
+							<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
+								<WandIcon class="size-6" />
+							</Button>
+							<EmotesPopover onEmoteClick={handleEmoteClick} />
+						</div>
+					</div>
+
+					<div>
+						<div class="mb-2 font-medium">Ссылки на записи</div>
+						<Textarea
+							id="vod-links"
+							class="w-full resize-none"
+							bind:value={vodLinks}
+							rows={3}
+						/>
+					</div>
+				</div>
+			{:else if isVodsShown}
 				<div class="mt-5 space-y-3" in:fade>
 					<div class="font-medium">Ссылки на записи</div>
 					<Textarea
 						id="vod-links"
 						class="w-full resize-none"
-						readonly={isVodsShown}
-						bind:value={vodLinks}
+						readonly={true}
+						value={vodLinks}
 					/>
 				</div>
 			{:else}
@@ -190,11 +271,14 @@
 				size="sm"
 				class="p-2"
 				bind:pressed={getEditMode, setEditMode}
+				disabled={isSaving}
 				style={isEditMode
 					? 'background-color: var(--primary); color: var(--primary-foreground);'
 					: ''}
 			>
-				{#if isEditMode}
+				{#if isSaving}
+					Сохранение...
+				{:else if isEditMode}
 					<TickCircleIcon />
 					Сохранить
 				{:else}
