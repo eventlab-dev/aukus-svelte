@@ -2,7 +2,6 @@ import { browser } from '$app/environment'
 import { goto } from '$app/navigation'
 
 export const ssr = false
-export const prerender = false
 
 export const load = () => {
 	if (browser) {

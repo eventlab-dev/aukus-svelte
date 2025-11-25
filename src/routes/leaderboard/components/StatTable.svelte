@@ -113,6 +113,13 @@
 								href={`/players/${player.player_slug}`}
 								class="p-0 text-foreground no-underline hover:text-[var(--player-color)]"
 								style="--player-color: {player.color}"
+								onclick={(e) => {
+									const isMobile = window.matchMedia('(max-width: 768px)').matches
+									if (isMobile && typeof (window as any).navigateToPlayer === 'function') {
+										e.preventDefault()
+										;(window as any).navigateToPlayer(player.player_slug)
+									}
+								}}
 							>
 								{player[key]}
 							</Button>

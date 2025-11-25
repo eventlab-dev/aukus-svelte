@@ -72,12 +72,12 @@
 </script>
 
 <div
-	class="group relative flex w-[800px] flex-col rounded-xl bg-card p-3"
+	class="group relative flex w-full flex-col rounded-xl bg-card p-3 md:w-[800px]"
 	id={`move-card-${move.id}`}
 >
-	<div class="flex justify-between">
+	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
 		<div class="flex">
-			<div class="flex gap-1.5">
+			<div class="flex flex-wrap gap-1.5">
 				<Badge variant={moveTypeStyles.variant}>
 					{moveTypeStyles.text}
 				</Badge>
@@ -124,19 +124,19 @@
 			</div>
 		</div>
 		<div
-			class="absolute top-3 right-3 text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground"
+			class="text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground md:absolute md:top-3 md:right-3"
 		>
 			{formatDateTime(move.created_at)}
 		</div>
 	</div>
 
-	<div class="mt-3 flex gap-3">
+	<div class="mt-3 flex flex-col gap-3 md:flex-row">
 		<ImageLoader
 			src={move.cover_image_url || FALLBACK_GAME_POSTER}
 			alt={move.item_title || ''}
-			class="h-[140px] w-[105px]"
+			class="h-[100px] w-[75px] flex-shrink-0 md:h-[140px] md:w-[105px]"
 		/>
-		<div class="w-full space-y-3">
+		<div class="w-full min-w-0 space-y-3">
 			{#if isEditMode}
 				<div in:fade>
 					<Input
@@ -147,7 +147,9 @@
 					/>
 				</div>
 			{:else}
-				<div class="text-2xl leading-[29px] font-bold" in:fade>{move.item_title}</div>
+				<div class="text-lg leading-tight font-bold md:text-2xl md:leading-[29px]" in:fade>
+					{move.item_title}
+				</div>
 			{/if}
 
 			{#if isEditMode || isVodsShown}
@@ -170,11 +172,11 @@
 		</div>
 	</div>
 
-	<div class="mt-3 flex justify-between" transition:slide>
+	<div class="mt-3 flex flex-wrap gap-2 justify-between" transition:slide>
 		{#if vodLinks.trim().length > 0}
 			<Toggle
 				size="sm"
-				class="mr-4 w-[105px]"
+				class="min-w-[80px] md:w-[105px]"
 				bind:pressed={isVodsShown}
 				style={isVodsShown
 					? 'background-color: var(--primary); color: var(--primary-foreground);'
@@ -202,9 +204,9 @@
 			</Toggle>
 		{/if}
 		{#if matchedGames.length > 0}
-			<div class="mt-3 flex w-full items-center justify-end gap-3" transition:slide>
-				Также играли:
-				<div>
+			<div class="mt-3 flex w-full flex-wrap items-center justify-end gap-3" transition:slide>
+				<span class="text-sm">Также играли:</span>
+				<div class="flex flex-wrap gap-2">
 					{#each matchedGames as game (game.id)}
 						<PopoverGameCard {game} />
 					{/each}
