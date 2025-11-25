@@ -233,7 +233,7 @@
 					<KickPlayerDialog {player} />
 				{/if}
 			</div>
-			<div class="text-sm font-semibold text-muted-foreground">Выпало на ауке</div>
+			<div class="text-sm font-semibold text-muted-foreground">Игра на стриме</div>
 			<div class="flex gap-2">
 				<ImageLoader
 					class="h-[90px]"
