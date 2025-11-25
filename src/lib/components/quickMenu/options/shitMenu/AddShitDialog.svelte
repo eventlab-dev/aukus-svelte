@@ -25,7 +25,7 @@
 		<Button class="w-full bg-secondary">+1</Button>
 	</DialogTrigger>
 	<DialogContent>
-		<DialogHeader class="text-3xl">Добавить стак подсера за донатгол в 5000?</DialogHeader>
+		<DialogHeader class="text-3xl">Получить стак подсера за донатгол в 5000₽?</DialogHeader>
 		<div class="mt-10 flex justify-center">
 			<Button class="w-100" {onclick} loading={$addShit.isPending}>Да</Button>
 		</div>

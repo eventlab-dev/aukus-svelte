@@ -48,10 +48,12 @@
 			</DialogHeader>
 			{#if outcome === 'shield_removed'}
 				<div class="mt-10 flex justify-center text-lg">
-					{player.username} защитился и потерял стак щита!
+					Не удалось: {player.username} защитился и потерял стак щита!
 				</div>
 			{:else if outcome === 'win'}
-				<div class="mt-10 flex justify-center text-lg">Получилось, можно закидывать!</div>
+				<div class="mt-10 flex justify-center text-lg">
+					Получилось, можно закидывать игру на аук!
+				</div>
 			{:else if outcome === 'out_of_shit'}
 				<div class="mt-10 flex justify-center text-lg">Упс стаков нехватает!</div>
 			{:else}
