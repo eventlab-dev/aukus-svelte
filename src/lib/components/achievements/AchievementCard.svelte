@@ -17,6 +17,12 @@
 	const playersWithAchievement = $derived(
 		$players.filter((player) => player.unlocked_achievements.find((a) => a.id === achievement.id))
 	)
+
+	const playersWithFirstAchievement = $derived(
+		$players.filter((player) =>
+			player.unlocked_achievements.find((a) => a.id === achievement.id && a.is_first)
+		)
+	)
 </script>
 
 {#if skin}
@@ -50,8 +56,13 @@
 			</div>
 		</TooltipTrigger>
 		<TooltipContent side="bottom" align="start" class="flex flex-col gap-1.5">
-			Получили: {#each playersWithAchievement as player (player.slug)}
-				<div>{$playersBySlug[player.slug]?.username}</div>
+			Получили:
+			{#each playersWithAchievement as player (player.slug)}
+				{#if playersWithFirstAchievement.find((p) => p.slug === player.slug)}
+					<div class="text-[#FF881E]">{$playersBySlug[player.slug]?.username}</div>
+				{:else}
+					<div>{$playersBySlug[player.slug]?.username}</div>
+				{/if}
 			{/each}
 		</TooltipContent>
 	</Tooltip>
