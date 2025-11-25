@@ -15,7 +15,6 @@
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
-	import { AukusBaseUrl } from '$lib/client'
 	import PopoverGameCard from './PopoverGameCard.svelte'
 	import DiceRollInfo from './DiceRollInfo.svelte'
 	import Rating from '../moveForm/components/Rating.svelte'
@@ -33,8 +32,8 @@
 	const { move, matchedGames }: Props = $props()
 
 	const { playersBySlug, myPlayer, usersStore, playersMovesStore } = getAppManagerContext()
-	const { myUser, accessToken } = usersStore
-	const { playerMovesQuery } = playersMovesStore
+	const { myUser } = usersStore
+	const { updatePlayerMove, movesQuery } = playersMovesStore
 
 	const player = $derived($playersBySlug[move.player_slug])
 	const canEdit = $derived.by(() => {
@@ -75,36 +74,24 @@
 		if (!pressed && isEditMode) {
 			isSaving = true
 			try {
-				const token = $accessToken
-				if (!token) {
-					throw new Error('Not authenticated')
-				}
-
-				const response = await fetch(`${AukusBaseUrl}/api/players/moves/${move.id}`, {
-					method: 'PATCH',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
-					},
-					body: JSON.stringify({
+				await $updatePlayerMove.mutateAsync({
+					moveId: move.id,
+					data: {
 						item_review: review,
 						item_rating: rating,
 						vod_links: vodLinks || null
-					})
+					}
 				})
-
-				if (!response.ok) {
-					throw new Error(`Failed to update move: ${response.statusText}`)
-				}
 
 				move.item_review = review
 				move.item_rating = rating
 				move.vod_links = vodLinks
 
-				await $playerMovesQuery?.refetch()
+				await $movesQuery?.refetch()
 			} catch (error) {
 				console.error('Failed to save changes:', error)
-				alert('Ошибка при сохранении изменений')
+				const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка'
+				alert(`Ошибка при сохранении: ${errorMessage}`)
 				return
 			} finally {
 				isSaving = false
@@ -126,7 +113,7 @@
 </script>
 
 <div
-	class="group relative flex w-full flex-col rounded-xl bg-card p-3 md:w-[800px]"
+	class="bg-card group relative flex w-full flex-col rounded-xl p-3 md:w-[800px]"
 	id={`move-card-${move.id}`}
 >
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
@@ -138,9 +125,12 @@
 				{#if move.dice_roll_id}
 					<Popover>
 						<PopoverTrigger>
-							<Badge variant="secondary" class="cursor-pointer hover:bg-secondary/80 flex items-center gap-1">
+							<Badge
+								variant="secondary"
+								class="hover:bg-secondary/80 flex cursor-pointer items-center gap-1"
+							>
 								Кубик: {move.dice_roll}
-								<InfoIcon class="w-3 h-3" />
+								<InfoIcon class="h-3 w-3" />
 							</Badge>
 						</PopoverTrigger>
 						<PopoverContent>
@@ -178,7 +168,7 @@
 			</div>
 		</div>
 		<div
-			class="text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground md:absolute md:top-3 md:right-3"
+			class="text-muted-foreground group-data-[current=true]:text-foreground text-sm font-semibold leading-[17px] md:absolute md:right-3 md:top-3"
 		>
 			{formatDateTime(move.created_at)}
 		</div>
@@ -191,7 +181,7 @@
 			class="h-[100px] w-[75px] flex-shrink-0 md:h-[140px] md:w-[105px]"
 		/>
 		<div class="w-full min-w-0 space-y-3">
-			<div class="text-lg leading-tight font-bold md:text-2xl md:leading-[29px]">
+			<div class="text-lg font-bold leading-tight md:text-2xl md:leading-[29px]">
 				{move.item_title}
 			</div>
 
@@ -215,7 +205,7 @@
 							}}
 							simple
 						/>
-						<div class="absolute right-1.5 bottom-1.5 flex flex-col">
+						<div class="absolute bottom-1.5 right-1.5 flex flex-col">
 							<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
 								<WandIcon class="size-6" />
 							</Button>
@@ -225,26 +215,16 @@
 
 					<div>
 						<div class="mb-2 font-medium">Ссылки на записи</div>
-						<Textarea
-							id="vod-links"
-							class="w-full resize-none"
-							bind:value={vodLinks}
-							rows={3}
-						/>
+						<Textarea id="vod-links" class="w-full resize-none" bind:value={vodLinks} rows={3} />
 					</div>
 				</div>
 			{:else if isVodsShown}
 				<div class="mt-5 space-y-3" in:fade>
 					<div class="font-medium">Ссылки на записи</div>
-					<Textarea
-						id="vod-links"
-						class="w-full resize-none"
-						readonly={true}
-						value={vodLinks}
-					/>
+					<Textarea id="vod-links" class="w-full resize-none" readonly={true} value={vodLinks} />
 				</div>
 			{:else}
-				<div class="font-medium text-muted-foreground [&>*]:inline" in:fade>
+				<div class="text-muted-foreground font-medium [&>*]:inline" in:fade>
 					<span>{move.item_rating}/10 — </span>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html parsedReview}
@@ -253,7 +233,7 @@
 		</div>
 	</div>
 
-	<div class="mt-3 flex flex-wrap gap-2 justify-between" transition:slide>
+	<div class="mt-3 flex flex-wrap justify-between gap-2" transition:slide>
 		{#if vodLinks.trim().length > 0}
 			<Toggle
 				size="sm"

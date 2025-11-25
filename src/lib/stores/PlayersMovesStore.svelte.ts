@@ -1,7 +1,8 @@
 import { AukusBaseUrl } from '$lib/client'
 import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { GetPlayerMovesApiPlayersMovesGetData } from '$lib/heyapi/aukus/types.gen'
-import { createQuery } from '@tanstack/svelte-query'
+import { defaultAuth } from '$lib/utils'
+import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { derived, writable } from 'svelte/store'
 
 type QueryParams = GetPlayerMovesApiPlayersMovesGetData['query']
@@ -31,9 +32,41 @@ export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) 
 		return $movesQuery.data?.moves ?? []
 	})
 
+	const updatePlayerMove = createMutation({
+		mutationFn: async ({ 
+			moveId, 
+			data 
+		}: { 
+			moveId: number
+			data: { item_review?: string; item_rating?: number; vod_links?: string | null }
+		}) => {
+			const token = typeof localStorage !== 'undefined' ? localStorage.getItem('auth_token') : null
+			if (!token) {
+				throw new Error('Not authenticated')
+			}
+
+			const response = await fetch(`${AukusBaseUrl}/api/players/moves/${moveId}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify(data)
+			})
+
+			if (!response.ok) {
+				const error = await response.json().catch(() => ({}))
+				throw new Error(error.detail || `Failed to update move: ${response.statusText}`)
+			}
+
+			return response.json()
+		}
+	})
+
 	return {
 		queryParams,
 		movesQuery,
-		playerMoves
+		playerMoves,
+		updatePlayerMove
 	}
 }
