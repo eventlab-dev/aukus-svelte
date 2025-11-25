@@ -58,7 +58,7 @@
 		<CollapsibleTrigger class="w-full">
 			{#if $myUser}
 				<Avatar class="size-[27px]">
-					<AvatarImage src="https://github.com/shadcn.png" />
+					<AvatarImage src={$myUser.avatar_link || "https://github.com/shadcn.png"} />
 					<AvatarFallback class="uppercase">{$myUser.username.slice(0, 2)}</AvatarFallback>
 				</Avatar>
 				{$myUser.username}
