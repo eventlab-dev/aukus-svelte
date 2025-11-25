@@ -142,7 +142,7 @@
 </script>
 
 {#if canEdit}
-	<div class="top-15 z-200 sticky flex w-full justify-center gap-3">
+	<div class="sticky top-15 left-1/2 z-200 flex w-fit -translate-x-1/2 justify-center gap-3">
 		{#if $editMode}
 			<Button onclick={handleClose} variant="destructive">Закрыть</Button>
 			<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>
