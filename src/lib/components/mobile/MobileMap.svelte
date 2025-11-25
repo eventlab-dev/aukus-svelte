@@ -43,8 +43,8 @@
 		<div class="flex w-full gap-[5px]">
 			{#each row as cellId (cellId)}
 				{#if cellId === 0}
-					<div class="flex w-full items-center justify-center gap-1 rounded-md bg-[#222222] p-2">
-						<span class="font-bold text-[#666666]">Старт</span>
+					<div class="flex w-full items-center gap-1 rounded-md bg-[#222222] p-2">
+						<div class="font-bold text-[#666666]">Старт</div>
 						{#if playersByPosition.has(cellId)}
 							<div class="flex flex-wrap items-center justify-center gap-0.5">
 								{#each playersByPosition.get(cellId) as player (player.slug)}
