@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition'
-	import Star from '../icons/StarIcon.svelte'
 	import { Button } from '../ui/button'
 	import PlayerAvatar from './PlayerAvatar.svelte'
 	import type { PlayerData } from '$lib/types'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
 	import FireIcon from '../icons/new/FireIcon.svelte'
+	import StarIcon from '../icons/new/StarIcon.svelte'
 
 	type Props = {
 		player: PlayerData
@@ -66,7 +66,7 @@
 				</div>
 				<div class="flex h-fit items-center gap-[2px] text-sm font-semibold">
 					{Math.round(player.total_score)}
-					<Star />
+					<StarIcon />
 				</div>
 			</div>
 		</div>
