@@ -119,6 +119,37 @@
 					</span>
 				{/each}
 			</div>
+
+			<div class="mt-[40px] text-4xl font-bold">Сделано с использованием</div>
+			<div class="mt-20 flex flex-wrap gap-4">
+				<Button variant="link" href="https://svelte.dev/" target="_blank" rel="noopener noreferrer">
+					<img class="h-20 w-auto" src="https://svelte.dev/favicon.png" alt="svelte" />
+				</Button>
+				<Button
+					variant="link"
+					href="https://tailwindcss.com/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<img
+						class="h-20 w-auto"
+						src="https://tailwindcss.com/favicons/favicon.ico?v=4"
+						alt="tailwind"
+					/>
+				</Button>
+				<Button
+					variant="link"
+					href="https://fastapi.tiangolo.com/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<img
+						class="h-20 w-auto"
+						src="https://fastapi.tiangolo.com/img/favicon.png"
+						alt="tailwind"
+					/>
+				</Button>
+			</div>
 		</div>
 	</div>
 </div>
