@@ -51,7 +51,7 @@
 	])
 </script>
 
-<div class="space-x-3">
+<div class="flex flex-wrap gap-3">
 	{#each items as { href, Icon, color }, idx (idx)}
 		{#if href}
 			<Button

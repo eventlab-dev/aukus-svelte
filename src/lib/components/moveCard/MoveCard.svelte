@@ -31,11 +31,10 @@
 
 	const { move, matchedGames }: Props = $props()
 
-	const { playersBySlug, myPlayer, usersStore, playersMovesStore } = getAppManagerContext()
+	const { myPlayer, usersStore, playersMovesStore } = getAppManagerContext()
 	const { myUser } = usersStore
 	const { updatePlayerMove } = playersMovesStore
 
-	const player = $derived($playersBySlug[move.player_slug])
 	const canEdit = $derived.by(() => {
 		if (move.player_slug === $myPlayer?.slug) {
 			return true
@@ -86,7 +85,7 @@
 				console.error('Failed to save changes:', error)
 				const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка'
 				alert(`Ошибка при сохранении: ${errorMessage}`)
-				
+
 				review = move.item_review || ''
 				rating = move.item_rating
 				vodLinks = move.vod_links || ''
@@ -111,7 +110,7 @@
 </script>
 
 <div
-	class="bg-card group relative flex w-full flex-col rounded-xl p-3 md:w-[800px]"
+	class="group relative flex w-full flex-col rounded-xl bg-card p-3 md:w-[800px]"
 	id={`move-card-${move.id}`}
 >
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
@@ -125,7 +124,7 @@
 						<PopoverTrigger>
 							<Badge
 								variant="secondary"
-								class="hover:bg-secondary/80 flex cursor-pointer items-center gap-1"
+								class="flex cursor-pointer items-center gap-1 hover:bg-secondary/80"
 							>
 								Кубик: {move.dice_roll}
 								<InfoIcon class="h-3 w-3" />
@@ -166,7 +165,7 @@
 			</div>
 		</div>
 		<div
-			class="text-muted-foreground group-data-[current=true]:text-foreground text-sm font-semibold leading-[17px] md:absolute md:right-3 md:top-3"
+			class="text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground md:absolute md:top-3 md:right-3"
 		>
 			{formatDateTime(move.created_at)}
 		</div>
@@ -179,7 +178,7 @@
 			class="h-[100px] w-[75px] flex-shrink-0 md:h-[140px] md:w-[105px]"
 		/>
 		<div class="w-full min-w-0 space-y-3">
-			<div class="text-lg font-bold leading-tight md:text-2xl md:leading-[29px]">
+			<div class="text-lg leading-tight font-bold md:text-2xl md:leading-[29px]">
 				{move.item_title}
 			</div>
 
@@ -203,7 +202,7 @@
 							}}
 							simple
 						/>
-						<div class="absolute bottom-1.5 right-1.5 flex flex-col">
+						<div class="absolute right-1.5 bottom-1.5 flex flex-col">
 							<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
 								<WandIcon class="size-6" />
 							</Button>
@@ -222,7 +221,7 @@
 					<Textarea id="vod-links" class="w-full resize-none" readonly={true} value={vodLinks} />
 				</div>
 			{:else}
-				<div class="text-muted-foreground font-medium [&>*]:inline" in:fade>
+				<div class="font-medium text-muted-foreground [&>*]:inline" in:fade>
 					<span>{move.item_rating}/10 — </span>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html parsedReview}
