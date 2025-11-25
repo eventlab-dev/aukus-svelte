@@ -16,9 +16,10 @@
 	type Props = {
 		data: T[]
 		headers: TableHeaderType<T>[]
+		navigateToPlayer?: (slug: string) => void
 	}
 
-	const { data, headers }: Props = $props()
+	const { data, headers, navigateToPlayer }: Props = $props()
 
 	let sortByKey: keyof T | null = $state(null)
 	let sortOrder: 1 | -1 = $state(1)
@@ -115,9 +116,9 @@
 								style="--player-color: {player.color}"
 								onclick={(e) => {
 									const isMobile = window.matchMedia('(max-width: 768px)').matches
-									if (isMobile && typeof (window as any).navigateToPlayer === 'function') {
+									if (isMobile && navigateToPlayer) {
 										e.preventDefault()
-										;(window as any).navigateToPlayer(player.player_slug)
+										navigateToPlayer(player.player_slug)
 									}
 								}}
 							>

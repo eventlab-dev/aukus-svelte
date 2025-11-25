@@ -46,7 +46,7 @@
 				<MobileMap {navigateToPlayer} />
 			</div>
 		{:else if page === 'table'}
-			<MobileLeaderboard />
+			<MobileLeaderboard {navigateToPlayer} />
 		{:else if page === 'rules'}
 			<MobileRules />
 		{:else if page === 'player' && selectedPlayerSlug}

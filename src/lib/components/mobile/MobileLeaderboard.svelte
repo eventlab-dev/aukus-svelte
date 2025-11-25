@@ -3,6 +3,12 @@
 	import type { StatItem, TableHeaderType } from '$lib/types'
 	import StatTable from '../../../routes/leaderboard/components/StatTable.svelte'
 
+	type Props = {
+		navigateToPlayer: (slug: string) => void
+	}
+
+	let { navigateToPlayer }: Props = $props()
+
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
 
@@ -55,7 +61,8 @@
 <div class="flex flex-col gap-4">
 	<div class="flex gap-2">
 		<button
-			class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {activeTab === 'leaderboard'
+			class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {activeTab ===
+			'leaderboard'
 				? 'bg-primary text-primary-foreground'
 				: 'bg-secondary text-secondary-foreground'}"
 			onclick={() => (activeTab = 'leaderboard')}
@@ -63,7 +70,8 @@
 			Лидеры
 		</button>
 		<button
-			class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {activeTab === 'moves'
+			class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {activeTab ===
+			'moves'
 				? 'bg-primary text-primary-foreground'
 				: 'bg-secondary text-secondary-foreground'}"
 			onclick={() => (activeTab = 'moves')}
@@ -75,11 +83,10 @@
 	<div class="overflow-x-auto">
 		{#key activeTab}
 			{#if activeTab === 'leaderboard'}
-				<StatTable data={statsWithPlayerInfo} headers={leaderboardHeaders} />
+				<StatTable data={statsWithPlayerInfo} headers={leaderboardHeaders} {navigateToPlayer} />
 			{:else}
-				<StatTable data={statsWithPlayerInfo} headers={moveStatHeaders} />
+				<StatTable data={statsWithPlayerInfo} headers={moveStatHeaders} {navigateToPlayer} />
 			{/if}
 		{/key}
 	</div>
 </div>
-
