@@ -11,9 +11,9 @@
 
 	function diceOptionsForPosition(mapPosition: number): DiceOptionOrDrop[] {
 		if (mapPosition >= 81) {
-			return ['drop', '1d2', '1d4', '2d4', '2d6', '3d6']
+			return ['drop', '1d2', '1d4', '1d6']
 		}
-		return ['drop', '1d2', '1d4', '2d4', '2d6', '3d6']
+		return ['drop', '1d2', '1d4', '2d4', '2d6', '3d6', '4d6']
 	}
 
 	const panelParams = $derived.by(() => {

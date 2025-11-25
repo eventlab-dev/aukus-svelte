@@ -50,7 +50,8 @@
 		error?: string
 	}
 
-	const { usersStore, eventDataStore, myPlayer, frontendState, eventActive } = getAppManagerContext()
+	const { usersStore, eventDataStore, myPlayer, frontendState, eventActive } =
+		getAppManagerContext()
 
 	const { saveMoveForm } = usersStore
 	const { eventDataQuery } = eventDataStore
@@ -230,7 +231,7 @@
 						bind:editorState
 						bind:value={form.review}
 						extensions={{
-							placeholderText: 'Отзыв об игре'
+							placeholderText: 'Отзыв'
 						}}
 						simple
 					/>

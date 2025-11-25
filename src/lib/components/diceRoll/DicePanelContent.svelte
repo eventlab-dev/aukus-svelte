@@ -18,6 +18,7 @@
 	type Option = {
 		label: string
 		value: DiceOptionOrDrop
+		tooltip?: string
 	}
 
 	type Props = {
@@ -37,12 +38,13 @@
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions: Option[] = [
 			{ label: 'Дроп', value: 'drop' },
-			{ label: '1d2', value: '1d2' },
-			{ label: '1d4', value: '1d4' },
-			{ label: '2d4', value: '2d4' },
-			{ label: '2d6', value: '2d6' },
-			{ label: '3d6', value: '3d6' },
-			{ label: '4d6', value: '4d6' }
+			{ label: '1d2', value: '1d2', tooltip: 'Игры 0-4ч' },
+			{ label: '1d4', value: '1d4', tooltip: 'Игры 5-10ч' },
+			{ label: '2d4', value: '2d4', tooltip: 'Игры 11-16ч' },
+			{ label: '1d6', value: '1d6', tooltip: 'Игры 11+ч' },
+			{ label: '2d6', value: '2d6', tooltip: 'Игры 17-24ч' },
+			{ label: '3d6', value: '3d6', tooltip: 'Игры 25-40ч' },
+			{ label: '4d6', value: '4d6', tooltip: 'Игры 40+ч' }
 		]
 		return allOptions.filter((option) => diceOptions.includes(option.value))
 	})
@@ -246,7 +248,7 @@
 			<PlayerModel {player} variant="big" />
 		</div>
 		<Separator orientation="vertical" />
-		<div class="flex w-[450px] flex-col gap-3 p-4 font-bold">
+		<div class="flex w-[520px] flex-col gap-3 p-4 font-bold">
 			<div class="font-semibold text-muted-foreground">Варианты хода</div>
 			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
 			<div class="flex w-full gap-2">
