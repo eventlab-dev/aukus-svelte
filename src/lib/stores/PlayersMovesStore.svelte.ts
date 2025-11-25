@@ -1,7 +1,6 @@
 import { AukusBaseUrl } from '$lib/client'
 import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { GetPlayerMovesApiPlayersMovesGetData } from '$lib/heyapi/aukus/types.gen'
-import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query'
 import { derived, writable } from 'svelte/store'
 
@@ -9,7 +8,7 @@ type QueryParams = GetPlayerMovesApiPlayersMovesGetData['query']
 
 export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) {
 	const queryClient = useQueryClient()
-	
+
 	const queryParams = writable<QueryParams>({
 		players: playerSlug ? [playerSlug] : [],
 		start_ts: null,
@@ -35,10 +34,10 @@ export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) 
 	})
 
 	const updatePlayerMove = createMutation({
-		mutationFn: async ({ 
-			moveId, 
-			data 
-		}: { 
+		mutationFn: async ({
+			moveId,
+			data
+		}: {
 			moveId: number
 			data: { item_review?: string; item_rating?: number; vod_links?: string | null }
 		}) => {
@@ -51,7 +50,7 @@ export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) 
 				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`
+					Authorization: `Bearer ${token}`
 				},
 				body: JSON.stringify(data)
 			})
@@ -64,10 +63,10 @@ export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) 
 			return response.json()
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ 
-				queryKey: getPlayerMovesApiPlayersMovesGetOptions({ 
-					baseUrl: AukusBaseUrl 
-				}).queryKey 
+			queryClient.invalidateQueries({
+				queryKey: getPlayerMovesApiPlayersMovesGetOptions({
+					baseUrl: AukusBaseUrl
+				}).queryKey
 			})
 		}
 	})

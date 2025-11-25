@@ -64,7 +64,7 @@
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
-				exclude_player: undefined
+				exclude_player: page.params.player
 			})
 			return
 		}
@@ -85,7 +85,7 @@
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
-				exclude_player: undefined
+				exclude_player: page.params.player
 			})
 		}
 	})

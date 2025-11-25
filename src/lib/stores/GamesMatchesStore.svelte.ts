@@ -28,6 +28,7 @@ export function createGamesMatchesStore({
 		titles: [],
 		exclude_player: playerSlug
 	})
+
 	const historyMatchQuery = createQuery(
 		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
 			// console.log('query', $gamesMatchParams)
@@ -52,16 +53,20 @@ export function createGamesMatchesStore({
 
 	const movesMatchQuery = createQuery(
 		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
+			const playersFilter = $gamesMatchParams.exclude_player
+				? $fullPlayersList.filter((p) => p !== $gamesMatchParams.exclude_player)
+				: $fullPlayersList
+
 			const params = getPlayerMovesApiPlayersMovesGetOptions({
 				baseUrl: AukusBaseUrl,
 				query: {
 					titles: $gamesMatchParams.titles,
 					exclude_ids: $gamesMatchParams.exclude_ids_moves,
 					start_ts: null,
-					players: $fullPlayersList
+					players: playersFilter
 				}
 			})
-			params.enabled = $gamesMatchParams.titles.length > 0 && $fullPlayersList.length > 0
+			params.enabled = $gamesMatchParams.titles.length > 0 && playersFilter.length > 0
 			params.refetchOnWindowFocus = false
 			return params
 		})
