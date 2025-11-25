@@ -488,7 +488,7 @@ export type PlayerMoveItem = {
 /**
  * PlayerMoveType
  */
-export type PlayerMoveType = 'completed' | 'reroll' | 'drop' | 'movie' | 'sheikh_moment' | 'shit_kick';
+export type PlayerMoveType = 'completed' | 'reroll' | 'drop' | 'movie' | 'sheikh_moment';
 
 /**
  * PlayerMovesResponse
