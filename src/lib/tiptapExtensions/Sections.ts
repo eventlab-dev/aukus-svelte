@@ -3,7 +3,7 @@ import { Node, mergeAttributes } from '@tiptap/core'
 import { Plugin, PluginKey } from 'prosemirror-state'
 import { Node as ProseMirrorNode } from 'prosemirror-model'
 
-let debugCounter = 20
+let debugCounter = 200
 
 export function createSectionPlugin(params: { mode: 'full' | 'parse-only' } = { mode: 'full' }) {
 	return Node.create({
