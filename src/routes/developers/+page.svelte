@@ -89,7 +89,7 @@
 			>
 		</div>
 		<div>
-			<div class="text-4xl font-bold">Наши споносры</div>
+			<div class="text-4xl font-bold">Наши спонсоры</div>
 			<div class="mt-[20px] flex flex-col gap-5">
 				{#if sponsors.length === 0}
 					<Button

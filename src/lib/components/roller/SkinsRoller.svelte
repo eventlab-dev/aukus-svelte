@@ -353,15 +353,6 @@
 		// rolling animation will start from reactive watcher above
 	}
 
-	function toggleMute() {
-		if (!soundManager.isMuted) {
-			soundManager.stop()
-			soundManager.mute()
-		} else {
-			soundManager.unmute()
-		}
-	}
-
 	onDestroy(() => {
 		if (animationId !== null) cancelAnimationFrame(animationId)
 		soundManager.stop()
