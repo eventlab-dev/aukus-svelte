@@ -134,7 +134,9 @@
 				<div class="flex flex-col gap-2 rounded-xl bg-card p-3">
 					<div class="flex justify-between text-sm font-semibold text-muted-foreground">
 						<div>Стримит на {platformName}</div>
-						<div>{formatMs((player.current_game_duration || 0) * 1000)}</div>
+						{#if player.current_game_duration}
+							<div>{formatMs((player.current_game_duration || 0) * 1000)}</div>
+						{/if}
 					</div>
 					<div class="flex gap-2">
 						<ImageLoader
