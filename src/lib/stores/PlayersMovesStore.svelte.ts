@@ -2,12 +2,14 @@ import { AukusBaseUrl } from '$lib/client'
 import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { GetPlayerMovesApiPlayersMovesGetData } from '$lib/heyapi/aukus/types.gen'
 import { defaultAuth } from '$lib/utils'
-import { createMutation, createQuery } from '@tanstack/svelte-query'
+import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query'
 import { derived, writable } from 'svelte/store'
 
 type QueryParams = GetPlayerMovesApiPlayersMovesGetData['query']
 
 export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) {
+	const queryClient = useQueryClient()
+	
 	const queryParams = writable<QueryParams>({
 		players: playerSlug ? [playerSlug] : [],
 		start_ts: null,
@@ -60,6 +62,13 @@ export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) 
 			}
 
 			return response.json()
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ 
+				queryKey: getPlayerMovesApiPlayersMovesGetOptions({ 
+					baseUrl: AukusBaseUrl 
+				}).queryKey 
+			})
 		}
 	})
 

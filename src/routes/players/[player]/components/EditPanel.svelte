@@ -25,8 +25,16 @@
 		)
 	)
 
-	function handleSave() {
-		canvasStore.saveCanvasChanges()
+	async function handleSave() {
+		try {
+			await canvasStore.saveCanvasChanges()
+			canvasStore.discardCanvasChanges()
+			editMode.set(false)
+			await $canvasQuery.refetch()
+		} catch (error) {
+			console.error('Failed to save canvas:', error)
+			alert('Ошибка при сохранении изменений')
+		}
 	}
 
 	let fileInput = $state<HTMLInputElement | null>(null)
@@ -134,7 +142,7 @@
 </script>
 
 {#if canEdit}
-	<div class="sticky top-15 z-200 flex w-full justify-center gap-3">
+	<div class="top-15 z-200 sticky flex w-full justify-center gap-3">
 		{#if $editMode}
 			<Button onclick={handleClose} variant="destructive">Закрыть</Button>
 			<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>

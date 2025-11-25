@@ -33,7 +33,7 @@
 
 	const { playersBySlug, myPlayer, usersStore, playersMovesStore } = getAppManagerContext()
 	const { myUser } = usersStore
-	const { updatePlayerMove, movesQuery } = playersMovesStore
+	const { updatePlayerMove } = playersMovesStore
 
 	const player = $derived($playersBySlug[move.player_slug])
 	const canEdit = $derived.by(() => {
@@ -82,16 +82,14 @@
 						vod_links: vodLinks || null
 					}
 				})
-
-				move.item_review = review
-				move.item_rating = rating
-				move.vod_links = vodLinks
-
-				await $movesQuery?.refetch()
 			} catch (error) {
 				console.error('Failed to save changes:', error)
 				const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка'
 				alert(`Ошибка при сохранении: ${errorMessage}`)
+				
+				review = move.item_review || ''
+				rating = move.item_rating
+				vodLinks = move.vod_links || ''
 				return
 			} finally {
 				isSaving = false
