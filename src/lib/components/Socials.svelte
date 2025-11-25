@@ -29,16 +29,6 @@
 			color: 'bg-custom-purple'
 		},
 		{
-			href: socials.donationAlertsLink,
-			Icon: DonationAlertsIcon,
-			color: 'bg-custom-orange'
-		},
-		{
-			href: socials.telegramLink,
-			Icon: TelegramIcon,
-			color: 'bg-custom-blue'
-		},
-		{
 			href: socials.vkLiveLink,
 			Icon: VkLiveIcon,
 			color: 'bg-custom-red'
@@ -47,6 +37,16 @@
 			href: socials.kickLink,
 			Icon: KickIcon,
 			color: 'bg-custom-green'
+		},
+		{
+			href: socials.donationAlertsLink,
+			Icon: DonationAlertsIcon,
+			color: 'bg-custom-orange'
+		},
+		{
+			href: socials.telegramLink,
+			Icon: TelegramIcon,
+			color: 'bg-custom-blue'
 		}
 	])
 </script>
