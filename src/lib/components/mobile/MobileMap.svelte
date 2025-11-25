@@ -4,6 +4,12 @@
 	import { SvelteMap } from 'svelte/reactivity'
 	import PlayerAvatar from '../player/PlayerAvatar.svelte'
 
+	type Props = {
+		navigateToPlayer: (slug: string) => void
+	}
+
+	let { navigateToPlayer }: Props = $props()
+
 	const { players } = getAppManagerContext()
 
 	const playersByPosition = $derived.by(() => {
@@ -37,18 +43,14 @@
 		<div class="flex w-full gap-[5px]">
 			{#each row as cellId (cellId)}
 				{#if cellId === 0}
-					<div
-						class="flex w-full items-center justify-center gap-1 rounded-md bg-[#222222] p-2"
-					>
+					<div class="flex w-full items-center justify-center gap-1 rounded-md bg-[#222222] p-2">
 						<span class="font-bold text-[#666666]">Старт</span>
 						{#if playersByPosition.has(cellId)}
 							<div class="flex flex-wrap items-center justify-center gap-0.5">
 								{#each playersByPosition.get(cellId) as player (player.slug)}
 									<button
 										onclick={() => {
-											if (typeof (window as any).navigateToPlayer === 'function') {
-												;(window as any).navigateToPlayer(player.slug)
-											}
+											navigateToPlayer(player.slug)
 										}}
 										class="relative"
 									>
@@ -72,12 +74,10 @@
 						{/if}
 						{#if playersByPosition.has(cellId)}
 							{@const playersInCell = playersByPosition.get(cellId)}
-							{#if playersInCell.length === 1}
+							{#if playersInCell && playersInCell.length === 1}
 								<button
 									onclick={() => {
-										if (typeof (window as any).navigateToPlayer === 'function') {
-											;(window as any).navigateToPlayer(playersInCell[0].slug)
-										}
+										navigateToPlayer(playersInCell[0].slug)
 									}}
 									class="relative"
 								>
@@ -89,13 +89,13 @@
 									/>
 								</button>
 							{:else}
-								<div class="absolute inset-0 flex flex-wrap items-center justify-center gap-0.5 p-0.5">
+								<div
+									class="absolute inset-0 flex flex-wrap items-center justify-center gap-0.5 p-0.5"
+								>
 									{#each playersInCell as player (player.slug)}
 										<button
 											onclick={() => {
-												if (typeof (window as any).navigateToPlayer === 'function') {
-													;(window as any).navigateToPlayer(player.slug)
-												}
+												navigateToPlayer(player.slug)
 											}}
 											class="relative"
 										>

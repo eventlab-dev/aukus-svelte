@@ -20,7 +20,7 @@
 		return $playersBySlug[selectedPlayerSlug] || null
 	})
 
-	function handlePlayerSelect(slug: string) {
+	function navigateToPlayer(slug: string) {
 		selectedPlayerSlug = slug
 		page = 'player'
 	}
@@ -28,10 +28,6 @@
 	function handleBackToMenu() {
 		page = 'map'
 		selectedPlayerSlug = null
-	}
-
-	if (typeof window !== 'undefined') {
-		;(window as any).navigateToPlayer = handlePlayerSelect
 	}
 </script>
 
@@ -47,7 +43,7 @@
 	<div class="mb-30 p-2">
 		{#if page === 'map'}
 			<div class="mt-6">
-				<MobileMap />
+				<MobileMap {navigateToPlayer} />
 			</div>
 		{:else if page === 'table'}
 			<MobileLeaderboard />
