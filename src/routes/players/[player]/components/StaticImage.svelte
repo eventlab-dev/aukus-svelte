@@ -40,7 +40,7 @@
 
 	const style = $derived.by(() => {
 		const styles = [
-			`top: ${file.y}px`,
+			`top: ${file.y + yOffset}px`,
 			`left: ${file.x + centerX}px`,
 			`width: ${file.width}px`,
 			`height: ${file.height}px`,

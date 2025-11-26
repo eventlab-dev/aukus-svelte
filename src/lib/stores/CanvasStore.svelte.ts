@@ -6,7 +6,7 @@ import {
 } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { CanvasFile } from '$lib/heyapi/aukus/types.gen'
 import { defaultAuth } from '$lib/utils'
-import { createMutation, createQuery } from '@tanstack/svelte-query'
+import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query'
 import { SvelteSet } from 'svelte/reactivity'
 import { derived, get, writable } from 'svelte/store'
 
@@ -17,6 +17,7 @@ export function createCanvasStore() {
 	const deletedImages = writable<number[]>([])
 
 	const playerSlug = writable('')
+	const queryClient = useQueryClient()
 
 	const canvasQuery = createQuery(
 		derived(playerSlug, ($playerSlug) => {
@@ -31,14 +32,34 @@ export function createCanvasStore() {
 	const updateCanvasMutation = createMutation(
 		updateCanvasApiCanvasPlayerSlugUpdatePutMutation({
 			baseUrl: AukusBaseUrl,
-			auth: defaultAuth
+			auth: defaultAuth,
+			onSuccess: async () => {
+				const _playerSlug = get(playerSlug)
+				await queryClient.invalidateQueries({
+					queryKey: getCanvasFilesApiCanvasPlayerSlugGetOptions({
+						baseUrl: AukusBaseUrl,
+						auth: defaultAuth,
+						path: { player_slug: _playerSlug }
+					}).queryKey
+				})
+			}
 		})
 	)
 
 	const uploadImageMutation = createMutation(
 		uploadCanvasImageApiCanvasPlayerSlugUploadPostMutation({
 			baseUrl: AukusBaseUrl,
-			auth: defaultAuth
+			auth: defaultAuth,
+			onSuccess: async () => {
+				const _playerSlug = get(playerSlug)
+				await queryClient.invalidateQueries({
+					queryKey: getCanvasFilesApiCanvasPlayerSlugGetOptions({
+						baseUrl: AukusBaseUrl,
+						auth: defaultAuth,
+						path: { player_slug: _playerSlug }
+					}).queryKey
+				})
+			}
 		})
 	)
 
@@ -82,13 +103,15 @@ export function createCanvasStore() {
 		const _playerSlug = get(playerSlug)
 		const _updatedImages = get(updatedImages)
 		const _deletedImages = get(deletedImages)
-		return get(updateCanvasMutation).mutateAsync({
+		const result = await get(updateCanvasMutation).mutateAsync({
 			body: {
 				files: _updatedImages,
 				delete_ids: _deletedImages
 			},
 			path: { player_slug: _playerSlug }
 		})
+		discardCanvasChanges()
+		return result
 	}
 
 	function discardCanvasChanges() {

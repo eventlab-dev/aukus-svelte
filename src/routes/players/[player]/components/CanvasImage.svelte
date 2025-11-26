@@ -49,7 +49,7 @@
 	$effect(() => {
 		if (konvaImage) {
 			konvaImage.node.scaleX(file.scale_x)
-			konvaImage.node.y(file.y)
+			konvaImage.node.y(file.y + yOffset)
 			konvaImage.node.getLayer()?.batchDraw()
 		}
 	})
@@ -89,7 +89,7 @@
 		const updatedFile = {
 			...file,
 			x: event.target.x() - centerX,
-			y: event.target.y()
+			y: event.target.y() - yOffset
 		}
 		canvasStore.updateImage(updatedFile)
 	}
@@ -110,7 +110,7 @@
 		const updatedFile: CanvasFile = {
 			...file,
 			x: node.x() - centerX,
-			y: node.y(),
+			y: node.y() - yOffset,
 			scale_x: newScaleX,
 			scale_y: newScaleY,
 			rotation: node.rotation(),
@@ -136,7 +136,7 @@
 	bind:this={konvaImage}
 	{image}
 	x={centerX + x}
-	y={y}
+	y={y + yOffset}
 	{scaleX}
 	{scaleY}
 	{height}

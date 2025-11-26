@@ -28,9 +28,7 @@
 	async function handleSave() {
 		try {
 			await canvasStore.saveCanvasChanges()
-			canvasStore.discardCanvasChanges()
 			editMode.set(false)
-			await $canvasQuery.refetch()
 		} catch (error) {
 			console.error('Failed to save canvas:', error)
 			alert('Ошибка при сохранении изменений')
@@ -64,12 +62,12 @@
 					}
 				},
 				{
-					onSettled: () => {
+					onSuccess: () => {
 						URL.revokeObjectURL(image.src)
 						canvasStore.discardCanvasChanges()
-						$canvasQuery.refetch()
 					},
 					onError: (err) => {
+						URL.revokeObjectURL(image.src)
 						alert('Ошибка при загрузке изображения: ' + err.detail)
 					}
 				}
@@ -86,7 +84,6 @@
 	function handleClose() {
 		canvasStore.discardCanvasChanges()
 		editMode.set(false)
-		$canvasQuery.refetch()
 	}
 
 	function handleFlip() {
