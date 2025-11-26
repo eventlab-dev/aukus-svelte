@@ -4,11 +4,11 @@
 	import CanvasImage from './CanvasImage.svelte'
 
 	type Props = {
-		contentCenter: number
+		canvasCenter: number
 		contentHeight: number
 	}
 
-	const { contentCenter, contentHeight }: Props = $props()
+	const { canvasCenter, contentHeight }: Props = $props()
 
 	const { canvasStore } = getAppManagerContext()
 	const { displayImages, selectImage } = canvasStore
@@ -20,8 +20,6 @@
 
 	const canvasWidth = $derived(canvasMaxWidth)
 	const canvasHeight = $derived(Math.min(contentHeight, canvasMaxHeight))
-
-	// $inspect('canvas-width', window.innerWidth, canvasWidth)
 
 	function handleStageClick(event: KonvaMouseEvent) {
 		if (event.target === event.target.getStage()) {
@@ -38,7 +36,7 @@
 	<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
 		<Layer>
 			{#each $displayImages as img (img.id)}
-				<CanvasImage file={img} editable centerX={contentCenter} />
+				<CanvasImage file={img} editable centerX={canvasCenter} />
 			{/each}
 		</Layer>
 	</Stage>

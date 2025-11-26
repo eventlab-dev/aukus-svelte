@@ -99,27 +99,24 @@
 	)
 
 	let contentContainer = $state<HTMLDivElement | null>(null)
-	// let contentWidth = $state(0)
-	let contentCenter = $state(0)
 	let contentHeight = $state(0)
+
+	const canvasCenter = $derived($canvasWidth / 2)
 
 	function handleResize() {
 		if (contentContainer) {
-			const contentSize = contentContainer.clientWidth
-			contentCenter = contentSize / 2
-
 			const left = ($canvasWidth - window.innerWidth) / 2
 			document.getElementById('canvas-container')?.scrollTo({ left, behavior: 'instant' })
 
 			console.log({
-				contentSize,
 				containerWidth: contentContainer.clientWidth,
 				windowWidth: window.innerWidth,
+				canvasWidth: $canvasWidth,
+				canvasCenter,
 				left
 			})
 
 			contentHeight = contentContainer.clientHeight
-			// contentWidth = contentContainer.clientWidth
 		}
 	}
 
@@ -135,11 +132,7 @@
 		}
 	})
 
-	// $inspect('StaticCanvas', $displayImages)
-	// $inspect('StaticCanvas width', canvasWidth)
-	// $inspect('content center', contentCenter)
-
-	const widthStyle = `width: ${$canvasWidth}px` // $derived($canvasWidth > contentWidth ? `width: ${$canvasWidth}px;` : '')
+	const widthStyle = `width: ${$canvasWidth}px`
 </script>
 
 <svelte:head>
@@ -157,9 +150,9 @@
 	>
 		<div class="mx-auto" style={widthStyle}>
 			{#if $editMode}
-				<Canvas {contentCenter} {contentHeight} />
+				<Canvas canvasCenter={canvasCenter} {contentHeight} />
 			{:else}
-				<StaticCanvas {contentCenter} />
+				<StaticCanvas canvasCenter={canvasCenter} />
 			{/if}
 			<div
 				class="relative mx-auto flex w-full flex-col items-center justify-center overflow-auto pt-20"

@@ -28,17 +28,6 @@
 	let konvaImage = $state<ImageType | null>(null)
 	let transformer = $state<TransformerType | null>(null)
 
-	let attachedMoveCard = $state<HTMLElement | null>(null)
-	const yOffset = $derived.by(() => {
-		if (attachedMoveCard) {
-			const scrollElement = document.getElementById('main-scroll-area')?.firstElementChild
-			if (scrollElement) {
-				return attachedMoveCard.getBoundingClientRect().top + scrollElement.scrollTop
-			}
-		}
-		return 0
-	})
-
 	$effect(() => {
 		if (transformer && konvaImage) {
 			transformer.node.nodes([konvaImage.node])
@@ -49,27 +38,8 @@
 	$effect(() => {
 		if (konvaImage) {
 			konvaImage.node.scaleX(file.scale_x)
-			konvaImage.node.y(file.y + yOffset)
+			konvaImage.node.y(file.y)
 			konvaImage.node.getLayer()?.batchDraw()
-		}
-	})
-
-	$effect(() => {
-		if (!attachedMoveCard && file.attach_move_id) {
-			const findCard = () => {
-				const el = document.getElementById(`move-card-${file.attach_move_id}`)
-				if (el) {
-					attachedMoveCard = el
-					observer.disconnect()
-				}
-			}
-			const observer = new MutationObserver(findCard)
-			observer.observe(document.body, { childList: true, subtree: true })
-			findCard()
-			return () => observer.disconnect()
-		}
-		if (file.attach_move_id === null) {
-			attachedMoveCard = null
 		}
 	})
 
@@ -89,9 +59,8 @@
 		const updatedFile = {
 			...file,
 			x: event.target.x() - centerX,
-			y: event.target.y() - yOffset
+			y: event.target.y()
 		}
-		// console.log('drag update y', event.target.y(), yOffset, event.target.y() - yOffset)
 		canvasStore.updateImage(updatedFile)
 	}
 
@@ -99,15 +68,24 @@
 		if (!konvaImage) return
 		const node = konvaImage.node
 
+		const transformScaleX = node.scaleX()
+		const transformScaleY = node.scaleY()
+
+		const newScaleX = transformScaleX > 0 ? 1 : -1
+		const newScaleY = transformScaleY > 0 ? 1 : -1
+
+		node.scaleX(newScaleX)
+		node.scaleY(newScaleY)
+
 		const updatedFile: CanvasFile = {
 			...file,
 			x: node.x() - centerX,
-			y: node.y() - yOffset,
-			scale_x: node.scaleX(),
-			scale_y: node.scaleY(),
+			y: node.y(),
+			scale_x: newScaleX,
+			scale_y: newScaleY,
 			rotation: node.rotation(),
-			width: node.width(),
-			height: node.height()
+			width: Math.abs(Math.max(20, node.width() * transformScaleX)),
+			height: Math.abs(node.height() * transformScaleY)
 		}
 
 		canvasStore.updateImage(updatedFile)
@@ -128,7 +106,7 @@
 	bind:this={konvaImage}
 	{image}
 	x={centerX + x}
-	y={y + yOffset}
+	y={y}
 	{scaleX}
 	{scaleY}
 	{height}
