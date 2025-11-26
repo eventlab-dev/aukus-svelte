@@ -160,7 +160,9 @@
 	>
 		{#if onlyName}
 			<div class="flex w-full justify-center p-1">
-				<p class="relative left-1/2 -translate-x-1/2">{player.username}</p>
+				<div class="relative left-1/2 -translate-x-1/2 rounded-md bg-card p-1">
+					{player.username}
+				</div>
 			</div>
 		{:else}
 			<PlayerModel {player} showUsername variant="small" />
