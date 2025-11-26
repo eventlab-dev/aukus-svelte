@@ -29,7 +29,7 @@
 </script>
 
 <Select type="single" bind:value {disabled}>
-	<SelectTrigger class="w-full">{triggerContent}</SelectTrigger>
+	<SelectTrigger class="w-fit">{triggerContent}</SelectTrigger>
 	<SelectContent>
 		<div class="mb-1 border-b px-2 py-1 text-xs leading-tight text-foreground/90">
 			Если игра пройдена быстрее времени<br />

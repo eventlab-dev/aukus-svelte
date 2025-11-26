@@ -31,7 +31,7 @@
 </script>
 
 <Select type="single" bind:value>
-	<SelectTrigger class="w-full">{triggerContent}</SelectTrigger>
+	<SelectTrigger class="w-60">{triggerContent}</SelectTrigger>
 	<SelectContent>
 		{#each items as { value, label } (value)}
 			{#if value === 'completed' && gameDuration}

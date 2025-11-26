@@ -16,7 +16,7 @@
 
 	const items: ItemType[] = [
 		{ value: 'easy', label: 'Легкая' },
-		{ value: 'normal', label: 'Нормальная / Нет сложности' },
+		{ value: 'normal', label: 'Нормальная / Нет выбора' },
 		{ value: 'hard', label: 'Сложная' },
 		{ value: 'very-hard', label: 'Очень сложная' }
 	]
@@ -25,7 +25,7 @@
 </script>
 
 <Select type="single" {disabled} bind:value>
-	<SelectTrigger class="w-full">{trigger}</SelectTrigger>
+	<SelectTrigger class="w-90 overflow-hidden">{trigger}</SelectTrigger>
 	<SelectContent>
 		{#each items as item (item.value)}
 			<SelectItem value={item.value}>{item.label}</SelectItem>
