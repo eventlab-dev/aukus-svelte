@@ -16,7 +16,7 @@
 
 	const items: ItemType[] = [
 		{ value: 'easy', label: 'Легкая' },
-		{ value: 'normal', label: 'Нормальная' },
+		{ value: 'normal', label: 'Нормальная / Нет сложности' },
 		{ value: 'hard', label: 'Сложная' },
 		{ value: 'very-hard', label: 'Очень сложная' }
 	]
