@@ -28,6 +28,17 @@
 	let konvaImage = $state<ImageType | null>(null)
 	let transformer = $state<TransformerType | null>(null)
 
+	let attachedMoveCard = $state<HTMLElement | null>(null)
+	const yOffset = $derived.by(() => {
+		if (attachedMoveCard) {
+			const scrollElement = document.getElementById('main-scroll-area')?.firstElementChild
+			if (scrollElement) {
+				return attachedMoveCard.getBoundingClientRect().top + scrollElement.scrollTop
+			}
+		}
+		return 0
+	})
+
 	$effect(() => {
 		if (transformer && konvaImage) {
 			transformer.node.nodes([konvaImage.node])
@@ -40,6 +51,25 @@
 			konvaImage.node.scaleX(file.scale_x)
 			konvaImage.node.y(file.y)
 			konvaImage.node.getLayer()?.batchDraw()
+		}
+	})
+
+	$effect(() => {
+		if (!attachedMoveCard && file.attach_move_id) {
+			const findCard = () => {
+				const el = document.getElementById(`move-card-${file.attach_move_id}`)
+				if (el) {
+					attachedMoveCard = el
+					observer.disconnect()
+				}
+			}
+			const observer = new MutationObserver(findCard)
+			observer.observe(document.body, { childList: true, subtree: true })
+			findCard()
+			return () => observer.disconnect()
+		}
+		if (file.attach_move_id === null) {
+			attachedMoveCard = null
 		}
 	})
 
