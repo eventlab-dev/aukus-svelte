@@ -21,8 +21,6 @@
 	const { canvasStore } = getAppManagerContext()
 	const { selectedImage, selectImage } = canvasStore
 
-	const { x, y, scale_x: scaleX, scale_y: scaleY, height, width, rotation, z_index: zIndex } = file
-
 	let image = $state<HTMLImageElement | undefined>(undefined)
 
 	let konvaImage = $state<ImageType | null>(null)
@@ -43,14 +41,6 @@
 		if (transformer && konvaImage) {
 			transformer.node.nodes([konvaImage.node])
 			transformer.node.getLayer()?.batchDraw()
-		}
-	})
-
-	$effect(() => {
-		if (konvaImage) {
-			konvaImage.node.scaleX(file.scale_x)
-			konvaImage.node.y(file.y + yOffset)
-			konvaImage.node.getLayer()?.batchDraw()
 		}
 	})
 
@@ -135,14 +125,14 @@
 <Image
 	bind:this={konvaImage}
 	{image}
-	x={centerX + x}
-	y={y + yOffset}
-	{scaleX}
-	{scaleY}
-	{height}
-	{width}
-	{rotation}
-	{zIndex}
+	x={centerX + file.x}
+	y={file.y + yOffset}
+	scaleX={file.scale_x}
+	scaleY={file.scale_y}
+	height={file.height}
+	width={file.width}
+	rotation={file.rotation}
+	zIndex={file.z_index}
 	draggable={editable}
 	onclick={handleClick}
 	ondragend={handleDragEnd}

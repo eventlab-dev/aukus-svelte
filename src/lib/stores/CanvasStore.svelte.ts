@@ -32,34 +32,14 @@ export function createCanvasStore() {
 	const updateCanvasMutation = createMutation(
 		updateCanvasApiCanvasPlayerSlugUpdatePutMutation({
 			baseUrl: AukusBaseUrl,
-			auth: defaultAuth,
-			onSuccess: async () => {
-				const _playerSlug = get(playerSlug)
-				await queryClient.invalidateQueries({
-					queryKey: getCanvasFilesApiCanvasPlayerSlugGetOptions({
-						baseUrl: AukusBaseUrl,
-						auth: defaultAuth,
-						path: { player_slug: _playerSlug }
-					}).queryKey
-				})
-			}
+			auth: defaultAuth
 		})
 	)
 
 	const uploadImageMutation = createMutation(
 		uploadCanvasImageApiCanvasPlayerSlugUploadPostMutation({
 			baseUrl: AukusBaseUrl,
-			auth: defaultAuth,
-			onSuccess: async () => {
-				const _playerSlug = get(playerSlug)
-				await queryClient.invalidateQueries({
-					queryKey: getCanvasFilesApiCanvasPlayerSlugGetOptions({
-						baseUrl: AukusBaseUrl,
-						auth: defaultAuth,
-						path: { player_slug: _playerSlug }
-					}).queryKey
-				})
-			}
+			auth: defaultAuth
 		})
 	)
 
@@ -103,15 +83,26 @@ export function createCanvasStore() {
 		const _playerSlug = get(playerSlug)
 		const _updatedImages = get(updatedImages)
 		const _deletedImages = get(deletedImages)
-		const result = await get(updateCanvasMutation).mutateAsync({
+		
+		await get(updateCanvasMutation).mutateAsync({
 			body: {
 				files: _updatedImages,
 				delete_ids: _deletedImages
 			},
 			path: { player_slug: _playerSlug }
 		})
+		
+		await queryClient.invalidateQueries({
+			queryKey: getCanvasFilesApiCanvasPlayerSlugGetOptions({
+				baseUrl: AukusBaseUrl,
+				auth: defaultAuth,
+				path: { player_slug: _playerSlug }
+			}).queryKey
+		})
+		
+		await get(canvasQuery).refetch()
+		
 		discardCanvasChanges()
-		return result
 	}
 
 	function discardCanvasChanges() {

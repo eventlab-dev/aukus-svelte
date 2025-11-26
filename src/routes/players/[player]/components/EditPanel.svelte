@@ -37,7 +37,7 @@
 
 	let fileInput = $state<HTMLInputElement | null>(null)
 
-	function handleUpload(event: Event) {
+	async function handleUpload(event: Event) {
 		const input = event.target as HTMLInputElement
 		const file = input?.files?.[0]
 		if (!file) return
@@ -49,9 +49,9 @@
 
 		const image = new window.Image()
 		image.src = URL.createObjectURL(file)
-		image.onload = () => {
-			$uploadImageMutation.mutate(
-				{
+		image.onload = async () => {
+			try {
+				await $uploadImageMutation.mutateAsync({
 					body: {
 						file,
 						height: image.naturalHeight,
@@ -60,18 +60,14 @@
 					path: {
 						player_slug: playerSlug
 					}
-				},
-				{
-					onSuccess: () => {
-						URL.revokeObjectURL(image.src)
-						canvasStore.discardCanvasChanges()
-					},
-					onError: (err) => {
-						URL.revokeObjectURL(image.src)
-						alert('Ошибка при загрузке изображения: ' + err.detail)
-					}
-				}
-			)
+				})
+				URL.revokeObjectURL(image.src)
+				await $canvasQuery.refetch()
+				canvasStore.discardCanvasChanges()
+			} catch (err: any) {
+				URL.revokeObjectURL(image.src)
+				alert('Ошибка при загрузке изображения: ' + err.detail)
+			}
 		}
 	}
 
@@ -139,7 +135,7 @@
 </script>
 
 {#if canEdit}
-	<div class="sticky top-15 left-1/2 z-200 flex w-fit -translate-x-1/2 justify-center gap-3">
+	<div class="top-15 z-200 sticky left-1/2 flex w-fit -translate-x-1/2 justify-center gap-3">
 		{#if $editMode}
 			<Button onclick={handleClose} variant="destructive">Закрыть</Button>
 			<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>
