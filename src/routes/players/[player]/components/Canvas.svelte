@@ -13,12 +13,15 @@
 	const { canvasStore } = getAppManagerContext()
 	const { displayImages, selectImage } = canvasStore
 
-	const canvasMaxSize = 10000
+	const canvasMaxHeight = 10000
+	const canvasMaxWidth = 2500
 
 	let container = $state<HTMLDivElement | null>(null)
 
-	const canvasWidth = $derived(Math.min(container?.offsetWidth ?? window.innerWidth, canvasMaxSize))
-	const canvasHeight = $derived(Math.min(contentHeight, canvasMaxSize))
+	const canvasWidth = $derived(canvasMaxWidth)
+	const canvasHeight = $derived(Math.min(contentHeight, canvasMaxHeight))
+
+	// $inspect('canvas-width', window.innerWidth, canvasWidth)
 
 	function handleStageClick(event: KonvaMouseEvent) {
 		if (event.target === event.target.getStage()) {
@@ -30,7 +33,7 @@
 <div
 	bind:this={container}
 	class="absolute inset-0 min-h-screen overflow-hidden"
-	style="border: 1px solid cyan; z-index: 100; width: {contentCenter * 2}px;"
+	style="border: 1px solid cyan; z-index: 100; width: {canvasWidth + 2}px;"
 >
 	<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
 		<Layer>

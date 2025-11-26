@@ -109,6 +109,7 @@ export function createCanvasStore() {
 	}
 
 	const canvasWidth = derived(displayImages, ($displayImages) => {
+		return 2500
 		let maxLeftX = 0
 		let maxRightX = 0
 		for (const img of $displayImages) {

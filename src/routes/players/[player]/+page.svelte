@@ -99,20 +99,27 @@
 	)
 
 	let contentContainer = $state<HTMLDivElement | null>(null)
-	let contentWidth = $state(0)
+	// let contentWidth = $state(0)
 	let contentCenter = $state(0)
 	let contentHeight = $state(0)
 
 	function handleResize() {
 		if (contentContainer) {
-			const contentSize = Math.max($canvasWidth, contentContainer.clientWidth)
+			const contentSize = contentContainer.clientWidth
 			contentCenter = contentSize / 2
 
-			const left = (contentSize - window.innerWidth) / 2
+			const left = ($canvasWidth - window.innerWidth) / 2
 			document.getElementById('canvas-container')?.scrollTo({ left, behavior: 'instant' })
 
+			console.log({
+				contentSize,
+				containerWidth: contentContainer.clientWidth,
+				windowWidth: window.innerWidth,
+				left
+			})
+
 			contentHeight = contentContainer.clientHeight
-			contentWidth = contentContainer.clientWidth
+			// contentWidth = contentContainer.clientWidth
 		}
 	}
 
@@ -132,7 +139,7 @@
 	// $inspect('StaticCanvas width', canvasWidth)
 	// $inspect('content center', contentCenter)
 
-	const widthStyle = $derived($canvasWidth > contentWidth ? `width: ${$canvasWidth}px;` : '')
+	const widthStyle = `width: ${$canvasWidth}px` // $derived($canvasWidth > contentWidth ? `width: ${$canvasWidth}px;` : '')
 </script>
 
 <svelte:head>
