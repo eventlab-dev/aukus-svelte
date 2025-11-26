@@ -9,7 +9,7 @@
 	import PlayerModel from '../map/PlayerModel.svelte'
 	import { Separator } from '../ui/separator'
 	import ImageLoader from '../ImageLoader.svelte'
-	import { FALLBACK_GAME_POSTER } from '$lib/constants'
+	import { FALLBACK_GAME_POSTER, FALLBACK_AVATAR_URL } from '$lib/constants'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import KickPlayerDialog from '../quickMenu/options/shitMenu/KickPlayerDialog.svelte'
 
@@ -186,10 +186,10 @@
 </script>
 
 {#if canRollDice}
-	<div class="flex min-w-[500px] flex-col gap-3 rounded-3xl bg-card p-3">
-		<div class="font-semibold text-muted-foreground">Бросок кубика</div>
+	<div class="bg-card flex min-w-[500px] flex-col gap-3 rounded-3xl p-3">
+		<div class="text-muted-foreground font-semibold">Бросок кубика</div>
 		<div class="flex gap-3">
-			<div class="flex-1 rounded-2xl bg-secondary p-3">
+			<div class="bg-secondary flex-1 rounded-2xl p-3">
 				<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
 				<p class="text-left text-2xl font-bold">
 					{ladderChance.toFixed(1)}%
@@ -198,7 +198,7 @@
 					{/if}
 				</p>
 			</div>
-			<div class="flex-1 rounded-2xl bg-secondary p-3">
+			<div class="bg-secondary flex-1 rounded-2xl p-3">
 				<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
 				<p class="text-left text-2xl font-bold">
 					{snakeChance.toFixed(1)}%
@@ -217,23 +217,23 @@
 		</Button>
 	</div>
 {:else}
-	<div class="flex rounded-3xl bg-card">
+	<div class="bg-card flex rounded-3xl">
 		<div class="flex w-[450px] flex-col gap-3 p-4">
 			<div class="flex justify-between">
 				<div class="flex items-center gap-2">
 					<Avatar class="size-[27px]">
-						<AvatarImage src="https://github.com/shadcn.png" />
+						<AvatarImage src={player.avatar_link || FALLBACK_AVATAR_URL} />
 						<AvatarFallback class="uppercase">{player.username.slice(0, 2)}</AvatarFallback>
 					</Avatar>
 					<Button variant="link" class="p-0" href={`/players/${player.slug}`}>
-						<div class="text-xl font-bold text-foreground">{player.username}</div>
+						<div class="text-foreground text-xl font-bold">{player.username}</div>
 					</Button>
 				</div>
 				{#if canKick}
 					<KickPlayerDialog {player} />
 				{/if}
 			</div>
-			<div class="text-sm font-semibold text-muted-foreground">Игра на стриме</div>
+			<div class="text-muted-foreground text-sm font-semibold">Игра на стриме</div>
 			<div class="flex gap-2">
 				<ImageLoader
 					class="h-[90px]"
@@ -249,16 +249,16 @@
 		</div>
 		<Separator orientation="vertical" />
 		<div class="flex w-[520px] flex-col gap-3 p-4 font-bold">
-			<div class="font-semibold text-muted-foreground">Варианты хода</div>
+			<div class="text-muted-foreground font-semibold">Варианты хода</div>
 			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
 			<div class="flex w-full gap-2">
-				<div class="flex-1 rounded-2xl bg-secondary p-3">
+				<div class="bg-secondary flex-1 rounded-2xl p-3">
 					<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
 					<p class="text-left text-2xl font-bold">
 						{ladderChance.toFixed(1)}%
 					</p>
 				</div>
-				<div class="flex-1 rounded-2xl bg-secondary p-3">
+				<div class="bg-secondary flex-1 rounded-2xl p-3">
 					<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
 					<p class="text-left text-2xl font-bold">
 						{snakeChance.toFixed(1)}%

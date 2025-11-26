@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { FALLBACK_AVATAR_URL } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import storable from '$lib/stores/LocalStore.svelte'
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
@@ -58,7 +59,7 @@
 		<CollapsibleTrigger class="w-full">
 			{#if $myUser}
 				<Avatar class="size-[27px]">
-					<AvatarImage src={$myUser.avatar_link || "https://github.com/shadcn.png"} />
+					<AvatarImage src={$myUser.avatar_link || FALLBACK_AVATAR_URL} />
 					<AvatarFallback class="uppercase">{$myUser.username.slice(0, 2)}</AvatarFallback>
 				</Avatar>
 				{$myUser.username}

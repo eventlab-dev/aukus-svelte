@@ -150,9 +150,9 @@
 	>
 		<div class="mx-auto" style={widthStyle}>
 			{#if $editMode}
-				<Canvas canvasCenter={canvasCenter} {contentHeight} />
+				<Canvas {canvasCenter} {contentHeight} />
 			{:else}
-				<StaticCanvas canvasCenter={canvasCenter} />
+				<StaticCanvas {canvasCenter} />
 			{/if}
 			<div
 				class="relative mx-auto flex w-full flex-col items-center justify-center overflow-auto pt-20"
@@ -166,7 +166,7 @@
 					class="mb-2.5"
 				/>
 				<div class="mb-[30px] flex flex-col items-center gap-5">
-					<div class="text-5xl leading-[58px] font-bold">
+					<div class="text-5xl font-bold leading-[58px]">
 						{player.first_name} «{player.username}»
 					</div>
 					<Socials {player} />
