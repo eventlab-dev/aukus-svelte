@@ -112,7 +112,7 @@
 		}
 		if (form.status === 'movie')
 			return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
-		if (!form.hltbTime) return { isFormFilled: false, buttonText: 'Выбери время по HLTB' }
+		if (!form.hltbTime) return { isFormFilled: false, buttonText: 'Выбери время' }
 
 		if ($myPlayer?.map_position === LastMapPosition) {
 			return { isFormFilled: true, buttonText: 'Победить в АУКУСЕ 4' }

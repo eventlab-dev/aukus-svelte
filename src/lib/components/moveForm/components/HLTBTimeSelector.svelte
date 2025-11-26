@@ -23,7 +23,9 @@
 		{ value: '40+', label: '40+ часов' }
 	]
 
-	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Время по HLTB')
+	const triggerContent = $derived(
+		items.find((f) => f.value === value)?.label ?? 'Время (по HLTB или свое)'
+	)
 </script>
 
 <Select type="single" bind:value {disabled}>
