@@ -20,7 +20,8 @@
 			try {
 				const data = await fetchFrontVersion()
 				const currentVersion = import.meta.env.PACKAGE_VERSION
-				if (data.version && data.version !== currentVersion && userActivityStore.isInactive) {
+				const isStreamsPage = window.location.pathname === '/streams'
+				if (data.version && data.version !== currentVersion && userActivityStore.isInactive && !isStreamsPage) {
 					console.log(
 						`Version mismatch: current ${currentVersion}, server ${data.version}. User is inactive, reloading...`
 					)
