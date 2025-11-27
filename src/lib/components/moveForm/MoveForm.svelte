@@ -8,6 +8,7 @@
 	import { Button } from '../ui/button'
 	import BoxIcon from '../icons/BoxIcon.svelte'
 	import TiptapEditor from '../richEditor/TiptapEditor.svelte'
+	import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 	import { Editor } from '@tiptap/core'
 	import GameTitle from './components/GameTitle.svelte'
 	import EmotesPopover from './components/EmotesPopover.svelte'
@@ -236,10 +237,20 @@
 						simple
 					/>
 					<div class="absolute right-1.5 bottom-1.5 flex flex-col">
-						<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
-							<WandIcon class="size-6" />
-						</Button>
-						<EmotesPopover onEmoteClick={handleEmoteClick} />
+						<Tooltip>
+							<TooltipTrigger>
+								<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
+									<WandIcon class="size-6" />
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent>Спойлер</TooltipContent>
+						</Tooltip>
+						<Tooltip>
+							<TooltipTrigger>
+								<EmotesPopover onEmoteClick={handleEmoteClick} />
+							</TooltipTrigger>
+							<TooltipContent>Смайлы</TooltipContent>
+						</Tooltip>
 					</div>
 				</div>
 

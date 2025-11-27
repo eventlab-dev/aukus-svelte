@@ -203,10 +203,20 @@
 							simple
 						/>
 						<div class="absolute right-1.5 bottom-1.5 flex flex-col">
-							<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
-								<WandIcon class="size-6" />
-							</Button>
-							<EmotesPopover onEmoteClick={handleEmoteClick} />
+							<Tooltip>
+								<TooltipTrigger>
+									<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
+										<WandIcon class="size-6" />
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent>Спойлер</TooltipContent>
+							</Tooltip>
+							<Tooltip>
+								<TooltipTrigger>
+									<EmotesPopover onEmoteClick={handleEmoteClick} />
+								</TooltipTrigger>
+								<TooltipContent>Смайлы</TooltipContent>
+							</Tooltip>
 						</div>
 					</div>
 
