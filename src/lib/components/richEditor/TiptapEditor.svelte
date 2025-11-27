@@ -75,7 +75,12 @@
 
 	$effect(() => {
 		if (editor) {
-			editor.commands.setContent(content ? JSON.parse(content) : '')
+			const newContent = content ? JSON.parse(content) : ''
+			const currentContent = editor.getJSON()
+			
+			if (JSON.stringify(newContent) !== JSON.stringify(currentContent)) {
+				editor.commands.setContent(newContent)
+			}
 		}
 	})
 
