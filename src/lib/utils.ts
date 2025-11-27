@@ -226,9 +226,7 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 			stats.games_40_plus * 4 +
 			stats.games_dropped * 2 -
 			stats.sheikh_moments * 2) *
-			row +
-		stats.first_achievements * 3 +
-		stats.regular_achievements * 3
+			row + (stats.first_achievements + stats.regular_achievements) * 3
 	return Math.max(0, Math.floor(score))
 }
 
@@ -244,9 +242,8 @@ export function getPlayerScoreDescription(stats: PlayerStatsItem) {
 		`Дропы: -${stats.games_dropped} * 2`,
 		`Шейх-дропы: -${stats.sheikh_moments} * 2`,
 		`Ряд: ${row}`,
-		`Первые ачивки: ${stats.first_achievements}`,
-		`Ачивки: ${stats.regular_achievements}`,
-		`Всего: (${stats.games_0_4 * 0.5} + ${stats.games_5_10 * 1} + ${stats.games_11_16 * 1.5} + ${stats.games_17_24 * 2} + ${stats.games_25_40 * 3} + ${stats.games_40_plus * 4}  - ${stats.games_dropped * 2} - ${stats.sheikh_moments * 2}) * ${row} + ${stats.first_achievements} * 3 + ${stats.regular_achievements} * 3`
+		`Ачивки: ${stats.first_achievements + stats.regular_achievements}`,
+		`Всего: (${stats.games_0_4 * 0.5} + ${stats.games_5_10 * 1} + ${stats.games_11_16 * 1.5} + ${stats.games_17_24 * 2} + ${stats.games_25_40 * 3} + ${stats.games_40_plus * 4}  - ${stats.games_dropped * 2} - ${stats.sheikh_moments * 2}) * ${row} + ${stats.first_achievements + stats.regular_achievements} * 3`
 	]
 }
 
