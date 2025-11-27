@@ -28,7 +28,8 @@ export function createMovementStore({
 	const myMovementState = writable<PlayerMovementState>({
 		rollValues: [],
 		startCell: 0,
-		steps: 0
+		steps: 0,
+		minSteps: 1
 	})
 
 	const registerPlayer = (playerId: string, element: HTMLElement) => {

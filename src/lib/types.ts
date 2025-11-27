@@ -54,6 +54,7 @@ export type PlayerMovementState = {
 	steps: number
 	startCell: number
 	rollValues: number[]
+	minSteps: number
 }
 
 export type CommonGameItem = Omit<GameHistoryItem, 'completion_status'> & {

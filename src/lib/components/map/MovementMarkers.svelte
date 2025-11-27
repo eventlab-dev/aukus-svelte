@@ -7,9 +7,9 @@
 	const { myMovementState, selectedPlayer } = movementStore
 
 	const cells = $derived.by(() => {
-		const { startCell, steps } = $myMovementState
+		const { startCell, steps, minSteps } = $myMovementState
 		const cells = []
-		for (let i = 1; i <= Math.abs(steps); i++) {
+		for (let i = Math.abs(minSteps); i <= Math.abs(steps); i++) {
 			cells.push(steps > 0 ? startCell + i : startCell - i)
 		}
 		return cells
@@ -44,7 +44,7 @@
 			data-variant={cellType(cell.id)}
 			style="top: {cell.position.y + 40}px; left: {cell.position.x + 45}px;"
 		>
-			<div class="w-[2ch]">{showMinus ? '-' : ''}{idx + 1}</div>
+			<div class="w-[2ch]">{showMinus ? '-' : ''}{idx + Math.abs($myMovementState.minSteps)}</div>
 		</div>
 	{/each}
 {/if}

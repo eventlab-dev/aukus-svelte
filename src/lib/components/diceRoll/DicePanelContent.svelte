@@ -96,43 +96,55 @@
 		frontendState.set(null)
 	}
 
-	const { ladderChance, snakeChance, maxRoll, ladders, snakes } = $derived.by(() => {
+	const { ladderChance, snakeChance, maxRoll, minRoll, ladders, snakes } = $derived.by(() => {
 		let maxRoll = 0
+		let minRoll = 1
 		switch (selectedDiceOption) {
 			case '1d6':
 				maxRoll = 6
+				minRoll = 1
 				break
 			case '2d6':
 				maxRoll = 12
+				minRoll = 2
 				break
 			case '3d6':
 				maxRoll = 18
+				minRoll = 3
 				break
 			case '4d6':
 				maxRoll = 24
+				minRoll = 4
 				break
 			case '1d4':
 				maxRoll = 4
+				minRoll = 1
 				break
 			case '2d4':
 				maxRoll = 8
+				minRoll = 2
 				break
 			case '3d4':
 				maxRoll = 12
+				minRoll = 3
 				break
 			case '1d2':
 				maxRoll = 2
+				minRoll = 1
 				break
 			case 'drop': {
 				if (player.map_position >= 81) {
 					maxRoll = -12
+					minRoll = -2
 				} else {
 					maxRoll = -6
+					minRoll = -1
 				}
 				break
 			}
 			case null:
 				maxRoll = 0
+				minRoll = 0
 				break
 			default: {
 				const error: never = selectedDiceOption
@@ -142,7 +154,8 @@
 		const ladders = []
 		const snakes = []
 		const absMaxRoll = Math.abs(maxRoll)
-		for (let i = 1; i <= absMaxRoll; i++) {
+		const possibleSteps = absMaxRoll - Math.abs(minRoll) + 1
+		for (let i = Math.abs(minRoll); i <= absMaxRoll; i++) {
 			const cellId = player.map_position + i * moveDirection
 			if (laddersByCell[cellId]) {
 				ladders.push(cellId)
@@ -152,9 +165,10 @@
 			}
 		}
 		return {
-			ladderChance: (ladders.length / absMaxRoll) * 100,
-			snakeChance: (snakes.length / absMaxRoll) * 100,
+			ladderChance: (ladders.length / possibleSteps) * 100,
+			snakeChance: (snakes.length / possibleSteps) * 100,
 			maxRoll,
+			minRoll,
 			snakes,
 			ladders
 		}
@@ -164,7 +178,8 @@
 		myMovementState.set({
 			rollValues: [],
 			startCell: player.map_position,
-			steps: normalizeSteps(player.map_position, maxRoll)
+			steps: normalizeSteps(player.map_position, maxRoll),
+			minSteps: minRoll
 		})
 		// movementState.set({
 		// 	direction: 'forward',
@@ -186,10 +201,10 @@
 </script>
 
 {#if canRollDice}
-	<div class="bg-card flex min-w-[500px] flex-col gap-3 rounded-3xl p-3">
-		<div class="text-muted-foreground font-semibold">Бросок кубика</div>
+	<div class="flex min-w-[500px] flex-col gap-3 rounded-3xl bg-card p-3">
+		<div class="font-semibold text-muted-foreground">Бросок кубика</div>
 		<div class="flex gap-3">
-			<div class="bg-secondary flex-1 rounded-2xl p-3">
+			<div class="flex-1 rounded-2xl bg-secondary p-3">
 				<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
 				<p class="text-left text-2xl font-bold">
 					{ladderChance.toFixed(1)}%
@@ -198,7 +213,7 @@
 					{/if}
 				</p>
 			</div>
-			<div class="bg-secondary flex-1 rounded-2xl p-3">
+			<div class="flex-1 rounded-2xl bg-secondary p-3">
 				<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
 				<p class="text-left text-2xl font-bold">
 					{snakeChance.toFixed(1)}%
@@ -217,7 +232,7 @@
 		</Button>
 	</div>
 {:else}
-	<div class="bg-card flex rounded-3xl">
+	<div class="flex rounded-3xl bg-card">
 		<div class="flex w-[450px] flex-col gap-3 p-4">
 			<div class="flex justify-between">
 				<div class="flex items-center gap-2">
@@ -226,14 +241,14 @@
 						<AvatarFallback class="uppercase">{player.username.slice(0, 2)}</AvatarFallback>
 					</Avatar>
 					<Button variant="link" class="p-0" href={`/players/${player.slug}`}>
-						<div class="text-foreground text-xl font-bold">{player.username}</div>
+						<div class="text-xl font-bold text-foreground">{player.username}</div>
 					</Button>
 				</div>
 				{#if canKick}
 					<KickPlayerDialog {player} />
 				{/if}
 			</div>
-			<div class="text-muted-foreground text-sm font-semibold">Игра на стриме</div>
+			<div class="text-sm font-semibold text-muted-foreground">Игра на стриме</div>
 			<div class="flex gap-2">
 				<ImageLoader
 					class="h-[90px]"
@@ -249,16 +264,16 @@
 		</div>
 		<Separator orientation="vertical" />
 		<div class="flex w-[520px] flex-col gap-3 p-4 font-bold">
-			<div class="text-muted-foreground font-semibold">Варианты хода</div>
+			<div class="font-semibold text-muted-foreground">Варианты хода</div>
 			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
 			<div class="flex w-full gap-2">
-				<div class="bg-secondary flex-1 rounded-2xl p-3">
+				<div class="flex-1 rounded-2xl bg-secondary p-3">
 					<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
 					<p class="text-left text-2xl font-bold">
 						{ladderChance.toFixed(1)}%
 					</p>
 				</div>
-				<div class="bg-secondary flex-1 rounded-2xl p-3">
+				<div class="flex-1 rounded-2xl bg-secondary p-3">
 					<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
 					<p class="text-left text-2xl font-bold">
 						{snakeChance.toFixed(1)}%
