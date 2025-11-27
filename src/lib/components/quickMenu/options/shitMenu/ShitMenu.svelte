@@ -11,7 +11,7 @@
 <div class="flex flex-col">
 	<div class="flex w-full items-center justify-between gap-1">
 		<div class="flex items-center gap-1">
-			<FireIcon /> Подсеров - {$myPlayer?.shit_stacks}
+			<FireIcon /> Подсёров - {$myPlayer?.shit_stacks}
 		</div>
 		<div class="flex items-center gap-1 text-muted-foreground">
 			{$myPlayer?.shield_stacks}
