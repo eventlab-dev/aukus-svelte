@@ -7,6 +7,7 @@
 	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
 	import FireIcon from '../icons/new/FireIcon.svelte'
 	import StarIcon from '../icons/new/StarIcon.svelte'
+	import { getDirectStreamUrl } from '$lib/utils/streamUtils'
 
 	type Props = {
 		player: PlayerData
@@ -37,6 +38,16 @@
 
 		hoveredPlayer.set(null)
 	}
+
+	function handleAuxClick(event: MouseEvent) {
+		if (event.button === 1) {
+			event.preventDefault()
+			const streamUrl = getDirectStreamUrl(player)
+			if (streamUrl) {
+				window.open(streamUrl, '_blank')
+			}
+		}
+	}
 </script>
 
 <Button
@@ -44,6 +55,7 @@
 	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-xl bg-card p-0! text-foreground select-none hover:no-underline"
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
+	onauxclick={handleAuxClick}
 >
 	<div
 		class="relative flex h-full w-full flex-col gap-[5px] p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 hover:after:opacity-100"
