@@ -46,7 +46,11 @@
 </script>
 
 {#if $myPlayer}
-	<Button onclick={handleClick}>
+	<Button
+		onclick={handleClick}
+		data-active={$myPlayer.skin_rolls > 0}
+		class="data-[active=true]:bg-primary"
+	>
 		<Gift />
 		Ролл скинов ({$myPlayer.skin_rolls})
 	</Button>
