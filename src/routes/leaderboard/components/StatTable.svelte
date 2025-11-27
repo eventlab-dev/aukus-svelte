@@ -96,7 +96,7 @@
 								<TooltipTrigger class="w-full text-left">
 									{player[key]}
 								</TooltipTrigger>
-								<TooltipContent>
+								<TooltipContent class="z-2000">
 									{@const description = getPlayerScoreDescription(player)}
 									{#each description as item (item)}
 										<p>{item}</p>
