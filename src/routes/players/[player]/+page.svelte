@@ -148,7 +148,7 @@
 		id="canvas-container"
 		bind:this={contentContainer}
 	>
-		<div class="mx-auto" style={widthStyle}>
+		<div class="mx-auto mb-80" style={widthStyle}>
 			{#if $editMode}
 				<Canvas {canvasCenter} {contentHeight} />
 			{:else}
@@ -166,7 +166,7 @@
 					class="mb-2.5"
 				/>
 				<div class="mb-[30px] flex flex-col items-center gap-5">
-					<div class="text-5xl font-bold leading-[58px]">
+					<div class="text-5xl leading-[58px] font-bold">
 						{player.first_name} «{player.username}»
 					</div>
 					<Socials {player} />
