@@ -214,7 +214,11 @@
 
 				<div class="flex max-w-158 gap-3">
 					<GameStatusSelector {gameDuration} bind:value={form.status} />
-					<HltbTimeSelector bind:value={form.hltbTime} disabled={form.status !== 'completed'} />
+					<HltbTimeSelector
+						bind:value={form.hltbTime}
+						{gameDuration}
+						disabled={form.status !== 'completed'}
+					/>
 					<DifficultySelector bind:value={form.difficulty} />
 				</div>
 

@@ -64,6 +64,7 @@
 				URL.revokeObjectURL(image.src)
 				await $canvasQuery.refetch()
 				canvasStore.discardCanvasChanges()
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (err: any) {
 				URL.revokeObjectURL(image.src)
 				alert('Ошибка при загрузке изображения: ' + err.detail)
