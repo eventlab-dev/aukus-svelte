@@ -37,7 +37,7 @@
 				</div>
 				<div>{achievement.description}</div>
 				{#if achievement.is_first}
-					<div class="mt-2 text-sm">Ты первый кто открыл это достижение! +10 очков</div>
+					<div class="mt-2 text-sm">Ты первый кто открыл это достижение! +3 очка</div>
 				{:else}
 					<div class="mt-2 text-sm">+3 очка</div>
 				{/if}
