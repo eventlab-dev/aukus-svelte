@@ -196,7 +196,7 @@
 	<DialogContent class="gap-3 overflow-hidden p-3 sm:max-w-[800px]" showCloseButton={false}>
 		<DialogHeader>
 			<DialogTitle aria-describedby="move form">
-				Новый ход — {$myPlayer?.current_game}
+				Новый ход — {form.title || $myPlayer?.current_game}
 			</DialogTitle>
 		</DialogHeader>
 
