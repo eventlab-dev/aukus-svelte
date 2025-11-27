@@ -11,7 +11,7 @@
 	}
 
 	const founder: Developer = {
-		name: 'Lasqa',
+		name: 'Lasqa(feat. Segall)',
 		description: 'Организатор и автор идеи',
 		isFounder: true
 	}
