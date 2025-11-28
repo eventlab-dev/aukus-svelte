@@ -17,7 +17,7 @@
 	let { value = $bindable(), gameDuration }: Props = $props()
 
 	const completedLabel = $derived(
-		gameDuration ? `Прошёл за — ${formatMs(gameDuration * 1000)}` : 'Прошёл'
+		gameDuration ? `Прошёл игру за — ${formatMs(gameDuration * 1000)}` : 'Прошёл игру'
 	)
 	const items: ItemType[] = $derived([
 		{ value: 'completed', label: completedLabel },
@@ -27,7 +27,7 @@
 		{ value: 'sheikh_moment', label: 'Шейх-момент (дроп)' }
 	])
 
-	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Выберите игру')
+	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Выбери игру')
 </script>
 
 <Select type="single" bind:value>
