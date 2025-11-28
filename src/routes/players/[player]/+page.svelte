@@ -152,7 +152,7 @@
 			{#if $editMode}
 				<Canvas {canvasCenter} {contentHeight} />
 			{:else}
-				<StaticCanvas {canvasCenter} />
+				<StaticCanvas {canvasCenter} {contentHeight} />
 			{/if}
 			<div
 				class="relative mx-auto flex w-full flex-col items-center justify-center overflow-auto pt-20"
