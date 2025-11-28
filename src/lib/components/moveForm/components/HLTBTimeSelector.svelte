@@ -12,9 +12,10 @@
 		value?: GameLength
 		disabled?: boolean
 		gameDuration?: number
+		isInvalid?: boolean
 	}
 
-	let { value = $bindable(), disabled, gameDuration }: Props = $props()
+	let { value = $bindable(), disabled, gameDuration, isInvalid = $bindable() }: Props = $props()
 
 	export function getSeconds(hours: number, minutes: number): number {
 		const secondsInHour = 3600
@@ -68,6 +69,11 @@
 	const triggerContent = $derived(
 		items.find((f) => f.value === value)?.label ?? 'Время (по HLTB или свое)'
 	)
+
+	$effect(() => {
+		const selectedItem = items.find((f) => f.value === value)
+		isInvalid = selectedItem?.highlight ?? false
+	})
 </script>
 
 <Select type="single" bind:value {disabled}>

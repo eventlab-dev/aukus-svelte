@@ -69,6 +69,8 @@
 	let selectedGame: IgdbGameSummary | null = $state(null)
 	let isDialogOpen = $state(false)
 	let editorState: { editor: Editor | null } = $state({ editor: null })
+	let isHltbTimeInvalid = $state(false)
+	let bypassClickCount = $state(0)
 
 	const selectedGameStore = writable<IgdbGameSummary | null>(null)
 
@@ -101,24 +103,24 @@
 		return undefined
 	})
 
-	const { isFormFilled, buttonText } = $derived.by(() => {
-		if (!form.title) return { isFormFilled: false, buttonText: 'Введи название игры' }
-		if (!form.status) return { isFormFilled: false, buttonText: 'Выбери статус игры' }
-		if (!form.review) return { isFormFilled: false, buttonText: 'Напиши отзыв' }
-		if (form.status === 'reroll') return { isFormFilled: true, buttonText: 'Рерольнуть игру' }
-		if (form.rating === null) return { isFormFilled: false, buttonText: 'Поставь оценку' }
-		if (!form.difficulty) return { isFormFilled: false, buttonText: 'Выбери сложность' }
+	const { isFormFilled, buttonText, hasHltbError } = $derived.by(() => {
+		if (!form.title) return { isFormFilled: false, buttonText: 'Введи название игры', hasHltbError: false }
+		if (!form.status) return { isFormFilled: false, buttonText: 'Выбери статус игры', hasHltbError: false }
+		if (!form.review) return { isFormFilled: false, buttonText: 'Напиши отзыв', hasHltbError: false }
+		if (form.status === 'reroll') return { isFormFilled: true, buttonText: 'Рерольнуть игру', hasHltbError: false }
+		if (form.rating === null) return { isFormFilled: false, buttonText: 'Поставь оценку', hasHltbError: false }
+		if (!form.difficulty) return { isFormFilled: false, buttonText: 'Выбери сложность', hasHltbError: false }
 		if (form.status === 'drop' || form.status === 'sheikh_moment') {
-			return { isFormFilled: true, buttonText: 'Дропнуть игру' }
+			return { isFormFilled: true, buttonText: 'Дропнуть игру', hasHltbError: false }
 		}
 		if (form.status === 'movie')
-			return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
-		if (!form.hltbTime) return { isFormFilled: false, buttonText: 'Выбери время' }
+			return { isFormFilled: true, buttonText: 'Перейти к броску кубиков', hasHltbError: false }
+		if (!form.hltbTime) return { isFormFilled: false, buttonText: 'Выбери время', hasHltbError: false }
 
 		if ($myPlayer?.map_position === LastMapPosition) {
-			return { isFormFilled: true, buttonText: 'Победить в АУКУСЕ 4' }
+			return { isFormFilled: true, buttonText: 'Победить в АУКУСЕ 4', hasHltbError: isHltbTimeInvalid }
 		}
-		return { isFormFilled: true, buttonText: 'Перейти к броску кубиков' }
+		return { isFormFilled: true, buttonText: 'Перейти к броску кубиков', hasHltbError: isHltbTimeInvalid }
 	})
 
 	async function saveReview() {
@@ -185,6 +187,23 @@
 	function toggleSpoiler() {
 		editorState.editor?.chain().focus().toggleSpoilerMark().setTextSelection(0).run()
 	}
+
+	$effect(() => {
+		if (!isDialogOpen) {
+			bypassClickCount = 0
+		}
+	})
+
+	$effect(() => {
+		form.title
+		form.status
+		form.hltbTime
+		form.rating
+		form.review
+		form.difficulty
+		selectedGame
+		bypassClickCount = 0
+	})
 </script>
 
 <Dialog bind:open={isDialogOpen}>
@@ -216,6 +235,7 @@
 					<GameStatusSelector {gameDuration} bind:value={form.status} />
 					<HltbTimeSelector
 						bind:value={form.hltbTime}
+						bind:isInvalid={isHltbTimeInvalid}
 						{gameDuration}
 						disabled={form.status !== 'completed'}
 					/>
@@ -258,10 +278,34 @@
 					</div>
 				</div>
 
-				<Button class="ml-auto w-[264px]" disabled={!isFormFilled} onclick={saveReview}>
-					<BoxIcon />
-					{buttonText}
-				</Button>
+				<div class="ml-auto w-[264px]">
+					{#if hasHltbError && bypassClickCount < 5}
+						<Tooltip>
+							<TooltipTrigger>
+								<Button
+									class="w-full opacity-50 cursor-not-allowed"
+									onclick={(e) => {
+										e.preventDefault()
+										bypassClickCount++
+									}}
+								>
+									<BoxIcon />
+									{buttonText}
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent class="max-w-[400px]">
+								Ваше время меньше выбранного диапозона HLTB, согласно разделу 2 пункту 5 правил
+								если время прохождения стримером меньше HLTB, то нужно изменить выбранный
+								диапозон на своё время. ({5 - bypassClickCount} нажатий для обхода)
+							</TooltipContent>
+						</Tooltip>
+					{:else}
+						<Button class="w-full" disabled={!isFormFilled} onclick={saveReview}>
+							<BoxIcon />
+							{buttonText}
+						</Button>
+					{/if}
+				</div>
 			</div>
 		</div>
 
