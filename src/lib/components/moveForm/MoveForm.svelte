@@ -29,16 +29,18 @@
 	import { LastMapPosition } from '$lib/constants'
 	import { EventlabBaseUrl } from '$lib/client'
 	import { getGameDurationApiStreamsGameDurationGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
-	import { defaultAuth } from '$lib/utils'
+	import { defaultAuth, formatMs } from '$lib/utils'
 	import { createQuery } from '@tanstack/svelte-query'
 	import { derived, writable } from 'svelte/store'
 	import DifficultySelector from './components/DifficultySelector.svelte'
+	import FinalTimeSelector from './components/FinalTimeSelector.svelte'
 	import type { Difficulty } from '$lib/types'
 
 	type FormType = {
 		title: string
 		status?: PlayerMoveType
 		hltbTime?: GameLength
+		finalTime?: GameLength
 		rating: number | null
 		review: string
 		difficulty?: Difficulty
@@ -61,6 +63,7 @@
 		title: '',
 		status: undefined,
 		hltbTime: undefined,
+		finalTime: undefined,
 		rating: null,
 		review: '',
 		difficulty: undefined
@@ -69,7 +72,7 @@
 	let selectedGame: IgdbGameSummary | null = $state(null)
 	let isDialogOpen = $state(false)
 	let editorState: { editor: Editor | null } = $state({ editor: null })
-	let isHltbTimeInvalid = $state(false)
+	let isFinalTimeInvalid = $state(false)
 	let bypassClickCount = $state(0)
 
 	const selectedGameStore = writable<IgdbGameSummary | null>(null)
@@ -104,23 +107,48 @@
 	})
 
 	const { isFormFilled, buttonText, hasHltbError } = $derived.by(() => {
-		if (!form.title) return { isFormFilled: false, buttonText: 'Введи название игры', hasHltbError: false }
-		if (!form.status) return { isFormFilled: false, buttonText: 'Выбери статус игры', hasHltbError: false }
-		if (!form.review) return { isFormFilled: false, buttonText: 'Напиши отзыв', hasHltbError: false }
-		if (form.status === 'reroll') return { isFormFilled: true, buttonText: 'Рерольнуть игру', hasHltbError: false }
-		if (form.rating === null) return { isFormFilled: false, buttonText: 'Поставь оценку', hasHltbError: false }
-		if (!form.difficulty) return { isFormFilled: false, buttonText: 'Выбери сложность', hasHltbError: false }
+		if (!form.title)
+			return { isFormFilled: false, buttonText: 'Введи название игры', hasHltbError: false }
+		if (!form.status)
+			return { isFormFilled: false, buttonText: 'Выбери статус игры', hasHltbError: false }
+		if (!form.review)
+			return { isFormFilled: false, buttonText: 'Напиши отзыв', hasHltbError: false }
+		if (form.status === 'reroll')
+			return { isFormFilled: true, buttonText: 'Рерольнуть игру', hasHltbError: false }
+		if (form.rating === null)
+			return { isFormFilled: false, buttonText: 'Поставь оценку', hasHltbError: false }
+		if (!form.difficulty)
+			return { isFormFilled: false, buttonText: 'Выбери сложность', hasHltbError: false }
 		if (form.status === 'drop' || form.status === 'sheikh_moment') {
 			return { isFormFilled: true, buttonText: 'Дропнуть игру', hasHltbError: false }
 		}
-		if (form.status === 'movie')
-			return { isFormFilled: true, buttonText: 'Перейти к броску кубиков', hasHltbError: false }
-		if (!form.hltbTime) return { isFormFilled: false, buttonText: 'Выбери время', hasHltbError: false }
+		if (form.status === 'movie') {
+			return {
+				isFormFilled: true,
+				buttonText: 'Перейти к броску кубиков',
+				hasHltbError: false
+			}
+		}
+		if (!form.finalTime) {
+			return {
+				isFormFilled: false,
+				buttonText: 'Выбери время',
+				hasHltbError: false
+			}
+		}
 
 		if ($myPlayer?.map_position === LastMapPosition) {
-			return { isFormFilled: true, buttonText: 'Победить в АУКУСЕ 4', hasHltbError: isHltbTimeInvalid }
+			return {
+				isFormFilled: true,
+				buttonText: 'Победить в АУКУСЕ 4',
+				hasHltbError: isFinalTimeInvalid
+			}
 		}
-		return { isFormFilled: true, buttonText: 'Перейти к броску кубиков', hasHltbError: isHltbTimeInvalid }
+		return {
+			isFormFilled: true,
+			buttonText: 'Перейти к броску кубиков',
+			hasHltbError: isFinalTimeInvalid
+		}
 	})
 
 	async function saveReview() {
@@ -153,7 +181,7 @@
 				type: form.status!,
 				item_review: form.review,
 				item_rating: form.rating,
-				item_length: form.hltbTime || null,
+				item_length: form.finalTime || null,
 				item_title: form.title,
 				game_id: selectedGame?.id || null,
 				cover_image_url: selectedGame?.cover || fallbackPoster,
@@ -172,6 +200,7 @@
 				title: '',
 				status: undefined,
 				hltbTime: undefined,
+				finalTime: undefined,
 				rating: null,
 				review: '',
 				difficulty: undefined
@@ -198,6 +227,7 @@
 		form.title
 		form.status
 		form.hltbTime
+		form.finalTime
 		form.rating
 		form.review
 		form.difficulty
@@ -231,15 +261,38 @@
 					<HltbLink gameTitle={form.title} />
 				</div>
 
-				<div class="flex max-w-158 gap-3">
+				<div class="flex gap-3">
 					<GameStatusSelector {gameDuration} bind:value={form.status} />
-					<HltbTimeSelector
-						bind:value={form.hltbTime}
-						bind:isInvalid={isHltbTimeInvalid}
-						{gameDuration}
-						disabled={form.status !== 'completed'}
-					/>
 					<DifficultySelector bind:value={form.difficulty} />
+				</div>
+
+				<div class="flex gap-3">
+					<div class="flex w-fit flex-col rounded-lg bg-[oklch(0.38_0_0)] p-2">
+						<div>Мое время</div>
+						<div>
+							{#if gameDuration}
+								{formatMs(gameDuration * 1000, { noDays: true })}
+							{:else}не найдено{/if}
+						</div>
+					</div>
+					<div class="flex flex-1 flex-col">
+						<div>HLTB</div>
+						<HltbTimeSelector
+							bind:value={form.hltbTime}
+							{gameDuration}
+							disabled={form.status !== 'completed'}
+						/>
+					</div>
+					<div class="flex flex-1 flex-col">
+						<div>Итоговое время</div>
+						<FinalTimeSelector
+							bind:value={form.finalTime}
+							bind:isInvalid={isFinalTimeInvalid}
+							{gameDuration}
+							hltbTime={form.hltbTime}
+							disabled={form.status !== 'completed'}
+						/>
+					</div>
 				</div>
 
 				<div class="space-y-2.5">
@@ -283,7 +336,7 @@
 						<Tooltip>
 							<TooltipTrigger>
 								<Button
-									class="w-full opacity-50 cursor-not-allowed"
+									class="w-full cursor-not-allowed opacity-50"
 									onclick={(e) => {
 										e.preventDefault()
 										bypassClickCount++
@@ -294,9 +347,11 @@
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent class="max-w-[400px]">
-								Ваше время прохождения по категории стрима меньше выбранного диапозона HLTB, согласно разделу 2 пункту 5 правил
-								если время прохождения стримером меньше HLTB, то нужно изменить выбранный
-								диапозон HLTB на тот, который включает время, в котором прошёл стример. Если вы уверены, что прошли за время в выбранном диапазоне HLTB, то нажмите на кнопку ({5 - bypassClickCount} нажатий для обхода)
+								Ваше время прохождения по категории стрима меньше выбранного диапозона HLTB,
+								согласно разделу 2 пункту 5 правил если время прохождения стримером меньше HLTB, то
+								нужно изменить выбранный диапозон HLTB на тот, который включает время, в котором
+								прошёл стример. Если вы уверены, что прошли за время в выбранном диапазоне HLTB, то
+								нажмите на кнопку ({5 - bypassClickCount} нажатий для обхода)
 							</TooltipContent>
 						</Tooltip>
 					{:else}

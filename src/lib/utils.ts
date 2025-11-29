@@ -26,10 +26,10 @@ export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'childre
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null }
 
-export function formatMs(diffMs: number) {
+export function formatMs(diffMs: number, params: { noDays?: boolean } = {}) {
 	const diffS = Math.floor(diffMs / 1000)
 	const days = Math.floor(diffS / (60 * 60 * 24))
-	const hours = Math.floor((diffS % (60 * 60 * 24)) / (60 * 60))
+	const hoursFull = Math.floor(diffS / (60 * 60))
 	const minutes = Math.floor((diffS % (60 * 60)) / 60)
 	const seconds = diffS % 60
 
@@ -37,18 +37,19 @@ export function formatMs(diffMs: number) {
 	// const minutesPadded = String(minutes).padStart(2, '0');
 	// const secondsPadded = String(seconds).padStart(2, '0');
 
-	if (days > 0) {
-		if (hours === 0) {
+	if (days > 0 && !params.noDays) {
+		const dayHours = Math.floor((diffS % (60 * 60 * 24)) / (60 * 60))
+		if (dayHours === 0) {
 			return `${days}д ${minutes}м`
 		}
-		return `${days}д ${hours}ч ${minutes}м`
+		return `${days}д ${dayHours}ч ${minutes}м`
 	}
 
-	if (hours === 0) {
+	if (hoursFull === 0) {
 		return `${minutes}м ${seconds}с`
 	}
 
-	return `${hours}ч ${minutes}м`
+	return `${hoursFull}ч ${minutes}м`
 }
 
 export function formatDateTime(timestamp: number, options: { onlyHourMinute?: boolean } = {}) {
@@ -226,7 +227,8 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 			stats.games_40_plus * 4 +
 			stats.games_dropped * 2 -
 			stats.sheikh_moments * 2) *
-			row + (stats.first_achievements + stats.regular_achievements) * 3
+			row +
+		(stats.first_achievements + stats.regular_achievements) * 3
 	return Math.max(0, Math.floor(score))
 }
 

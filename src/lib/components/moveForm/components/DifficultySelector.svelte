@@ -25,7 +25,7 @@
 </script>
 
 <Select type="single" {disabled} bind:value>
-	<SelectTrigger class="w-90 overflow-hidden">{trigger}</SelectTrigger>
+	<SelectTrigger class="flex-1 overflow-hidden">{trigger}</SelectTrigger>
 	<SelectContent>
 		{#each items as item (item.value)}
 			<SelectItem value={item.value}>{item.label}</SelectItem>
