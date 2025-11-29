@@ -284,7 +284,7 @@
 						/>
 					</div>
 					<div class="flex flex-1 flex-col">
-						<div>Итоговое время</div>
+						<div>Итоговое время (само)</div>
 						<FinalTimeSelector
 							bind:value={form.finalTime}
 							bind:isInvalid={isFinalTimeInvalid}
