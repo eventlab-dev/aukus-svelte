@@ -17,6 +17,10 @@ export type AchievementItem = {
      */
     reward_skin_id: number;
     visibility: AchievementVisibility;
+    /**
+     * Points
+     */
+    points: number;
 };
 
 /**
@@ -596,6 +600,10 @@ export type PlayerStatsItem = {
      * Regular Achievements
      */
     regular_achievements: number;
+    /**
+     * Games Time
+     */
+    games_time: number;
 };
 
 /**
@@ -697,6 +705,24 @@ export type UnlockedAchievementItem = {
 };
 
 /**
+ * UpdatePlayerMoveRequest
+ */
+export type UpdatePlayerMoveRequest = {
+    /**
+     * Item Review
+     */
+    item_review?: string | null;
+    /**
+     * Item Rating
+     */
+    item_rating?: number | null;
+    /**
+     * Vod Links
+     */
+    vod_links?: string | null;
+};
+
+/**
  * ValidationError
  */
 export type ValidationError = {
@@ -752,16 +778,7 @@ export type UploadCanvasImageApiCanvasPlayerSlugUploadPostData = {
          */
         player_slug: string;
     };
-    query?: {
-        /**
-         * For Update
-         */
-        for_update?: boolean;
-        /**
-         * Allow Acting
-         */
-        allow_acting?: boolean;
-    };
+    query?: never;
     url: '/api/canvas/{player_slug}/upload';
 };
 
@@ -791,16 +808,7 @@ export type UpdateCanvasApiCanvasPlayerSlugUpdatePutData = {
          */
         player_slug: string;
     };
-    query?: {
-        /**
-         * For Update
-         */
-        for_update?: boolean;
-        /**
-         * Allow Acting
-         */
-        allow_acting?: boolean;
-    };
+    query?: never;
     url: '/api/canvas/{player_slug}/update';
 };
 
@@ -1192,6 +1200,34 @@ export type UnlockSkinApiPlayersUnlockSkinPostResponses = {
      * Successful Response
      */
     201: unknown;
+};
+
+export type UpdatePlayerMoveApiPlayersMovesMoveIdPatchData = {
+    body: UpdatePlayerMoveRequest;
+    path: {
+        /**
+         * Move Id
+         */
+        move_id: number;
+    };
+    query?: never;
+    url: '/api/players/moves/{move_id}';
+};
+
+export type UpdatePlayerMoveApiPlayersMovesMoveIdPatchErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UpdatePlayerMoveApiPlayersMovesMoveIdPatchError = UpdatePlayerMoveApiPlayersMovesMoveIdPatchErrors[keyof UpdatePlayerMoveApiPlayersMovesMoveIdPatchErrors];
+
+export type UpdatePlayerMoveApiPlayersMovesMoveIdPatchResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
 };
 
 export type GetCurrentRulesVersionApiRulesCurrentGetData = {
