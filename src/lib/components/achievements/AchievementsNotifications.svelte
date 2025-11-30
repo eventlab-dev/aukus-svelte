@@ -36,11 +36,15 @@
 					</div>
 				</div>
 				<div>{achievement.description}</div>
-				{#if achievement.is_first}
-					<div class="mt-2 text-sm">Ты первый кто открыл это достижение! +3 очка</div>
-				{:else}
-					<div class="mt-2 text-sm">+3 очка</div>
-				{/if}
+
+				<div class="mt-2 flex gap-2 text-sm">
+					{#if achievement.is_first}
+						<div>Ты первый кто открыл это достижение!</div>
+					{/if}
+					{#if achievement.points}
+						<div>+3 очка</div>
+					{/if}
+				</div>
 				<DialogClose>
 					<Button class="w-full">{buttonText}</Button>
 				</DialogClose>
