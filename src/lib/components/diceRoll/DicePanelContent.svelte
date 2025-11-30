@@ -29,11 +29,19 @@
 
 	const { player, canRollDice, diceOptions }: Props = $props()
 
-	const { usersStore, eventDataStore, movementStore, myPlayer, frontendState, notificationStore } =
-		getAppManagerContext()
+	const {
+		usersStore,
+		eventDataStore,
+		movementStore,
+		myPlayer,
+		frontendState,
+		notificationStore,
+		statsStore
+	} = getAppManagerContext()
 	const { finishMove, rollDice } = usersStore
 	const { eventDataQuery } = eventDataStore
 	const { myMovementState } = movementStore
+	const { statsQuery } = statsStore
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions: Option[] = [
@@ -93,6 +101,7 @@
 			notificationStore.notify(moveParams.unlocked_achievements)
 		}
 		await $eventDataQuery.refetch()
+		await $statsQuery.refetch()
 		frontendState.set(null)
 	}
 
