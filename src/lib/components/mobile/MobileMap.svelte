@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerData } from '$lib/types'
+	import { LOGO_URL } from '$lib/constants'
 	import { SvelteMap } from 'svelte/reactivity'
 	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
 	import ArrowUp from '$lib/components/icons/new/ArrowUp.svelte'
@@ -56,6 +57,10 @@
 		/>
 	</button>
 {/snippet}
+
+<div class="mb-5 flex justify-center">
+	<img src={LOGO_URL} alt="logo" class="h-20" />
+</div>
 
 <div class="flex flex-col gap-[5px]">
 	<div class="flex w-full gap-[5px]">
