@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { StatItem, TableHeaderType } from '$lib/types'
+	import { formatMs } from '$lib/utils'
 	import StatTable from '../../../routes/leaderboard/components/StatTable.svelte'
 
 	type Props = {
@@ -24,7 +25,8 @@
 				username: player.username,
 				avatarLink: player.avatar_link ?? '',
 				currentGame: player.current_game ?? '<Нет игры>',
-				position: idx + 1
+				position: idx + 1,
+				games_time: formatMs(playerStat.games_time * 1000)
 			}
 		})
 	})
@@ -42,7 +44,8 @@
 		{ key: 'games_dropped', name: 'Дроп', width: 70 },
 		{ key: 'rerolls', name: 'Рерол', width: 70 },
 		{ key: 'movies', name: 'Фильм', width: 70 },
-		{ key: 'sheikh_moments', name: 'Шейх', width: 70 }
+		{ key: 'sheikh_moments', name: 'Шейх', width: 70 },
+		{ key: 'games_time', name: 'Наиграно', width: 110 }
 	]
 
 	const moveStatHeaders: MoveStatHeadersType = [
