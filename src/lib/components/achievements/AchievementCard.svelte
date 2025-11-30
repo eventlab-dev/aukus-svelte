@@ -45,6 +45,9 @@
 							Откроется когда кто-либо из игроков получит это достижение
 						{:else}
 							{achievement.description}
+							{#if achievement.points === 0}
+								<div class="mt-3">Не дает очков!</div>
+							{/if}
 						{/if}
 					</div>
 				</div>
