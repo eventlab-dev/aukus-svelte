@@ -87,11 +87,24 @@
 				{#each headers as { key } (key)}
 					{#if key === 'avatarLink'}
 						<TableCell class="p-0">
-							<ImageLoader
-								src={player.avatarLink}
-								alt={player.username}
-								class="size-[27px] !rounded-full"
-							/>
+							<Button
+								variant="link"
+								href={$isMobile ? '' : `/players/${player.player_slug}`}
+								class="p-0 text-foreground no-underline hover:text-[var(--player-color)]"
+								style="--player-color: {player.color}"
+								onclick={(e) => {
+									if ($isMobile && navigateToPlayer) {
+										e.preventDefault()
+										navigateToPlayer(player.player_slug)
+									}
+								}}
+							>
+								<ImageLoader
+									src={player.avatarLink}
+									alt={player.username}
+									class="size-[27px] !rounded-full"
+								/>
+							</Button>
 						</TableCell>
 					{:else if key === 'total_score'}
 						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
