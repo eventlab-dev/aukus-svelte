@@ -224,7 +224,7 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 			stats.games_11_16 * 1.5 +
 			stats.games_17_24 * 2 +
 			stats.games_25_40 * 3 +
-			stats.games_40_plus * 4 +
+			stats.games_40_plus * 4 -
 			stats.games_dropped * 2 -
 			stats.sheikh_moments * 2) *
 			row +
