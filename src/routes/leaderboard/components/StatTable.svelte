@@ -104,6 +104,15 @@
 								</TooltipContent>
 							</Tooltip>
 						</TableCell>
+					{:else if key === 'games_time'}
+						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
+							<Tooltip>
+								<TooltipTrigger class="w-full text-left">
+									{player[key]}
+								</TooltipTrigger>
+								<TooltipContent class="z-2000">Суммарное время по категориям стрима</TooltipContent>
+							</Tooltip>
+						</TableCell>
 					{:else if key === 'username'}
 						<TableCell
 							class="py-0 text-foreground data-[active=true]:text-foreground"

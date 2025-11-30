@@ -2,6 +2,7 @@
 	import { fade } from 'svelte/transition'
 	import StatTable from './components/StatTable.svelte'
 	import type { StatItem, TableHeaderType } from '$lib/types'
+	import { formatMs } from '$lib/utils'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
@@ -19,7 +20,8 @@
 				username: player.username,
 				avatarLink: player.avatar_link ?? '',
 				currentGame: player.current_game ?? '<Нет игры>',
-				position: idx + 1
+				position: idx + 1,
+				games_time: formatMs(playerStat.games_time * 1000)
 			}
 		})
 	})
@@ -38,6 +40,7 @@
 		{ key: 'rerolls', name: 'Реролы', width: 102 },
 		{ key: 'movies', name: 'Фильмы', width: 104 },
 		{ key: 'sheikh_moments', name: 'Шейхи', width: 104 },
+		{ key: 'games_time', name: 'Наиграно', width: 100 },
 		{ key: 'currentGame', name: 'Игра на стриме', width: 242 }
 	]
 
