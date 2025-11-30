@@ -67,7 +67,7 @@
 			<img
 				src={skin.image_url}
 				alt="player-skin"
-				class="absolute top-0 h-[80px]"
+				class="absolute top-0 z-25 h-[80px]"
 				style={sizeStyle}
 			/>
 		{:else if skin.slot === 'body'}
