@@ -292,3 +292,74 @@ export function getConfirmationText(): string {
 	const options = ['Круто', 'Тупа топ', 'Я рад', 'Спасибо', 'Ахуеньчик', 'Согласен']
 	return options[Math.floor(Math.random() * options.length)]
 }
+
+export type DiceProbability = Record<number, number>
+
+export function calculateDiceProbability(diceAmount: number, diceType: number): DiceProbability {
+	// Input validation
+	if (diceAmount <= 0 || !Number.isInteger(diceAmount)) {
+		console.error('Dice amount must be a positive integer.')
+		return {}
+	}
+	if (diceType <= 1 || !Number.isInteger(diceType)) {
+		console.error('Dice type (number of sides) must be an integer greater than 1.')
+		return {}
+	}
+
+	// Step 1: Initialize the frequency map for the first die (1dD).
+	// Each face value (1 to diceType) has a frequency of 1.
+	let currentFrequencies: Record<number, number> = {}
+	for (let face = 1; face <= diceType; face++) {
+		currentFrequencies[face] = 1
+	}
+
+	// Step 2: Iterate to calculate the frequency distribution for the remaining dice.
+	// This loop runs (diceAmount - 1) times.
+	for (let d = 2; d <= diceAmount; d++) {
+		const nextFrequencies: Record<number, number> = {}
+
+		// Get the possible sums and their frequencies from the previous roll (d-1 dice)
+		const previousSums = Object.keys(currentFrequencies).map(Number)
+
+		// Iterate through every previous sum and every possible face value of the new die
+		for (const prevSum of previousSums) {
+			const prevFrequency = currentFrequencies[prevSum]
+
+			// Add the next die's value (1 to diceType) to the previous sum
+			for (let newFace = 1; newFace <= diceType; newFace++) {
+				const newSum = prevSum + newFace
+
+				// The frequency of the new sum is increased by the frequency of the previous sum
+				nextFrequencies[newSum] = (nextFrequencies[newSum] || 0) + prevFrequency
+			}
+		}
+		// Update the map for the next iteration
+		currentFrequencies = nextFrequencies
+	}
+
+	// Step 3: Convert frequencies to probabilities.
+
+	// Calculate the total number of possible outcomes: (diceType) ^ (diceAmount)
+	const totalOutcomes = Math.pow(diceType, diceAmount)
+
+	const probabilityDistribution: DiceProbability = {}
+	const sortedSums = Object.keys(currentFrequencies)
+		.map(Number)
+		.sort((a, b) => a - b)
+
+	// let totalProbabilityCheck = 0
+
+	for (const sum of sortedSums) {
+		const frequency = currentFrequencies[sum]
+		const probability = frequency / totalOutcomes
+
+		// Store the probability, rounded for cleaner display
+		probabilityDistribution[sum] = parseFloat(probability.toFixed(6))
+		// totalProbabilityCheck += probability
+	}
+
+	// This check should always be 1.0, but we display the sums and probabilities
+	// console.log('Total Probability Check (should be 1):', totalProbabilityCheck)
+
+	return probabilityDistribution
+}

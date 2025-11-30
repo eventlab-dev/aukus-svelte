@@ -5,7 +5,7 @@
 	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
 	import ToggleButtonGroup from './ToggleButtonGroup.svelte'
 	import type { PlayerData } from '$lib/types'
-	import { normalizeSteps } from '$lib/utils'
+	import { normalizeSteps, calculateDiceProbability, type DiceProbability } from '$lib/utils'
 	import PlayerModel from '../map/PlayerModel.svelte'
 	import { Separator } from '../ui/separator'
 	import ImageLoader from '../ImageLoader.svelte'
@@ -108,46 +108,57 @@
 	const { ladderChance, snakeChance, maxRoll, minRoll, ladders, snakes } = $derived.by(() => {
 		let maxRoll = 0
 		let minRoll = 1
+		let probabilities: DiceProbability | null = null
 		switch (selectedDiceOption) {
 			case '1d6':
 				maxRoll = 6
 				minRoll = 1
+				probabilities = calculateDiceProbability(1, 6)
 				break
 			case '2d6':
 				maxRoll = 12
 				minRoll = 2
+				probabilities = calculateDiceProbability(2, 6)
 				break
 			case '3d6':
 				maxRoll = 18
 				minRoll = 3
+				probabilities = calculateDiceProbability(3, 6)
 				break
 			case '4d6':
 				maxRoll = 24
 				minRoll = 4
+				probabilities = calculateDiceProbability(4, 6)
 				break
 			case '1d4':
 				maxRoll = 4
 				minRoll = 1
+				probabilities = calculateDiceProbability(1, 4)
 				break
 			case '2d4':
 				maxRoll = 8
 				minRoll = 2
+				probabilities = calculateDiceProbability(2, 4)
 				break
 			case '3d4':
 				maxRoll = 12
 				minRoll = 3
+				probabilities = calculateDiceProbability(3, 4)
 				break
 			case '1d2':
 				maxRoll = 2
 				minRoll = 1
+				probabilities = calculateDiceProbability(1, 2)
 				break
 			case 'drop': {
 				if (player.map_position >= 81) {
 					maxRoll = -12
 					minRoll = -2
+					probabilities = calculateDiceProbability(2, 6)
 				} else {
 					maxRoll = -6
 					minRoll = -1
+					probabilities = calculateDiceProbability(1, 6)
 				}
 				break
 			}
@@ -163,7 +174,6 @@
 		const ladders = []
 		const snakes = []
 		const absMaxRoll = Math.abs(maxRoll)
-		const possibleSteps = absMaxRoll - Math.abs(minRoll) + 1
 		for (let i = Math.abs(minRoll); i <= absMaxRoll; i++) {
 			const cellId = player.map_position + i * moveDirection
 			if (laddersByCell[cellId]) {
@@ -173,9 +183,32 @@
 				snakes.push(cellId)
 			}
 		}
+
+		// console.log('prob', probabilities)
+
+		const ladderChance =
+			100 *
+			ladders.reduce((acc, v) => {
+				const diff = Math.abs(v - player.map_position)
+				if (probabilities[diff]) {
+					return acc + probabilities[diff]
+				}
+				return acc
+			}, 0)
+
+		const snakeChance =
+			100 *
+			snakes.reduce((acc, v) => {
+				const diff = Math.abs(v - player.map_position)
+				if (probabilities[diff]) {
+					return acc + probabilities[diff]
+				}
+				return acc
+			}, 0)
+
 		return {
-			ladderChance: (ladders.length / possibleSteps) * 100,
-			snakeChance: (snakes.length / possibleSteps) * 100,
+			ladderChance,
+			snakeChance,
 			maxRoll,
 			minRoll,
 			snakes,
