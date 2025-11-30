@@ -2,6 +2,9 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerData } from '$lib/types'
 	import { SvelteMap } from 'svelte/reactivity'
+	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
+	import ArrowUp from '$lib/components/icons/new/ArrowUp.svelte'
+	import ArrowDown from '$lib/components/icons/new/ArrowDown.svelte'
 	import PlayerAvatar from '../player/PlayerAvatar.svelte'
 
 	type Props = {
@@ -38,7 +41,44 @@
 	]
 </script>
 
+{#snippet playerIcon(player: PlayerData)}
+	<button
+		onclick={() => {
+			navigateToPlayer(player.slug)
+		}}
+		class="relative"
+	>
+		<PlayerAvatar
+			src={player.avatar_link ?? ''}
+			name={player.username}
+			isOnline={Boolean(player.is_online)}
+			size="small"
+		/>
+	</button>
+{/snippet}
+
 <div class="flex flex-col gap-[5px]">
+	<div class="flex w-full gap-[5px]">
+		<div class="flex w-full gap-1 font-bold text-[#666666]">
+			<div class="flex w-fit items-center gap-[10px] rounded-md bg-[#222222] px-1 py-2">
+				<div>101</div>
+				{#if playersByPosition.get(101)}
+					{#each playersByPosition.get(101) as player (player.slug)}
+						{@render playerIcon(player)}
+					{/each}
+				{/if}
+			</div>
+			<div class="flex flex-1 gap-[5px] rounded-md bg-[#222222] p-2">
+				<div>1</div>
+			</div>
+			<div class="flex flex-1 gap-[5px] rounded-md bg-[#222222] p-2">
+				<div>2</div>
+			</div>
+			<div class="flex flex-1 gap-[5px] rounded-md bg-[#222222] p-2">
+				<div>3</div>
+			</div>
+		</div>
+	</div>
 	{#each cells as row, idx (idx)}
 		<div class="flex w-full gap-[5px]">
 			{#each row as cellId (cellId)}
@@ -48,19 +88,7 @@
 						{#if playersByPosition.has(cellId)}
 							<div class="flex flex-wrap items-center justify-center gap-0.5">
 								{#each playersByPosition.get(cellId) as player (player.slug)}
-									<button
-										onclick={() => {
-											navigateToPlayer(player.slug)
-										}}
-										class="relative"
-									>
-										<PlayerAvatar
-											src={player.avatar_link ?? ''}
-											name={player.username}
-											isOnline={Boolean(player.is_online)}
-											size="small"
-										/>
-									</button>
+									{@render playerIcon(player)}
 								{/each}
 							</div>
 						{/if}
@@ -72,40 +100,22 @@
 						{#if cellId % 10 === 0 && !playersByPosition.has(cellId)}
 							{cellId}
 						{/if}
+						{#if laddersByCell[cellId]}
+							<ArrowUp color="green" />
+						{/if}
+						{#if snakesByCell[cellId]}
+							<ArrowDown color="red" />
+						{/if}
 						{#if playersByPosition.has(cellId)}
 							{@const playersInCell = playersByPosition.get(cellId)}
 							{#if playersInCell && playersInCell.length === 1}
-								<button
-									onclick={() => {
-										navigateToPlayer(playersInCell[0].slug)
-									}}
-									class="relative"
-								>
-									<PlayerAvatar
-										src={playersInCell[0].avatar_link ?? ''}
-										name={playersInCell[0].username}
-										isOnline={Boolean(playersInCell[0].is_online)}
-										size="small"
-									/>
-								</button>
+								{@render playerIcon(playersInCell[0])}
 							{:else}
 								<div
 									class="absolute inset-0 flex flex-wrap items-center justify-center gap-0.5 p-0.5"
 								>
 									{#each playersInCell as player (player.slug)}
-										<button
-											onclick={() => {
-												navigateToPlayer(player.slug)
-											}}
-											class="relative"
-										>
-											<PlayerAvatar
-												src={player.avatar_link ?? ''}
-												name={player.username}
-												isOnline={Boolean(player.is_online)}
-												size="tiny"
-											/>
-										</button>
+										{@render playerIcon(player)}
 									{/each}
 								</div>
 							{/if}
