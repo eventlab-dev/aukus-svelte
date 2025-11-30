@@ -61,46 +61,27 @@
 		return '0-4'
 	}
 
+	let recommended = $state<GameLength | null>(null)
+
 	$effect(() => {
 		if (gameDuration && hltbTime) {
-			value = getSmallest(gameDuration, hltbTime)
+			recommended = getSmallest(gameDuration, hltbTime)
+			value = recommended
 		}
 	})
 
 	const items = $derived.by(() => {
-		const all: ItemType[] = []
-		all.push({ value: '0-4', label: '0 — 4 часов', highlight: false })
-
-		if (gameDuration && gameDuration < hours_4_30) {
-			all.push({ value: '5-10', label: '5 — 10 часов', highlight: true })
-		} else {
-			all.push({ value: '5-10', label: '5 — 10 часов', highlight: false })
+		const all: ItemType[] = [
+			{ value: '0-4', label: '0 — 4 часов', highlight: false },
+			{ value: '5-10', label: '5 — 10 часов', highlight: false },
+			{ value: '11-16', label: '11 — 16 часов', highlight: false },
+			{ value: '17-24', label: '17 — 24 часов', highlight: false },
+			{ value: '25-40', label: '25 — 39 часов', highlight: false },
+			{ value: '40+', label: '40+ часов', highlight: false }
+		]
+		if (recommended) {
+			all.forEach((item) => (item.highlight = item.value !== recommended))
 		}
-
-		if (gameDuration && gameDuration <= hours_10_30) {
-			all.push({ value: '11-16', label: '11 — 16 часов', highlight: true })
-		} else {
-			all.push({ value: '11-16', label: '11 — 16 часов', highlight: false })
-		}
-
-		if (gameDuration && gameDuration <= hours_16_30) {
-			all.push({ value: '17-24', label: '17 — 24 часов', highlight: true })
-		} else {
-			all.push({ value: '17-24', label: '17 — 24 часов', highlight: false })
-		}
-
-		if (gameDuration && gameDuration <= hours_24_30) {
-			all.push({ value: '25-40', label: '25-39 часов', highlight: true })
-		} else {
-			all.push({ value: '25-40', label: '25-39 часов', highlight: false })
-		}
-
-		if (gameDuration && gameDuration <= hours_40_00) {
-			all.push({ value: '40+', label: '40+ часов', highlight: true })
-		} else {
-			all.push({ value: '40+', label: '40+ часов', highlight: false })
-		}
-
 		return all
 	})
 
