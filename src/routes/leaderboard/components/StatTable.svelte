@@ -12,6 +12,7 @@
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import type { StatItem, TableHeaderType } from '$lib/types'
 	import { getPlayerScoreDescription } from '$lib/utils'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type Props = {
 		data: T[]
@@ -20,6 +21,8 @@
 	}
 
 	const { data, headers, navigateToPlayer }: Props = $props()
+
+	const { isMobile } = getAppManagerContext()
 
 	let sortByKey: keyof T | null = $state(null)
 	let sortOrder: 1 | -1 = $state(1)
@@ -120,12 +123,11 @@
 						>
 							<Button
 								variant="link"
-								href={`/players/${player.player_slug}`}
+								href={$isMobile ? '' : `/players/${player.player_slug}`}
 								class="p-0 text-foreground no-underline hover:text-[var(--player-color)]"
 								style="--player-color: {player.color}"
 								onclick={(e) => {
-									const isMobile = window.matchMedia('(max-width: 768px)').matches
-									if (isMobile && navigateToPlayer) {
+									if ($isMobile && navigateToPlayer) {
 										e.preventDefault()
 										navigateToPlayer(player.player_slug)
 									}
