@@ -40,7 +40,7 @@
 		{ key: 'rerolls', name: 'Реролы', width: 102 },
 		{ key: 'movies', name: 'Фильмы', width: 104 },
 		{ key: 'sheikh_moments', name: 'Шейхи', width: 104 },
-		{ key: 'games_time', name: 'Наиграно', width: 100 },
+		{ key: 'games_time', name: 'Наиграно', width: 110 },
 		{ key: 'currentGame', name: 'Игра на стриме', width: 242 }
 	]
 
