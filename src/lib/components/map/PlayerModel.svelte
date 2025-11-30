@@ -63,18 +63,18 @@
 				class="absolute top-[0px] left-1/2 z-25 h-[80px] w-auto -translate-x-1/2"
 				style={sizeStyle}
 			/>
-		{:else if skin.slot === 'body'}
-			<img
-				src={skin.image_url}
-				alt="player-skin"
-				class="absolute top-[0px] left-1/2 z-20 h-[80px] w-auto -translate-x-1/2"
-				style={sizeStyle}
-			/>
 		{:else if skin.slot === 'item'}
 			<img
 				src={skin.image_url}
 				alt="player-skin"
 				class="absolute top-0 h-[80px]"
+				style={sizeStyle}
+			/>
+		{:else if skin.slot === 'body'}
+			<img
+				src={skin.image_url}
+				alt="player-skin"
+				class="absolute top-[0px] left-1/2 z-20 h-[80px] w-auto -translate-x-1/2"
 				style={sizeStyle}
 			/>
 		{/if}
