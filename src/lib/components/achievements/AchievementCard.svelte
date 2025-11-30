@@ -46,7 +46,7 @@
 						{:else}
 							{achievement.description}
 							{#if achievement.points === 0}
-								<div class="mt-3">Не дает очков!</div>
+								<div class="mt-3 underline">Не дает очков!</div>
 							{/if}
 						{/if}
 					</div>
