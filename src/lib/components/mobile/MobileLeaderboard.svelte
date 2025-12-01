@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { StatItem, TableHeaderType } from '$lib/types'
-	import { formatMs } from '$lib/utils'
 	import StatTable from '../../../routes/leaderboard/components/StatTable.svelte'
 
 	type Props = {
@@ -26,7 +25,7 @@
 				avatarLink: player.avatar_link ?? '',
 				currentGame: player.current_game ?? '<Нет игры>',
 				position: idx + 1,
-				games_time: formatMs(playerStat.games_time * 1000)
+				games_time: playerStat.games_time * 1000
 			}
 		})
 	})

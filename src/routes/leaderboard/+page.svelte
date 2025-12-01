@@ -2,7 +2,6 @@
 	import { fade } from 'svelte/transition'
 	import StatTable from './components/StatTable.svelte'
 	import type { StatItem, TableHeaderType } from '$lib/types'
-	import { formatMs } from '$lib/utils'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
@@ -21,7 +20,7 @@
 				avatarLink: player.avatar_link ?? '',
 				currentGame: player.current_game ?? '<Нет игры>',
 				position: idx + 1,
-				games_time: formatMs(playerStat.games_time * 1000)
+				games_time: playerStat.games_time * 1000
 			}
 		})
 	})

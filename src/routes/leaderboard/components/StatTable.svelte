@@ -11,7 +11,7 @@
 	} from '$lib/components/ui/table'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import type { StatItem, TableHeaderType } from '$lib/types'
-	import { getPlayerScoreDescription } from '$lib/utils'
+	import { getPlayerScoreDescription, formatMs } from '$lib/utils'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type Props = {
@@ -124,7 +124,7 @@
 						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
 							<Tooltip>
 								<TooltipTrigger class="w-full text-left">
-									{player[key]}
+									{formatMs(player[key] as number)}
 								</TooltipTrigger>
 								<TooltipContent class="z-2000">Суммарное время по категориям стрима</TooltipContent>
 							</Tooltip>
