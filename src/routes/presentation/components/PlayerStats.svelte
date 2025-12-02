@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PlayerData } from '$lib/types'
+	import { formatDuration } from '$lib/utils'
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import StatsCards from './StatsCards.svelte'
@@ -26,7 +27,7 @@
 				{ title: 'Ходов сделано', value: '0' },
 				{ title: 'Игр дропнуто', value: stats.games_dropped.toString() },
 				{ title: 'Шейх-моментов', value: stats.sheikh_moments.toString() },
-				{ title: 'Часов наиграно', value: stats.games_time.toString() },
+				{ title: 'Часов наиграно', value: formatDuration(stats.games_time).toString() },
 				{ title: 'Фильмов просмотрено', value: stats.movies.toString() },
 				{ title: 'Средняя оценка игр', value: '0' },
 				{

@@ -5,7 +5,7 @@
 
 	const { statsStore, eventDataStore } = getAppManagerContext()
 	const { stats } = statsStore
-	const { achievementsWithScores } = eventDataStore
+	const { achievementsWithScores, achievements } = eventDataStore
 
 	const showStats = $derived.by(() => {
 		const completed = $stats.reduce((acc, item) => acc + item.games_completed, 0)
@@ -13,10 +13,12 @@
 		const rerolls = $stats.reduce((acc, item) => acc + item.rerolls, 0)
 		const sheikhs = $stats.reduce((acc, item) => acc + item.sheikh_moments, 0)
 		const movies = $stats.reduce((acc, item) => acc + item.movies, 0)
-		const unlockedAchievements = $stats.reduce(
-			(acc, item) => acc + item.first_achievements + item.regular_achievements,
-			0
-		)
+
+		const achievementsIds = $achievementsWithScores.map((a) => a.id)
+
+		const unlockedAchievements = $achievements.filter(
+			(a) => a.visibility !== 'hidden' && achievementsIds.includes(a.id)
+		).length
 		const totalAchievements = $achievementsWithScores.length
 
 		return [
