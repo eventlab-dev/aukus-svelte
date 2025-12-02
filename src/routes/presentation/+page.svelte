@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import TotalStats from './components/TotalStats.svelte'
 
 	const { playersInOrder } = getAppManagerContext()
 
@@ -30,8 +31,16 @@
 	{#if onLastPage}
 		<div class="w-[220px]"></div>
 	{:else}
-		<Button class="w-[220px]" variant="secondary" onclick={nextPage}
-			>Дальше ({pageId + 1}/{pagesAmount}) {'->'}</Button
-		>
+		<Button class="w-[220px]" variant="secondary" onclick={nextPage}>
+			Дальше ({pageId + 1}/{pagesAmount}) {'->'}
+		</Button>
 	{/if}
 </div>
+
+{#if pageId === 0}
+	<div class="mt-[220px] flex justify-center">
+		<TotalStats />
+	</div>
+{:else}
+	<div>Player stats</div>
+{/if}
