@@ -355,7 +355,12 @@
 							</TooltipContent>
 						</Tooltip>
 					{:else}
-						<Button class="w-full" disabled={!isFormFilled} onclick={saveReview}>
+						<Button
+							class="w-full"
+							disabled={!isFormFilled}
+							onclick={saveReview}
+							loading={$saveMoveForm.isPending}
+						>
 							<BoxIcon />
 							{buttonText}
 						</Button>
