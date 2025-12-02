@@ -11,7 +11,7 @@
 	let { stats }: Props = $props()
 </script>
 
-<div class="flex flex-wrap gap-3">
+<div class="flex flex-wrap justify-center gap-3">
 	{#each stats as s (s.title)}
 		<div class="w-fit rounded-xl bg-card p-4">
 			<div class="mb-3 text-[#9F9F9F]">{s.title}</div>
