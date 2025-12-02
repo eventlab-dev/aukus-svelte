@@ -14,6 +14,7 @@
 	import ErrorNotifications from './ErrorNotifications.svelte'
 	import { setErrorCallback } from '$lib/client'
 	import { initializeClientInterceptors } from '$lib/clientInterceptors'
+	import { page } from '$app/state'
 
 	let { children } = $props()
 
@@ -49,6 +50,8 @@
 	})
 
 	const { isMobile, errorNotificationStore } = appManager
+
+	const hidePanels = $derived(page.url.pathname === '/presentation')
 </script>
 
 <ErrorNotifications {errorNotificationStore} />
@@ -59,19 +62,23 @@
 	<ScrollArea class="h-screen" type="always" id="main-scroll-area">
 		<div id="wallpaper"></div>
 		<div class="py-3">
-			<div class="absolute top-3 left-3 z-10">
-				<QuickMenu />
-			</div>
+			{#if !hidePanels}
+				<div class="absolute top-3 left-3 z-10">
+					<QuickMenu />
+				</div>
 
-			<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
-				<PlayersList />
-			</div>
+				<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+					<PlayersList />
+				</div>
 
-			<Navigation />
+				<Navigation />
+			{/if}
 			{@render children?.()}
-			<div class="px-3">
-				<Footer />
-			</div>
+			{#if !hidePanels}
+				<div class="px-3">
+					<Footer />
+				</div>
+			{/if}
 		</div>
 	</ScrollArea>
 {/if}
