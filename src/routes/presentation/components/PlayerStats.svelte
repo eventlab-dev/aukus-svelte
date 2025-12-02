@@ -13,11 +13,12 @@
 
 	const { statsStore, eventDataStore } = getAppManagerContext()
 	const { statsBySlug } = statsStore
-	const { achievements } = eventDataStore
+	const { achievementsWithScores } = eventDataStore
 
 	const playerStats = $derived.by(() => {
 		const stats = $statsBySlug[player.slug]
 		if (stats) {
+			const totalAchievements = $achievementsWithScores.length
 			const playerAchievements = stats.first_achievements + stats.regular_achievements
 
 			return [
@@ -29,7 +30,7 @@
 				{ title: 'Фильмов просмотрено', value: stats.movies.toString() },
 				{ title: 'Средняя оценка игр', value: '0' },
 				{
-					title: `Очки за ачивки: ${playerAchievements}/${$achievements.length}}`,
+					title: `Очки за ачивки: ${playerAchievements}/${totalAchievements}}`,
 					value: (playerAchievements * 3).toString()
 				},
 				{ title: 'Подсеров кинуто', value: '0' },

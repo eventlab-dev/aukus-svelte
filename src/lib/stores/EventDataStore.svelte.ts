@@ -56,6 +56,10 @@ export function createEventDataStore() {
 		return map
 	})
 
+	const achievementsWithScores = derived(achievements, ($achievements) => {
+		return $achievements.filter((a) => a.points > 0)
+	})
+
 	const chatMessages = derived(eventData, ($eventData) => $eventData?.chat_messages ?? [])
 
 	return {
@@ -69,7 +73,8 @@ export function createEventDataStore() {
 		achievementsById,
 		eventSettings,
 		diceOptions,
-		chatMessages
+		chatMessages,
+		achievementsWithScores
 	}
 }
 
