@@ -81,6 +81,12 @@
 		const cursorPos = val.length - (val.endsWith(' ₽') ? 2 : 0)
 		t.setSelectionRange(cursorPos, cursorPos)
 	}
+
+	const lastDrop = $derived.by(() => {
+		if ($myPlayer?.last_move?.type === 'drop') {
+			return $myPlayer.last_move.item_title
+		}
+	})
 </script>
 
 {#snippet readonlyInput({ title, value }: { title: string; value: number })}
@@ -101,8 +107,10 @@
 				aria-describedby="punishment calculator"
 			>
 				<span>Наказание за дроп</span>
-				{#if $myPlayer?.current_game}
+				{#if $myPlayer?.current_game && false}
 					<span> — {$myPlayer?.current_game}</span>
+				{:else if lastDrop}
+					<span> — {lastDrop}</span>
 				{/if}
 			</DialogTitle>
 		</DialogHeader>
