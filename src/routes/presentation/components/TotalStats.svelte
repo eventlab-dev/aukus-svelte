@@ -21,17 +21,22 @@
 		).length
 		const totalAchievements = $achievementsWithScores.length
 
+		const totalMoves = $stats.reduce((acc, item) => acc + item.total_moves, 0)
+		const avgRating = $stats.reduce((acc, item) => acc + item.average_rating, 0)
+		const shitsThrown = $stats.reduce((acc, item) => acc + item.shits_thrown, 0)
+		const shieldsUsed = $stats.reduce((acc, item) => acc + item.shields_used, 0)
+
 		return [
 			{ title: 'Игр пройдено за сезон', value: completed.toString() },
-			{ title: 'Ходов совершено', value: '10/100' },
+			{ title: 'Ходов совершено', value: totalMoves.toString() },
 			{ title: 'Игр дропнуто', value: dropped.toString() },
 			{ title: 'Рерольнуто игр', value: rerolls.toString() },
 			{ title: 'Шейх-моментов', value: sheikhs.toString() },
 			{ title: 'Фильмов просмотрено', value: movies.toString() },
-			{ title: 'Средняя оценка игр', value: '0' },
+			{ title: 'Средняя оценка игр', value: avgRating.toFixed(2) },
 			{ title: 'Достижений достигнуто', value: `${unlockedAchievements}/${totalAchievements}` },
-			{ title: 'Подсеров кинуто', value: '0' },
-			{ title: 'Защиты использовано', value: '0' }
+			{ title: 'Подсеров кинуто', value: shitsThrown.toString() },
+			{ title: 'Защиты использовано', value: shieldsUsed.toString() }
 		]
 	})
 </script>

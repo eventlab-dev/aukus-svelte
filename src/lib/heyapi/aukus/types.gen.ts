@@ -604,6 +604,18 @@ export type PlayerStatsItem = {
      * Games Time
      */
     games_time: number;
+    /**
+     * Average Rating
+     */
+    average_rating: number;
+    /**
+     * Shits Thrown
+     */
+    shits_thrown: number;
+    /**
+     * Shields Used
+     */
+    shields_used: number;
 };
 
 /**

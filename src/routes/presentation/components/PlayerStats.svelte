@@ -24,18 +24,18 @@
 
 			return [
 				{ title: 'Игр пройдено', value: stats.games_completed.toString() },
-				{ title: 'Ходов сделано', value: '0' },
+				{ title: 'Ходов сделано', value: stats.total_moves.toString() },
 				{ title: 'Игр дропнуто', value: stats.games_dropped.toString() },
 				{ title: 'Шейх-моментов', value: stats.sheikh_moments.toString() },
 				{ title: 'Часов наиграно', value: formatDuration(stats.games_time).toString() },
 				{ title: 'Фильмов просмотрено', value: stats.movies.toString() },
-				{ title: 'Средняя оценка игр', value: '0' },
+				{ title: 'Средняя оценка игр', value: stats.average_rating.toFixed(2) },
 				{
-					title: `Очки за ачивки: ${playerAchievements}/${totalAchievements}}`,
+					title: `Очки за ачивки: ${playerAchievements}/${totalAchievements}`,
 					value: (playerAchievements * 3).toString()
 				},
-				{ title: 'Подсеров кинуто', value: '0' },
-				{ title: 'Защиты использовано', value: '0' }
+				{ title: 'Подсеров кинуто', value: stats.shits_thrown.toString() },
+				{ title: 'Защиты использовано', value: stats.shields_used.toString() }
 			]
 		}
 		return []
