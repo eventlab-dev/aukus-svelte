@@ -4,6 +4,7 @@
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import StatsCards from './StatsCards.svelte'
+	import { fly, slide } from 'svelte/transition'
 
 	type Props = {
 		player: PlayerData
@@ -43,23 +44,27 @@
 </script>
 
 <div class="mt-[100px] flex flex-col">
-	<div class="mb-[20px] w-full text-center">
-		<div
-			class="font-roboto-wide-semibold-italic mb-[20px] text-xl text-[var(--player-color)] italic"
-			style={`--player-color: ${player.color}`}
-		>
-			{position}-ое место
+	{#key player.slug}
+		<div class="mb-[20px] w-full text-center">
+			<div
+				class="font-roboto-wide-semibold-italic mb-[20px] text-xl text-[var(--player-color)] italic"
+				style={`--player-color: ${player.color}`}
+			>
+				{position}-ое место
+			</div>
+			<div in:slide|global={{ y: 20, duration: 2000, delay: 0 }}>
+				<div class="flex w-full justify-center">
+					<PlayerAvatar src={player.avatar_link ?? ''} name={player.username} size="lg" />
+				</div>
+				<div class="font-roboto-wide-black-alt text-6xl">
+					{player.first_name} «{player.username}»
+				</div>
+			</div>
 		</div>
 		<div class="flex w-full justify-center">
-			<PlayerAvatar src={player.avatar_link ?? ''} name={player.username} size="lg" />
+			<div class="flex max-w-[1100px] justify-center">
+				<StatsCards stats={playerStats} />
+			</div>
 		</div>
-		<div class="font-roboto-wide-black-alt text-6xl">
-			{player.first_name} «{player.username}»
-		</div>
-	</div>
-	<div class="flex w-full justify-center">
-		<div class="flex max-w-[1100px] justify-center">
-			<StatsCards stats={playerStats} />
-		</div>
-	</div>
+	{/key}
 </div>
