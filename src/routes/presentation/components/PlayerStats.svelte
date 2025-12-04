@@ -45,7 +45,7 @@
 <div class="mt-[100px] flex flex-col">
 	<div class="mb-[20px] w-full text-center">
 		<div
-			class="mb-[20px] text-xl font-bold text-[var(--player-color)] italic"
+			class="font-roboto-wide-semibold-italic mb-[20px] text-xl text-[var(--player-color)] italic"
 			style={`--player-color: ${player.color}`}
 		>
 			{position}-ое место
@@ -53,7 +53,7 @@
 		<div class="flex w-full justify-center">
 			<PlayerAvatar src={player.avatar_link ?? ''} name={player.username} size="lg" />
 		</div>
-		<div class="text-6xl font-bold">
+		<div class="font-roboto-wide-black-alt text-6xl">
 			{player.first_name} «{player.username}»
 		</div>
 	</div>
