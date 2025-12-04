@@ -3,6 +3,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { AchievementItem } from '$lib/heyapi/aukus/types.gen'
 	import { getSkinIconUrl } from '$lib/utils'
+	import SkinPreview from '$lib/components/skinEditor/SkinPreview.svelte'
 	import { scale } from 'svelte/transition'
 
 	type Props = { achievement: AchievementItem }
@@ -33,13 +34,18 @@
 				transition:scale={{ duration: 200, start: 0.9, opacity: 0 }}
 			>
 				<div>
-					<div class="flex justify-center p-2">
-						<img
-							src={getSkinIconUrl(skin.image_url)}
-							alt={skin.slot}
-							class="h-[80px] w-auto rounded-sm"
-						/>
+					<div class="flex h-[80px] justify-center p-2">
+						{#if achievement.visibility === 'hidden'}
+							<img
+								src={getSkinIconUrl(skin.image_url)}
+								alt={skin.slot}
+								class="h-[80px] w-auto rounded-sm"
+							/>
+						{:else}
+							<SkinPreview {skin} />
+						{/if}
 					</div>
+
 					<div class="mt-3 text-left text-sm leading-4 font-semibold text-muted-foreground">
 						{#if achievement.visibility === 'hidden'}
 							Откроется когда кто-либо из игроков получит это достижение
