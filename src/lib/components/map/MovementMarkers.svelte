@@ -19,12 +19,15 @@
 
 	const showMinus = $derived($myMovementState.steps < 0)
 
-	function cellType(cellId: number) {
+	function cellType(startCell: number, cellId: number) {
 		if (snakesByCell[cellId]) {
 			return 'negative'
 		}
 		if (laddersByCell[cellId]) {
 			return 'positive'
+		}
+		if (startCell < 81 && cellId > 81) {
+			return 'slow'
 		}
 		return 'neutral'
 	}
@@ -35,13 +38,23 @@
 			$turnState === 'player-map-animation' ||
 			$selectedPlayer
 	)
+
+	const startCell = $derived.by(() => {
+		if ($myMovementState) {
+			return $myMovementState.startCell
+		}
+		if ($selectedPlayer) {
+			return $selectedPlayer.map_position
+		}
+		return null
+	})
 </script>
 
-{#if cells && showMarkers}
+{#if cells && showMarkers && startCell}
 	{#each cells as cell, idx (idx)}
 		<div
-			class="absolute w-fit rounded-2xl p-3 text-center data-[variant=negative]:bg-red-500 data-[variant=neutral]:bg-secondary data-[variant=positive]:bg-green-500"
-			data-variant={cellType(cell.id)}
+			class="data-[variant=positive]:bg-grey-500 absolute w-fit rounded-2xl p-3 text-center data-[variant=negative]:bg-red-500 data-[variant=neutral]:bg-secondary data-[variant=slow]:bg-yellow-700"
+			data-variant={cellType(startCell, cell.id)}
 			style="top: {cell.position.y + 40}px; left: {cell.position.x + 45}px;"
 		>
 			<div class="w-[2ch]">{showMinus ? '-' : ''}{idx + Math.abs($myMovementState.minSteps)}</div>

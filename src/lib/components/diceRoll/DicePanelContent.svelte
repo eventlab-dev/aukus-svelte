@@ -171,6 +171,14 @@
 				throw new Error(`Unsupported dice option: ${error}`)
 			}
 		}
+
+		// slow down on going through 81 cell
+		if (player.map_position < 81 && player.map_position + maxRoll > 81) {
+			const diff = 81 - player.map_position
+			const remaining = Math.floor((maxRoll - diff) / 2)
+			maxRoll = diff + remaining
+		}
+
 		const ladders = []
 		const snakes = []
 		const absMaxRoll = Math.abs(maxRoll)
