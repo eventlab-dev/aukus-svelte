@@ -63,3 +63,9 @@
 		<div class="text-3xl">Титры</div>
 	</div>
 {/if}
+
+{#if showImages}
+	<div class="absolute bottom-[-200px] left-[-200px] z-10 w-fit blur-2xl">
+		<SnowflakeIcon class="size-[500px]" {color} />
+	</div>
+{/if}
