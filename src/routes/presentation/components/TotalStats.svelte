@@ -42,7 +42,10 @@
 </script>
 
 <div class="max-w-[1100px]">
-	<div class="mb-7 text-center text-6xl font-bold">Общая статистика</div>
+	<div class="font-roboto-wide-semibold-italic mb-3 text-center text-xl text-primary">
+		Общая статистика
+	</div>
+	<div class="font-roboto-wide-black-alt mb-7 text-center text-6xl">АУКУС 4</div>
 	<div class="flex justify-center">
 		<StatsCards stats={showStats} />
 	</div>
