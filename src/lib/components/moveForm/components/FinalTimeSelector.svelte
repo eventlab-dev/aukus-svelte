@@ -12,7 +12,7 @@
 		value?: GameLength
 		disabled?: boolean
 		gameDuration?: number
-		hltbTime?: GameLength
+		hltbTime?: number
 		isInvalid?: boolean
 	}
 
@@ -45,16 +45,13 @@
 		'40+': hours_40_00
 	}
 
-	function getSmallest(duration: number, timeOption: GameLength): GameLength {
-		const minTime = durationMinValues[timeOption]
-		if (minTime <= duration) {
-			return timeOption
-		}
+	function getSmallest(duration1: number, duration2: number): GameLength {
+		const minTime = Math.min(duration1, duration2)
 
 		const options: GameLength = ['0-4', '5-10', '11-16', '17-24', '24-40', '40+'].reverse()
 		for (const opt of options) {
 			const min = durationMinValues[opt]
-			if (min < duration) {
+			if (min < minTime) {
 				return opt
 			}
 		}
@@ -64,9 +61,13 @@
 	let recommended = $state<GameLength | null>(null)
 
 	$effect(() => {
+		console.log(gameDuration, hltbTime)
 		if (gameDuration && hltbTime) {
 			recommended = getSmallest(gameDuration, hltbTime)
 			value = recommended
+		} else {
+			value = undefined
+			recommended = null
 		}
 	})
 

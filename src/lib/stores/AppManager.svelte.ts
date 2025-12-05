@@ -14,6 +14,7 @@ import { createCanvasStore } from './CanvasStore.svelte'
 import { createGamesMatchesStore } from './GamesMatchesStore.svelte'
 import { createErrorNotificationStore } from './ErrorNotificationStore.svelte'
 import { createShitStore } from './ShitStore.svelte'
+import { createGameTimeStore } from './gameTimeStore'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -167,6 +168,8 @@ export function createAppManager() {
 		return () => query.removeEventListener('change', listener)
 	})
 
+	const gameTimeStore = createGameTimeStore({ usersStore })
+
 	return {
 		usersStore,
 		gamesHistoryStore,
@@ -191,7 +194,8 @@ export function createAppManager() {
 		canvasStore,
 		gamesMatchesStore,
 		isMobile,
-		shitStore
+		shitStore,
+		gameTimeStore
 	}
 }
 

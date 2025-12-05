@@ -198,6 +198,24 @@ export type EventsResponse = {
 export type GameCompletionStatus = 'completed' | 'reroll' | 'drop';
 
 /**
+ * GameDurationResponse
+ */
+export type GameDurationResponse = {
+    /**
+     * Duration
+     */
+    duration: number;
+    /**
+     * Sessions Count
+     */
+    sessions_count: number;
+    /**
+     * Event Slug
+     */
+    event_slug: string;
+};
+
+/**
  * GameHistoryItem
  */
 export type GameHistoryItem = {
@@ -271,6 +289,170 @@ export type HttpValidationError = {
      * Detail
      */
     detail?: Array<ValidationError>;
+};
+
+/**
+ * HltbGameResponse
+ */
+export type HltbGameResponse = {
+    /**
+     * Game Id
+     */
+    game_id: number;
+    /**
+     * Game Name
+     */
+    game_name: string;
+    /**
+     * Game Name Date
+     */
+    game_name_date: number;
+    /**
+     * Game Alias
+     */
+    game_alias?: string | null;
+    /**
+     * Game Type
+     */
+    game_type: string;
+    /**
+     * Game Image
+     */
+    game_image: string;
+    /**
+     * Comp Lvl Combine
+     */
+    comp_lvl_combine: number;
+    /**
+     * Comp Lvl Sp
+     */
+    comp_lvl_sp: number;
+    /**
+     * Comp Lvl Co
+     */
+    comp_lvl_co: number;
+    /**
+     * Comp Lvl Mp
+     */
+    comp_lvl_mp: number;
+    /**
+     * Comp Main
+     */
+    comp_main: number;
+    /**
+     * Comp Plus
+     */
+    comp_plus: number;
+    /**
+     * Comp 100
+     */
+    comp_100: number;
+    /**
+     * Comp All
+     */
+    comp_all: number;
+    /**
+     * Comp Main Count
+     */
+    comp_main_count: number;
+    /**
+     * Comp Plus Count
+     */
+    comp_plus_count: number;
+    /**
+     * Comp 100 Count
+     */
+    comp_100_count: number;
+    /**
+     * Comp All Count
+     */
+    comp_all_count: number;
+    /**
+     * Invested Co
+     */
+    invested_co: number;
+    /**
+     * Invested Mp
+     */
+    invested_mp: number;
+    /**
+     * Invested Co Count
+     */
+    invested_co_count: number;
+    /**
+     * Invested Mp Count
+     */
+    invested_mp_count: number;
+    /**
+     * Count Comp
+     */
+    count_comp: number;
+    /**
+     * Count Speedrun
+     */
+    count_speedrun: number;
+    /**
+     * Count Backlog
+     */
+    count_backlog: number;
+    /**
+     * Count Review
+     */
+    count_review: number;
+    /**
+     * Review Score
+     */
+    review_score: number;
+    /**
+     * Count Playing
+     */
+    count_playing: number;
+    /**
+     * Count Retired
+     */
+    count_retired: number;
+    /**
+     * Profile Platform
+     */
+    profile_platform?: string | null;
+    /**
+     * Profile Popular
+     */
+    profile_popular: number;
+    /**
+     * Release World
+     */
+    release_world?: number | null;
+    /**
+     * Genres
+     */
+    genres?: string | null;
+    /**
+     * Steam Id
+     */
+    steam_id?: number | null;
+    /**
+     * Description
+     */
+    description?: string | null;
+    /**
+     * Created At
+     */
+    created_at: number;
+    /**
+     * Updated At
+     */
+    updated_at: number;
+};
+
+/**
+ * HltbGamesListResponse
+ */
+export type HltbGamesListResponse = {
+    /**
+     * Games
+     */
+    games: Array<HltbGameResponse>;
 };
 
 /**
@@ -377,6 +559,10 @@ export type PlayerMoveNotificationRequest = {
      * Cover Image Url
      */
     cover_image_url?: string | null;
+    /**
+     * Item Duration
+     */
+    item_duration?: number;
 };
 
 /**
@@ -871,6 +1057,44 @@ export type StartIgdbUpdateApiIgdbUpdateStartGetResponses = {
     200: unknown;
 };
 
+export type SearchGamesApiHltbSearchGetData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Search
+         */
+        search: string;
+        /**
+         * Limit
+         */
+        limit?: number;
+        /**
+         * Exact
+         */
+        exact?: number;
+    };
+    url: '/api/hltb/search';
+};
+
+export type SearchGamesApiHltbSearchGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SearchGamesApiHltbSearchGetError = SearchGamesApiHltbSearchGetErrors[keyof SearchGamesApiHltbSearchGetErrors];
+
+export type SearchGamesApiHltbSearchGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: HltbGamesListResponse;
+};
+
+export type SearchGamesApiHltbSearchGetResponse = SearchGamesApiHltbSearchGetResponses[keyof SearchGamesApiHltbSearchGetResponses];
+
 export type RefreshStreamsApiStreamsRefreshPostData = {
     body?: never;
     path?: never;
@@ -921,14 +1145,6 @@ export type GetGameDurationApiStreamsGameDurationGetData = {
          * Game Name
          */
         game_name: string;
-        /**
-         * For Update
-         */
-        for_update?: boolean;
-        /**
-         * Allow Acting
-         */
-        allow_acting?: boolean;
     };
     url: '/api/streams/game-duration';
 };
@@ -944,12 +1160,9 @@ export type GetGameDurationApiStreamsGameDurationGetError = GetGameDurationApiSt
 
 export type GetGameDurationApiStreamsGameDurationGetResponses = {
     /**
-     * Response Get Game Duration Api Streams Game Duration Get
      * Successful Response
      */
-    200: {
-        [key: string]: unknown;
-    };
+    200: GameDurationResponse;
 };
 
 export type GetGameDurationApiStreamsGameDurationGetResponse = GetGameDurationApiStreamsGameDurationGetResponses[keyof GetGameDurationApiStreamsGameDurationGetResponses];

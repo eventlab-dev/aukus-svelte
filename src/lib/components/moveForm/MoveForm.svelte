@@ -2,7 +2,6 @@
 	import ImageLoader from '../ImageLoader.svelte'
 	import fallbackPoster from '$lib/assets/images/GameFallbackPoster.png'
 	import GameStatusSelector from './components/GameStatusSelector.svelte'
-	import HltbTimeSelector from './components/HLTBTimeSelector.svelte'
 	import HltbLink from './components/HLTBLink.svelte'
 	import Rating from './components/Rating.svelte'
 	import { Button } from '../ui/button'
@@ -27,11 +26,7 @@
 	import type { GameDifficulty, GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
 	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'
 	import { LastMapPosition } from '$lib/constants'
-	import { EventlabBaseUrl } from '$lib/client'
-	import { getGameDurationApiStreamsGameDurationGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
-	import { defaultAuth, formatMs } from '$lib/utils'
-	import { createQuery } from '@tanstack/svelte-query'
-	import { derived, writable } from 'svelte/store'
+	import { formatMs } from '$lib/utils'
 	import DifficultySelector from './components/DifficultySelector.svelte'
 	import FinalTimeSelector from './components/FinalTimeSelector.svelte'
 	import type { Difficulty } from '$lib/types'
@@ -39,30 +34,24 @@
 	type FormType = {
 		title: string
 		status?: PlayerMoveType
-		hltbTime?: GameLength
 		finalTime?: GameLength
 		rating: number | null
 		review: string
 		difficulty?: Difficulty
 	}
 
-	type GameDurationResponse = {
-		duration: number
-		sessions_count: number
-		event_slug?: string
-		error?: string
-	}
-
-	const { usersStore, eventDataStore, myPlayer, frontendState, eventActive } =
+	const { usersStore, eventDataStore, myPlayer, frontendState, eventActive, gameTimeStore } =
 		getAppManagerContext()
 
 	const { saveMoveForm } = usersStore
 	const { eventDataQuery } = eventDataStore
+	const { hltbMatch, gameTitle: timeSearchTitle, categoryDuration, hltbLink } = gameTimeStore
+
+	// $inspect('match', $hltbMatch)
 
 	let form: FormType = $state({
 		title: '',
 		status: undefined,
-		hltbTime: undefined,
 		finalTime: undefined,
 		rating: null,
 		review: '',
@@ -75,35 +64,12 @@
 	let isFinalTimeInvalid = $state(false)
 	let bypassClickCount = $state(0)
 
-	const selectedGameStore = writable<IgdbGameSummary | null>(null)
-
 	$effect(() => {
-		selectedGameStore.set(selectedGame)
-	})
-
-	const gameDurationQuery = createQuery(
-		derived([myPlayer, selectedGameStore], ([$myPlayer, $selectedGame]) => {
-			const options = getGameDurationApiStreamsGameDurationGetOptions({
-				baseUrl: EventlabBaseUrl,
-				auth: defaultAuth,
-				query: {
-					slug: $myPlayer?.slug || '',
-					game_name: $selectedGame?.name || ''
-				}
-			})
-			options.enabled = Boolean($selectedGame && $myPlayer)
-			options.staleTime = 0
-			options.gcTime = 0
-			return options
-		})
-	)
-
-	const gameDuration = $derived.by(() => {
-		const response = $gameDurationQuery.data as GameDurationResponse | undefined
-		if (selectedGame && response && response.duration !== undefined) {
-			return response.duration
+		if (selectedGame) {
+			timeSearchTitle.set(selectedGame.name)
+		} else if (form.title) {
+			timeSearchTitle.set(form.title)
 		}
-		return undefined
 	})
 
 	const { isFormFilled, buttonText, hasHltbError } = $derived.by(() => {
@@ -199,7 +165,6 @@
 			form = {
 				title: '',
 				status: undefined,
-				hltbTime: undefined,
 				finalTime: undefined,
 				rating: null,
 				review: '',
@@ -226,7 +191,6 @@
 	$effect(() => {
 		form.title
 		form.status
-		form.hltbTime
 		form.finalTime
 		form.rating
 		form.review
@@ -258,38 +222,56 @@
 			<div class="flex w-full flex-col gap-3">
 				<div class="flex gap-3">
 					<GameTitle bind:value={form.title} bind:selectedGame />
-					<HltbLink gameTitle={form.title} />
 				</div>
 
 				<div class="flex gap-3">
-					<GameStatusSelector {gameDuration} bind:value={form.status} />
+					<GameStatusSelector gameDuration={$categoryDuration} bind:value={form.status} />
 					<DifficultySelector bind:value={form.difficulty} />
 				</div>
 
 				<div class="flex gap-3">
-					<div class="flex w-fit flex-col rounded-lg bg-[oklch(0.38_0_0)] p-2">
+					<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
 						<div>Мое время</div>
 						<div>
-							{#if gameDuration}
-								{formatMs(gameDuration * 1000, { noDays: true })}
-							{:else}не найдено{/if}
+							{#if $categoryDuration}
+								{formatMs($categoryDuration * 1000, { noDays: true })}
+							{:else}
+								не найдено
+							{/if}
 						</div>
 					</div>
-					<div class="flex flex-1 flex-col">
-						<div>HLTB</div>
-						<HltbTimeSelector
-							bind:value={form.hltbTime}
-							{gameDuration}
-							disabled={form.status !== 'completed'}
-						/>
+					<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
+						<Button
+							variant="link"
+							class="h-fit p-0"
+							target="_blank"
+							rel="noopener noreferrer"
+							href={$hltbLink}
+						>
+							Время по HLTB
+						</Button>
+						<div>
+							{#if $hltbMatch?.comp_main}
+								{formatMs($hltbMatch.comp_main * 1000, { noDays: true })}
+							{:else}
+								не найдено
+							{/if}
+						</div>
 					</div>
-					<div class="flex flex-1 flex-col">
-						<div>Итоговое время (само)</div>
+					<div class="flex flex-1 flex-col gap-2">
+						<div>
+							Итоговое время
+							{#if $categoryDuration && $hltbMatch?.comp_main}
+								(само)
+							{:else}
+								(выбери)
+							{/if}
+						</div>
 						<FinalTimeSelector
 							bind:value={form.finalTime}
 							bind:isInvalid={isFinalTimeInvalid}
-							{gameDuration}
-							hltbTime={form.hltbTime}
+							gameDuration={$categoryDuration}
+							hltbTime={$hltbMatch?.comp_main}
 							disabled={form.status !== 'completed'}
 						/>
 					</div>
