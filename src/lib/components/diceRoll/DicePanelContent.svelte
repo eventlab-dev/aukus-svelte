@@ -198,7 +198,7 @@
 			100 *
 			ladders.reduce((acc, v) => {
 				const diff = Math.abs(v - player.map_position)
-				if (probabilities[diff]) {
+				if (probabilities?.[diff]) {
 					return acc + probabilities[diff]
 				}
 				return acc
@@ -208,7 +208,7 @@
 			100 *
 			snakes.reduce((acc, v) => {
 				const diff = Math.abs(v - player.map_position)
-				if (probabilities[diff]) {
+				if (probabilities?.[diff]) {
 					return acc + probabilities[diff]
 				}
 				return acc

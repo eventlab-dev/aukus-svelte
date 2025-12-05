@@ -4,7 +4,7 @@
 	type Props = {
 		src: string
 		name: string
-		isOnline: boolean
+		isOnline?: boolean
 		class?: string
 		size?: 'default' | 'lg' | 'small' | 'tiny'
 	}
@@ -17,7 +17,9 @@
 		class="size-[41px] group-data-[size=lg]:size-[70px] group-data-[size=small]:size-[25px] group-data-[size=tiny]:size-[18px] md:size-7 "
 	>
 		<AvatarImage {src} />
-		<AvatarFallback class="text-[10px] uppercase group-data-[size=lg]:text-xl group-data-[size=tiny]:text-[8px]">
+		<AvatarFallback
+			class="text-[10px] uppercase group-data-[size=lg]:text-xl group-data-[size=tiny]:text-[8px]"
+		>
 			{name.slice(0, 2)}
 		</AvatarFallback>
 	</Avatar>

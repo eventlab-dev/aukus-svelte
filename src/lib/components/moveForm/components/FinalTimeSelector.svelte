@@ -48,7 +48,7 @@
 	function getSmallest(duration1: number, duration2: number): GameLength {
 		const minTime = Math.min(duration1, duration2)
 
-		const options: GameLength = ['0-4', '5-10', '11-16', '17-24', '24-40', '40+'].reverse()
+		const options = ['0-4', '5-10', '11-16', '17-24', '24-40', '40+'].reverse() as GameLength[]
 		for (const opt of options) {
 			const min = durationMinValues[opt]
 			if (min < minTime) {
