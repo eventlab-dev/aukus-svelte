@@ -53,7 +53,7 @@
 {#if cells && showMarkers && startCell}
 	{#each cells as cell, idx (idx)}
 		<div
-			class="data-[variant=positive]:bg-grey-500 absolute w-fit rounded-2xl p-3 text-center data-[variant=negative]:bg-red-500 data-[variant=neutral]:bg-secondary data-[variant=slow]:bg-yellow-700"
+			class="absolute w-fit rounded-2xl p-3 text-center data-[variant=negative]:bg-red-500 data-[variant=neutral]:bg-secondary data-[variant=positive]:bg-green-500 data-[variant=slow]:bg-yellow-700"
 			data-variant={cellType(startCell, cell.id)}
 			style="top: {cell.position.y + 40}px; left: {cell.position.x + 45}px;"
 		>
