@@ -40,6 +40,8 @@
 		[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 		[0]
 	]
+
+	const players101 = $derived(playersByPosition.get(101))
 </script>
 
 {#snippet playerIcon(player: PlayerData)}
@@ -67,8 +69,8 @@
 		<div class="flex w-full gap-1 font-bold text-[#666666]">
 			<div class="flex w-fit items-center gap-[10px] rounded-md bg-[#222222] px-1 py-2">
 				<div>101</div>
-				{#if playersByPosition.get(101)}
-					{#each playersByPosition.get(101) as player (player.slug)}
+				{#if players101}
+					{#each players101 as player (player.slug)}
 						{@render playerIcon(player)}
 					{/each}
 				{/if}
@@ -97,11 +99,12 @@
 		<div class="flex w-full gap-[5px]">
 			{#each row as cellId (cellId)}
 				{#if cellId === 0}
+					{@const playersOnStart = playersByPosition.get(cellId)}
 					<div class="flex w-full items-center gap-1 rounded-md bg-[#222222] p-2">
 						<div class="font-bold text-[#666666]">Старт</div>
-						{#if playersByPosition.has(cellId)}
+						{#if playersOnStart}
 							<div class="flex flex-wrap items-center justify-center gap-0.5">
-								{#each playersByPosition.get(cellId) as player (player.slug)}
+								{#each playersOnStart as player (player.slug)}
 									{@render playerIcon(player)}
 								{/each}
 							</div>
@@ -124,7 +127,7 @@
 							{@const playersInCell = playersByPosition.get(cellId)}
 							{#if playersInCell && playersInCell.length === 1}
 								{@render playerIcon(playersInCell[0])}
-							{:else}
+							{:else if playersInCell && playersInCell.length > 1}
 								<div
 									class="absolute inset-0 flex flex-wrap items-center justify-center gap-0.5 p-0.5"
 								>
