@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition'
+	import { fly, slide } from 'svelte/transition'
 	import StatsCards from './StatsCards.svelte'
 	import GameCard from './GameCard.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { onMount } from 'svelte'
 
 	const { statsStore, eventDataStore } = getAppManagerContext()
 	const { stats } = statsStore
@@ -72,23 +73,34 @@
 			return acc
 		}, null)
 	})
+
+	let show = $state(false)
+
+	onMount(() => (show = true))
 </script>
 
 <div class="max-w-[1100px]">
 	<div class="font-roboto-wide-semibold-italic mb-3 text-center text-xl text-primary">
 		Общая статистика
 	</div>
-	<div class="font-roboto-wide-black-alt mb-7 text-center text-6xl">АУКУС 4</div>
-	<div class="flex justify-center">
-		<StatsCards stats={showStats} />
-	</div>
-	{#if bestGame && worstGame}
+	{#if show}
 		<div
-			class="mt-3 flex justify-center gap-3"
-			in:fly|global={{ y: 20, duration: 400, delay: 2500 }}
+			class="font-roboto-wide-black-alt mb-7 text-center text-6xl"
+			in:slide|global={{ duration: 1000, delay: 0 }}
 		>
-			<GameCard game={bestGame} title="Лучшая игра за сезон" />
-			<GameCard game={worstGame} title="Худшая игра за сезон" />
+			АУКУС 4
 		</div>
+		<div class="flex justify-center">
+			<StatsCards stats={showStats} />
+		</div>
+		{#if bestGame && worstGame}
+			<div
+				class="mt-3 flex justify-center gap-3"
+				in:fly|global={{ y: 20, duration: 400, delay: 2500 }}
+			>
+				<GameCard game={bestGame} title="Лучшая игра за сезон" />
+				<GameCard game={worstGame} title="Худшая игра за сезон" />
+			</div>
+		{/if}
 	{/if}
 </div>
