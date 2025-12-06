@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PlayerData } from '$lib/types'
-	import ImageLoader from '$lib/components/ImageLoader.svelte'
-	import { formatDuration, renderToHTML } from '$lib/utils'
+	import GameCard from './GameCard.svelte'
+	import { formatDuration } from '$lib/utils'
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import GamepadIcon from '$lib/components/icons/new/GamepadIcon.svelte'
@@ -50,29 +50,6 @@
 	})
 </script>
 
-{#snippet gameCard(game: PlayerMove, title: str)}
-	<div class="flex w-[440px] flex-col gap-3 rounded-xl bg-card p-3">
-		<div class="flex justify-between text-[#9F9F9F]">
-			<div>{title}</div>
-			<div>{formatDuration(game.item_duration)}</div>
-		</div>
-		<div class="flex gap-2">
-			<div>
-				<ImageLoader
-					src={game.cover_image_url || ''}
-					alt={game.item_title || ''}
-					class="h-auto w-[80px]"
-				/>
-			</div>
-			<div class="text-2xl font-bold">{game.item_title} — {game.item_rating}/10</div>
-		</div>
-		<div>
-			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			{@html renderToHTML(game.item_review)}
-		</div>
-	</div>
-{/snippet}
-
 <div class="mt-[100px] flex flex-col">
 	{#key player.slug}
 		<div class="mb-[20px] w-full text-center">
@@ -104,8 +81,8 @@
 			Игры
 		</div>
 		<div class="flex w-full justify-center gap-3">
-			{#if bestGame}{@render gameCard(bestGame, 'Лучшая игра на ивенте')}{/if}
-			{#if worstGame}{@render gameCard(worstGame, 'Худшая игра на ивенте')}{/if}
+			{#if bestGame}<GameCard game={bestGame} title="Лучшая игра на ивенте" />{/if}
+			{#if worstGame}<GameCard game={worstGame} title="Худшая игра на ивенте" />{/if}
 		</div>
 	{/key}
 </div>

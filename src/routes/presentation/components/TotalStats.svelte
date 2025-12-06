@@ -1,6 +1,6 @@
 <script lang="ts">
 	import StatsCards from './StatsCards.svelte'
-
+	import GameCard from './GameCard.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	const { statsStore, eventDataStore } = getAppManagerContext()
@@ -39,6 +39,38 @@
 			{ title: 'Защиты использовано', value: shieldsUsed.toString() }
 		]
 	})
+
+	const bestGame = $derived.by(() => {
+		return $stats.reduce((acc, item) => {
+			const game = item.best_game
+			if (!acc) {
+				return game
+			}
+			if (game.item_rating > acc.item_rating) {
+				return game
+			}
+			if (game.item_duration > acc.item_duration) {
+				return game
+			}
+			return acc
+		}, null)
+	})
+
+	const worstGame = $derived.by(() => {
+		return $stats.reduce((acc, item) => {
+			const game = item.best_game
+			if (!acc) {
+				return game
+			}
+			if (game.item_rating < acc.item_rating) {
+				return game
+			}
+			if (game.item_duration > acc.item_duration) {
+				return game
+			}
+			return acc
+		}, null)
+	})
 </script>
 
 <div class="max-w-[1100px]">
@@ -49,4 +81,10 @@
 	<div class="flex justify-center">
 		<StatsCards stats={showStats} />
 	</div>
+	{#if bestGame}
+		<div class="mt-3 flex justify-center gap-3">
+			<GameCard game={bestGame} title="Лучшая игра за сезон" />
+			<GameCard game={worstGame} title="Худшая игра за сезон" />
+		</div>
+	{/if}
 </div>
