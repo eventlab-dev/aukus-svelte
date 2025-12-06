@@ -23,7 +23,7 @@ export function createGameTimeStore({ usersStore }: { usersStore: UsersStore }) 
 				}
 			})
 			params.enabled = $searchTitle.length >= MIN_TITLE_LEN
-			console.log('search title', $searchTitle, params)
+			// console.log('search title', $searchTitle, params)
 			return params
 		})
 	)
