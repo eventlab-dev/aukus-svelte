@@ -58,7 +58,7 @@
 
 	const worstGame = $derived.by(() => {
 		return $stats.reduce((acc, item) => {
-			const game = item.best_game
+			const game = item.worst_game
 			if (!acc) {
 				return game
 			}
