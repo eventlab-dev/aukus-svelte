@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition'
 	import StatsCards from './StatsCards.svelte'
 	import GameCard from './GameCard.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
@@ -81,8 +82,11 @@
 	<div class="flex justify-center">
 		<StatsCards stats={showStats} />
 	</div>
-	{#if bestGame}
-		<div class="mt-3 flex justify-center gap-3">
+	{#if bestGame && worstGame}
+		<div
+			class="mt-3 flex justify-center gap-3"
+			in:fly|global={{ y: 20, duration: 400, delay: 2500 }}
+		>
 			<GameCard game={bestGame} title="Лучшая игра за сезон" />
 			<GameCard game={worstGame} title="Худшая игра за сезон" />
 		</div>

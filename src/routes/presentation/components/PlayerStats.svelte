@@ -48,6 +48,8 @@
 		const stats = $statsBySlug[player.slug]
 		return { bestGame: stats?.best_game, worstGame: stats?.worst_game }
 	})
+
+	const gamesDelay = 2000
 </script>
 
 <div class="mt-[100px] flex flex-col">
@@ -59,7 +61,7 @@
 			>
 				{position}-ое место
 			</div>
-			<div in:slide|global={{ y: 20, duration: 2000, delay: 0 }}>
+			<div in:slide|global={{ duration: 1000, delay: 0 }}>
 				<div class="flex w-full justify-center">
 					<PlayerAvatar src={player.avatar_link ?? ''} name={player.username} size="lg" />
 				</div>
@@ -76,13 +78,22 @@
 		<div
 			class="font-roboto-wide-black-alt mt-[120px] mb-[20px] flex w-full items-center justify-center gap-[10px] text-3xl text-[var(--player-color)]"
 			style={`--player-color: ${player.color}`}
+			in:fly|global={{ y: 5000, duration: 1000, delay: gamesDelay }}
 		>
 			<GamepadIcon class="size-8" />
 			Игры
 		</div>
 		<div class="flex w-full justify-center gap-3">
-			{#if bestGame}<GameCard game={bestGame} title="Лучшая игра на ивенте" />{/if}
-			{#if worstGame}<GameCard game={worstGame} title="Худшая игра на ивенте" />{/if}
+			{#if bestGame}
+				<div in:fly|global={{ x: -5000, duration: 1000, delay: gamesDelay }}>
+					<GameCard game={bestGame} title="Лучшая игра на ивенте" />
+				</div>
+			{/if}
+			{#if worstGame}
+				<div in:fly|global={{ x: 5000, duration: 1000, delay: gamesDelay }}>
+					<GameCard game={worstGame} title="Худшая игра на ивенте" />
+				</div>
+			{/if}
 		</div>
 	{/key}
 </div>
