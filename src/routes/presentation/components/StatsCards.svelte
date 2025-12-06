@@ -18,7 +18,7 @@
 <div class="flex flex-wrap justify-center gap-3">
 	{#each stats as s, idx (s.title)}
 		<div
-			class="w-fit rounded-xl bg-card p-4"
+			class="w-fit rounded-xl bg-card p-3"
 			in:fly|global={{ y: 20, duration: 400, delay: baseDelay + 200 * idx }}
 		>
 			<div class="mb-3 font-semibold text-[#9F9F9F]">{s.title}</div>

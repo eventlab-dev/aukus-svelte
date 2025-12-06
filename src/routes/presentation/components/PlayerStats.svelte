@@ -1,8 +1,10 @@
 <script lang="ts">
 	import type { PlayerData } from '$lib/types'
-	import { formatDuration } from '$lib/utils'
+	import ImageLoader from '$lib/components/ImageLoader.svelte'
+	import { formatDuration, renderToHTML } from '$lib/utils'
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import GamepadIcon from '$lib/components/icons/new/GamepadIcon.svelte'
 	import StatsCards from './StatsCards.svelte'
 	import { fly, slide } from 'svelte/transition'
 
@@ -41,7 +43,35 @@
 		}
 		return []
 	})
+
+	const { bestGame, worstGame } = $derived.by(() => {
+		const stats = $statsBySlug[player.slug]
+		return { bestGame: stats?.best_game, worstGame: stats?.worst_game }
+	})
 </script>
+
+{#snippet gameCard(game: PlayerMove, title: str)}
+	<div class="flex w-[440px] flex-col gap-3 rounded-xl bg-card p-3">
+		<div class="flex justify-between text-[#9F9F9F]">
+			<div>{title}</div>
+			<div>{formatDuration(game.item_duration)}</div>
+		</div>
+		<div class="flex gap-2">
+			<div>
+				<ImageLoader
+					src={game.game_cover || ''}
+					alt={game.game_title || ''}
+					class="h-auto w-[80px]"
+				/>
+			</div>
+			<div class="text-2xl font-bold">{game.item_title} — {game.item_rating}/10</div>
+		</div>
+		<div>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			{@html renderToHTML(game.item_review)}
+		</div>
+	</div>
+{/snippet}
 
 <div class="mt-[100px] flex flex-col">
 	{#key player.slug}
@@ -65,6 +95,17 @@
 			<div class="flex max-w-[1100px] justify-center">
 				<StatsCards stats={playerStats} />
 			</div>
+		</div>
+		<div
+			class="font-roboto-wide-black-alt mt-[120px] mb-[20px] flex w-full items-center justify-center gap-[10px] text-3xl text-[var(--player-color)]"
+			style={`--player-color: ${player.color}`}
+		>
+			<GamepadIcon class="size-8" />
+			Игры
+		</div>
+		<div class="flex w-full justify-center gap-3">
+			{#if bestGame}{@render gameCard(bestGame, 'Лучшая игра на ивенте')}{/if}
+			{#if worstGame}{@render gameCard(worstGame, 'Худшая игра на ивенте')}{/if}
 		</div>
 	{/key}
 </div>
