@@ -616,6 +616,8 @@ export type PlayerStatsItem = {
      * Shields Used
      */
     shields_used: number;
+    best_game: PlayerMoveItem | null;
+    worst_game: PlayerMoveItem | null;
 };
 
 /**

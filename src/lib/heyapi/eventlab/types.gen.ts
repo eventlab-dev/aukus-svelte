@@ -563,6 +563,14 @@ export type PlayerMoveNotificationRequest = {
      * Item Duration
      */
     item_duration?: number;
+    /**
+     * Snake
+     */
+    snake?: number | null;
+    /**
+     * Ladder
+     */
+    ladder?: number | null;
 };
 
 /**
@@ -1094,6 +1102,34 @@ export type SearchGamesApiHltbSearchGetResponses = {
 };
 
 export type SearchGamesApiHltbSearchGetResponse = SearchGamesApiHltbSearchGetResponses[keyof SearchGamesApiHltbSearchGetResponses];
+
+export type StartHltbUpdateApiHltbUpdateStartGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Force
+         */
+        force?: boolean;
+    };
+    url: '/api/hltb/update/start';
+};
+
+export type StartHltbUpdateApiHltbUpdateStartGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type StartHltbUpdateApiHltbUpdateStartGetError = StartHltbUpdateApiHltbUpdateStartGetErrors[keyof StartHltbUpdateApiHltbUpdateStartGetErrors];
+
+export type StartHltbUpdateApiHltbUpdateStartGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type RefreshStreamsApiStreamsRefreshPostData = {
     body?: never;
