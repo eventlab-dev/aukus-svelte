@@ -59,8 +59,8 @@
 		<div class="flex gap-2">
 			<div>
 				<ImageLoader
-					src={game.game_cover || ''}
-					alt={game.game_title || ''}
+					src={game.cover_image_url || ''}
+					alt={game.item_title || ''}
 					class="h-auto w-[80px]"
 				/>
 			</div>
