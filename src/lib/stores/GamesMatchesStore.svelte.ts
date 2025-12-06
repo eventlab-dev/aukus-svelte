@@ -13,6 +13,8 @@ type MatchParams = {
 	exclude_player?: string
 }
 
+const EXCLUDE_TITLES = new Set(['Just Chatting'])
+
 export function createGamesMatchesStore({
 	eventDataStore,
 	playerSlug
@@ -32,10 +34,12 @@ export function createGamesMatchesStore({
 	const historyMatchQuery = createQuery(
 		derived([gamesMatchParams, fullPlayersList], ([$gamesMatchParams, $fullPlayersList]) => {
 			// console.log('query', $gamesMatchParams)
+			const titles = $gamesMatchParams.titles.filter((t) => !EXCLUDE_TITLES.has(t))
+
 			const params = getGamesApiGamesHistoryGetOptions({
 				baseUrl: EventlabBaseUrl,
 				query: {
-					titles: $gamesMatchParams.titles,
+					titles,
 					exclude_ids: $gamesMatchParams.exclude_ids_history,
 					start_id: null,
 					players: $fullPlayersList.filter((p) => p !== $gamesMatchParams.exclude_player)
@@ -44,7 +48,7 @@ export function createGamesMatchesStore({
 				// tags: ['abc']
 			})
 			// console.log('query params', params)
-			params.enabled = $gamesMatchParams.titles.length > 0
+			params.enabled = titles.length > 0
 			params.refetchOnWindowFocus = false
 			// params.queryKey.push({ _id: 'tag', tags: [playerSlug ?? 'all-players'] })
 			return params
@@ -57,16 +61,18 @@ export function createGamesMatchesStore({
 				? $fullPlayersList.filter((p) => p !== $gamesMatchParams.exclude_player)
 				: $fullPlayersList
 
+			const titles = $gamesMatchParams.titles.filter((t) => !EXCLUDE_TITLES.has(t))
+
 			const params = getPlayerMovesApiPlayersMovesGetOptions({
 				baseUrl: AukusBaseUrl,
 				query: {
-					titles: $gamesMatchParams.titles,
+					titles,
 					exclude_ids: $gamesMatchParams.exclude_ids_moves,
 					start_ts: null,
 					players: playersFilter
 				}
 			})
-			params.enabled = $gamesMatchParams.titles.length > 0 && playersFilter.length > 0
+			params.enabled = titles.length > 0 && playersFilter.length > 0
 			params.refetchOnWindowFocus = false
 			return params
 		})
