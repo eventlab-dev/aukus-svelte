@@ -238,7 +238,7 @@
 		</div>
 	</div>
 {:else}
-	<div class="fixed inset-0 z-[99999] overflow-hidden bg-[#282828]">
+	<div class="fixed inset-0 z-[99999] overflow-y-auto bg-[#282828]">
 		<div class="px-4 py-4">
 			<div class="mb-4 flex items-center gap-4">
 				<button
