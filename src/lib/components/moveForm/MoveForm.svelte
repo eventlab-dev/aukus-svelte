@@ -79,8 +79,11 @@
 			return { isFormFilled: false, buttonText: 'Выбери статус игры', hasHltbError: false }
 		if (!form.review)
 			return { isFormFilled: false, buttonText: 'Напиши отзыв', hasHltbError: false }
-		if (form.status === 'reroll')
+		if (form.status === 'reroll') {
+			if (form.rating === null)
+				return { isFormFilled: false, buttonText: 'Поставь оценку', hasHltbError: false }
 			return { isFormFilled: true, buttonText: 'Рерольнуть игру', hasHltbError: false }
+		}
 		if (form.rating === null)
 			return { isFormFilled: false, buttonText: 'Поставь оценку', hasHltbError: false }
 		if (!form.difficulty)
