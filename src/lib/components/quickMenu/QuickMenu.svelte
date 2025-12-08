@@ -8,6 +8,7 @@
 	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte'
 	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte'
 	import ProfileIcon from '../icons/ProfileIcon.svelte'
+	import WinIcon from '../icons/new/WinIcon.svelte'
 	import TwitchIcon from '../icons/TwitchIcon.svelte'
 	import SkinEditorDialog from '../skinEditor/SkinEditorDialog.svelte'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
@@ -20,7 +21,7 @@
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
 
-	const { usersStore, myPlayer } = getAppManagerContext()
+	const { usersStore, myPlayer, eventFinished } = getAppManagerContext()
 
 	const { myUser } = usersStore
 
@@ -70,6 +71,11 @@
 
 		<CollapsibleContent>
 			<CollapsibleGroup>
+				{#if $eventFinished}
+					<Button class="bg-primary!" href="/presentation">
+						<WinIcon /> Итоги
+					</Button>
+				{/if}
 				<AchievementsDialog />
 				<GamesHistoryDialog />
 				<Button onclick={() => window.open('/streams', '_blank')}>
