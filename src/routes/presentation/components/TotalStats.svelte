@@ -24,7 +24,7 @@
 		const totalAchievements = $achievementsWithScores.length
 
 		const totalMoves = $stats.reduce((acc, item) => acc + item.total_moves, 0)
-		const avgRating = $stats.reduce((acc, item) => acc + item.average_rating, 0)
+		const avgRating = $stats.reduce((acc, item) => acc + item.average_rating, 0) / $stats.length
 		const shitsThrown = $stats.reduce((acc, item) => acc + item.shits_thrown, 0)
 		const shieldsUsed = $stats.reduce((acc, item) => acc + item.shields_used, 0)
 
