@@ -100,11 +100,19 @@ export function createUsersStore() {
 		refetchInterval: 2 * 60 * 1000
 	})
 
-	const users = derived(usersQuery, ($query) => {
+	const cachedUsers = writable<UserItem[]>([])
+
+	usersQuery.subscribe(($query) => {
+		if ($query.isSuccess) {
+			cachedUsers.set($query.data.users)
+		}
+	})
+
+	const users = derived([usersQuery, cachedUsers], ([$query, $cachedUsers]) => {
 		if ($query.isSuccess) {
 			return $query.data.users
 		}
-		return []
+		return $cachedUsers
 	})
 
 	const usersBySlug = derived(users, ($users) => {
