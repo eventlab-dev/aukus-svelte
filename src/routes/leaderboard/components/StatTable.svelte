@@ -11,7 +11,7 @@
 	} from '$lib/components/ui/table'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import type { StatItem, TableHeaderType } from '$lib/types'
-	import { getPlayerScoreDescription, formatMs } from '$lib/utils'
+	import { getPlayerScoreDescription, formatMs, formatDuration } from '$lib/utils'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type Props = {
@@ -148,6 +148,20 @@
 							>
 								{player[key]}
 							</Button>
+						</TableCell>
+					{:else if key === 'currentGame'}
+						<TableCell
+							class="py-0 data-[active=true]:text-foreground"
+							data-active={sortByKey === key}
+						>
+							<div class="flex flex-col gap-0.5">
+								<div>{player[key]}</div>
+								{#if player.currentGameDuration}
+									<div class="text-xs text-muted-foreground">
+										{formatDuration(player.currentGameDuration)}
+									</div>
+								{/if}
+							</div>
 						</TableCell>
 					{:else}
 						<TableCell

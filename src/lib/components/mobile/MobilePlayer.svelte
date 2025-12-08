@@ -130,24 +130,24 @@
 				<div class="text-sm font-semibold text-muted-foreground">Очков получено</div>
 				<div class="text-3xl font-bold">{player.total_score}</div>
 			</div>
-			{#if player.current_game}
-				<div class="flex flex-col gap-2 rounded-xl bg-card p-3">
-					<div class="flex justify-between text-sm font-semibold text-muted-foreground">
-						<div>Стримит на {platformName}</div>
-						{#if player.current_game_duration}
-							<div>{formatMs((player.current_game_duration || 0) * 1000)}</div>
-						{/if}
-					</div>
-					<div class="flex gap-2">
+			<div class="flex flex-col gap-2 rounded-xl bg-card p-3">
+				<div class="flex justify-between text-sm font-semibold text-muted-foreground">
+					<div>Стримит на {platformName}</div>
+					{#if player.current_game_duration}
+						<div>{formatMs((player.current_game_duration || 0) * 1000)}</div>
+					{/if}
+				</div>
+				<div class="flex gap-2">
+					{#if player.current_game}
 						<ImageLoader
 							src={player.current_game_cover || FALLBACK_GAME_POSTER}
 							alt={player.current_game}
 							class="h-[58px] w-[43px] overflow-hidden"
 						/>
-						<div class="text-xl font-bold">{player.current_game}</div>
-					</div>
+					{/if}
+					<div class="text-xl font-bold">{player.current_game || 'Выбирает игру...'}</div>
 				</div>
-			{/if}
+			</div>
 		</div>
 
 		<div class="mt-4 w-full space-y-4">

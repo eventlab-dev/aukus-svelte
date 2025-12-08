@@ -47,9 +47,11 @@
 			{/if}
 		</div>
 		<div class="flex gap-2">
-			<ImageLoader src={gameImage || FALLBACK_GAME_POSTER} alt={gameName} class="h-[58px] w-[43px] overflow-hidden" />
+			{#if gameName}
+				<ImageLoader src={gameImage || FALLBACK_GAME_POSTER} alt={gameName} class="h-[58px] w-[43px] overflow-hidden" />
+			{/if}
 			<div class="text-2xl leading-[29px] font-bold">
-				{gameName}
+				{gameName || 'Выбирает игру...'}
 			</div>
 		</div>
 	</div>

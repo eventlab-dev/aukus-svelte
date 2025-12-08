@@ -32,13 +32,15 @@
 		{/if}
 	</div>
 	<div class="mt-3 flex gap-3">
-		<ImageLoader
-			src={player.current_game_cover || FALLBACK_GAME_POSTER}
-			alt="game cover"
-			class="h-[140px] w-[105px]"
-		/>
+		{#if player.current_game}
+			<ImageLoader
+				src={player.current_game_cover || FALLBACK_GAME_POSTER}
+				alt="game cover"
+				class="h-[140px] w-[105px]"
+			/>
+		{/if}
 		<div class="w-full space-y-3">
-			<div class="text-2xl leading-[29px] font-bold" in:fade>{player.current_game}</div>
+			<div class="text-2xl leading-[29px] font-bold" in:fade>{player.current_game || 'Выбирает игру...'}</div>
 		</div>
 	</div>
 </div>

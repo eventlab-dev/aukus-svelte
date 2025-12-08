@@ -18,7 +18,8 @@
 				...playerStat,
 				username: player.username,
 				avatarLink: player.avatar_link ?? '',
-				currentGame: player.current_game ?? '<Нет игры>',
+				currentGame: player.current_game ?? 'Выбирает игру...',
+				currentGameDuration: player.current_game_duration ?? null,
 				position: idx + 1,
 				games_time: playerStat.games_time * 1000
 			}

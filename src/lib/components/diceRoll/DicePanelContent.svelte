@@ -300,12 +300,14 @@
 			</div>
 			<div class="text-sm font-semibold text-muted-foreground">Игра на стриме</div>
 			<div class="flex gap-2">
-				<ImageLoader
-					class="h-[90px]"
-					alt="poster"
-					src={player.current_game_cover || FALLBACK_GAME_POSTER}
-				/>
-				<div class="font-bold">{player.current_game}</div>
+				{#if player.current_game}
+					<ImageLoader
+						class="h-[90px]"
+						alt="poster"
+						src={player.current_game_cover || FALLBACK_GAME_POSTER}
+					/>
+				{/if}
+				<div class="font-bold">{player.current_game || 'Выбирает игру...'}</div>
 			</div>
 		</div>
 		<Separator orientation="vertical" />
