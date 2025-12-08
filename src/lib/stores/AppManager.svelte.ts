@@ -137,12 +137,18 @@ export function createAppManager() {
 		return false
 	})
 
-	const eventFinished = derived(eventDataStore.eventSettings, ($settings) => {
-		if ($settings?.event_end_time) {
-			return Number($settings?.event_end_time) * 1000 < Date.now()
+	const eventFinished = derived(
+		[eventDataStore.eventSettings, playersCompletedMap],
+		([$settings, $playersCompletedMap]) => {
+			if ($playersCompletedMap.length > 0) {
+				return true
+			}
+			if ($settings?.event_end_time) {
+				return Number($settings?.event_end_time) * 1000 < Date.now()
+			}
+			return false
 		}
-		return false
-	})
+	)
 
 	const eventActive = derived([eventNotStarted, eventFinished], ([$notStarted, $finished]) => {
 		return !$notStarted && !$finished
