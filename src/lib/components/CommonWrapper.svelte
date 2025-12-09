@@ -15,6 +15,8 @@
 	import { setErrorCallback } from '$lib/client'
 	import { initializeClientInterceptors } from '$lib/clientInterceptors'
 	import { page } from '$app/state'
+	import FrontVersionInfo from '$lib/components/FrontVersionInfo.svelte'
+	import Metrika from '$lib/components/Metrika.svelte'
 
 	let { children } = $props()
 
@@ -81,4 +83,9 @@
 			{/if}
 		</div>
 	</ScrollArea>
+{/if}
+
+<Metrika />
+{#if !hidePanels}
+	<FrontVersionInfo />
 {/if}

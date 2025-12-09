@@ -8,8 +8,6 @@
 	import { onMount } from 'svelte'
 	import { fetchFrontVersion } from '$lib/api/version'
 	import { createUserActivityStore } from '$lib/stores/UserActivityStore.svelte'
-	import FrontVersionInfo from '$lib/components/FrontVersionInfo.svelte'
-	import Metrika from '$lib/components/Metrika.svelte'
 
 	let { children } = $props()
 
@@ -21,7 +19,12 @@
 				const data = await fetchFrontVersion()
 				const currentVersion = import.meta.env.PACKAGE_VERSION
 				const isStreamsPage = window.location.pathname === '/streams'
-				if (data.version && data.version !== currentVersion && userActivityStore.isInactive && !isStreamsPage) {
+				if (
+					data.version &&
+					data.version !== currentVersion &&
+					userActivityStore.isInactive &&
+					!isStreamsPage
+				) {
 					console.log(
 						`Version mismatch: current ${currentVersion}, server ${data.version}. User is inactive, reloading...`
 					)
@@ -48,6 +51,3 @@
 		</CommonWrapper>
 	</TooltipProvider>
 </QueryClientProvider>
-
-<Metrika />
-<FrontVersionInfo />
