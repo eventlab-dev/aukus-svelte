@@ -79,7 +79,7 @@
 									</span>
 								{/if}
 							</TooltipTrigger>
-							<TooltipContent>Очки без учета умножения на ряд и без ачивок</TooltipContent>
+							<TooltipContent>Чистые очки: очки без учета умножения на ряд и без ачивок</TooltipContent>
 						</Tooltip>
 					{:else}
 						<span class="relative">
