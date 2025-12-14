@@ -120,7 +120,13 @@
 						href="https://www.youtube.com/@quznecYoutube/videos"
 						target="_blank"
 						rel="noopener noreferrer"
-					>quznec</Button>
+					>quznec</Button>, <Button
+						variant="link"
+						class="p-0 text-foreground underline"
+						href="https://www.youtube.com/@strimuska"
+						target="_blank"
+						rel="noopener noreferrer"
+					>стримушка</Button>
 				</span>
 			</div>
 			<div class="mt-[40px] text-4xl font-bold">Команда разработчиков</div>
