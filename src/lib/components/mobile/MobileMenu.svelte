@@ -5,40 +5,50 @@
 	import StatsIcon from '../icons/new/StatsIcon.svelte'
 	import { Button } from '../ui/button'
 	import type { MobilePage } from './types'
+	import { goto } from '$app/navigation'
 
 	type Props = {
 		page: MobilePage
 	}
 
 	let { page = $bindable() }: Props = $props()
+
+	function setPage(newPage: MobilePage) {
+		page = newPage
+		// Update URL when changing pages
+		if (newPage === 'map') {
+			goto('/', { noScroll: true, replaceState: false })
+		}
+		// Other pages don't have specific URLs in mobile view
+	}
 </script>
 
 <div class="sticky top-2 z-1000 flex gap-2 p-2">
 	<Button
 		class="flex-1 rounded-xl"
 		variant={page === 'map' ? 'default' : 'secondary'}
-		onclick={() => (page = 'map')}
+		onclick={() => setPage('map')}
 	>
 		<MapIcon />
 	</Button>
 	<Button
 		class="flex-1 rounded-xl"
 		variant={page === 'table' ? 'default' : 'secondary'}
-		onclick={() => (page = 'table')}
+		onclick={() => setPage('table')}
 	>
 		<StatsIcon />
 	</Button>
 	<Button
 		class="flex-1 rounded-xl"
 		variant={page === 'rules' ? 'default' : 'secondary'}
-		onclick={() => (page = 'rules')}
+		onclick={() => setPage('rules')}
 	>
 		<RulesIcon />
 	</Button>
 	<Button
 		class="flex-1 rounded-xl"
 		variant={page === 'about' ? 'default' : 'secondary'}
-		onclick={() => (page = 'about')}
+		onclick={() => setPage('about')}
 	>
 		<DevelopersIcon />
 	</Button>

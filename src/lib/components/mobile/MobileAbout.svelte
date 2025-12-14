@@ -111,14 +111,6 @@
 					</span>
 				{/each}
 			</div>
-			<div class="mt-[40px] text-4xl font-bold">Команда разработчиков</div>
-			<div class="mt-[20px] flex flex-col gap-5">
-				{#each developers as developer (developer.name)}
-					<span>
-						<strong class={developer.isFounder ? 'text-[#FF881E]' : ''}>{developer.name}</strong> — {developer.description}
-					</span>
-				{/each}
-			</div>
 			<div class="mt-[40px] text-4xl font-bold">Благодарности</div>
 			<div class="mt-[20px] flex flex-col gap-5">
 				<span>
@@ -130,6 +122,14 @@
 						rel="noopener noreferrer"
 					>quznec</Button>
 				</span>
+			</div>
+			<div class="mt-[40px] text-4xl font-bold">Команда разработчиков</div>
+			<div class="mt-[20px] flex flex-col gap-5">
+				{#each developers as developer (developer.name)}
+					<span>
+						<strong class={developer.isFounder ? 'text-[#FF881E]' : ''}>{developer.name}</strong> — {developer.description}
+					</span>
+				{/each}
 			</div>
 		</div>
 	</div>

@@ -7,6 +7,8 @@
 	import ArrowUp from '$lib/components/icons/new/ArrowUp.svelte'
 	import ArrowDown from '$lib/components/icons/new/ArrowDown.svelte'
 	import PlayerAvatar from '../player/PlayerAvatar.svelte'
+	import { Dialog, DialogContent, DialogTitle } from '../ui/dialog'
+	import { Button } from '../ui/button'
 
 	type Props = {
 		navigateToPlayer: (slug: string) => void
@@ -42,6 +44,26 @@
 	]
 
 	const players101 = $derived(playersByPosition.get(101))
+
+	let selectedPlayers = $state<PlayerData[] | null>(null)
+	let dialogOpen = $state(false)
+
+	function handleCellClick(playersInCell: PlayerData[] | undefined) {
+		if (!playersInCell || playersInCell.length === 0) return
+		
+		if (playersInCell.length === 1) {
+			navigateToPlayer(playersInCell[0].slug)
+		} else {
+			selectedPlayers = playersInCell
+			dialogOpen = true
+		}
+	}
+
+	function handlePlayerSelect(player: PlayerData) {
+		dialogOpen = false
+		navigateToPlayer(player.slug)
+		selectedPlayers = null
+	}
 </script>
 
 {#snippet playerIcon(player: PlayerData)}
@@ -100,16 +122,31 @@
 			{#each row as cellId (cellId)}
 				{#if cellId === 0}
 					{@const playersOnStart = playersByPosition.get(cellId)}
-					<div class="flex w-full items-center gap-1 rounded-md bg-[#222222] p-2">
+					<button
+						onclick={() => handleCellClick(playersOnStart)}
+						class="flex w-full items-center gap-1 rounded-md bg-[#222222] p-2"
+					>
 						<div class="font-bold text-[#666666]">Старт</div>
 						{#if playersOnStart}
 							<div class="flex flex-wrap items-center justify-center gap-0.5">
-								{#each playersOnStart as player (player.slug)}
-									{@render playerIcon(player)}
-								{/each}
+								{#if playersOnStart.length === 1}
+									{@render playerIcon(playersOnStart[0])}
+								{:else}
+									{#each playersOnStart as player (player.slug)}
+										<PlayerAvatar
+											src={player.avatar_link ?? ''}
+											name={player.username}
+											isOnline={Boolean(player.is_online)}
+											size="small"
+										/>
+									{/each}
+									{#if playersOnStart.length > 1}
+										<div class="ml-1 text-xs text-[#666666]">({playersOnStart.length})</div>
+									{/if}
+								{/if}
 							</div>
 						{/if}
-					</div>
+					</button>
 				{:else}
 					<div
 						class="relative flex aspect-square flex-1 items-center justify-center overflow-hidden rounded-md bg-[#222222] text-center font-bold text-[#666666]"
@@ -128,13 +165,22 @@
 							{#if playersInCell && playersInCell.length === 1}
 								{@render playerIcon(playersInCell[0])}
 							{:else if playersInCell && playersInCell.length > 1}
-								<div
+								<button
+									onclick={() => handleCellClick(playersInCell)}
 									class="absolute inset-0 flex flex-wrap items-center justify-center gap-0.5 p-0.5"
 								>
 									{#each playersInCell as player (player.slug)}
-										{@render playerIcon(player)}
+										<PlayerAvatar
+											src={player.avatar_link ?? ''}
+											name={player.username}
+											isOnline={Boolean(player.is_online)}
+											size="small"
+										/>
 									{/each}
-								</div>
+									<div class="absolute bottom-0 left-0 right-0 bg-black/70 text-xs text-white text-center py-0.5">
+										{playersInCell.length}
+									</div>
+								</button>
 							{/if}
 						{/if}
 					</div>
@@ -143,3 +189,28 @@
 		</div>
 	{/each}
 </div>
+
+{#if selectedPlayers && selectedPlayers.length > 1}
+	<Dialog bind:open={dialogOpen}>
+		<DialogContent>
+			<DialogTitle>Выберите игрока</DialogTitle>
+			<div class="flex flex-col gap-2">
+				{#each selectedPlayers as player (player.slug)}
+					<Button
+						variant="outline"
+						class="flex items-center gap-3 p-3"
+						onclick={() => handlePlayerSelect(player)}
+					>
+						<PlayerAvatar
+							src={player.avatar_link ?? ''}
+							name={player.username}
+							isOnline={Boolean(player.is_online)}
+							size="small"
+						/>
+						<span class="font-semibold">{player.username}</span>
+					</Button>
+				{/each}
+			</div>
+		</DialogContent>
+	</Dialog>
+{/if}

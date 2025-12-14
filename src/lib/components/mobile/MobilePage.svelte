@@ -9,8 +9,10 @@
 	import type { MobilePage } from './types'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { Button } from '../ui/button'
+	import { page } from '$app/state'
+	import { goto } from '$app/navigation'
 
-	let page = $state<MobilePage>('map')
+	let pageState = $state<MobilePage>('map')
 	let selectedPlayerSlug = $state<string | null>(null)
 
 	const { playersBySlug } = getAppManagerContext()
@@ -22,36 +24,58 @@
 
 	function navigateToPlayer(slug: string) {
 		selectedPlayerSlug = slug
-		page = 'player'
+		pageState = 'player'
+		goto(`/players/${slug}`, { noScroll: true, replaceState: false })
 	}
 
 	function handleBackToMenu() {
-		page = 'map'
+		pageState = 'map'
 		selectedPlayerSlug = null
+		goto('/', { noScroll: true, replaceState: false })
 	}
+
+	// React to route changes
+	$effect(() => {
+		const pathname = page.url.pathname
+		const playerMatch = pathname.match(/^\/players\/([^/]+)$/)
+		
+		if (playerMatch) {
+			const slug = playerMatch[1]
+			if ($playersBySlug[slug]) {
+				selectedPlayerSlug = slug
+				pageState = 'player'
+			} else {
+				pageState = 'map'
+				selectedPlayerSlug = null
+			}
+		} else if (pathname === '/') {
+			pageState = 'map'
+			selectedPlayerSlug = null
+		}
+	})
 </script>
 
 <ScrollArea class="h-screen" type="always">
-	{#if page === 'player' && selectedPlayer}
+	{#if pageState === 'player' && selectedPlayer}
 		<div class="sticky top-2 z-1000 flex gap-2 p-2">
 			<Button class="rounded-xl" variant="secondary" onclick={handleBackToMenu}>← Назад</Button>
 		</div>
 	{:else}
-		<MobileMenu bind:page />
+		<MobileMenu bind:page={pageState} />
 	{/if}
 
 	<div class="mb-30 p-2">
-		{#if page === 'map'}
+		{#if pageState === 'map'}
 			<div class="mt-6">
 				<MobileMap {navigateToPlayer} />
 			</div>
-		{:else if page === 'table'}
+		{:else if pageState === 'table'}
 			<MobileLeaderboard {navigateToPlayer} />
-		{:else if page === 'rules'}
+		{:else if pageState === 'rules'}
 			<MobileRules />
-		{:else if page === 'player' && selectedPlayerSlug}
+		{:else if pageState === 'player' && selectedPlayerSlug}
 			<MobilePlayer playerSlug={selectedPlayerSlug} />
-		{:else if page === 'about'}
+		{:else if pageState === 'about'}
 			<MobileAbout />
 		{/if}
 	</div>
