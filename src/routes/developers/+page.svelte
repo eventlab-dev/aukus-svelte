@@ -120,6 +120,19 @@
 				{/each}
 			</div>
 
+			<div class="mt-[40px] text-4xl font-bold">Благодарности</div>
+			<div class="mt-[20px] flex flex-col gap-5">
+				<span>
+					Нарезки — <Button
+						variant="link"
+						class="p-0 text-foreground underline"
+						href="https://www.youtube.com/@quznecYoutube/videos"
+						target="_blank"
+						rel="noopener noreferrer"
+					>quznec</Button>
+				</span>
+			</div>
+
 			<div class="mt-[40px] text-4xl font-bold">Сделано с использованием</div>
 			<div class="mt-20 flex flex-wrap gap-4">
 				<Button variant="link" href="https://svelte.dev/" target="_blank" rel="noopener noreferrer">

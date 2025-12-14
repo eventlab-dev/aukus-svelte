@@ -67,6 +67,7 @@ export type StatItem = PlayerStatsItem & {
 	currentGame: string
 	position: number
 	total_score: number
+	clean_score: number
 	color: string
 }
 

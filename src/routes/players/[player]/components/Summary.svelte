@@ -1,7 +1,8 @@
 <script lang="ts">
 	import ImageLoader from '$lib/components/ImageLoader.svelte';
 	import { FALLBACK_GAME_POSTER } from '$lib/constants';
-	import { formatMs } from '$lib/utils';
+	import { formatMs, getPlayerCleanScore } from '$lib/utils';
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
 
 	type Props = {
 		totalScore: number;
@@ -10,9 +11,19 @@
 		gameImage: string;
 		gameDuration: number;
 		mainPlatform: string | null;
+		playerSlug: string;
 	};
 
-	const { totalScore, gamesCompleted, gameName, gameImage, gameDuration, mainPlatform }: Props = $props();
+	const { totalScore, gamesCompleted, gameName, gameImage, gameDuration, mainPlatform, playerSlug }: Props = $props();
+
+	const { statsStore } = getAppManagerContext();
+	const { statsBySlug } = statsStore;
+
+	const cleanScore = $derived.by(() => {
+		const stats = $statsBySlug[playerSlug];
+		if (!stats) return 0;
+		return getPlayerCleanScore(stats);
+	});
 
 	function getPlatformName(platform: string | null): string {
 		switch (platform?.toLowerCase()) {
@@ -38,6 +49,7 @@
 	<div class="flex w-[150px] flex-col gap-3 rounded-xl bg-card p-3">
 		<div class="text-sm leading-[17px] font-semibold text-muted-foreground">Очков получено</div>
 		<div class="text-5xl leading-[58px] font-bold">{totalScore}</div>
+		<div class="text-xs leading-[14px] text-muted-foreground">Чистые очки: {cleanScore}</div>
 	</div>
 	<div class="flex w-[476px] flex-col gap-3 rounded-xl bg-card p-3">
 		<div class="flex justify-between text-sm leading-[17px] font-semibold text-muted-foreground">

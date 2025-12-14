@@ -2,6 +2,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { StatItem, TableHeaderType } from '$lib/types'
 	import StatTable from '../../../routes/leaderboard/components/StatTable.svelte'
+	import { getPlayerCleanScore } from '$lib/utils'
 
 	type Props = {
 		navigateToPlayer: (slug: string) => void
@@ -26,7 +27,8 @@
 				currentGame: player.current_game ?? 'Выбирает игру...',
 				currentGameDuration: player.current_game_duration ?? null,
 				position: idx + 1,
-				games_time: playerStat.games_time * 1000
+				games_time: playerStat.games_time * 1000,
+				clean_score: getPlayerCleanScore(playerStat)
 			}
 		})
 	})
@@ -40,6 +42,7 @@
 		{ key: 'username', name: 'Стример', width: 120 },
 		{ key: 'map_position', name: 'Поз.', width: 60 },
 		{ key: 'total_score', name: 'Очки', width: 70 },
+		{ key: 'clean_score', name: 'Ч.очки', width: 80 },
 		{ key: 'games_completed', name: 'Прой.', width: 70 },
 		{ key: 'games_dropped', name: 'Дроп', width: 70 },
 		{ key: 'rerolls', name: 'Рерол', width: 70 },

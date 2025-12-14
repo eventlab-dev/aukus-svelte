@@ -232,6 +232,34 @@ export function getPlayerScore(stats: PlayerStatsItem) {
 	return Math.max(0, Math.floor(score))
 }
 
+export function getPlayerCleanScore(stats: PlayerStatsItem) {
+	const score =
+		stats.games_0_4 * 0.5 +
+		stats.games_5_10 * 1 +
+		stats.games_11_16 * 1.5 +
+		stats.games_17_24 * 2 +
+		stats.games_25_40 * 3 +
+		stats.games_40_plus * 4 -
+		stats.games_dropped * 2 -
+		stats.sheikh_moments * 2
+	return Math.max(0, score)
+}
+
+export function getPlayerCleanScoreDescription(stats: PlayerStatsItem) {
+	return [
+		'Очки без учета умножения на ряд и без ачивок',
+		`Игры 0-4: ${stats.games_0_4} * 0.5`,
+		`Игры 5-10: ${stats.games_5_10} * 1`,
+		`Игры 11-16: ${stats.games_11_16} * 1.5`,
+		`Игры 17-24: ${stats.games_17_24} * 2`,
+		`Игры 25-39: ${stats.games_25_40} * 3`,
+		`Игры 40+: ${stats.games_40_plus} * 4`,
+		`Дропы: -${stats.games_dropped} * 2`,
+		`Шейх-дропы: -${stats.sheikh_moments} * 2`,
+		`Всего: ${stats.games_0_4 * 0.5} + ${stats.games_5_10 * 1} + ${stats.games_11_16 * 1.5} + ${stats.games_17_24 * 2} + ${stats.games_25_40 * 3} + ${stats.games_40_plus * 4} - ${stats.games_dropped * 2} - ${stats.sheikh_moments * 2} = ${getPlayerCleanScore(stats)}`
+	]
+}
+
 export function getPlayerScoreDescription(stats: PlayerStatsItem) {
 	const row = cellRow(stats.map_position)
 	return [

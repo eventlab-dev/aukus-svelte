@@ -3,6 +3,7 @@
 	import StatTable from './components/StatTable.svelte'
 	import type { StatItem, TableHeaderType } from '$lib/types'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getPlayerCleanScore } from '$lib/utils'
 
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
@@ -21,7 +22,8 @@
 				currentGame: player.current_game ?? 'Выбирает игру...',
 				currentGameDuration: player.current_game_duration ?? null,
 				position: idx + 1,
-				games_time: playerStat.games_time * 1000
+				games_time: playerStat.games_time * 1000,
+				clean_score: getPlayerCleanScore(playerStat)
 			}
 		})
 	})
@@ -35,6 +37,7 @@
 		{ key: 'username', name: 'Стример', width: 137 },
 		{ key: 'map_position', name: 'Позиция', width: 114 },
 		{ key: 'total_score', name: 'Очки', width: 86 },
+		{ key: 'clean_score', name: 'Ч.очки', width: 120 },
 		{ key: 'games_completed', name: 'Пройдено', width: 120 },
 		{ key: 'games_dropped', name: 'Дропы', width: 94 },
 		{ key: 'rerolls', name: 'Реролы', width: 102 },

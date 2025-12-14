@@ -4,7 +4,7 @@
 	import Socials from '../Socials.svelte'
 	import ImageLoader from '../ImageLoader.svelte'
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
-	import { formatMs } from '$lib/utils'
+	import { formatMs, getPlayerCleanScore } from '$lib/utils'
 	import MoveCard from '../moveCard/MoveCard.svelte'
 	import { createGamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
 	import { createPlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
@@ -14,7 +14,8 @@
 	}
 
 	const { playerSlug }: Props = $props()
-	const { playersBySlug, eventDataStore } = getAppManagerContext()
+	const { playersBySlug, eventDataStore, statsStore } = getAppManagerContext()
+	const { statsBySlug } = statsStore
 
 	let gamesMatchesStoreForPlayer = $state(
 		createGamesMatchesStore({ eventDataStore, playerSlug })
@@ -103,6 +104,13 @@
 	}
 
 	const platformName = $derived(getPlatformName(player?.main_platform ?? null))
+
+	const cleanScore = $derived.by(() => {
+		if (!playerSlug) return 0;
+		const stats = $statsBySlug[playerSlug];
+		if (!stats) return 0;
+		return getPlayerCleanScore(stats);
+	});
 </script>
 
 {#if player}
@@ -129,6 +137,7 @@
 			<div class="flex flex-col gap-2 rounded-xl bg-card p-3">
 				<div class="text-sm font-semibold text-muted-foreground">Очков получено</div>
 				<div class="text-3xl font-bold">{player.total_score}</div>
+				<div class="text-xs text-muted-foreground">Чистые очки: {cleanScore}</div>
 			</div>
 			<div class="flex flex-col gap-2 rounded-xl bg-card p-3">
 				<div class="flex justify-between text-sm font-semibold text-muted-foreground">

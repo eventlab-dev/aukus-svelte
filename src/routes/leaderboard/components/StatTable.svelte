@@ -11,7 +11,7 @@
 	} from '$lib/components/ui/table'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import type { StatItem, TableHeaderType } from '$lib/types'
-	import { getPlayerScoreDescription, formatMs, formatDuration } from '$lib/utils'
+	import { getPlayerScoreDescription, getPlayerCleanScoreDescription, formatMs, formatDuration } from '$lib/utils'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type Props = {
@@ -65,18 +65,36 @@
 					style="width: {width}px"
 					onclick={() => selectSortKey(key)}
 				>
-					<span class="relative">
-						{name}
-						{#if sortByKey === key}
-							<span class="absolute left-[calc(100%_+_4px)]">
-								{#if sortOrder === 1}
-									↑
-								{:else}
-									↓
+					{#if key === 'clean_score'}
+						<Tooltip>
+							<TooltipTrigger class="relative w-full cursor-pointer">
+								{name}
+								{#if sortByKey === key}
+									<span class="absolute left-[calc(100%_+_4px)]">
+										{#if sortOrder === 1}
+											↑
+										{:else}
+											↓
+										{/if}
+									</span>
 								{/if}
-							</span>
-						{/if}
-					</span>
+							</TooltipTrigger>
+							<TooltipContent>Очки без учета умножения на ряд и без ачивок</TooltipContent>
+						</Tooltip>
+					{:else}
+						<span class="relative">
+							{name}
+							{#if sortByKey === key}
+								<span class="absolute left-[calc(100%_+_4px)]">
+									{#if sortOrder === 1}
+										↑
+									{:else}
+										↓
+									{/if}
+								</span>
+							{/if}
+						</span>
+					{/if}
 				</TableHead>
 			{/each}
 		</TableRow>
@@ -114,6 +132,20 @@
 								</TooltipTrigger>
 								<TooltipContent class="z-2000">
 									{@const description = getPlayerScoreDescription(player)}
+									{#each description as item (item)}
+										<p>{item}</p>
+									{/each}
+								</TooltipContent>
+							</Tooltip>
+						</TableCell>
+					{:else if key === 'clean_score'}
+						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
+							<Tooltip>
+								<TooltipTrigger class="w-full text-left">
+									{player[key]}
+								</TooltipTrigger>
+								<TooltipContent class="z-2000">
+									{@const description = getPlayerCleanScoreDescription(player)}
 									{#each description as item (item)}
 										<p>{item}</p>
 									{/each}
