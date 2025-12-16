@@ -109,3 +109,4 @@ export const LOGO_URL = `${CDN_URL_BASE}/map/logo.avif`
 export const LOGO_BG_URL = `${CDN_URL_BASE}/map/logo-bg.avif`
 
 export const FALLBACK_AVATAR_URL = 'https://github.com/shadcn.png'
+export const MOVIE_POSTER_URL = `${CDN_URL_BASE}/utils/movie_poster.png`

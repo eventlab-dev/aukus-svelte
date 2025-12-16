@@ -10,7 +10,7 @@
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
-	import { FALLBACK_GAME_POSTER, gameLengthRanges } from '$lib/constants'
+	import { FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
@@ -107,6 +107,13 @@
 		1: 'На сложном',
 		2: 'На очень сложном'
 	}
+
+	const posterUrl = $derived.by(() => {
+		if (move.type === 'movie') {
+			return MOVIE_POSTER_URL
+		}
+		return move.cover_image_url || FALLBACK_GAME_POSTER
+	})
 </script>
 
 <div
@@ -173,7 +180,7 @@
 
 	<div class="mt-3 flex flex-col gap-3 md:flex-row">
 		<ImageLoader
-			src={move.cover_image_url || FALLBACK_GAME_POSTER}
+			src={posterUrl}
 			alt={move.item_title || ''}
 			class="h-[100px] w-[75px] flex-shrink-0 md:h-[140px] md:w-[105px]"
 		/>
