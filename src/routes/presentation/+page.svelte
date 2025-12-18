@@ -5,7 +5,12 @@
 	import PlayerStats from './components/PlayerStats.svelte'
 	import SnowflakeIcon from '$lib/components/icons/SnowflakeIcon.svelte'
 
-	const { playersInOrder } = getAppManagerContext()
+	const { playersInOrder, eventDataStore } = getAppManagerContext()
+	const { eventSettings } = eventDataStore
+
+	const videoFinalUrl = $derived(
+		typeof $eventSettings?.video_final_url === 'string' ? $eventSettings.video_final_url : null
+	)
 
 	let pageId = $state(0)
 
@@ -59,8 +64,23 @@
 {:else if currentPlayer}
 	<PlayerStats player={currentPlayer} position={$playersInOrder.length - pageId + 1} />
 {:else if pageId === pagesAmount - 1}
-	<div class="mt-[200px] flex justify-center">
-		<div class="text-3xl">Титры</div>
+	<div class="mt-[100px] flex justify-center">
+		{#if videoFinalUrl}
+			<div class="flex flex-col items-center gap-6">
+				<video
+					class="rounded-xl shadow-2xl"
+					width="1280"
+					height="720"
+					controls
+					autoplay
+					src={videoFinalUrl}
+				>
+					<track kind="captions" />
+				</video>
+			</div>
+		{:else}
+			<div class="text-3xl">Титры</div>
+		{/if}
 	</div>
 {/if}
 
