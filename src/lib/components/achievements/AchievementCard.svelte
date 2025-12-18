@@ -65,12 +65,18 @@
 			</div>
 		</TooltipTrigger>
 		<TooltipContent side="bottom" align="start" class="flex flex-col gap-1.5">
-			Получили:
 			{#each playersWithAchievement as player (player.slug)}
 				{#if playersWithFirstAchievement.find((p) => p.slug === player.slug)}
-					<div class="text-[#FF881E]">{$playersBySlug[player.slug]?.username}</div>
+					<div>{$playersBySlug[player.slug]?.username} - первый</div>
 				{:else}
 					<div>{$playersBySlug[player.slug]?.username}</div>
+				{/if}
+			{/each}
+
+			<div class="mt-3"></div>
+			{#each $players as player (player.slug)}
+				{#if !playersWithAchievement.find((p) => p.slug === player.slug)}
+					<div class="text-muted-foreground">{$playersBySlug[player.slug]?.username}</div>
 				{/if}
 			{/each}
 		</TooltipContent>
