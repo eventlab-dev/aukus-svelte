@@ -49,7 +49,7 @@
 		return { bestGame: stats?.best_game, worstGame: stats?.worst_game }
 	})
 
-	const gamesDelay = 2000
+	const gamesDelay = 1000
 </script>
 
 <div class="mt-[100px] flex flex-col">
@@ -61,7 +61,7 @@
 			>
 				{position}-ое место
 			</div>
-			<div in:slide|global={{ duration: 1000, delay: 0 }}>
+			<div in:fly|global={{ duration: 500, delay: 0, y: 100 }}>
 				<div class="flex w-full justify-center">
 					<PlayerAvatar src={player.avatar_link ?? ''} name={player.username} size="lg" />
 				</div>

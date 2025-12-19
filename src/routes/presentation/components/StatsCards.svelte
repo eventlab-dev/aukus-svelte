@@ -12,7 +12,7 @@
 
 	let { stats }: Props = $props()
 
-	const baseDelay = 500
+	const baseDelay = 200
 </script>
 
 <div class="flex flex-wrap justify-center gap-3">
