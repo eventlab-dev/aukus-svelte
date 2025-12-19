@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition'
 	import { Button } from './ui/button'
 	import { routes } from '$lib/constants'
+	import SnowToggleButton from './SnowToggleButton.svelte'
 
 	const GAP = 3
 	const BASE_WIDTH = 180
@@ -25,7 +26,7 @@
 </script>
 
 <nav
-	class="absolute top-3 left-1/2 z-1000 mx-auto h-auto w-fit -translate-x-1/2 rounded-lg bg-card p-[3px] shadow-md"
+	class="absolute top-3 left-1/2 z-1000 mx-auto flex h-auto w-fit -translate-x-1/2 items-center gap-1 rounded-lg bg-card p-[3px] shadow-md"
 >
 	<div class="relative flex h-full w-fit items-center" style="gap: {GAP}px">
 		{#each routes as route, idx (route.title)}
@@ -47,5 +48,8 @@
 				transition:fade={{ duration: 200 }}
 			></span>
 		{/if}
+	</div>
+	<div class="border-l border-border pl-1">
+		<SnowToggleButton />
 	</div>
 </nav>

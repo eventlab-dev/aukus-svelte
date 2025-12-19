@@ -17,6 +17,7 @@
 	import { page } from '$app/state'
 	import FrontVersionInfo from '$lib/components/FrontVersionInfo.svelte'
 	import Metrika from '$lib/components/Metrika.svelte'
+	import SnowEffect from './SnowEffect.svelte'
 
 	let { children } = $props()
 
@@ -86,6 +87,7 @@
 {/if}
 
 <Metrika />
+<SnowEffect />
 {#if !hidePanels}
 	<FrontVersionInfo />
 {/if}
