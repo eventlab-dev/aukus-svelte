@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { formatDuration, renderToHTML } from '$lib/utils'
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 
 	type Props = {
-		game: PlayerMove
-		title: str
+		game: PlayerMoveItem
+		title: string
 	}
 
 	let { game, title }: Props = $props()

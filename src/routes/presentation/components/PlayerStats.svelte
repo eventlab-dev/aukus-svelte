@@ -6,7 +6,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import GamepadIcon from '$lib/components/icons/new/GamepadIcon.svelte'
 	import StatsCards from './StatsCards.svelte'
-	import { fly, slide } from 'svelte/transition'
+	import { fly } from 'svelte/transition'
 
 	type Props = {
 		player: PlayerData

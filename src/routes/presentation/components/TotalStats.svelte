@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { fly, slide } from 'svelte/transition'
+	import { fly } from 'svelte/transition'
 	import StatsCards from './StatsCards.svelte'
 	import GameCard from './GameCard.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { onMount } from 'svelte'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 
 	const { statsStore, eventDataStore } = getAppManagerContext()
 	const { stats } = statsStore
@@ -43,15 +44,18 @@
 	})
 
 	const bestGame = $derived.by(() => {
-		return $stats.reduce((acc, item) => {
+		return $stats.reduce((acc: PlayerMoveItem | null, item) => {
 			const game = item.best_game
 			if (!acc) {
 				return game
 			}
-			if (game.item_rating > acc.item_rating) {
+			if (!game) {
+				return acc
+			}
+			if (game.item_rating > acc?.item_rating) {
 				return game
 			}
-			if (game.item_duration > acc.item_duration) {
+			if (game.item_duration > acc?.item_duration) {
 				return game
 			}
 			return acc
@@ -59,10 +63,13 @@
 	})
 
 	const worstGame = $derived.by(() => {
-		return $stats.reduce((acc, item) => {
+		return $stats.reduce((acc: PlayerMoveItem | null, item) => {
 			const game = item.worst_game
 			if (!acc) {
 				return game
+			}
+			if (!game) {
+				return acc
 			}
 			if (game.item_rating < acc.item_rating) {
 				return game
@@ -86,7 +93,7 @@
 	{#if show}
 		<div
 			class="font-roboto-wide-black-alt mb-7 text-center text-6xl"
-			in:slide|global={{ duration: 1000, delay: 0 }}
+			in:fly|global={{ duration: 1000, delay: 0, y: 100 }}
 		>
 			АУКУС 4
 		</div>
