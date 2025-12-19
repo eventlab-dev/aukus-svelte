@@ -9,6 +9,7 @@
 	import { fly } from 'svelte/transition'
 	import WinIcon from '$lib/components/icons/new/WinIcon.svelte'
 	import PlayerModel from '$lib/components/map/PlayerModel.svelte'
+	import SkinPreview from '$lib/components/skinEditor/SkinPreview.svelte'
 
 	type Props = {
 		player: PlayerData
@@ -19,7 +20,7 @@
 
 	const { statsStore, eventDataStore } = getAppManagerContext()
 	const { statsBySlug } = statsStore
-	const { achievementsWithScores } = eventDataStore
+	const { achievementsWithScores, achievementsById, skinsById } = eventDataStore
 
 	const playerStats = $derived.by(() => {
 		const stats = $statsBySlug[player.slug]
@@ -62,10 +63,15 @@
 		return 0
 	})
 
+	const rareAchievement = $derived.by(() => {
+		const rare = player.unlocked_achievements[0]
+		return $achievementsById.get(rare?.id)
+	})
+
 	const gamesDelay = 1000
 </script>
 
-<div class="mt-[100px] flex flex-col">
+<div class="mt-[100px] mb-[200px] flex flex-col">
 	{#key player.slug}
 		<div class="mb-[20px] w-full text-center">
 			<div
@@ -100,7 +106,18 @@
 				<div class="text-[#9F9F9F]">Достижений получено</div>
 				<div class="mt-5 text-7xl font-bold">{achievementsPercent.toFixed(0)}%</div>
 			</div>
-			<div class="w-[440px] rounded-xl bg-card p-3 text-[#9F9F9F]">Самое редкое достижение</div>
+			{#if rareAchievement}
+				{@const skin = $skinsById.get(rareAchievement.reward_skin_id)}
+				{#if skin}
+					<div class="w-[440px] rounded-xl bg-card p-3">
+						<div class="text-[#9F9F9F]">Самое редкое достижение</div>
+						<div class="mt-5 flex text-2xl font-bold">
+							<div class="h-[100px]"><SkinPreview {skin} /></div>
+							{rareAchievement.description}
+						</div>
+					</div>
+				{/if}
+			{/if}
 			<div class="flex w-[144px] justify-center rounded-xl bg-card">
 				<PlayerModel {player} variant="big" />
 			</div>
