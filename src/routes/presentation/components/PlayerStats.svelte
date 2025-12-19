@@ -7,6 +7,8 @@
 	import GamepadIcon from '$lib/components/icons/new/GamepadIcon.svelte'
 	import StatsCards from './StatsCards.svelte'
 	import { fly } from 'svelte/transition'
+	import WinIcon from '$lib/components/icons/new/WinIcon.svelte'
+	import PlayerModel from '$lib/components/map/PlayerModel.svelte'
 
 	type Props = {
 		player: PlayerData
@@ -49,6 +51,17 @@
 		return { bestGame: stats?.best_game, worstGame: stats?.worst_game }
 	})
 
+	const achievementsPercent = $derived.by(() => {
+		const stats = $statsBySlug[player.slug]
+		if (stats) {
+			const totalAchievements = $achievementsWithScores.length
+			const playerAchievements = stats.first_achievements + stats.regular_achievements
+			// round
+			return (playerAchievements / totalAchievements) * 100
+		}
+		return 0
+	})
+
 	const gamesDelay = 1000
 </script>
 
@@ -73,6 +86,23 @@
 		<div class="flex w-full justify-center">
 			<div class="flex max-w-[1100px] justify-center">
 				<StatsCards stats={playerStats} />
+			</div>
+		</div>
+		<div
+			class="font-roboto-wide-black-alt mt-[120px] mb-[20px] flex w-full items-center justify-center gap-[10px] text-3xl text-[var(--player-color)]"
+			style={`--player-color: ${player.color}`}
+		>
+			<WinIcon class="size-8" />
+			Достижения
+		</div>
+		<div class="flex w-full justify-center gap-3">
+			<div class="w-fit rounded-xl bg-card p-3">
+				<div class="text-[#9F9F9F]">Достижений получено</div>
+				<div class="mt-5 text-7xl font-bold">{achievementsPercent.toFixed(0)}%</div>
+			</div>
+			<div class="w-[440px] rounded-xl bg-card p-3 text-[#9F9F9F]">Самое редкое достижение</div>
+			<div class="flex w-[144px] justify-center rounded-xl bg-card">
+				<PlayerModel {player} variant="big" />
 			</div>
 		</div>
 		<div
