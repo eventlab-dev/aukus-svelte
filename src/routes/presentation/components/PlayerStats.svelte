@@ -134,7 +134,7 @@
 				{#if skin}
 					<div class="w-[440px] rounded-xl bg-card p-3">
 						<div class="text-[#9F9F9F]">Самое редкое достижение</div>
-						<div class="align-center mt-5 flex text-2xl font-bold">
+						<div class="align-center mt-5 flex gap-3 text-2xl font-bold">
 							<div class="h-[100px]"><SkinPreview {skin} /></div>
 							{rareAchievement.description}
 						</div>
