@@ -93,7 +93,7 @@
 	})
 </script>
 
-<div class="mt-[100px] mb-[200px] flex flex-col">
+<div class="flex flex-col">
 	{#key player.slug}
 		<div class="mb-[20px] w-full text-center">
 			<div

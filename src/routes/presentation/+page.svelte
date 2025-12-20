@@ -57,13 +57,15 @@
 	</div>
 </div>
 
-<div class="relative z-50">
+<div class="relative z-50 mb-[100px]">
 	{#if pageId === 0}
 		<div class="mt-[220px] flex justify-center">
 			<TotalStats />
 		</div>
 	{:else if currentPlayer}
-		<PlayerStats player={currentPlayer} position={$playersInOrder.length - pageId + 1} />
+		<div class="mt-[100px]">
+			<PlayerStats player={currentPlayer} position={$playersInOrder.length - pageId + 1} />
+		</div>
 	{:else if pageId === pagesAmount - 1}
 		<div class="mt-[100px] flex justify-center">
 			{#if videoFinalUrl}
@@ -84,10 +86,11 @@
 			{/if}
 		</div>
 	{/if}
+	{#if showImages}
+		<div
+			class="absolute bottom-[-200px] left-[-180px] z-10 h-[330px] w-fit overflow-hidden blur-2xl"
+		>
+			<SnowflakeIcon class="size-[500px]" {color} />
+		</div>
+	{/if}
 </div>
-
-{#if showImages}
-	<div class="absolute bottom-[-200px] left-[-200px] z-10 w-fit blur-2xl">
-		<SnowflakeIcon class="size-[500px]" {color} />
-	</div>
-{/if}
