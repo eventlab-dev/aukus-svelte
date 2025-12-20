@@ -67,9 +67,15 @@
 	const rareAchievement = $derived.by(() => {
 		const rare = player.unlocked_achievements.reduce(
 			(acc: UnlockedAchievementItem | null, next: UnlockedAchievementItem) => {
-				if (!acc) return next
-				const accRarity = $achievementsRarity.get(acc.id)
 				const nextRarity = $achievementsRarity.get(next.id)
+				if (!acc) {
+					if (nextRarity) {
+						return next
+					}
+					return acc
+				}
+				const accRarity = $achievementsRarity.get(acc.id)
+
 				if (nextRarity && accRarity) {
 					return nextRarity < accRarity ? next : acc
 				}
@@ -82,6 +88,8 @@
 		}
 		return null
 	})
+
+	$inspect($achievementsRarity, rareAchievement, 'rareAchievement')
 
 	const gamesDelay = 1000
 </script>
