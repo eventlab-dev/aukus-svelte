@@ -57,32 +57,34 @@
 	</div>
 </div>
 
-{#if pageId === 0}
-	<div class="mt-[220px] flex justify-center">
-		<TotalStats />
-	</div>
-{:else if currentPlayer}
-	<PlayerStats player={currentPlayer} position={$playersInOrder.length - pageId + 1} />
-{:else if pageId === pagesAmount - 1}
-	<div class="mt-[100px] flex justify-center">
-		{#if videoFinalUrl}
-			<div class="flex flex-col items-center gap-6">
-				<video
-					class="rounded-xl shadow-2xl"
-					width="1280"
-					height="720"
-					controls
-					autoplay
-					src={videoFinalUrl}
-				>
-					<track kind="captions" />
-				</video>
-			</div>
-		{:else}
-			<div class="text-3xl">Титры</div>
-		{/if}
-	</div>
-{/if}
+<div class="relative z-50">
+	{#if pageId === 0}
+		<div class="mt-[220px] flex justify-center">
+			<TotalStats />
+		</div>
+	{:else if currentPlayer}
+		<PlayerStats player={currentPlayer} position={$playersInOrder.length - pageId + 1} />
+	{:else if pageId === pagesAmount - 1}
+		<div class="mt-[100px] flex justify-center">
+			{#if videoFinalUrl}
+				<div class="flex flex-col items-center gap-6">
+					<video
+						class="rounded-xl shadow-2xl"
+						width="1280"
+						height="720"
+						controls
+						autoplay
+						src={videoFinalUrl}
+					>
+						<track kind="captions" />
+					</video>
+				</div>
+			{:else}
+				<div class="text-3xl">Титры</div>
+			{/if}
+		</div>
+	{/if}
+</div>
 
 {#if showImages}
 	<div class="absolute bottom-[-200px] left-[-200px] z-10 w-fit blur-2xl">
