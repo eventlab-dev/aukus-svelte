@@ -77,6 +77,9 @@
 				const accRarity = $achievementsRarity.get(acc.id)
 
 				if (nextRarity && accRarity) {
+					if (nextRarity === accRarity) {
+						return acc.unlocked_at > next.unlocked_at ? acc : next
+					}
 					return nextRarity < accRarity ? next : acc
 				}
 				return acc
@@ -88,8 +91,6 @@
 		}
 		return null
 	})
-
-	$inspect($achievementsRarity, rareAchievement, 'rareAchievement')
 
 	const gamesDelay = 1000
 </script>
