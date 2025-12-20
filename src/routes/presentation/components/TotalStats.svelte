@@ -101,10 +101,7 @@
 			<StatsCards stats={showStats} />
 		</div>
 		{#if bestGame && worstGame}
-			<div
-				class="mt-3 flex justify-center gap-3"
-				in:fly|global={{ y: 20, duration: 400, delay: 2500 }}
-			>
+			<div class="mt-3 flex justify-center gap-3" in:fly|global={{ y: 20, duration: 400 }}>
 				<GameCard game={bestGame} title="Лучшая игра за сезон" />
 				<GameCard game={worstGame} title="Худшая игра за сезон" />
 			</div>
