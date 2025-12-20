@@ -93,7 +93,7 @@
 	{#if show}
 		<div
 			class="font-roboto-wide-black-alt mb-7 text-center text-6xl"
-			in:fly|global={{ duration: 1000, delay: 0, y: 100 }}
+			in:fly|global={{ duration: 500, delay: 0, y: 100 }}
 		>
 			АУКУС 4
 		</div>

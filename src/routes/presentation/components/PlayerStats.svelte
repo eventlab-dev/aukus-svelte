@@ -91,8 +91,6 @@
 		}
 		return null
 	})
-
-	const gamesDelay = 1000
 </script>
 
 <div class="mt-[100px] mb-[200px] flex flex-col">
@@ -118,50 +116,53 @@
 				<StatsCards stats={playerStats} />
 			</div>
 		</div>
-		<div
-			class="font-roboto-wide-black-alt mt-[120px] mb-[20px] flex w-full items-center justify-center gap-[10px] text-3xl text-[var(--player-color)]"
-			style={`--player-color: ${player.color}`}
-		>
-			<WinIcon class="size-8" />
-			Достижения
-		</div>
-		<div class="flex w-full justify-center gap-3">
-			<div class="w-fit rounded-xl bg-card p-3">
-				<div class="text-[#9F9F9F]">Достижений получено</div>
-				<div class="mt-5 text-7xl font-bold">{achievementsPercent.toFixed(0)}%</div>
+		<div in:fly|global={{ duration: 500, delay: 0, y: 100 }}>
+			<div
+				class="font-roboto-wide-black-alt mt-[120px] mb-[20px] flex w-full items-center justify-center gap-[10px] text-3xl text-[var(--player-color)]"
+				style={`--player-color: ${player.color}`}
+			>
+				<WinIcon class="size-8" />
+				Достижения
 			</div>
-			{#if rareAchievement}
-				{@const skin = $skinsById.get(rareAchievement.reward_skin_id)}
-				{#if skin}
-					<div class="w-[440px] rounded-xl bg-card p-3">
-						<div class="text-[#9F9F9F]">Самое редкое достижение</div>
-						<div class="align-center mt-5 flex gap-3 text-2xl font-bold">
-							<div class="h-[100px]"><SkinPreview {skin} /></div>
-							{rareAchievement.description}
+			<div class="flex w-full justify-center gap-3">
+				<div class="w-fit rounded-xl bg-card p-3">
+					<div class="text-[#9F9F9F]">Достижений получено</div>
+					<div class="mt-5 text-7xl font-bold">{achievementsPercent.toFixed(0)}%</div>
+				</div>
+				{#if rareAchievement}
+					{@const skin = $skinsById.get(rareAchievement.reward_skin_id)}
+					{#if skin}
+						<div class="w-[440px] rounded-xl bg-card p-3">
+							<div class="text-[#9F9F9F]">Самое редкое достижение</div>
+							<div class="align-center mt-5 flex gap-3 text-2xl font-bold">
+								<div class="h-[100px]"><SkinPreview {skin} /></div>
+								{rareAchievement.description}
+							</div>
 						</div>
-					</div>
+					{/if}
 				{/if}
-			{/if}
-			<div class="flex w-[144px] justify-center rounded-xl bg-card">
-				<PlayerModel {player} variant="big" />
+				<div class="flex w-[144px] justify-center rounded-xl bg-card">
+					<PlayerModel {player} variant="big" />
+				</div>
 			</div>
 		</div>
+
 		<div
 			class="font-roboto-wide-black-alt mt-[120px] mb-[20px] flex w-full items-center justify-center gap-[10px] text-3xl text-[var(--player-color)]"
 			style={`--player-color: ${player.color}`}
-			in:fly|global={{ y: 5000, duration: 1000, delay: gamesDelay }}
+			in:fly|global={{ y: 5000, duration: 500 }}
 		>
 			<GamepadIcon class="size-8" />
 			Игры
 		</div>
 		<div class="flex w-full justify-center gap-3">
 			{#if bestGame}
-				<div in:fly|global={{ x: -5000, duration: 1000, delay: gamesDelay }}>
+				<div in:fly|global={{ x: -5000, duration: 500 }}>
 					<GameCard game={bestGame} title="Лучшая игра на ивенте" />
 				</div>
 			{/if}
 			{#if worstGame}
-				<div in:fly|global={{ x: 5000, duration: 1000, delay: gamesDelay }}>
+				<div in:fly|global={{ x: 5000, duration: 500 }}>
 					<GameCard game={worstGame} title="Худшая игра на ивенте" />
 				</div>
 			{/if}
