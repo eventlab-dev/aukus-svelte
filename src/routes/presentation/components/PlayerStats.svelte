@@ -10,6 +10,7 @@
 	import WinIcon from '$lib/components/icons/new/WinIcon.svelte'
 	import PlayerModel from '$lib/components/map/PlayerModel.svelte'
 	import SkinPreview from '$lib/components/skinEditor/SkinPreview.svelte'
+	import type { UnlockedAchievementItem } from '$lib/heyapi/aukus/types.gen'
 
 	type Props = {
 		player: PlayerData
@@ -20,7 +21,7 @@
 
 	const { statsStore, eventDataStore } = getAppManagerContext()
 	const { statsBySlug } = statsStore
-	const { achievementsWithScores, achievementsById, skinsById } = eventDataStore
+	const { achievementsWithScores, achievementsById, skinsById, achievementsRarity } = eventDataStore
 
 	const playerStats = $derived.by(() => {
 		const stats = $statsBySlug[player.slug]
@@ -64,8 +65,22 @@
 	})
 
 	const rareAchievement = $derived.by(() => {
-		const rare = player.unlocked_achievements[0]
-		return $achievementsById.get(rare?.id)
+		const rare = player.unlocked_achievements.reduce(
+			(acc: UnlockedAchievementItem | null, next: UnlockedAchievementItem) => {
+				if (!acc) return next
+				const accRarity = $achievementsRarity.get(acc.id)
+				const nextRarity = $achievementsRarity.get(next.id)
+				if (nextRarity && accRarity) {
+					return nextRarity < accRarity ? next : acc
+				}
+				return acc
+			},
+			null
+		)
+		if (rare) {
+			return $achievementsById.get(rare.id)
+		}
+		return null
 	})
 
 	const gamesDelay = 1000
@@ -111,7 +126,7 @@
 				{#if skin}
 					<div class="w-[440px] rounded-xl bg-card p-3">
 						<div class="text-[#9F9F9F]">Самое редкое достижение</div>
-						<div class="mt-5 flex text-2xl font-bold">
+						<div class="align-center mt-5 flex text-2xl font-bold">
 							<div class="h-[100px]"><SkinPreview {skin} /></div>
 							{rareAchievement.description}
 						</div>

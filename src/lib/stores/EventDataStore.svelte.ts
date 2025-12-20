@@ -62,6 +62,20 @@ export function createEventDataStore() {
 
 	const chatMessages = derived(eventData, ($eventData) => $eventData?.chat_messages ?? [])
 
+	const achievementsRarity = derived(
+		[achievementsWithScores, players],
+		([$achievements, $players]) => {
+			const rarityMap = new SvelteMap<number, number>()
+			$achievements.forEach((achievement) => {
+				const unlockedPlayers = $players.filter((player) =>
+					player.unlocked_achievements.some((a) => a.id === achievement.id)
+				)
+				rarityMap.set(achievement.id, unlockedPlayers.length)
+			})
+			return rarityMap
+		}
+	)
+
 	return {
 		eventDataQuery,
 		players,
@@ -74,7 +88,8 @@ export function createEventDataStore() {
 		eventSettings,
 		diceOptions,
 		chatMessages,
-		achievementsWithScores
+		achievementsWithScores,
+		achievementsRarity
 	}
 }
 
