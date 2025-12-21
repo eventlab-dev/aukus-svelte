@@ -58,7 +58,7 @@
 	<DialogTrigger>
 		<LifebuoyIcon /> Колёса
 	</DialogTrigger>
-	<DialogContent showCloseButton={false} class="bg-unset shadow-none">
+	<DialogContent showCloseButton={false} class="bg-unset max-w-[850px]! shadow-none">
 		<div class="top-3 flex justify-center gap-3">
 			<Button
 				variant={!isMomentType ? 'default' : 'secondary'}
@@ -83,7 +83,7 @@
 				<Wheel entries={currentEntries} size={564} {onSpinStart} {onSpinEnd} />
 			{/key}
 
-			<div class="absolute bottom-0 left-[calc(100%_+_2.5rem)] z-50">
+			<div class="absolute bottom-[40px] left-[calc(100%_-_5rem)] z-50">
 				<Volume />
 			</div>
 		</div>

@@ -324,7 +324,7 @@
 	</div>
 	<div class="absolute top-1/2 left-1/2 z-20 -translate-1/2">
 		<StartButton
-			{isSpinning}
+			disabled={Boolean(isSpinning || winner)}
 			{textSize}
 			{buttonSize}
 			strokeColor={STROKE_COLOR}
