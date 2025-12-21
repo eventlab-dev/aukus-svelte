@@ -55,7 +55,7 @@
 	// }
 </script>
 
-{#key $myUser?.slug}
+{#key [$myUser?.slug, $eventFinished]}
 	<Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
 		<CollapsibleTrigger class="w-full">
 			{#if $myUser}
