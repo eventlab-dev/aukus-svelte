@@ -217,7 +217,7 @@ function cellRow(position: number) {
 
 export function getPlayerScore(stats: PlayerStatsItem) {
 	// («Пройденные игры до 15ч» * 1 + «Пройденные игры до 30ч» * 1,5 + «Пройденные игры от 30ч» * 2 - дропнутые игры)*ряд
-	const row = Math.max(10, cellRow(stats.map_position))
+	const row = Math.min(10, cellRow(stats.map_position))
 
 	const score =
 		(stats.games_0_4 * 0.5 +
@@ -262,7 +262,7 @@ export function getPlayerCleanScoreDescription(stats: PlayerStatsItem) {
 }
 
 export function getPlayerScoreDescription(stats: PlayerStatsItem) {
-	const row = Math.max(10, cellRow(stats.map_position))
+	const row = Math.min(10, cellRow(stats.map_position))
 
 	return [
 		`Игры 0-4: ${stats.games_0_4} * 0.5`,
