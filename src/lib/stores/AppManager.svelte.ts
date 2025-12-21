@@ -15,6 +15,7 @@ import { createGamesMatchesStore } from './GamesMatchesStore.svelte'
 import { createErrorNotificationStore } from './ErrorNotificationStore.svelte'
 import { createShitStore } from './ShitStore.svelte'
 import { createGameTimeStore } from './gameTimeStore'
+import { createNowStore } from './NowStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -38,6 +39,8 @@ export function createAppManager() {
 	const canvasStore = createCanvasStore()
 	const errorNotificationStore = createErrorNotificationStore()
 	const shitStore = createShitStore()
+
+	const nowStore = createNowStore()
 
 	const soundManager = new SoundManager()
 
@@ -138,13 +141,13 @@ export function createAppManager() {
 	})
 
 	const eventFinished = derived(
-		[eventDataStore.eventSettings, playersCompletedMap],
-		([$settings, $playersCompletedMap]) => {
+		[eventDataStore.eventSettings, playersCompletedMap, nowStore.nowSeconds],
+		([$settings, $playersCompletedMap, $nowSeconds]) => {
 			if ($playersCompletedMap.length > 0) {
 				return true
 			}
 			if ($settings?.event_end_time) {
-				return Number($settings?.event_end_time) * 1000 < Date.now()
+				return Number($settings?.event_end_time) <= $nowSeconds
 			}
 			return false
 		}
