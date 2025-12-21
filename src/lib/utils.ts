@@ -277,15 +277,30 @@ export function getPlayerScoreDescription(stats: PlayerStatsItem) {
 	]
 }
 
-export function formatDuration(timestamp: number, params: { includeSeconds?: boolean } = {}) {
-	const totalSeconds = Math.floor(timestamp)
-	const hours = Math.floor(totalSeconds / 3600)
-	const minutes = Math.floor((totalSeconds % 3600) / 60)
-	const seconds = totalSeconds % 60
-	if (!params.includeSeconds) {
-		return `${hours}ч ${minutes}м`
+export function formatDuration(
+	timestamp: number,
+	params: { seconds: boolean; minutes: boolean; hours: boolean } = {
+		seconds: false,
+		minutes: true,
+		hours: true
 	}
-	return `${hours}ч ${minutes}м ${seconds}с`
+) {
+	const totalSeconds = Math.floor(timestamp)
+
+	const parts = []
+	if (params.hours) {
+		const hours = Math.floor(totalSeconds / 3600)
+		parts.push(`${hours}ч`)
+	}
+	if (params.minutes) {
+		const minutes = Math.floor((totalSeconds % 3600) / 60)
+		parts.push(`${minutes}м`)
+	}
+	if (params.seconds) {
+		const seconds = totalSeconds % 60
+		parts.push(`${seconds}с`)
+	}
+	return parts.join(' ')
 }
 
 export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {

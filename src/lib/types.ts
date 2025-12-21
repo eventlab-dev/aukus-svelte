@@ -65,6 +65,7 @@ export type StatItem = PlayerStatsItem & {
 	username: string
 	avatarLink: string
 	currentGame: string
+	currentGameDuration: number
 	position: number
 	total_score: number
 	clean_score: number

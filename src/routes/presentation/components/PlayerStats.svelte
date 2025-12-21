@@ -34,7 +34,14 @@
 				{ title: 'Ходов сделано', value: stats.total_moves.toString() },
 				{ title: 'Игр дропнуто', value: stats.games_dropped.toString() },
 				{ title: 'Шейх-моментов', value: stats.sheikh_moments.toString() },
-				{ title: 'Часов наиграно', value: formatDuration(stats.games_time).toString() },
+				{
+					title: 'Часов наиграно',
+					value: formatDuration(stats.games_time, {
+						hours: true,
+						minutes: false,
+						seconds: false
+					}).toString()
+				},
 				{ title: 'Фильмов просмотрено', value: stats.movies.toString() },
 				{ title: 'Средняя оценка игр', value: stats.average_rating.toFixed(2) },
 				{

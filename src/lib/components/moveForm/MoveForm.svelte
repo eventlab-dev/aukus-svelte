@@ -2,7 +2,6 @@
 	import ImageLoader from '../ImageLoader.svelte'
 	import fallbackPoster from '$lib/assets/images/GameFallbackPoster.png'
 	import GameStatusSelector from './components/GameStatusSelector.svelte'
-	import HltbLink from './components/HLTBLink.svelte'
 	import Rating from './components/Rating.svelte'
 	import { Button } from '../ui/button'
 	import BoxIcon from '../icons/BoxIcon.svelte'
