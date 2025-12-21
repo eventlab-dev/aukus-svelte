@@ -1,16 +1,23 @@
 <script lang="ts">
 	import { LastMapPosition } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { getCellPosition, getWinnerPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
+	import {
+		getCellPosition,
+		getWinnerPosition,
+		laddersByCell,
+		snakesByCell,
+		type CellPosition
+	} from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
 	import { onMount } from 'svelte'
 	import PlayerModel from './PlayerModel.svelte'
 
 	type Props = {
 		player: PlayerData
+		asWinner?: boolean
 	}
 
-	const { player }: Props = $props()
+	const { player, asWinner }: Props = $props()
 
 	const {
 		players,
@@ -19,6 +26,7 @@
 		myPlayer,
 		turnState,
 		playersCompletedMap,
+		winners,
 		frontendState
 	} = getAppManagerContext()
 	const { playersBySlug } = eventDataStore
@@ -31,13 +39,6 @@
 			player.map_position === 102 &&
 			$turnState === 'player-win-animation'
 	)
-
-	const cellPosition = $derived.by(() => {
-		if (startWinAnimation) {
-			return getCellPosition(LastMapPosition)
-		}
-		return getCellPosition(player.map_position)
-	})
 
 	$effect(() => {
 		if (startWinAnimation && element) {
@@ -54,38 +55,62 @@
 			.sort((a, b) => a.slug.localeCompare(b.slug))
 	)
 
+	const doWinJumpAnimation = $derived(
+		(asWinner && $winners[0]?.slug === player.slug) || $playersCompletedMap[0]?.slug === player.slug
+	)
+
 	const {
 		x: cellOffsetX,
 		y: cellOffsetY,
+		cellPosition,
 		onlyName
 	} = $derived.by(() => {
 		const completedIndex = $playersCompletedMap.findIndex((p) => p.slug === player.slug)
 		if (completedIndex !== -1 && !startWinAnimation) {
 			const coord = getWinnerPosition(completedIndex + 1)
-			return { ...coord, onlyName: false }
+
+			let cellPosition: CellPosition
+			if (startWinAnimation) {
+				cellPosition = getCellPosition(LastMapPosition)
+			} else {
+				cellPosition = getCellPosition(player.map_position)
+			}
+
+			return { ...coord, onlyName: false, cellPosition }
+		}
+
+		const winnerIndex = $winners.findIndex((p) => p.slug === player.slug)
+
+		if (asWinner && winnerIndex !== -1) {
+			const coord = getWinnerPosition(winnerIndex + 1)
+			const cellPosition = getCellPosition(102)
+			return { ...coord, onlyName: false, cellPosition }
 		}
 
 		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
 
+		const cellPosition = getCellPosition(player.map_position)
+
 		if (player.map_position === 0) {
-			return { x: 160 + 100 * index, y: 20, onlyName: false }
+			return { x: 160 + 100 * index, y: 20, onlyName: false, cellPosition }
 		}
 
 		if (playersOnCell.length === 1) {
-			return { x: 26, y: 20, onlyName: false }
+			return { x: 26, y: 20, onlyName: false, cellPosition }
 		}
 
 		if (playersOnCell.length === 2) {
 			if (index === 0) {
-				return { x: 50, y: 0, onlyName: false }
+				return { x: 50, y: 0, onlyName: false, cellPosition }
 			}
-			return { x: -5, y: 35, onlyName: false }
+			return { x: -5, y: 35, onlyName: false, cellPosition }
 		}
 
 		return {
 			x: 20,
 			y: 20 + index * 30,
-			onlyName: true
+			onlyName: true,
+			cellPosition
 		}
 	})
 
@@ -148,8 +173,9 @@
 
 <div
 	bind:this={element}
-	class="absolute transition-opacity duration-300"
+	class="absolute transition-opacity duration-300 data-[win-jump=true]:animate-bounce"
 	style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}"
+	data-win-jump={doWinJumpAnimation}
 >
 	<button
 		onclick={onCharacterClick}

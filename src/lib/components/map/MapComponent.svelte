@@ -11,7 +11,7 @@
 	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'
 
-	const { players, movementStore, eventFinished } = getAppManagerContext()
+	const { players, movementStore, eventFinished, winners } = getAppManagerContext()
 
 	$effect(() => {
 		const mapWidth = 1715
@@ -41,7 +41,11 @@
 </div>
 
 {#if $eventFinished}
-	<Fireworks autostart {options} class="fireworks absolute top-0 left-0 z-9 h-[700px] w-full" />
+	<Fireworks
+		autostart
+		{options}
+		class="fireworks pointer-events-none absolute top-0 left-0 z-9 h-[700px] w-full"
+	/>
 {/if}
 
 <div class="mt-[310px] flex justify-center">
@@ -66,6 +70,10 @@
 			<MovementMarkers />
 			{#each $players as player (player.slug)}
 				<PlayerCharacter {player} />
+			{/each}
+
+			{#each $winners as player (player.slug)}
+				<PlayerCharacter {player} asWinner />
 			{/each}
 
 			<MapCountdowwn />
