@@ -68,6 +68,7 @@ export const AchievementBackgroundUrl = `${CDN_URL_BASE}/utils/achievement_backg
 
 export const DiceModelUrl = `${CDN_URL_BASE}/dice_skins/dice_model.glb`
 export const DefaultDiceTexture = `${CDN_URL_BASE}/dice_skins/default_texture.png`
+export const FINAL_VIDEO_POSTER = `${CDN_URL_BASE}/final_video_poster.png`
 
 const SOUNDS_URL_BASE = `https://storage.yandexcloud.net/eventlab/assets/eventlab/wheel/sounds`
 

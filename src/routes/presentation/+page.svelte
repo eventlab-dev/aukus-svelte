@@ -4,6 +4,7 @@
 	import TotalStats from './components/TotalStats.svelte'
 	import PlayerStats from './components/PlayerStats.svelte'
 	import SnowflakeIcon from '$lib/components/icons/SnowflakeIcon.svelte'
+	import { FINAL_VIDEO_POSTER } from '$lib/constants'
 
 	const { playersInOrder, eventDataStore } = getAppManagerContext()
 	const { eventSettings } = eventDataStore
@@ -75,7 +76,7 @@
 						width="1280"
 						height="720"
 						controls
-						autoplay
+						poster={FINAL_VIDEO_POSTER}
 						src={videoFinalUrl}
 					>
 						<track kind="captions" />
