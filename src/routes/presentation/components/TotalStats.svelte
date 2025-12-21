@@ -6,7 +6,7 @@
 	import { onMount } from 'svelte'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 
-	const { statsStore, eventDataStore } = getAppManagerContext()
+	const { statsStore, eventDataStore, playersBySlug } = getAppManagerContext()
 	const { stats } = statsStore
 	const { achievementsWithScores, achievements } = eventDataStore
 
@@ -37,7 +37,7 @@
 			{ title: 'Шейх-моментов', value: sheikhs.toString() },
 			{ title: 'Фильмов просмотрено', value: movies.toString() },
 			{ title: 'Средняя оценка игр', value: avgRating.toFixed(2) },
-			{ title: 'Достижений достигнуто', value: `${unlockedAchievements}/${totalAchievements}` },
+			{ title: 'Достижений получено', value: `${unlockedAchievements}/${totalAchievements}` },
 			{ title: 'Подсеров кинуто', value: shitsThrown.toString() },
 			{ title: 'Защиты использовано', value: shieldsUsed.toString() }
 		]
@@ -81,6 +81,13 @@
 		}, null)
 	})
 
+	const bestGamePlayerName = $derived(
+		bestGame ? $playersBySlug[bestGame.player_slug]?.username : null
+	)
+	const worstGamePlayerName = $derived(
+		worstGame ? $playersBySlug[worstGame.player_slug]?.username : null
+	)
+
 	let show = $state(false)
 
 	onMount(() => (show = true))
@@ -102,8 +109,8 @@
 		</div>
 		{#if bestGame && worstGame}
 			<div class="mt-3 flex justify-center gap-3" in:fly|global={{ y: 20, duration: 400 }}>
-				<GameCard game={bestGame} title="Лучшая игра за сезон" />
-				<GameCard game={worstGame} title="Худшая игра за сезон" />
+				<GameCard game={bestGame} title="Лучшая игра за сезон — {bestGamePlayerName}" />
+				<GameCard game={worstGame} title="Худшая игра за сезон — {worstGamePlayerName}" />
 			</div>
 		{/if}
 	{/if}
