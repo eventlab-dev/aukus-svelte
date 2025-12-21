@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fireworks-js/svelte':
+        specifier: ^2.10.8
+        version: 2.10.8(svelte@5.38.6)
       '@tanstack/svelte-query':
         specifier: ^5.90.1
         version: 5.90.1(svelte@5.38.6)
@@ -379,6 +382,11 @@ packages:
   '@eslint/plugin-kit@0.3.5':
     resolution: {integrity: sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@fireworks-js/svelte@2.10.8':
+    resolution: {integrity: sha512-suaFnG/ahpHghWnAEMW+YWlbOP4/pdJsrIl51gIT7J9HT3d9DADE3QVSDcNtswWKSTTnoNS609t/pChiSOTb9w==}
+    peerDependencies:
+      svelte: '>=3.0.0'
 
   '@floating-ui/core@1.7.3':
     resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
@@ -1321,6 +1329,9 @@ packages:
   find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
+
+  fireworks-js@2.10.8:
+    resolution: {integrity: sha512-UZNxeJvRmQzLisN4iriWXqKojG9TDJqc0dPmkUw0/+AEQQ3w8z1Jx2YdFSiBGSVb/u4dPTQXU109GMVblzhfpg==}
 
   flat-cache@4.0.1:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
@@ -2384,6 +2395,11 @@ snapshots:
       '@eslint/core': 0.15.2
       levn: 0.4.1
 
+  '@fireworks-js/svelte@2.10.8(svelte@5.38.6)':
+    dependencies:
+      fireworks-js: 2.10.8
+      svelte: 5.38.6
+
   '@floating-ui/core@1.7.3':
     dependencies:
       '@floating-ui/utils': 0.2.10
@@ -3360,6 +3376,8 @@ snapshots:
     dependencies:
       locate-path: 6.0.0
       path-exists: 4.0.0
+
+  fireworks-js@2.10.8: {}
 
   flat-cache@4.0.1:
     dependencies:
