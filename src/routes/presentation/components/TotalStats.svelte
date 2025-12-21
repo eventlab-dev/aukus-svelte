@@ -37,7 +37,7 @@
 			{ title: 'Шейх-моментов', value: sheikhs.toString() },
 			{ title: 'Фильмов просмотрено', value: movies.toString() },
 			{ title: 'Средняя оценка игр', value: avgRating.toFixed(2) },
-			{ title: 'Достижений получено', value: `${unlockedAchievements}/${totalAchievements}` },
+			{ title: 'Достижений достигнуто', value: `${unlockedAchievements}/${totalAchievements}` },
 			{ title: 'Подсеров кинуто', value: shitsThrown.toString() },
 			{ title: 'Защиты использовано', value: shieldsUsed.toString() }
 		]
