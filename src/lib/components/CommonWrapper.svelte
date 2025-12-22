@@ -35,14 +35,14 @@
 		if (!container) return
 
 		const wallpaper = new TWallpaper(container, {
-			fps: 1,
-			tails: 5,
-			animate: false,
+			fps: 30,
+			tails: 40,
+			animate: true,
 			scrollAnimate: false,
-			colors: ['#1c1c1c', '#1c1c1c', '#1c1c1c', '#1c1c1c'],
+			colors: ['#4a2020', '#204a20', '#4a4a20', '#203040'],
 			pattern: {
-				image: 'https://twallpaper.js.org/patterns/snowflakes.svg',
-				background: '#0c0c0c',
+				image: 'https://twallpaper.js.org/patterns/christmas.svg',
+				background: '#0a0a0a',
 				blur: 0,
 				size: '470px',
 				opacity: 1,
