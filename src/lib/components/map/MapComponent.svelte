@@ -38,15 +38,14 @@
 <div class="relative mt-[-60px] flex w-full justify-center">
 	<img src={LOGO_URL} class="absolute top-[170px] z-8 h-auto w-[300px]" alt="logo" />
 	<img src={LOGO_BG_URL} alt="back" class="absolute h-auto w-[1700px] max-w-[2000px]" />
+	{#if $eventFinished}
+		<Fireworks
+			autostart
+			{options}
+			class="fireworks pointer-events-none absolute top-0 left-0 z-9 h-[700px] w-full"
+		/>
+	{/if}
 </div>
-
-{#if $eventFinished}
-	<Fireworks
-		autostart
-		{options}
-		class="fireworks pointer-events-none absolute top-0 left-0 z-9 h-[700px] w-full"
-	/>
-{/if}
 
 <div class="mt-[310px] flex justify-center">
 	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
