@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { formatMs } from '$lib/utils'
+	import { Button } from '../ui/button'
 
 	const { eventDataStore } = getAppManagerContext()
 	const { eventSettings } = eventDataStore
@@ -43,5 +44,9 @@
 	<div class="absolute top-105 left-216 w-[160px] text-center text-xl text-black">
 		<div>{text}</div>
 		<div>{formatMs(timeLeft)}</div>
+	</div>
+{:else}
+	<div class="absolute top-105 left-216 w-[160px] text-center text-xl text-black">
+		<Button variant="link" class="p-0 text-black!" href="/presentation">Итоги</Button>
 	</div>
 {/if}
