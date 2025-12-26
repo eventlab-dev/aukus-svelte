@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { FALLBACK_AVATAR_URL } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import storable from '$lib/stores/LocalStore.svelte'
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
 	import Collapsible from '../collapsible/Collapsible.svelte'
 	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte'
@@ -20,33 +19,34 @@
 	import SkinRollerMenu from './options/SkinRollerMenu.svelte'
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
+	import { createLocalStore } from '$lib/stores/LocalStore.svelte'
 
 	const { usersStore, myPlayer, eventFinished } = getAppManagerContext()
 
 	const { myUser } = usersStore
 
-	const collapsed = storable('quickMenuCollapsed', false)
+	const collapsed = createLocalStore('quickMenuCollapsed', false)
 
 	let isTimelapseShown = $state(false)
 
-	$effect(() => {
-		if (!collapsed.value) {
-			isTimelapseShown = false
-		}
-	})
+	// $effect(() => {
+	// 	if (!$collapsed) {
+	// 		isTimelapseShown = false
+	// 	}
+	// })
 
-	const originalCollapsed = collapsed.value
+	// const originalCollapsed = collapsed.value
 
-	$effect(() => {
-		if ($myPlayer && !originalCollapsed) {
-			collapsed.value = true
-			collapsed.value = false
-		}
-	})
+	// $effect(() => {
+	// 	if ($myPlayer && !originalCollapsed) {
+	// 		collapsed.value = true
+	// 		collapsed.value = false
+	// 	}
+	// })
 
 	function closeTimelapse() {
 		isTimelapseShown = false
-		collapsed.value = false
+		// collapsed.value = false
 	}
 
 	// function openTimelapse() {
@@ -56,7 +56,7 @@
 </script>
 
 {#key [$myUser?.slug, $eventFinished]}
-	<Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
+	<Collapsible class="w-[260px]" bind:collapsed={$collapsed}>
 		<CollapsibleTrigger class="w-full">
 			{#if $myUser}
 				<Avatar class="size-[27px]">

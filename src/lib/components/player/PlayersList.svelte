@@ -5,6 +5,7 @@
 	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte'
 	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte'
 	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte'
+	import { createLocalStore } from '$lib/stores/LocalStore.svelte'
 
 	const { playersInOrder } = getAppManagerContext()
 
@@ -27,10 +28,12 @@
 
 		return () => clearInterval(interval)
 	})
+
+	const collapsed = createLocalStore('quickMenuCollapsed', false)
 </script>
 
 {#key $playersInOrder.length}
-	<Collapsible collapsed={false} class="w-[260px]">
+	<Collapsible bind:collapsed={$collapsed} class="w-[260px]">
 		<CollapsibleTrigger class="w-full">
 			<div>{currentTime} МСК</div>
 		</CollapsibleTrigger>

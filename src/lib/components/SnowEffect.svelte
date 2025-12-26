@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
-	import { snowStore, getFlakesCount } from '$lib/stores/SnowStore.svelte'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
-	const flakesCount = $derived(getFlakesCount(snowStore.value))
+	const { snowStore } = getAppManagerContext()
+	const { flakesCount, snowState } = snowStore
 </script>
 
-{#if browser && snowStore.value !== 'off'}
-	<snow-effect color="white" flakes={flakesCount} speed={1}></snow-effect>
+{#if browser && $snowState !== 'off'}
+	<snow-effect color="white" flakes={$flakesCount} speed={1}></snow-effect>
 {/if}

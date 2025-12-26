@@ -1,5 +1,4 @@
 import { SvelteMap } from 'svelte/reactivity'
-import storable from './LocalStore.svelte'
 
 type SoundConfig = {
 	volume?: number
@@ -13,12 +12,14 @@ class SoundManager {
 	private _audioContext: AudioContext
 	private _gainNode: GainNode
 	private _currentSource: AudioBufferSourceNode | null = null
-	private _settings = storable('soundManagerSettings', {
-		isMuted: false,
-		volume: 0.3,
-		volumeBeforeMute: 0.3,
-		lastPlayedSoundKey: ''
-	})
+	private _settings = {
+		value: {
+			isMuted: false,
+			volume: 0.3,
+			volumeBeforeMute: 0.3,
+			lastPlayedSoundKey: ''
+		}
+	}
 
 	readonly volumeBeforeMute = $derived(this._settings.value.volumeBeforeMute)
 	readonly isMuted = $derived(this._settings.value.isMuted)

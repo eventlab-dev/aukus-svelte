@@ -1,31 +1,45 @@
-import { browser } from "$app/environment";
+import { browser } from '$app/environment'
+import { writable } from 'svelte/store'
 
-export class LocalStore<T> {
-	private _value = $state<T>() as T;
-	private _key = '';
+export function createLocalStore<T>(key: string, defaultValue: T) {
+	const storageValue = writable<T>(defaultValue)
+	const localValue = writable<T>(defaultValue)
 
-	constructor(key: string, value: T) {
-		this._value = value;
-		this._key = key;
+	const eventKey = `storage-save-${key}`
 
-		if (browser) {
-			const savedValue = localStorage.getItem(this._key);
-			if (savedValue) this._value = JSON.parse(savedValue);
+	if (browser) {
+		function updateLocalValue() {
+			const savedValue = localStorage.getItem(key)
+			console.log('updating from localStorage', key, savedValue)
+			if (savedValue) {
+				try {
+					localValue.set(JSON.parse(savedValue))
+				} catch {
+					localValue.set(defaultValue)
+				}
+			} else {
+				localValue.set(defaultValue)
+			}
 		}
+
+		window.addEventListener(eventKey, () => {
+			updateLocalValue()
+		})
+
+		storageValue.subscribe((val) => {
+			console.log('saving to localStorage', key, val)
+			if (val === null) {
+				localStorage.removeItem(key)
+			} else {
+				localStorage.setItem(key, JSON.stringify(val))
+			}
+			window.dispatchEvent(new CustomEvent(eventKey))
+		})
 	}
 
-	get value() {
-		return this._value;
-	}
-
-	set value(val: T) {
-		localStorage.setItem(this._key, JSON.stringify(val));
-		this._value = val;
+	return {
+		subscribe: localValue.subscribe,
+		set: storageValue.set,
+		update: storageValue.update
 	}
 }
-
-function storable<T>(key: string, value: T) {
-	return new LocalStore(key, value);
-}
-
-export default storable;

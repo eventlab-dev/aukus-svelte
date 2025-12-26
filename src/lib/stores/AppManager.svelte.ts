@@ -16,6 +16,7 @@ import { createErrorNotificationStore } from './ErrorNotificationStore.svelte'
 import { createShitStore } from './ShitStore.svelte'
 import { createGameTimeStore } from './gameTimeStore'
 import { createNowStore } from './NowStore.svelte'
+import { createSnowStore } from './SnowStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -41,6 +42,7 @@ export function createAppManager() {
 	const shitStore = createShitStore()
 
 	const nowStore = createNowStore()
+	const snowStore = createSnowStore()
 
 	const soundManager = new SoundManager()
 
@@ -204,7 +206,8 @@ export function createAppManager() {
 		gamesMatchesStore,
 		isMobile,
 		shitStore,
-		gameTimeStore
+		gameTimeStore,
+		snowStore
 	}
 }
 
