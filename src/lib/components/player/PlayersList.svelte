@@ -29,7 +29,7 @@
 		return () => clearInterval(interval)
 	})
 
-	const collapsed = createLocalStore('quickMenuCollapsed', false)
+	const collapsed = createLocalStore('playersListCollapsed', false)
 </script>
 
 {#key $playersInOrder.length}
