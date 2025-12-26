@@ -22,9 +22,6 @@
 			const dateStr = formatDateToMSK(Number($eventSettings.event_start_time))
 			return `Ивент начнется ${dateStr} MSK`
 		}
-		if ($eventFinished) {
-			return 'Ивент завершён'
-		}
 		return null
 	})
 
