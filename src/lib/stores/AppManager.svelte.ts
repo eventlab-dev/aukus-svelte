@@ -17,6 +17,7 @@ import { createShitStore } from './ShitStore.svelte'
 import { createGameTimeStore } from './gameTimeStore'
 import { createNowStore } from './NowStore.svelte'
 import { createSnowStore } from './SnowStore.svelte'
+import { MapStore } from './MapStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -30,10 +31,13 @@ export function createAppManager() {
 
 	const { users, myUser } = usersStore
 
+	const mapStore = new MapStore()
+
 	const movementStore = createMovementStore({
 		eventDataStore,
 		frontendTurnState: frontendState,
-		usersStore
+		usersStore,
+		mapStore
 	})
 
 	const notificationStore = createNotificationStore({ eventDataStore })
@@ -181,6 +185,7 @@ export function createAppManager() {
 
 	const gameTimeStore = createGameTimeStore({ usersStore })
 
+
 	return {
 		usersStore,
 		gamesHistoryStore,
@@ -207,7 +212,8 @@ export function createAppManager() {
 		isMobile,
 		shitStore,
 		gameTimeStore,
-		snowStore
+		snowStore,
+		mapStore
 	}
 }
 

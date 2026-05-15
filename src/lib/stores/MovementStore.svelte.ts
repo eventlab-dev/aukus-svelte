@@ -1,7 +1,5 @@
 import { createTimeline } from 'animejs'
 import {
-	CellSize,
-	getCellPosition,
 	getMapCellById,
 	getWinnerPosition,
 	type MapCell
@@ -13,15 +11,18 @@ import { type PlayerData, type PlayerMovementState, type TurnState } from '$lib/
 import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME, LastMapPosition } from '$lib/constants'
 import type { FinishPlayerMoveResponse, PlayerItem } from '$lib/heyapi/aukus/types.gen'
 import type { UsersStore } from './UsersStore.svelte'
+import type { MapStore } from './MapStore.svelte'
 
 export function createMovementStore({
 	eventDataStore,
 	frontendTurnState,
-	usersStore
+	usersStore,
+	mapStore
 }: {
 	eventDataStore: EventDataStore
 	frontendTurnState: Writable<TurnState | null>
 	usersStore: UsersStore
+	mapStore: MapStore
 }) {
 	const playerElements = writable(new SvelteMap<string, HTMLElement>())
 
@@ -91,8 +92,8 @@ export function createMovementStore({
 		if (startCell === 0) {
 			// move to the start
 			timeline.add(element, {
-				left: `${getCellPosition(0).x + offsetInsideCellX}px`,
-				top: `${getCellPosition(0).y + offsetInsideCellY}px`,
+				left: `${mapStore.cellPositionById[0].x + offsetInsideCellX}px`,
+				top: `${mapStore.cellPositionById[0].y + offsetInsideCellY}px`,
 				duration: 700,
 				easing: 'easeInOutQuad',
 				// add "jump" effect
@@ -104,7 +105,7 @@ export function createMovementStore({
 		}
 
 		cellsPath.forEach((cell) => {
-			const pos = getCellPosition(cell.id)
+			const pos = mapStore.cellPositionById[cell.id]
 			timeline.add(element, {
 				left: `${pos.x + offsetInsideCellX}px`,
 				top: `${pos.y + offsetInsideCellY}px`,
@@ -121,7 +122,7 @@ export function createMovementStore({
 		let finalCell = endCell
 		// const ladder = laddersByCell[endCell]
 		if (params.moveResponse.ladder_to) {
-			const pos = getCellPosition(params.moveResponse.ladder_to)
+			const pos = mapStore.cellPositionById[params.moveResponse.ladder_to]
 			timeline.add(element, {
 				left: `${pos.x + offsetInsideCellX}px`,
 				top: `${pos.y + offsetInsideCellY}px`,
@@ -137,7 +138,7 @@ export function createMovementStore({
 		}
 		// const snake = snakesByCell[endCell]
 		if (params.moveResponse.snake_to) {
-			const pos = getCellPosition(params.moveResponse.snake_to)
+			const pos = mapStore.cellPositionById[params.moveResponse.snake_to]
 			timeline.add(element, {
 				left: `${pos.x + offsetInsideCellX}px`,
 				top: `${pos.y + offsetInsideCellY}px`,
@@ -176,20 +177,20 @@ export function createMovementStore({
 		const element = get(playerElements).get(params.playerSlug)
 		if (!element) return
 
-		const startPos = getCellPosition(LastMapPosition)
+		const startPos = mapStore.cellPositionById[LastMapPosition]
 		const finalPos = getWinnerPosition(params.position)
 
 		frontendTurnState.set('player-map-animation')
 
 		const timeline = createTimeline()
 		timeline.add(element, {
-			top: `${startPos.y - CellSize + offsetInsideCellY}px`,
+			top: `${startPos.y - mapStore.cellSize + offsetInsideCellY}px`,
 			left: `${startPos.x + offsetInsideCellX}px`,
 			duration: 2000,
 			easing: 'easeInOutQuad'
 		})
 		timeline.add(element, {
-			top: `${startPos.y - CellSize + offsetInsideCellY}px`,
+			top: `${startPos.y - mapStore.cellSize + offsetInsideCellY}px`,
 			left: `${finalPos.x}px`,
 			duration: 4000,
 			easing: 'easeInOutQuad',
@@ -269,7 +270,7 @@ export function createMovementStore({
 
 			// console.log('animating player', player)
 
-			const cellPosition = getCellPosition(previousPlayer.map_position)
+			const cellPosition = mapStore.cellPositionById[previousPlayer.map_position]
 			element.style.top = `${cellPosition.y + offsetInsideCellY}px`
 			element.style.left = `${cellPosition.x + offsetInsideCellX}px`
 

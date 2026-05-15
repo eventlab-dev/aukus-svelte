@@ -9,12 +9,16 @@
 		MapMarkerStart,
 		MapMarkerSwamp
 	} from '$lib/constants'
-	import { getCellPosition } from '$lib/mapUtils'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+
 
 	const { cellId } = $props<{ cellId: number }>()
 
+	const appManager = getAppManagerContext()
+	const { mapStore } = appManager
+
 	const { cellPosition, size } = $derived.by(() => {
-		const pos = getCellPosition(cellId)
+		const pos = mapStore.cellPositionById[cellId]
 		if (cellId === 0) {
 			return { cellPosition: { x: pos.x + 50, y: pos.y + 10 }, size: 2 }
 		}

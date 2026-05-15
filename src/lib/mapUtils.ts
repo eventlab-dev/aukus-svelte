@@ -121,58 +121,11 @@ export const snakesByCell = snakes.reduce(
 	{} as Record<number, Snake>
 )
 
-export const CellSize = 121
-
 export type CellPosition = {
 	x: number
 	y: number
 	x1: number
 	y1: number
-}
-
-const Cell100X = 244
-const Cell100Y = 513
-
-const Cell100Coords: CellPosition = {
-	x: Cell100X,
-	y: Cell100Y,
-	x1: Cell100X + CellSize,
-	y1: Cell100Y + CellSize
-}
-
-export function getCellPosition(cellId: number): CellPosition {
-	if (cellId === 102) {
-		// count winner offset from 0,0
-		return { x: 0, y: 0, x1: 0, y1: 0 }
-	}
-	if (cellId === 0) {
-		const cell1Pos = getCellPosition(1)
-		return {
-			x: cell1Pos.x,
-			y: cell1Pos.y + CellSize,
-			x1: cell1Pos.x1,
-			y1: cell1Pos.y1 + CellSize
-		}
-	}
-	if (cellId === LastMapPosition) {
-		const cell100Pos = getCellPosition(100)
-		return {
-			x: cell100Pos.x,
-			y: cell100Pos.y - CellSize,
-			x1: cell100Pos.x1,
-			y1: cell100Pos.y1 - CellSize
-		}
-	}
-
-	const cellRow = Math.floor((cellId - 1) / 10)
-	const cellCol = (cellId - 1) % 10
-	const xRaw = cellRow % 2 === 0 ? cellCol * CellSize : (9 - cellCol) * CellSize
-	const yRaw = (9 - cellRow) * CellSize
-
-	const x = xRaw + Cell100Coords.x
-	const y = yRaw + Cell100Coords.y
-
-	return { x, y, x1: x + CellSize, y1: y + CellSize }
 }
 
 export function getWinnerPosition(place: number) {

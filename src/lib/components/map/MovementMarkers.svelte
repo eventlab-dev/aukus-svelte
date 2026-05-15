@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { LastMapPosition } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { getCellPosition, laddersByCell, snakesByCell } from '$lib/mapUtils'
+	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
 
-	const { movementStore, turnState } = getAppManagerContext()
+	const { movementStore, turnState, mapStore } = getAppManagerContext()
 	const { myMovementState, selectedPlayer } = movementStore
 
 	const cells = $derived.by(() => {
@@ -14,7 +14,7 @@
 		}
 		return cells
 			.filter((c) => c <= LastMapPosition)
-			.map((cell) => ({ id: cell, position: getCellPosition(cell) }))
+			.map((cell) => ({ id: cell, position: mapStore.cellPositionById[cell] }))
 	})
 
 	const showMinus = $derived($myMovementState.steps < 0)

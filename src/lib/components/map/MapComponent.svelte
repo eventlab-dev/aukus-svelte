@@ -23,6 +23,18 @@
 		}
 	})
 
+	function getScale() {
+		// return 1
+		return window.innerWidth / 1700
+	}
+
+	let scale = $state(getScale())
+
+	// on resize update scale
+	window.addEventListener('resize', () => {
+		scale = getScale()
+	})
+
 	function handleClick() {
 		movementStore.selectedPlayer.set(null)
 	}
@@ -48,9 +60,14 @@
 </div>
 
 <div class="mt-[310px] flex justify-center">
-	<div class="overflow-x-auto overflow-y-hidden" id="map-scroll-container">
-		<button id={MapContainerId} class="relative h-[2000px] w-[1700px]" onclick={handleClick}>
-			<img class="h-[2000] w-[1700px] bg-center bg-no-repeat" src={MAP_IMAGE} alt="map" />
+	<div id="map-scroll-container">
+		<button
+			id={MapContainerId}
+			class="relative"
+			onclick={handleClick}
+			style="transform: scale({scale}); width: 1700px; height: 2000px;"
+		>
+			<img src={MAP_IMAGE} alt="map" />
 
 			<CellNumber cellId={0} />
 			<CellNumber cellId={LastMapPosition} />

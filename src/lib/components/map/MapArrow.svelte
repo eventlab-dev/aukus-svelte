@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CellSize, getCellPosition } from '$lib/mapUtils'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	let {
 		from,
@@ -11,8 +11,10 @@
 		hide?: boolean
 	}>()
 
-	const cellFromPos = $derived(getCellPosition(from))
-	const cellToPos = $derived(getCellPosition(to))
+	const { mapStore } = getAppManagerContext()
+
+	const cellFromPos = $derived(mapStore.cellPositionById[from])
+	const cellToPos = $derived(mapStore.cellPositionById[to])
 
 	// Derived values
 	const topPoint = $derived(Math.min(cellToPos.y, cellFromPos.y))
@@ -29,14 +31,14 @@
 	const height = $derived(Math.abs(topPoint - bottomPoint))
 
 	const fromX = $derived(
-		arrowGoesStraight || arrowGoesToRight ? CellSize / 2 : width - CellSize / 2
+		arrowGoesStraight || arrowGoesToRight ? mapStore.cellSize / 2 : width - mapStore.cellSize / 2
 	)
-	const fromY = $derived(isSnake ? CellSize / 2 : height - CellSize / 2)
+	const fromY = $derived(isSnake ? mapStore.cellSize / 2 : height - mapStore.cellSize / 2)
 
 	const toX = $derived(
-		arrowGoesStraight ? CellSize / 2 : arrowGoesToRight ? width - CellSize + 10 : CellSize - 10
+		arrowGoesStraight ? mapStore.cellSize / 2 : arrowGoesToRight ? width - mapStore.cellSize + 10 : mapStore.cellSize - 10
 	)
-	const toY = $derived(isSnake ? height - CellSize - 10 : CellSize - 10)
+	const toY = $derived(isSnake ? height - mapStore.cellSize - 10 : mapStore.cellSize - 10)
 </script>
 
 <svg

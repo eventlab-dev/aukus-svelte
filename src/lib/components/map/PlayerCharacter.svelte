@@ -2,7 +2,6 @@
 	import { LastMapPosition } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import {
-		getCellPosition,
 		getWinnerPosition,
 		laddersByCell,
 		snakesByCell,
@@ -27,7 +26,8 @@
 		turnState,
 		playersCompletedMap,
 		winners,
-		frontendState
+		frontendState,
+		mapStore,
 	} = getAppManagerContext()
 	const { playersBySlug } = eventDataStore
 	const { selectedPlayer, hoveredPlayer } = movementStore
@@ -71,9 +71,9 @@
 
 			let cellPosition: CellPosition
 			if (startWinAnimation) {
-				cellPosition = getCellPosition(LastMapPosition)
+				cellPosition = mapStore.cellPositionById[LastMapPosition]
 			} else {
-				cellPosition = getCellPosition(player.map_position)
+				cellPosition = mapStore.cellPositionById[player.map_position]
 			}
 
 			return { ...coord, onlyName: false, cellPosition }
@@ -83,13 +83,13 @@
 
 		if (asWinner && winnerIndex !== -1) {
 			const coord = getWinnerPosition(winnerIndex + 1)
-			const cellPosition = getCellPosition(102)
+			const cellPosition = mapStore.cellPositionById[102]
 			return { ...coord, onlyName: false, cellPosition }
 		}
 
 		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
 
-		const cellPosition = getCellPosition(player.map_position)
+		const cellPosition = mapStore.cellPositionById[player.map_position]
 
 		if (player.map_position === 0) {
 			return { x: 160 + 100 * index, y: 20, onlyName: false, cellPosition }

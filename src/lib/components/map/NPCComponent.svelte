@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { getCellPosition, type NPC } from '$lib/mapUtils'
+	import { type NPC } from '$lib/mapUtils'
 	import { fade } from 'svelte/transition'
 	import { parseMessageWithEmotes, type MessagePart } from '$lib/utils/emoteParser'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	type Props = {
 		npc: NPC
@@ -80,7 +81,8 @@
 		return groups
 	}
 
-	const position = getCellPosition(npc.cellId)
+	const { mapStore } = getAppManagerContext()
+	const position = mapStore.cellPositionById[npc.cellId]
 
 	let container = $state<HTMLDivElement | null>(null)
 	let messageElement = $state<HTMLDivElement | null>(null)
