@@ -28,10 +28,10 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: olegsvs/aukus4-frontend
+          tags: olegsvs/aukus5-frontend
           build-args: |
             GIT_COMMIT_SHA=${{ github.sha }}
-            VITE_AUKUS_BASE_URL=${{ secrets.VITE_AUKUS4_BASE_URL }}
+            VITE_AUKUS_BASE_URL=${{ secrets.VITE_AUKUS5_BASE_URL }}
             VITE_EVENTLAB_BASE_URL=${{ secrets.VITE_EVENTLAB_BASE_URL }}
       # - name: Success build to telegram
       #   if: success()

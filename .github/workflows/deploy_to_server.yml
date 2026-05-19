@@ -30,10 +30,10 @@ jobs:
           command_timeout: 10m
           script: |
             cd /root/eventlab
-            docker compose pull aukus4-frontend
-            docker compose up -d --no-deps aukus4-frontend
+            docker compose pull aukus5-frontend
+            docker compose up -d --no-deps aukus5-frontend
             sleep 5
-            docker ps --filter "name=aukus4-frontend" --format "{{.Status}}" | grep -q "Up" || (echo "Container is not running" && exit 1)
+            docker ps --filter "name=aukus5-frontend" --format "{{.Status}}" | grep -q "Up" || (echo "Container is not running" && exit 1)
             docker image prune -af
       # - name: Success to telegram
       #   if: success()
