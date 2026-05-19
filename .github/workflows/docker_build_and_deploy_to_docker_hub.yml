@@ -2,7 +2,7 @@ name: Docker build and deploy to docker hub
 
 on:
   push:
-    branches: ['master']
+    branches: ['aukus-5']
 
 concurrency:
   group: docker-build-${{ github.ref }}
