@@ -6,7 +6,7 @@ const BaseCell100X = 244
 const BaseCell100Y = 513
 
 export class MapStore {
-    // scale2 = $state(1)
+	// scale2 = $state(1)
 	scale = $state(1)
 
 	cellSize = $derived(BaseCellSize * this.scale)
@@ -22,7 +22,8 @@ export class MapStore {
 
 	cellPositionById = $derived.by(() => {
 		const positions: Record<number, CellPosition> = {}
-		for (let i = 0; i <= LastMapPosition; i++) {
+		// Loop up to LastMapPosition + 1 (102) to include the special completed/winner cell position
+		for (let i = 0; i <= LastMapPosition + 1; i++) {
 			positions[i] = calculateCellPosition({
 				cellId: i,
 				cellSize: this.cellSize,
