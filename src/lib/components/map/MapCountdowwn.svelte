@@ -40,7 +40,7 @@
 	})
 </script>
 
-{#if timeLeft > 0}
+<!-- {#if timeLeft > 0}
 	<div class="absolute top-105 left-216 w-[160px] text-center text-xl text-black">
 		<div>{text}</div>
 		<div>{formatMs(timeLeft)}</div>
@@ -49,4 +49,4 @@
 	<div class="absolute top-105 left-216 w-[160px] text-center text-xl text-black">
 		<Button variant="link" class="p-0 text-black!" href="/presentation">Итоги</Button>
 	</div>
-{/if}
+{/if} -->

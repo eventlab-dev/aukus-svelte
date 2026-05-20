@@ -13,9 +13,17 @@
 
 	const { players, movementStore, eventFinished, winners } = getAppManagerContext()
 
+	let mapImgWidth = $state(1700) // Fallback default
+	let mapImgHeight = $state(2000) // Fallback default
+
+	let scale = $state(window.innerWidth / 1700)
+
+	function updateScale() {
+		scale = window.innerWidth / mapImgWidth
+	}
+
 	$effect(() => {
-		const mapWidth = 1715
-		const diff = mapWidth - window.innerWidth
+		const diff = mapImgWidth - window.innerWidth
 		if (diff > 0) {
 			document
 				.getElementById('map-scroll-container')
@@ -23,17 +31,21 @@
 		}
 	})
 
-	function getScale() {
-		// return 1
-		return window.innerWidth / 1700
-	}
-
-	let scale = $state(getScale())
-
-	// on resize update scale
-	window.addEventListener('resize', () => {
-		scale = getScale()
+	$effect(() => {
+		window.addEventListener('resize', updateScale)
+		return () => {
+			window.removeEventListener('resize', updateScale)
+		}
 	})
+
+	function handleImageLoad(e: Event) {
+		const img = e.currentTarget as HTMLImageElement
+		if (img && img.naturalWidth) {
+			mapImgWidth = img.naturalWidth
+			mapImgHeight = img.naturalHeight
+			updateScale()
+		}
+	}
 
 	function handleClick() {
 		movementStore.selectedPlayer.set(null)
@@ -47,9 +59,14 @@
 	}
 </script>
 
-<div class="relative mt-[-60px] flex w-full justify-center">
+<div class="relative mt-[-60px] flex hidden w-full justify-center">
 	<img src={LOGO_URL} class="absolute top-[170px] z-8 h-auto w-[300px]" alt="logo" />
-	<img src={LOGO_BG_URL} alt="back" class="absolute h-auto w-[1700px] max-w-[2000px]" />
+	<img
+		src={LOGO_BG_URL}
+		alt="back"
+		class="absolute h-auto max-w-[2000px]"
+		style="width: {mapImgWidth}px;"
+	/>
 	{#if $eventFinished}
 		<Fireworks
 			autostart
@@ -65,11 +82,11 @@
 			id={MapContainerId}
 			class="relative"
 			onclick={handleClick}
-			style="transform: scale({scale}); width: 1700px; height: 2000px;"
+			style="transform: scale({scale}); width: {mapImgWidth}px; height: {mapImgHeight}px;"
 		>
-			<img src={MAP_IMAGE} alt="map" />
+			<img src={MAP_IMAGE} alt="map" onload={handleImageLoad} />
 
-			<CellNumber cellId={0} />
+			<!-- <CellNumber cellId={0} />
 			<CellNumber cellId={LastMapPosition} />
 			{#each mapCellsSorted as cell (cell.id)}
 				<CellNumber cellId={cell.id} />
@@ -80,9 +97,9 @@
 			{/each}
 			{#each snakes as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
 				<MapArrow {from} {to} />
-			{/each}
+			{/each} -->
 
-			<MapCharacters />
+			<!-- <MapCharacters /> -->
 			<MovementMarkers />
 			{#each $players as player (player.slug)}
 				<PlayerCharacter {player} />

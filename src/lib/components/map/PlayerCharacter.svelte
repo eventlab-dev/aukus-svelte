@@ -1,12 +1,7 @@
 <script lang="ts">
 	import { LastMapPosition } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import {
-		getWinnerPosition,
-		laddersByCell,
-		snakesByCell,
-		type CellPosition
-	} from '$lib/mapUtils'
+	import { getWinnerPosition, laddersByCell, snakesByCell, type CellPosition } from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
 	import { onMount } from 'svelte'
 	import PlayerModel from './PlayerModel.svelte'
@@ -27,7 +22,7 @@
 		playersCompletedMap,
 		winners,
 		frontendState,
-		mapStore,
+		mapStore
 	} = getAppManagerContext()
 	const { playersBySlug } = eventDataStore
 	const { selectedPlayer, hoveredPlayer } = movementStore
@@ -173,7 +168,9 @@
 
 <div
 	bind:this={element}
-	class="absolute transition-opacity duration-300 data-[win-jump=true]:animate-bounce"
+	class="absolute scale-50 transition-opacity duration-300 data-[active=true]:z-10
+    data-[active=true]:scale-110 data-[highlighted=true]:z-20
+    data-[highlighted=true]:scale-110 data-[win-jump=true]:animate-bounce"
 	style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}"
 	data-win-jump={doWinJumpAnimation}
 >

@@ -49,6 +49,8 @@ export const gameLengthRanges: Record<GameLength, string> = {
 
 export const CDN_URL_BASE = 'https://storage.yandexcloud.net/eventlab/assets/aukus4'
 
+export const CDN_URL_BASE5 = 'https://storage.yandexcloud.net/eventlab/assets/aukus5'
+
 export const MapMarkerIce = `${CDN_URL_BASE}/map/marker_ice.png`
 export const MapMarkerFire = `${CDN_URL_BASE}/map/marker_fire.png`
 export const MapMarkerSwamp = `${CDN_URL_BASE}/map/marker_swamp.png`
@@ -59,7 +61,7 @@ export const MapMarkerFinish = `${CDN_URL_BASE}/map/marker_finish.png`
 
 export const PlayerBaseModelUrl = `${CDN_URL_BASE}/map/player_model.png`
 
-export const MAP_IMAGE = `${CDN_URL_BASE}/map/map_final.avif`
+export const MAP_IMAGE = `${CDN_URL_BASE5}/map/map-demo.jpg`
 
 export const DICE_ROLL_ANIMATION_TIME = 2000
 export const DICE_ROLL_IDLE_TIME = 2000
