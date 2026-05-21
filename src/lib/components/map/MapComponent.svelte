@@ -16,18 +16,16 @@
 	// let mapImgWidth = $state(1700) // Fallback default
 	// let mapImgHeight = $state(2000) // Fallback default
 
-	let scale = $state(window.innerWidth / 1700)
+	let mapScale = $state(1)
 
 	let mapImg = $state<HTMLImageElement | null>(null)
+	let viewport: HTMLDivElement | null = null
 
 	function updateScale() {
-		// return 1
 		if (mapImg) {
-			scale = mapImg.clientWidth / mapImg.naturalWidth
+			mapScale = mapImg.clientWidth / mapImg.naturalWidth
 		}
 	}
-
-	$inspect('scale', scale)
 
 	// $effect(() => {
 	// 	if (mapImg) {
@@ -40,17 +38,22 @@
 	// 	}
 	// })
 
+	function onResize() {
+		updateScale()
+		updateMinZoom()
+	}
+
 	$effect(() => {
-		window.addEventListener('resize', updateScale)
+		window.addEventListener('resize', onResize)
 		return () => {
-			window.removeEventListener('resize', updateScale)
+			window.removeEventListener('resize', onResize)
 		}
 	})
 
 	function handleImageLoad(e: Event) {
 		const img = e.currentTarget as HTMLImageElement
 		if (img && img.naturalWidth) {
-			updateScale()
+			onResize()
 		}
 	}
 
@@ -63,6 +66,72 @@
 		explosion: 8,
 		intensity: 45,
 		particles: 105
+	}
+
+	let x = $state(0)
+	let y = $state(0)
+	let zoomScale = $state(1)
+
+	let dragging = $state(false)
+	let lastX = $state(0)
+	let lastY = $state(0)
+
+	function onMouseDown(e: MouseEvent) {
+		dragging = true
+
+		lastX = e.clientX
+		lastY = e.clientY
+	}
+
+	function onMouseMove(e: MouseEvent) {
+		if (!dragging || !viewport || !mapImg) return
+
+		const dx = e.clientX - lastX
+		const dy = e.clientY - lastY
+
+		x += dx
+		y += dy
+
+		lastX = e.clientX
+		lastY = e.clientY
+	}
+
+	function onMouseUp() {
+		dragging = false
+	}
+
+	let minZoom = $state(1)
+
+	function updateMinZoom() {
+		if (!viewport || !mapImg) return
+
+		const viewportWidth = viewport.clientWidth
+		const imageWidth = mapImg.naturalWidth
+
+		minZoom = viewportWidth / imageWidth
+
+		if (zoomScale < minZoom) {
+			zoomScale = minZoom
+		}
+	}
+
+	function onWheel(e: WheelEvent) {
+		e.preventDefault()
+
+		const mouseX = e.clientX
+		const mouseY = e.clientY
+
+		const oldScale = zoomScale
+
+		const factor = e.deltaY < 0 ? 1.1 : 0.9
+		zoomScale *= factor
+
+		zoomScale = Math.max(minZoom, Math.min(zoomScale, 5))
+
+		const scaleRatio = zoomScale / oldScale
+
+		x = mouseX - (mouseX - x) * scaleRatio
+		y = mouseY - (mouseY - y) * scaleRatio
 	}
 </script>
 
@@ -82,10 +151,36 @@
 	{/if}
 </div> -->
 
-<button id={MapContainerId} class="w-full relative" onclick={handleClick}>
-	<img bind:this={mapImg} src={MAP_IMAGE} alt="map" onload={handleImageLoad} class="h-auto w-full" />
+<div class="viewport relative h-screen w-full overflow-hidden">
+	<div
+		id={MapContainerId}
+		class="map-transform absolute top-0 left-0 origin-top-left"
+		onclick={handleClick}
+		onwheel={onWheel}
+		onmousedown={onMouseDown}
+		onmousemove={onMouseMove}
+		onmouseup={onMouseUp}
+		onkeyup={() => {}}
+		onkeydown={() => {}}
+		tabindex={0}
+		role="button"
+		bind:this={viewport}
+		style={`
+      transform:
+        translate(${x}px, ${y}px)
+        scale(${zoomScale});
+    `}
+	>
+		<img
+			bind:this={mapImg}
+			src={MAP_IMAGE}
+			alt="map"
+			onload={handleImageLoad}
+			class="h-auto w-full"
+			draggable="false"
+		/>
 
-	<!-- <CellNumber cellId={0} />
+		<!-- <CellNumber cellId={0} />
 			<CellNumber cellId={LastMapPosition} />
 			{#each mapCellsSorted as cell (cell.id)}
 				<CellNumber cellId={cell.id} />
@@ -98,17 +193,21 @@
 				<MapArrow {from} {to} />
 			{/each} -->
 
-	<!-- <MapCharacters /> -->
-	<div class="absolute left-0 top-0" style="transform: scale({scale}); transform-origin: top left;">
-		<MovementMarkers />
-		{#each $players as player (player.slug)}
-			<PlayerCharacter {player} />
-		{/each}
+		<!-- <MapCharacters /> -->
+		<div
+			class="absolute top-0 left-0"
+			style="transform: scale({mapScale}); transform-origin: top left;"
+		>
+			<MovementMarkers />
+			{#each $players as player (player.slug)}
+				<PlayerCharacter {player} />
+			{/each}
 
-		{#each $winners as player (player.slug)}
-			<PlayerCharacter {player} asWinner />
-		{/each}
+			{#each $winners as player (player.slug)}
+				<PlayerCharacter {player} asWinner />
+			{/each}
+		</div>
+
+		<MapCountdowwn />
 	</div>
-
-	<MapCountdowwn />
-</button>
+</div>
