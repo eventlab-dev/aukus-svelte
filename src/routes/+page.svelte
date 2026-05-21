@@ -21,11 +21,11 @@
 	<img src="/logo-background.png" alt="back" />
 </div> -->
 
-<div class="mt-30 flex gap-4">
+<div class="mt-2 flex gap-2">
 	<div class="flex-1">
 		<MapComponent />
 	</div>
-	<div class="w-[250px]">
+	<div class="w-[250px] pr-2">
 		<PlayersList />
 	</div>
 </div>

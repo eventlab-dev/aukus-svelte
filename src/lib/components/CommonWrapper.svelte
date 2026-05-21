@@ -54,7 +54,7 @@
 
 	const { isMobile, errorNotificationStore } = appManager
 
-	const hidePanels = $derived(page.url.pathname === '/presentation')
+	const hidePanels = $derived(page.url.pathname === '/presentation' || true)
 </script>
 
 <ErrorNotifications {errorNotificationStore} />
@@ -64,7 +64,7 @@
 {:else}
 	<ScrollArea class="h-screen" type="always" id="main-scroll-area">
 		<div id="wallpaper"></div>
-		<div class="py-3">
+		<div class="">
 			{#if !hidePanels}
 				<div class="absolute top-3 left-3 z-10">
 					<QuickMenu />
