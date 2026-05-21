@@ -33,7 +33,7 @@
 </script>
 
 {#key $playersInOrder.length}
-	<Collapsible bind:collapsed={$collapsed} class="w-[260px]">
+	<Collapsible bind:collapsed={$collapsed} class="w-full">
 		<CollapsibleTrigger class="w-full">
 			<div>{currentTime} МСК</div>
 		</CollapsibleTrigger>

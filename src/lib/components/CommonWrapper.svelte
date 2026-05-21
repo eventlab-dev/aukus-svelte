@@ -70,7 +70,7 @@
 					<QuickMenu />
 				</div>
 
-				<div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+				<div class="hidden absolute top-3 right-3 z-10 flex flex-col gap-1.5">
 					<PlayersList />
 				</div>
 

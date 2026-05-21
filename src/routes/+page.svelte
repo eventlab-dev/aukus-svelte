@@ -6,6 +6,7 @@
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte'
 	import EventStatusBanner from '$lib/components/EventStatusBanner.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import PlayersList from '$lib/components/player/PlayersList.svelte'
 
 	const { turnState, movementStore, myPlayer } = getAppManagerContext()
 	const { selectedPlayer } = movementStore
@@ -20,8 +21,13 @@
 	<img src="/logo-background.png" alt="back" />
 </div> -->
 
-<div class="">
-	<MapComponent />
+<div class="mt-30 flex gap-4">
+	<div class="flex-1">
+		<MapComponent />
+	</div>
+	<div class="w-[250px]">
+		<PlayersList />
+	</div>
 </div>
 
 {#if $turnState === 'filling-form' && !$selectedPlayer}

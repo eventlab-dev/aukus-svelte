@@ -13,23 +13,32 @@
 
 	const { players, movementStore, eventFinished, winners } = getAppManagerContext()
 
-	let mapImgWidth = $state(1700) // Fallback default
-	let mapImgHeight = $state(2000) // Fallback default
+	// let mapImgWidth = $state(1700) // Fallback default
+	// let mapImgHeight = $state(2000) // Fallback default
 
 	let scale = $state(window.innerWidth / 1700)
 
+	let mapImg = $state<HTMLImageElement | null>(null)
+
 	function updateScale() {
-		scale = window.innerWidth / mapImgWidth
+		// return 1
+		if (mapImg) {
+			scale = mapImg.clientWidth / mapImg.naturalWidth
+		}
 	}
 
-	$effect(() => {
-		const diff = mapImgWidth - window.innerWidth
-		if (diff > 0) {
-			document
-				.getElementById('map-scroll-container')
-				?.scrollTo({ left: diff / 2, behavior: 'smooth' })
-		}
-	})
+	$inspect('scale', scale)
+
+	// $effect(() => {
+	// 	if (mapImg) {
+	// 		const diff = mapImg.naturalWidth - window.innerWidth
+	// 		if (diff > 0) {
+	// 			document
+	// 				.getElementById('map-scroll-container')
+	// 				?.scrollTo({ left: diff / 2, behavior: 'smooth' })
+	// 		}
+	// 	}
+	// })
 
 	$effect(() => {
 		window.addEventListener('resize', updateScale)
@@ -41,8 +50,6 @@
 	function handleImageLoad(e: Event) {
 		const img = e.currentTarget as HTMLImageElement
 		if (img && img.naturalWidth) {
-			mapImgWidth = img.naturalWidth
-			mapImgHeight = img.naturalHeight
 			updateScale()
 		}
 	}
@@ -59,13 +66,12 @@
 	}
 </script>
 
-<div class="relative mt-[-60px] flex hidden w-full justify-center">
+<!-- <div class="relative mt-[-60px] flex hidden w-full justify-center">
 	<img src={LOGO_URL} class="absolute top-[170px] z-8 h-auto w-[300px]" alt="logo" />
 	<img
 		src={LOGO_BG_URL}
 		alt="back"
 		class="absolute h-auto max-w-[2000px]"
-		style="width: {mapImgWidth}px;"
 	/>
 	{#if $eventFinished}
 		<Fireworks
@@ -74,19 +80,12 @@
 			class="fireworks pointer-events-none absolute top-0 left-0 z-9 h-[700px] w-full"
 		/>
 	{/if}
-</div>
+</div> -->
 
-<div class="mt-[310px] flex justify-center">
-	<div id="map-scroll-container">
-		<button
-			id={MapContainerId}
-			class="relative"
-			onclick={handleClick}
-			style="transform: scale({scale}); width: {mapImgWidth}px; height: {mapImgHeight}px;"
-		>
-			<img src={MAP_IMAGE} alt="map" onload={handleImageLoad} />
+<button id={MapContainerId} class="w-full relative" onclick={handleClick}>
+	<img bind:this={mapImg} src={MAP_IMAGE} alt="map" onload={handleImageLoad} class="h-auto w-full" />
 
-			<!-- <CellNumber cellId={0} />
+	<!-- <CellNumber cellId={0} />
 			<CellNumber cellId={LastMapPosition} />
 			{#each mapCellsSorted as cell (cell.id)}
 				<CellNumber cellId={cell.id} />
@@ -99,17 +98,17 @@
 				<MapArrow {from} {to} />
 			{/each} -->
 
-			<!-- <MapCharacters /> -->
-			<MovementMarkers />
-			{#each $players as player (player.slug)}
-				<PlayerCharacter {player} />
-			{/each}
+	<!-- <MapCharacters /> -->
+	<div class="absolute left-0 top-0" style="transform: scale({scale}); transform-origin: top left;">
+		<MovementMarkers />
+		{#each $players as player (player.slug)}
+			<PlayerCharacter {player} />
+		{/each}
 
-			{#each $winners as player (player.slug)}
-				<PlayerCharacter {player} asWinner />
-			{/each}
-
-			<MapCountdowwn />
-		</button>
+		{#each $winners as player (player.slug)}
+			<PlayerCharacter {player} asWinner />
+		{/each}
 	</div>
-</div>
+
+	<MapCountdowwn />
+</button>
