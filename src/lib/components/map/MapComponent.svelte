@@ -92,6 +92,21 @@
 		x += dx
 		y += dy
 
+		// Constrain to image boundaries
+		const scaledWidth = mapImg.naturalWidth * zoomScale
+		const scaledHeight = mapImg.naturalHeight * zoomScale
+		const viewportWidth = viewport.clientWidth
+		const viewportHeight = viewport.clientHeight
+
+		// Calculate min/max x and y based on zoom level
+		const minX = scaledWidth > viewportWidth ? viewportWidth - scaledWidth : 0
+		const maxX = 0
+		const minY = scaledHeight > viewportHeight ? viewportHeight - scaledHeight : 0
+		const maxY = 0
+
+		x = Math.max(minX, Math.min(x, maxX))
+		y = Math.max(minY, Math.min(y, maxY))
+
 		lastX = e.clientX
 		lastY = e.clientY
 	}
