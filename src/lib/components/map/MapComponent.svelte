@@ -40,7 +40,6 @@
 
 	function onResize() {
 		updateScale()
-		updateMinZoom()
 	}
 
 	$effect(() => {
@@ -115,20 +114,7 @@
 		dragging = false
 	}
 
-	let minZoom = $state(1)
 
-	function updateMinZoom() {
-		if (!viewport || !mapImg) return
-
-		const viewportWidth = viewport.clientWidth
-		const imageWidth = mapImg.naturalWidth
-
-		minZoom = viewportWidth / imageWidth
-
-		if (zoomScale < minZoom) {
-			zoomScale = minZoom
-		}
-	}
 
 	function onWheel(e: WheelEvent) {
 		e.preventDefault()
@@ -141,7 +127,7 @@
 		const factor = e.deltaY < 0 ? 1.1 : 0.9
 		zoomScale *= factor
 
-		zoomScale = Math.max(minZoom, Math.min(zoomScale, 5))
+		zoomScale = Math.max(1, Math.min(zoomScale, 5))
 
 		const scaleRatio = zoomScale / oldScale
 
