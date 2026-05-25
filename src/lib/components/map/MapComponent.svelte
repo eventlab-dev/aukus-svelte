@@ -92,19 +92,22 @@
 		y += dy
 
 		// Constrain to image boundaries
-		const scaledWidth = mapImg.naturalWidth * zoomScale
-		const scaledHeight = mapImg.naturalHeight * zoomScale
+		const scaledWidth = mapImg.naturalWidth * zoomScale * mapScale
+		const scaledHeight = mapImg.naturalHeight * zoomScale * mapScale
 		const viewportWidth = viewport.clientWidth
 		const viewportHeight = viewport.clientHeight
 
 		// Calculate min/max x and y based on zoom level
 		const minX = scaledWidth > viewportWidth ? viewportWidth - scaledWidth : 0
 		const maxX = 0
+		
 		const minY = scaledHeight > viewportHeight ? viewportHeight - scaledHeight : 0
 		const maxY = 0
 
 		x = Math.max(minX, Math.min(x, maxX))
 		y = Math.max(minY, Math.min(y, maxY))
+
+		console.log({ minX, minY, x, y, scaledWidth, viewportWidth })
 
 		lastX = e.clientX
 		lastY = e.clientY
@@ -134,6 +137,8 @@
 		x = mouseX - (mouseX - x) * scaleRatio
 		y = mouseY - (mouseY - y) * scaleRatio
 	}
+
+	$inspect('xy', x, y)
 </script>
 
 <!-- <div class="relative mt-[-60px] flex hidden w-full justify-center">
@@ -177,7 +182,7 @@
 			src={MAP_IMAGE}
 			alt="map"
 			onload={handleImageLoad}
-			class="h-auto w-full"
+			class="h-auto w-full cursor-grab active:cursor-grabbing select-none"
 			draggable="false"
 		/>
 
