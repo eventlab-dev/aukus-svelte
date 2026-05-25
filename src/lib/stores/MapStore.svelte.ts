@@ -21,16 +21,27 @@ export class MapStore {
 	})
 
 	cellPositionById = $derived.by(() => {
-		const positions: Record<number, CellPosition> = {}
-		// Loop up to LastMapPosition + 1 (102) to include the special completed/winner cell position
-		for (let i = 0; i <= LastMapPosition + 1; i++) {
-			positions[i] = calculateCellPosition({
-				cellId: i,
-				cellSize: this.cellSize,
-				cell100Pos: this.cell100Position
-			})
-		}
-		return positions
+		return Object.fromEntries(
+			Object.entries(this.cellPositions).map(([key, pos]) => [
+				Number(key),
+				{
+					x: pos.centerX - this.cellWidth / 2,
+					y: pos.centerY - this.cellHeight / 2,
+					x1: pos.centerX + this.cellWidth / 2,
+					y1: pos.centerY + this.cellHeight / 2
+				}
+			])
+		)
+		// const positions: Record<number, CellPosition> = {}
+		// // Loop up to LastMapPosition + 1 (102) to include the special completed/winner cell position
+		// for (let i = 0; i <= LastMapPosition + 1; i++) {
+		// 	positions[i] = calculateCellPosition({
+		// 		cellId: i,
+		// 		cellSize: this.cellSize,
+		// 		cell100Pos: this.cell100Position
+		// 	})
+		// }
+		// return positions
 	})
 
 	cellPositions = CellPositions
@@ -490,4 +501,8 @@ const CellPositions: Record<number, CellPositionNew> = {
 		centerX: 0,
 		centerY: 0,
 	},
+	102: {
+		centerX: 800,
+		centerY: 800,
+	}
 }
