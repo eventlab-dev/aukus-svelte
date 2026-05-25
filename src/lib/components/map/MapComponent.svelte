@@ -71,7 +71,7 @@
 
 	let x = $state(0)
 	let y = $state(0)
-	let zoomScale = $state(1)
+	let userZoom = $state(1)
 
 	let dragging = $state(false)
 	let lastX = $state(0)
@@ -94,8 +94,8 @@
 		y += dy
 
 		// Constrain to image boundaries
-		const scaledWidth = mapImg.naturalWidth * zoomScale * mapScale
-		const scaledHeight = mapImg.naturalHeight * zoomScale * mapScale
+		const scaledWidth = mapImg.naturalWidth * userZoom * mapScale
+		const scaledHeight = mapImg.naturalHeight * userZoom * mapScale
 		const viewportWidth = viewport.clientWidth
 		const viewportHeight = viewport.clientHeight
 
@@ -127,20 +127,20 @@
 		const mouseX = e.clientX
 		const mouseY = e.clientY
 
-		const oldScale = zoomScale
+		const oldScale = userZoom
 
 		const factor = e.deltaY < 0 ? 1.1 : 0.9
-		zoomScale *= factor
+		userZoom *= factor
 
-		zoomScale = Math.max(1, Math.min(zoomScale, 5))
+		userZoom = Math.max(1, Math.min(userZoom, 5))
 
-		const scaleRatio = zoomScale / oldScale
+		const scaleRatio = userZoom / oldScale
 
 		x = mouseX - (mouseX - x) * scaleRatio
 		y = mouseY - (mouseY - y) * scaleRatio
 	}
 
-	$inspect('xy', x, y)
+	$inspect('mapscale', mapScale)
 </script>
 
 <!-- <div class="relative mt-[-60px] flex hidden w-full justify-center">
@@ -162,7 +162,7 @@
 <div class="viewport relative h-screen w-full overflow-hidden">
 	<div
 		id={MapContainerId}
-		class="map-transform absolute top-0 left-0 origin-top-left"
+		class="map-transform absolute top-0 left-0 origin-top-left w-full"
 		onclick={handleClick}
 		onwheel={onWheel}
 		onmousedown={onMouseDown}
@@ -176,7 +176,7 @@
 		style={`
       transform:
         translate(${x}px, ${y}px)
-        scale(${zoomScale});
+        scale(${userZoom});
     `}
 	>
 		<img
@@ -189,7 +189,7 @@
 		/>
 
 		{#each Object.keys(mapStore.cellPositions) as cellId (cellId)}
-			<NewCell cellId={parseInt(cellId)} />
+			<NewCell cellId={parseInt(cellId)} scale={mapScale} />
 		{/each}
 
 		<!-- <CellNumber cellId={0} />

@@ -3,9 +3,10 @@
 
 	type Props = {
 		cellId: number
+		scale?: number
 	}
 
-	const { cellId }: Props = $props()
+	const { cellId, scale = 1 }: Props = $props()
 
 	const { mapStore } = getAppManagerContext()
 
@@ -18,7 +19,7 @@
 
 <div
 	class="absolute border-2 border-black rounded-full text-black text-center"
-	style={`left: ${cellLeft}px; top: ${cellTop}px; width: ${cellWidth}px; height: ${cellHeight}px;`}
+	style={`left: ${cellLeft * scale}px; top: ${cellTop * scale}px; width: ${cellWidth * scale}px; height: ${cellHeight * scale}px; transform: scale(${scale});`}
 >
 	{cellId}
 </div>
