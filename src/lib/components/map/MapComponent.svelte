@@ -10,8 +10,10 @@
 	import MapCountdowwn from './MapCountdowwn.svelte'
 	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'
+	import { MapStore } from '$lib/stores/MapStore.svelte'
+	import NewCell from './NewCell.svelte'
 
-	const { players, movementStore, eventFinished, winners } = getAppManagerContext()
+	const { players, movementStore, eventFinished, winners, mapStore } = getAppManagerContext()
 
 	// let mapImgWidth = $state(1700) // Fallback default
 	// let mapImgHeight = $state(2000) // Fallback default
@@ -185,6 +187,10 @@
 			class="h-auto w-full cursor-grab active:cursor-grabbing select-none"
 			draggable="false"
 		/>
+
+		{#each Object.keys(mapStore.cellPositions) as cellId (cellId)}
+			<NewCell cellId={parseInt(cellId)} />
+		{/each}
 
 		<!-- <CellNumber cellId={0} />
 			<CellNumber cellId={LastMapPosition} />

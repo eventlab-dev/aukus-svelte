@@ -128,6 +128,11 @@ export type CellPosition = {
 	y1: number
 }
 
+export type CellPositionNew = {
+	centerX: number
+	centerY: number
+}
+
 export function getWinnerPosition(place: number) {
 	switch (place) {
 		case 1:
