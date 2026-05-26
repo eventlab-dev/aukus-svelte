@@ -187,7 +187,7 @@ init arrow 70 270 510 210
 		<MapArrowMarkers />
 		<svg
 			id="arrows-container"
-			class="absolute top-0 left-0 h-full w-full pointer-events-none {hideArrows ? 'hidden' : ''}"
+			class="pointer-events-none absolute top-0 left-0 h-full w-full {hideArrows ? 'hidden' : ''}"
 		>
 			{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
 				<MapArrow {from} {to} scale={mapScale} />
@@ -204,7 +204,9 @@ init arrow 70 270 510 210
 		>
 			<MovementMarkers />
 			{#each $players as player (player.slug)}
-				<PlayerCharacter {player} />
+				{#if player.map_position !== 102}
+					<PlayerCharacter {player} />
+				{/if}
 			{/each}
 
 			{#each $winners as player (player.slug)}
