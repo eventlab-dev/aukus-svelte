@@ -5,8 +5,13 @@ const BaseCell100X = 244
 const BaseCell100Y = 513
 
 export class MapStore {
-	// scale2 = $state(1)
 	scale = $state(1)
+
+	baseCellHeight = 50
+	baseCellWidth = 50
+
+	cellHeight = $derived(this.baseCellHeight * this.scale)
+	cellWidth = $derived(this.baseCellWidth * this.scale)
 
 	cellSize = $derived(BaseCellSize * this.scale)
 	cell100X = $derived(BaseCell100X * this.scale)
@@ -20,8 +25,17 @@ export class MapStore {
 	})
 
 	cellPositionById = CellPositions
-	cellHeight = 50
-	cellWidth = 50
+
+	// 102: {
+	// 	centerX: 880,
+	// 	centerY: 230,
+	// }
+
+	winnerPositions: Record<number, CellPositionNew> = {
+		1: { centerX: 635, centerY: 90 },
+		2: { centerX: 755, centerY: 105 },
+		3: { centerX: 515, centerY: 115 }
+	}
 }
 
 
@@ -434,8 +448,4 @@ const CellPositions: Record<number, CellPositionNew> = {
 		centerX: 880,
 		centerY: 280,
 	},
-	102: {
-		centerX: 880,
-		centerY: 230,
-	}
 }

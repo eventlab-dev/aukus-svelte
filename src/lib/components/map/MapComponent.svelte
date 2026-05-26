@@ -214,9 +214,9 @@
 				<PlayerCharacter {player} />
 			{/each}
 
-			<!-- {#each $winners as player (player.slug)}
+			{#each $winners as player (player.slug)}
 				<PlayerCharacter {player} asWinner />
-			{/each} -->
+			{/each}
 		</div>
 
 		<MapCountdowwn />

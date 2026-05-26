@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { LastMapPosition } from '$lib/constants'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { getWinnerPosition, laddersByCell, snakesByCell, type CellPosition, type CellPositionNew } from '$lib/mapUtils'
+	import {
+		laddersByCell,
+		snakesByCell,
+	} from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
 	import { onMount } from 'svelte'
 	import PlayerModel from './PlayerModel.svelte'
@@ -61,26 +63,19 @@
 		cellPosition,
 		onlyName
 	} = $derived.by(() => {
-		const completedIndex = $playersCompletedMap.findIndex((p) => p.slug === player.slug)
-		if (completedIndex !== -1 && !startWinAnimation) {
-			const coord = getWinnerPosition(completedIndex + 1)
-
-			let cellPosition: CellPositionNew
-			if (startWinAnimation) {
-				cellPosition = mapStore.cellPositionById[LastMapPosition]
-			} else {
-				cellPosition = mapStore.cellPositionById[player.map_position]
-			}
-
-			return { ...coord, onlyName: false, cellPosition }
-		}
-
 		const winnerIndex = $winners.findIndex((p) => p.slug === player.slug)
 
-		if (asWinner && winnerIndex !== -1) {
-			const coord = getWinnerPosition(winnerIndex + 1)
-			const cellPosition = mapStore.cellPositionById[102]
-			return { ...coord, onlyName: false, cellPosition }
+		if (winnerIndex !== -1) {
+			// if (asWinner) {
+			const coord = mapStore.winnerPositions[winnerIndex + 1]
+			return { x: 0, y: 0, onlyName: false, cellPosition: coord }
+			// }
+
+			// const completedIndex = $playersCompletedMap.findIndex((p) => p.slug === player.slug)
+			// if (completedIndex !== -1 && !startWinAnimation) {
+			// 	const cellPosition: CellPositionNew = mapStore.winnerPositions[player.map_position]
+			// 	return { x: 0, y: 0, onlyName: false, cellPosition }
+			// }
 		}
 
 		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
@@ -169,12 +164,12 @@
 
 <div
 	bind:this={element}
-	class="absolute transition-opacity duration-300 data-[active=true]:z-10
-    data-[active=true]:scale-110 data-[highlighted=true]:z-20 -translate-y-1/2 -translate-x-1/2 scale-30
+	class="absolute -translate-x-1/2 -translate-y-1/2 scale-30
+    transition-opacity duration-300 data-[active=true]:z-10 data-[active=true]:scale-110 data-[highlighted=true]:z-20
     data-[highlighted=true]:scale-110 data-[win-jump=true]:animate-bounce"
-		style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}"
-		data-win-jump={doWinJumpAnimation}
-	>
+	style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}"
+	data-win-jump={doWinJumpAnimation}
+>
 	<button
 		onclick={onCharacterClick}
 		class="relative isolate cursor-pointer
