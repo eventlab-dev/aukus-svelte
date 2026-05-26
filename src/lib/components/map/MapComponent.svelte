@@ -109,7 +109,6 @@
 		x = Math.max(minX, Math.min(x, maxX))
 		y = Math.max(minY, Math.min(y, maxY))
 
-		console.log({ minX, minY, x, y, scaledWidth, viewportWidth })
 
 		lastX = e.clientX
 		lastY = e.clientY
@@ -140,7 +139,7 @@
 		y = mouseY - (mouseY - y) * scaleRatio
 	}
 
-	$inspect('mapscale', mapScale)
+	// $inspect('mapscale', mapScale)
 </script>
 
 <!-- <div class="relative mt-[-60px] flex hidden w-full justify-center">
@@ -188,7 +187,7 @@
 			draggable="false"
 		/>
 
-		{#each Object.keys(mapStore.cellPositions) as cellId (cellId)}
+		{#each Object.keys(mapStore.cellPositionById) as cellId (cellId)}
 			<NewCell cellId={parseInt(cellId)} scale={mapScale} />
 		{/each}
 

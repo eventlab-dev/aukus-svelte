@@ -10,7 +10,7 @@
 
 	const { mapStore } = getAppManagerContext()
 
-	const cell = $derived(mapStore.cellPositions[cellId])
+	const cell = $derived(mapStore.cellPositionById[cellId])
 	const cellTop = $derived(cell.centerY - mapStore.cellHeight / 2)
 	const cellLeft = $derived(cell.centerX - mapStore.cellWidth / 2)
 	const cellWidth = $derived(mapStore.cellWidth)

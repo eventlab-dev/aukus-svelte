@@ -1,5 +1,4 @@
-import { LastMapPosition } from '$lib/constants'
-import type { CellPosition, CellPositionNew } from '$lib/mapUtils'
+import type { CellPositionNew } from '$lib/mapUtils'
 
 const BaseCellSize = 121
 const BaseCell100X = 244
@@ -20,75 +19,9 @@ export class MapStore {
 		y1: this.cell100Y + this.cellSize
 	})
 
-	cellPositionById = $derived.by(() => {
-		return Object.fromEntries(
-			Object.entries(this.cellPositions).map(([key, pos]) => [
-				Number(key),
-				{
-					x: pos.centerX - this.cellWidth / 2,
-					y: pos.centerY - this.cellHeight / 2,
-					x1: pos.centerX + this.cellWidth / 2,
-					y1: pos.centerY + this.cellHeight / 2
-				}
-			])
-		)
-		// const positions: Record<number, CellPosition> = {}
-		// // Loop up to LastMapPosition + 1 (102) to include the special completed/winner cell position
-		// for (let i = 0; i <= LastMapPosition + 1; i++) {
-		// 	positions[i] = calculateCellPosition({
-		// 		cellId: i,
-		// 		cellSize: this.cellSize,
-		// 		cell100Pos: this.cell100Position
-		// 	})
-		// }
-		// return positions
-	})
-
-	cellPositions = CellPositions
+	cellPositionById = CellPositions
 	cellHeight = 50
 	cellWidth = 50
-}
-
-function calculateCellPosition({
-	cellId,
-	cellSize,
-	cell100Pos
-}: {
-	cellId: number
-	cellSize: number
-	cell100Pos: CellPosition
-}): CellPosition {
-	if (cellId === 102) {
-		// count winner offset from 0,0
-		return { x: 0, y: 0, x1: 0, y1: 0 }
-	}
-	if (cellId === 0) {
-		const cell1Pos = calculateCellPosition({ cellId: 1, cellSize, cell100Pos })
-		return {
-			x: cell1Pos.x,
-			y: cell1Pos.y + cellSize,
-			x1: cell1Pos.x1,
-			y1: cell1Pos.y1 + cellSize
-		}
-	}
-	if (cellId === LastMapPosition) {
-		return {
-			x: cell100Pos.x,
-			y: cell100Pos.y - cellSize,
-			x1: cell100Pos.x1,
-			y1: cell100Pos.y1 - cellSize
-		}
-	}
-
-	const cellRow = Math.floor((cellId - 1) / 10)
-	const cellCol = (cellId - 1) % 10
-	const xRaw = cellRow % 2 === 0 ? cellCol * cellSize : (9 - cellCol) * cellSize
-	const yRaw = (9 - cellRow) * cellSize
-
-	const x = xRaw + BaseCell100X
-	const y = yRaw + BaseCell100Y
-
-	return { x, y, x1: x + cellSize, y1: y + cellSize }
 }
 
 
