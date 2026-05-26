@@ -10,15 +10,12 @@
 	import MapCountdowwn from './MapCountdowwn.svelte'
 	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'
-	import { MapStore } from '$lib/stores/MapStore.svelte'
 	import NewCell from './NewCell.svelte'
 
 	const { players, movementStore, eventFinished, winners, mapStore } = getAppManagerContext()
 
-	// let mapImgWidth = $state(1700) // Fallback default
-	// let mapImgHeight = $state(2000) // Fallback default
-
 	let mapScale = $state(1)
+	let hideArrows = $state(false)
 
 	let mapImg = $state<HTMLImageElement | null>(null)
 	let viewport: HTMLDivElement | null = null
@@ -28,17 +25,6 @@
 			mapScale = mapImg.clientWidth / mapImg.naturalWidth
 		}
 	}
-
-	// $effect(() => {
-	// 	if (mapImg) {
-	// 		const diff = mapImg.naturalWidth - window.innerWidth
-	// 		if (diff > 0) {
-	// 			document
-	// 				.getElementById('map-scroll-container')
-	// 				?.scrollTo({ left: diff / 2, behavior: 'smooth' })
-	// 		}
-	// 	}
-	// })
 
 	function onResize() {
 		updateScale()
@@ -84,7 +70,12 @@
 		lastY = e.clientY
 	}
 
+	let mouseX = $state(0)
+	let mouseY = $state(0)
+
 	function onMouseMove(e: MouseEvent) {
+		mouseX = e.clientX - viewport!.getBoundingClientRect().left
+		mouseY = e.clientY - viewport!.getBoundingClientRect().top
 		if (!dragging || !viewport || !mapImg) return
 
 		const dx = e.clientX - lastX
@@ -102,13 +93,12 @@
 		// Calculate min/max x and y based on zoom level
 		const minX = scaledWidth > viewportWidth ? viewportWidth - scaledWidth : 0
 		const maxX = 0
-		
+
 		const minY = scaledHeight > viewportHeight ? viewportHeight - scaledHeight : 0
 		const maxY = 0
 
 		x = Math.max(minX, Math.min(x, maxX))
 		y = Math.max(minY, Math.min(y, maxY))
-
 
 		lastX = e.clientX
 		lastY = e.clientY
@@ -117,8 +107,6 @@
 	function onMouseUp() {
 		dragging = false
 	}
-
-
 
 	function onWheel(e: WheelEvent) {
 		e.preventDefault()
@@ -155,13 +143,14 @@
 			{options}
 			class="fireworks pointer-events-none absolute top-0 left-0 z-9 h-[700px] w-full"
 		/>
-	{/if}
+	{/if}29
+init arrow 70 270 510 210
 </div> -->
 
 <div class="viewport relative h-screen w-full overflow-hidden">
 	<div
 		id={MapContainerId}
-		class="map-transform absolute top-0 left-0 origin-top-left w-full"
+		class="map-transform absolute top-0 left-0 w-full origin-top-left"
 		onclick={handleClick}
 		onwheel={onWheel}
 		onmousedown={onMouseDown}
@@ -183,26 +172,30 @@
 			src={MAP_IMAGE}
 			alt="map"
 			onload={handleImageLoad}
-			class="h-auto w-full cursor-grab active:cursor-grabbing select-none"
+			class="z-1 h-auto w-full cursor-grab select-none active:cursor-grabbing"
 			draggable="false"
 		/>
+
+		<div class="absolute top-0 left-0 z-20 text-black">
+			{mouseX}, {mouseY}, {mapScale}
+		</div>
 
 		{#each Object.keys(mapStore.cellPositionById) as cellId (cellId)}
 			<NewCell cellId={parseInt(cellId)} scale={mapScale} />
 		{/each}
 
-		<!-- <CellNumber cellId={0} />
-			<CellNumber cellId={LastMapPosition} />
-			{#each mapCellsSorted as cell (cell.id)}
-				<CellNumber cellId={cell.id} />
-			{/each}
-			<MapArrowMarkers />
+		<MapArrowMarkers />
+		<svg
+			id="arrows-container"
+			class="absolute top-0 left-0 h-full w-full pointer-events-none {hideArrows ? 'hidden' : ''}"
+		>
 			{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
-				<MapArrow {from} {to} />
+				<MapArrow {from} {to} scale={mapScale} />
 			{/each}
 			{#each snakes as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
-				<MapArrow {from} {to} />
-			{/each} -->
+				<MapArrow {from} {to} scale={mapScale} />
+			{/each}
+		</svg>
 
 		<!-- <MapCharacters /> -->
 		<div

@@ -24,7 +24,7 @@
 			id="green-arrow-end"
 			markerWidth="6"
 			markerHeight="4"
-			refX="0"
+			refX="5"
 			refY="2"
 			orient="auto"
 			stroke={baseColor}
@@ -48,7 +48,7 @@
 			id="red-arrow-end"
 			markerWidth="6"
 			markerHeight="4"
-			refX="0"
+			refX="5"
 			refY="2"
 			orient="auto"
 			stroke={baseColor}
