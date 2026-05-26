@@ -19,7 +19,7 @@
 
 <div
 	class="absolute border-2 border-black rounded-full text-black text-center"
-	style={`left: ${cellLeft * scale}px; top: ${cellTop * scale}px; width: ${cellWidth * scale}px; height: ${cellHeight * scale}px; transform: scale(${scale});`}
+	style={`left: ${cellLeft * scale}px; top: ${cellTop * scale}px; width: ${cellWidth * scale}px; height: ${cellHeight * scale}px;`}
 >
-	{cellId}
+	<p style={`transform: scale(${scale})`}>{cellId}</p>
 </div>
