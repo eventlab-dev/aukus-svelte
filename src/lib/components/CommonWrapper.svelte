@@ -5,7 +5,6 @@
 	import Footer from './Footer.svelte'
 	import Navigation from './Navigation.svelte'
 	import QuickMenu from './quickMenu/QuickMenu.svelte'
-	import { ScrollArea } from './ui/scroll-area'
 	import { createAppManager } from '$lib/stores/AppManager.svelte'
 	import { setAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { onMount } from 'svelte'
@@ -62,28 +61,26 @@
 {#if $isMobile}
 	<MobilePage />
 {:else}
-	<ScrollArea class="h-screen" type="always" id="main-scroll-area">
-		<div id="wallpaper"></div>
-		<div class="">
-			{#if !hidePanels}
-				<div class="absolute top-3 left-3 z-10">
-					<QuickMenu />
-				</div>
+	<div id="wallpaper"></div>
+	<div class="">
+		{#if !hidePanels}
+			<div class="absolute top-3 left-3 z-10">
+				<QuickMenu />
+			</div>
 
-				<div class="hidden absolute top-3 right-3 z-10 flex flex-col gap-1.5">
-					<PlayersList />
-				</div>
+			<div class="absolute top-3 right-3 z-10 flex hidden flex-col gap-1.5">
+				<PlayersList />
+			</div>
 
-				<Navigation />
-			{/if}
-			{@render children?.()}
-			{#if !hidePanels}
-				<div class="px-3">
-					<Footer />
-				</div>
-			{/if}
-		</div>
-	</ScrollArea>
+			<Navigation />
+		{/if}
+		{@render children?.()}
+		{#if !hidePanels}
+			<div class="px-3">
+				<Footer />
+			</div>
+		{/if}
+	</div>
 {/if}
 
 <Metrika />
