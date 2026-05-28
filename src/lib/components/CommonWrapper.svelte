@@ -17,6 +17,7 @@
 	import FrontVersionInfo from '$lib/components/FrontVersionInfo.svelte'
 	import Metrika from '$lib/components/Metrika.svelte'
 	import SnowEffect from './SnowEffect.svelte'
+	import SmartphoneNav from './SmartphoneNav.svelte'
 
 	let { children } = $props()
 
@@ -79,7 +80,9 @@
 			<div class="px-3">
 				<Footer />
 			</div>
+			
 		{/if}
+		<SmartphoneNav />
 	</div>
 {/if}
 
