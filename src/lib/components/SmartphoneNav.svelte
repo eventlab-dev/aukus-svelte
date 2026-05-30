@@ -4,6 +4,7 @@
 	import RulesIcon from './icons/new/RulesIcon.svelte'
 	import DevelopersIcon from './icons/new/DevelopersIcon.svelte'
 	import { fly } from 'svelte/transition'
+	import Smartphone from '@lucide/svelte/icons/smartphone'
 
 	let isOpen = $state(false)
 
@@ -22,28 +23,25 @@
 <div class="fixed bottom-4 left-4 z-50">
 	{#if isOpen}
 		<div
-			class="mb-3 rounded-[2.5rem] border-4 border-gray-800 bg-gray-900 p-4 shadow-2xl"
+			class="h-[542px] w-[320px] mb-3 border-8 border-[#B6E1FF] bg-[#40A3D8]/40 shadow-2xl backdrop-blur-lg rounded-[52px]"
 			transition:fly={{ duration: 300, y: 20 }}
 		>
-			<div class="mb-4 flex items-center justify-between">
-				<div class="h-2 w-20 rounded-full bg-gray-700"></div>
-				<div class="h-2 w-2 rounded-full bg-gray-700"></div>
-			</div>
-			<div class="grid grid-cols-2 gap-4">
+		<div class="flex justify-center w-full">
+			<div class="w-[108px] h-[20px] rounded-b-[12px] bg-[#B6E1FF]"></div>
+		</div>
+		<div class="w-full text-center text-2xl font-bold mt-[60px]">Привет!</div>
+			<div class="grid grid-cols-3 gap-3 p-6">
 				{#each apps as app (app.url)}
 					{@const Icon = app.icon}
 					<a
 						href={app.url}
-						class="flex flex-col items-center rounded-2xl bg-gray-800 p-4 transition-colors hover:bg-gray-700"
+						class="flex flex-col items-center rounded-2xl transition-colors "
 						onclick={() => (isOpen = false)}
 					>
-						<Icon class="mb-2 h-8 w-8 text-blue-400" />
-						<span class="text-xs text-gray-300">{app.label}</span>
+						<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
+						<span class="text-xs text-card-blue-foreground">{app.label}</span>
 					</a>
 				{/each}
-			</div>
-			<div class="mt-4 flex justify-center">
-				<div class="h-1 w-24 rounded-full bg-gray-700"></div>
 			</div>
 		</div>
 	{/if}
@@ -53,20 +51,6 @@
 		aria-label="Toggle navigation menu"
 		class="flex h-14 w-14 items-center justify-center rounded-full bg-blue-500 text-white shadow-lg transition-all hover:bg-blue-600 hover:scale-105"
 	>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			class={isOpen ? 'rotate-180 transition-transform' : 'transition-transform'}
-		>
-			<path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-			<line x1="12" y1="2" x2="12" y2="12"></line>
-		</svg>
+		<Smartphone />
 	</button>
 </div>
