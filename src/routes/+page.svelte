@@ -25,7 +25,7 @@
 	<div class="flex-1">
 		<MapComponent />
 	</div>
-	<div class="w-[250px] pr-2">
+	<div class="mr-2">
 		<PlayersList />
 	</div>
 </div>

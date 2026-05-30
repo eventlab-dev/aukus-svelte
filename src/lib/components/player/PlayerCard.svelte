@@ -52,13 +52,13 @@
 
 <Button
 	href="/players/{player.slug}"
-	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-xl bg-card p-0! text-foreground select-none hover:no-underline"
+	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline bg-card-blue! text-card-blue-foreground"
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
 	onauxclick={handleAuxClick}
 >
 	<div
-		class="relative flex h-full w-full flex-col gap-[5px] p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 hover:after:opacity-100"
+		class="relative flex h-full w-full flex-col gap-[5px] rounded-[18px]! p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 hover:after:opacity-100"
 	>
 		<div class="flex w-full justify-between gap-[5px]">
 			<div class="flex items-center gap-2">
@@ -70,19 +70,19 @@
 				<div class="font-bold">{player.username}</div>
 			</div>
 			<div class="flex gap-[8px]">
-				<div class="flex h-fit items-center gap-[2px] font-semibold text-muted-foreground">
+				<div class="flex h-fit items-center gap-[2px] font-semibold text-card-blue-foreground">
 					{player.shit_stacks}<FireIcon />
 				</div>
-				<div class="flex h-fit items-center gap-[2px] font-semibold text-muted-foreground">
+				<div class="flex h-fit items-center gap-[2px] font-semibold text-card-blue-foreground">
 					{player.shield_stacks}<ShieldIcon />
 				</div>
-				<div class="flex h-fit items-center gap-[2px] text-sm font-semibold">
+				<div class="flex h-fit items-center gap-[2px] text-sm font-semibold text-card-blue-foreground">
 					{Math.round(player.total_score)}
 					<StarIcon />
 				</div>
 			</div>
 		</div>
-		<div class="grid w-full font-medium text-muted-foreground">
+		<div class="grid w-full font-medium text-card-blue-foreground/80">
 			{#if isHovered}
 				<span class="col-start-1 row-start-1" transition:fly={{ x: -50 }}>На страницу -></span>
 			{:else}

@@ -28,21 +28,12 @@
 
 		return () => clearInterval(interval)
 	})
-
-	const collapsed = createLocalStore('playersListCollapsed', false)
 </script>
 
 {#key $playersInOrder.length}
-	<Collapsible bind:collapsed={$collapsed} class="w-full">
-		<CollapsibleTrigger class="w-full">
-			<div>{currentTime} МСК</div>
-		</CollapsibleTrigger>
-		<CollapsibleContent>
-			{#each $playersInOrder as player (player.slug)}
-				<CollapsibleGroup>
-					<PlayerCard {player} />
-				</CollapsibleGroup>
-			{/each}
-		</CollapsibleContent>
-	</Collapsible>
+	<div class="flex flex-col gap-[6px]">
+		{#each $playersInOrder as player (player.slug)}
+			<PlayerCard {player} />
+		{/each}
+	</div>
 {/key}
