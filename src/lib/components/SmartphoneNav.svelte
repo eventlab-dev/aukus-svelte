@@ -5,13 +5,28 @@
 	import DevelopersIcon from './icons/new/DevelopersIcon.svelte'
 	import { fly } from 'svelte/transition'
 	import Smartphone from '@lucide/svelte/icons/smartphone'
+	import TV from '@lucide/svelte/icons/tv'
+	import ShieldX from '@lucide/svelte/icons/shield-x'
+	import Shirt from '@lucide/svelte/icons/shirt'
+	import ShipWheel from '@lucide/svelte/icons/ship-wheel'
+	import Calculator from '@lucide/svelte/icons/calculator'
 
 	let isOpen = $state(false)
 
+	import Trophy from '@lucide/svelte/icons/trophy'
+	import History from '@lucide/svelte/icons/history'
 	const apps = [
 		{ icon: MapIcon, label: 'Карта', url: '/' },
-		{ icon: StatsIcon, label: 'Таблица', url: '/leaderboard' },
 		{ icon: RulesIcon, label: 'Правила', url: '/rules' },
+		{ icon: StatsIcon, label: 'Статистика', url: '/leaderboard' },
+		{ icon: Trophy, label: 'Ачивки', url: '/achievements' },
+		{ icon: History, label: 'История', url: '/history' },
+		{ icon: TV, label: 'Мультистрим', url: '/multistream' },
+		{ icon: ShieldX, label: 'Подсеры', url: '/subs' },
+		{ icon: Shirt, label: 'Одежда', url: ''},
+		{ icon: ShipWheel, label: 'Колеса', url: ''},
+		{ icon: Calculator, label: 'Калькулятор', url: ''},
+	
 		{ icon: DevelopersIcon, label: 'Создатели', url: '/developers' }
 	]
 
@@ -31,7 +46,7 @@
 		</div>
 		<div class="w-full text-center text-2xl font-bold mt-[60px]">Привет!</div>
 			<div class="grid grid-cols-3 gap-3 p-6">
-				{#each apps as app (app.url)}
+				{#each apps as app (app.label)}
 					{@const Icon = app.icon}
 					<a
 						href={app.url}
