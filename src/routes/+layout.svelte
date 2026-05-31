@@ -48,7 +48,7 @@
 <QueryClientProvider client={queryClient}>
 	<TooltipProvider disableHoverableContent delayDuration={300}>
 		<CommonWrapper>
-			<ScrollArea class="h-screen" type="auto">
+			<ScrollArea class="h-screen" type="auto" id="main-scroll-area">
 				{@render children?.()}
 			</ScrollArea>
 		</CommonWrapper>
