@@ -11,6 +11,7 @@
 	import EditPanel from './components/EditPanel.svelte'
 	import { createGamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
 	import { createPlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
+	import Footer from '$lib/components/Footer.svelte'
 
 	const { playersBySlug, canvasStore, eventDataStore } = getAppManagerContext()
 	const { playerSlug: canvasPlayerSlug, editMode, canvasWidth } = canvasStore
@@ -196,3 +197,5 @@
 		</div>
 	</div>
 {/if}
+
+<Footer />

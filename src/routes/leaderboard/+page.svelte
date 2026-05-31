@@ -4,6 +4,7 @@
 	import type { StatItem, TableHeaderType } from '$lib/types'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { getPlayerCleanScore } from '$lib/utils'
+	import Footer from '$lib/components/Footer.svelte'
 
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
@@ -72,3 +73,5 @@
 		</div>
 	</div>
 {/if}
+
+<Footer />

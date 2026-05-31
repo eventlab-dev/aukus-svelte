@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { AukusBaseUrl } from '$lib/client'
+	import Footer from '$lib/components/Footer.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { getDonationsApiDonationsGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 	import { createQuery } from '@tanstack/svelte-query'
@@ -171,3 +172,5 @@
 		</div>
 	</div>
 </div>
+
+<Footer />

@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/state'
 	import { AukusBaseUrl } from '$lib/client'
+	import Footer from '$lib/components/Footer.svelte'
 	import Loader from '$lib/components/Loader.svelte'
 	import TiptapEditor from '$lib/components/richEditor/TiptapEditor.svelte'
 	import { Button } from '$lib/components/ui/button'
@@ -127,3 +128,5 @@
 		{/if}
 	</div>
 </div>
+
+<Footer />
