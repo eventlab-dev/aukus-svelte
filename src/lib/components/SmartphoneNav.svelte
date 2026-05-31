@@ -15,6 +15,7 @@
 
 	import Trophy from '@lucide/svelte/icons/trophy'
 	import History from '@lucide/svelte/icons/history'
+	import { Button } from './ui/button'
 	const apps = [
 		{ icon: MapIcon, label: 'Карта', url: '/' },
 		{ icon: RulesIcon, label: 'Правила', url: '/rules' },
@@ -61,11 +62,11 @@
 		</div>
 	{/if}
 
-	<button
+	<Button
 		onclick={togglePhone}
 		aria-label="Toggle navigation menu"
 		class="flex h-14 w-14 items-center justify-center rounded-full bg-blue-500 text-white shadow-lg transition-all hover:bg-blue-600 hover:scale-105"
 	>
 		<Smartphone />
-	</button>
+	</Button>
 </div>
