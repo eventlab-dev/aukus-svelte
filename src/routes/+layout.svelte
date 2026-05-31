@@ -8,6 +8,7 @@
 	import { onMount } from 'svelte'
 	import { fetchFrontVersion } from '$lib/api/version'
 	import { createUserActivityStore } from '$lib/stores/UserActivityStore.svelte'
+	import { ScrollArea } from '$lib/components/ui/scroll-area'
 
 	let { children } = $props()
 
@@ -47,7 +48,9 @@
 <QueryClientProvider client={queryClient}>
 	<TooltipProvider disableHoverableContent delayDuration={300}>
 		<CommonWrapper>
-			{@render children?.()}
+			<ScrollArea class="h-screen" type="auto">
+				{@render children?.()}
+			</ScrollArea>
 		</CommonWrapper>
 	</TooltipProvider>
 </QueryClientProvider>
