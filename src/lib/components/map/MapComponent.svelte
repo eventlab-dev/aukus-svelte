@@ -164,7 +164,7 @@
 init arrow 70 270 510 210
 </div> -->
 
-<div class="viewport relative h-screen w-full overflow-hidden" bind:this={viewport}>
+<div class="viewport relative w-full overflow-hidden" bind:this={viewport} style="height: {mapImg?.clientHeight ?? 0}px;">
 	<div
 		id={MapContainerId}
 		class="map-transform absolute top-0 left-0 h-full w-full origin-top-left overflow-hidden"
