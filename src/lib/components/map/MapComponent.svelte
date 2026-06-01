@@ -18,7 +18,7 @@
 	let hideArrows = $state(false)
 
 	let mapImg = $state<HTMLImageElement | null>(null)
-	let viewport: HTMLDivElement | null = null
+	let viewport: HTMLDivElement | null = $state(null)
 
 	function updateScale() {
 		if (mapImg) {
@@ -26,23 +26,17 @@
 		}
 	}
 
-	function onResize() {
-		updateScale()
-	}
-
 	$effect(() => {
-		window.addEventListener('resize', onResize)
-		return () => {
-			window.removeEventListener('resize', onResize)
-		}
-	})
+		if (!viewport) return
 
-	function handleImageLoad(e: Event) {
-		const img = e.currentTarget as HTMLImageElement
-		if (img && img.naturalWidth) {
-			onResize()
-		}
-	}
+		const observer = new ResizeObserver(() => {
+			updateScale()
+		})
+
+		observer.observe(viewport)
+
+		return () => observer.disconnect()
+	})
 
 	function handleClick() {
 		movementStore.selectedPlayer.set(null)
@@ -111,23 +105,46 @@
 	function onWheel(e: WheelEvent) {
 		e.preventDefault()
 
-		const mouseX = e.clientX
-		const mouseY = e.clientY
+		if (!viewport || !mapImg) return
+
+		const rect = viewport.getBoundingClientRect()
+
+		const mouseX = e.clientX - rect.left
+		const mouseY = e.clientY - rect.top
 
 		const oldScale = userZoom
 
 		const factor = e.deltaY < 0 ? 1.1 : 0.9
-		userZoom *= factor
 
+		userZoom *= factor
 		userZoom = Math.max(1, Math.min(userZoom, 5))
 
 		const scaleRatio = userZoom / oldScale
 
 		x = mouseX - (mouseX - x) * scaleRatio
 		y = mouseY - (mouseY - y) * scaleRatio
+
+		clampPosition()
 	}
 
-	// $inspect('mapscale', mapScale)
+	function clampPosition() {
+		if (!viewport || !mapImg) return
+
+		const viewportWidth = viewport.clientWidth
+		const viewportHeight = viewport.clientHeight
+
+		const scaledWidth = viewportWidth * userZoom
+		const scaledHeight = viewportHeight * userZoom
+
+		const minX = Math.min(0, viewportWidth - scaledWidth)
+		const maxX = 0
+
+		const minY = Math.min(0, viewportHeight - scaledHeight)
+		const maxY = 0
+
+		x = Math.max(minX, Math.min(maxX, x))
+		y = Math.max(minY, Math.min(maxY, y))
+	}
 </script>
 
 <!-- <div class="relative mt-[-60px] flex hidden w-full justify-center">
@@ -147,10 +164,10 @@
 init arrow 70 270 510 210
 </div> -->
 
-<div class="viewport h-fit w-full overflow-hidden">
+<div class="viewport relative h-screen w-full overflow-hidden" bind:this={viewport}>
 	<div
 		id={MapContainerId}
-		class="map-transform w-full"
+		class="map-transform absolute top-0 left-0 h-full w-full origin-top-left overflow-hidden"
 		onclick={handleClick}
 		onwheel={onWheel}
 		onmousedown={onMouseDown}
@@ -160,7 +177,6 @@ init arrow 70 270 510 210
 		onkeydown={() => {}}
 		tabindex={0}
 		role="button"
-		bind:this={viewport}
 		style={`
       transform:
         translate(${x}px, ${y}px)
@@ -171,7 +187,6 @@ init arrow 70 270 510 210
 			bind:this={mapImg}
 			src={MAP_IMAGE}
 			alt="map"
-			onload={handleImageLoad}
 			class="z-1 h-auto w-full cursor-grab select-none active:cursor-grabbing"
 			draggable="false"
 		/>
