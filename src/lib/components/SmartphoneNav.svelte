@@ -31,7 +31,7 @@
 	const apps: AppItem[] = [
 		{ icon: MapIcon, label: 'Карта', url: '/' },
 		{ icon: RulesIcon, label: 'Правила', url: '/rules' },
-		{ icon: StatsIcon, label: 'Статистика', url: '/leaderboard' },
+		{ icon: StatsIcon, label: 'Статистика', url: '/stats', page: 'stats' },
 		{ icon: Trophy, label: 'Ачивки', url: '/achievements' },
 		{ icon: History, label: 'История', url: '/history' },
 		{ icon: TV, label: 'Мультистрим', url: '/multistream' },

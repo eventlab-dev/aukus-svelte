@@ -22,9 +22,13 @@ export class NavStore {
 
     sync() {
         this.current_page = getPageFromUrl()
+        if (this.current_page === 'not-found') {
+            this.navigate(MAIN_PAGE)
+        }
     }
 
     constructor() {
+        this.sync()
         window.addEventListener('popstate', () => {
             this.sync()
         })

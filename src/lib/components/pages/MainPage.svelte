@@ -9,6 +9,7 @@
 	import PlayersList from '$lib/components/player/PlayersList.svelte'
 	import PageContainer from '$lib/components/PageContainer.svelte'
 	import AboutPage from '$lib/components/pages/AboutPage.svelte'
+	import StatsPage from './stats/StatsPage.svelte'
 
 	const { turnState, movementStore, myPlayer, navStore } = getAppManagerContext()
 	const { selectedPlayer } = movementStore
@@ -35,6 +36,10 @@
 {#if navStore.current_page === 'about'}
 	<PageContainer>
 		<AboutPage />
+	</PageContainer>
+{:else if navStore.current_page === 'stats'}
+	<PageContainer>
+		<StatsPage />
 	</PageContainer>
 {/if}
 
