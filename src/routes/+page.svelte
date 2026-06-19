@@ -7,13 +7,14 @@
 	import EventStatusBanner from '$lib/components/EventStatusBanner.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import PlayersList from '$lib/components/player/PlayersList.svelte'
+	import PageContainer from '$lib/components/PageContainer.svelte'
 
-	const { turnState, movementStore, myPlayer } = getAppManagerContext()
+	const { turnState, movementStore, myPlayer, navStore } = getAppManagerContext()
 	const { selectedPlayer } = movementStore
 </script>
 
 <svelte:head>
-	<title>Aukus</title>
+	<title>Aukus 5</title>
 </svelte:head>
 
 <!-- <div class="absolute top-[-40px] flex w-full justify-center">
@@ -29,6 +30,12 @@
 		<PlayersList />
 	</div>
 </div>
+
+{#if navStore.current_page === 'about'}
+	<PageContainer>
+		About
+	</PageContainer>
+{/if}
 
 {#if $turnState === 'filling-form' && !$selectedPlayer}
 	<div class="sticky bottom-10 left-1/2 z-49 mt-10 flex w-fit -translate-x-1/2 justify-center">

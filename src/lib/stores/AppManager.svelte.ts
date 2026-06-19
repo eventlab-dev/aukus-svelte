@@ -18,6 +18,7 @@ import { createGameTimeStore } from './gameTimeStore'
 import { createNowStore } from './NowStore.svelte'
 import { createSnowStore } from './SnowStore.svelte'
 import { MapStore } from './MapStore.svelte'
+import { NavStore } from './NavStore.svelte'
 
 export function createAppManager() {
 	const usersStore = createUsersStore()
@@ -184,6 +185,7 @@ export function createAppManager() {
 	})
 
 	const gameTimeStore = createGameTimeStore({ usersStore })
+	const navStore = new NavStore()
 
 
 	return {
@@ -213,7 +215,8 @@ export function createAppManager() {
 		shitStore,
 		gameTimeStore,
 		snowStore,
-		mapStore
+		mapStore,
+		navStore
 	}
 }
 

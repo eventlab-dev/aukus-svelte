@@ -10,13 +10,25 @@
 	import Shirt from '@lucide/svelte/icons/shirt'
 	import ShipWheel from '@lucide/svelte/icons/ship-wheel'
 	import Calculator from '@lucide/svelte/icons/calculator'
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	let isOpen = $state(false)
+
+	const { navStore } = getAppManagerContext()
 
 	import Trophy from '@lucide/svelte/icons/trophy'
 	import History from '@lucide/svelte/icons/history'
 	import { Button } from './ui/button'
-	const apps = [
+	import type { AppPage } from '$lib/stores/NavStore.svelte'
+
+	type AppItem = {
+		icon: import('svelte').Component
+		label: string
+		url: string
+		page?: AppPage
+	}
+
+	const apps: AppItem[] = [
 		{ icon: MapIcon, label: 'Карта', url: '/' },
 		{ icon: RulesIcon, label: 'Правила', url: '/rules' },
 		{ icon: StatsIcon, label: 'Статистика', url: '/leaderboard' },
@@ -27,8 +39,7 @@
 		{ icon: Shirt, label: 'Одежда', url: ''},
 		{ icon: ShipWheel, label: 'Колеса', url: ''},
 		{ icon: Calculator, label: 'Калькулятор', url: ''},
-	
-		{ icon: DevelopersIcon, label: 'Создатели', url: '/developers' }
+		{ icon: DevelopersIcon, label: 'Создатели', url: '/developers', page: 'about'}
 	]
 
 	function togglePhone() {
@@ -49,14 +60,18 @@
 			<div class="grid grid-cols-3 gap-3 p-6">
 				{#each apps as app (app.label)}
 					{@const Icon = app.icon}
-					<a
-						href={app.url}
-						class="flex flex-col items-center rounded-2xl transition-colors "
-						onclick={() => (isOpen = false)}
+					<button
+						class="flex flex-col items-center rounded-2xl transition-colors cursor-pointer hover:bg-blue-500/20"
+						onclick={() => {
+							if (app.page) {
+								navStore.current_page = app.page
+							}
+							isOpen = false
+						}}
 					>
 						<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
 						<span class="text-xs text-card-blue-foreground">{app.label}</span>
-					</a>
+					</button>
 				{/each}
 			</div>
 		</div>
