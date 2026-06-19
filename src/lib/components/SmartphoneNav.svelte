@@ -64,7 +64,7 @@
 						class="flex flex-col items-center rounded-2xl transition-colors cursor-pointer hover:bg-blue-500/20"
 						onclick={() => {
 							if (app.page) {
-								navStore.current_page = app.page
+								navStore.navigate(app.page)
 							}
 							isOpen = false
 						}}

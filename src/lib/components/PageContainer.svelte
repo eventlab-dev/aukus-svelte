@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { Button } from './ui/button'
+	import { ScrollArea } from './ui/scroll-area'
 
 	const {navStore} = getAppManagerContext()
 	
@@ -9,9 +10,13 @@
 	}
 </script>
 
-<div class="fixed inset-0 z-100 flex items-center justify-center bg-black/90">
-	<div class="absolute top-4 left-1/2 -translate-x-1/2">
+<div class="fixed w-full h-screen top-0 z-100 flex items-center justify-center bg-black/90 overflow-auto">
+	<ScrollArea class="h-full w-full">
+		<slot />
+		<div class="h-60"></div>
+	</ScrollArea>
+	<div class="absolute top-4 right-5 ">
 		<Button class="w-50 h-20" onclick={closePage}>Close</Button>
 	</div>
-	<slot />
 </div>
+
