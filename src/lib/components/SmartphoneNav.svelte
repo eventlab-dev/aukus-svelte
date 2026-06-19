@@ -24,22 +24,21 @@
 	type AppItem = {
 		icon: import('svelte').Component
 		label: string
-		url: string
 		page?: AppPage
 	}
 
 	const apps: AppItem[] = [
-		{ icon: MapIcon, label: 'Карта', url: '/' },
-		{ icon: RulesIcon, label: 'Правила', url: '/rules' },
-		{ icon: StatsIcon, label: 'Статистика', url: '/stats', page: 'stats' },
-		{ icon: Trophy, label: 'Ачивки', url: '/achievements' },
-		{ icon: History, label: 'История', url: '/history' },
-		{ icon: TV, label: 'Мультистрим', url: '/multistream' },
-		{ icon: ShieldX, label: 'Подсеры', url: '/subs' },
-		{ icon: Shirt, label: 'Одежда', url: ''},
-		{ icon: ShipWheel, label: 'Колеса', url: ''},
-		{ icon: Calculator, label: 'Калькулятор', url: ''},
-		{ icon: DevelopersIcon, label: 'Создатели', url: '/developers', page: 'about'}
+		{ icon: MapIcon, label: 'Карта', page: 'map' },
+		{ icon: RulesIcon, label: 'Правила', page: 'rules' },
+		{ icon: StatsIcon, label: 'Статистика', page: 'stats' },
+		{ icon: Trophy, label: 'Ачивки'},
+		{ icon: History, label: 'История' },
+		{ icon: TV, label: 'Мультистрим', page: 'multistream' },
+		{ icon: ShieldX, label: 'Подсеры' },
+		{ icon: Shirt, label: 'Одежда' },
+		{ icon: ShipWheel, label: 'Колеса' },
+		{ icon: Calculator, label: 'Калькулятор' },
+		{ icon: DevelopersIcon, label: 'Создатели', page: 'about' }
 	]
 
 	function togglePhone() {
@@ -64,7 +63,7 @@
 						class="flex flex-col items-center rounded-2xl transition-colors cursor-pointer hover:bg-blue-500/20"
 						onclick={() => {
 							if (app.page) {
-								navStore.navigate(app.page)
+								navStore.changePage(app.page)
 							}
 							isOpen = false
 						}}

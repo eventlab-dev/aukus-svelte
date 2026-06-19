@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
-	import { page } from '$app/state'
 	import { AukusBaseUrl } from '$lib/client'
 	import Footer from '$lib/components/Footer.svelte'
 	import Loader from '$lib/components/Loader.svelte'
@@ -15,7 +14,7 @@
 	import { defaultAuth } from '$lib/utils'
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 
-	const { usersStore } = getAppManagerContext()
+	const { usersStore, navStore } = getAppManagerContext()
 	const { myUser } = usersStore
 	const canEdit = $derived(
 		$myUser?.roles.includes('admin') || $myUser?.roles.includes('rules.edit')
@@ -24,8 +23,11 @@
 	let category = $state<RulesCategory>('general')
 
 	$effect(() => {
-		if (page.url.pathname === '/rules/donators') {
+		if (navStore.app_url === '/donaters') {
 			category = 'donations'
+		}
+		if (navStore.app_url === '/rules') {
+			category = 'general'
 		}
 	})
 
@@ -70,8 +72,8 @@
 	}
 
 	function setCategory(newCategory: RulesCategory) {
+		navStore.changeUrl(newCategory === 'general' ? '/rules' : '/donaters')
 		category = newCategory
-		goto(newCategory === 'general' ? '/rules' : '/rules/donators')
 	}
 </script>
 

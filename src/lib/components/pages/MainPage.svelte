@@ -10,6 +10,7 @@
 	import PageContainer from '$lib/components/PageContainer.svelte'
 	import AboutPage from '$lib/components/pages/AboutPage.svelte'
 	import StatsPage from './stats/StatsPage.svelte'
+	import RulesPage from './rules/RulesPage.svelte'
 
 	const { turnState, movementStore, myPlayer, navStore } = getAppManagerContext()
 	const { selectedPlayer } = movementStore
@@ -18,11 +19,6 @@
 <svelte:head>
 	<title>Aukus 5</title>
 </svelte:head>
-
-<!-- <div class="absolute top-[-40px] flex w-full justify-center">
-	<img src="/logo2.png" class="absolute top-[100px] w-[300px]" alt="logo" />
-	<img src="/logo-background.png" alt="back" />
-</div> -->
 
 <div class="mt-2 flex gap-2">
 	<div class="flex-1">
@@ -33,13 +29,17 @@
 	</div>
 </div>
 
-{#if navStore.current_page === 'about'}
+{#if navStore.app_page === 'about'}
 	<PageContainer>
 		<AboutPage />
 	</PageContainer>
-{:else if navStore.current_page === 'stats'}
+{:else if navStore.app_page === 'stats'}
 	<PageContainer>
 		<StatsPage />
+	</PageContainer>
+{:else if navStore.app_page === 'rules'}
+	<PageContainer>
+		<RulesPage />
 	</PageContainer>
 {/if}
 
