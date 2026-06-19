@@ -11,6 +11,8 @@
 	import AboutPage from '$lib/components/pages/AboutPage.svelte'
 	import StatsPage from './stats/StatsPage.svelte'
 	import RulesPage from './rules/RulesPage.svelte'
+	import PresentationPage from './presentation/PresentationPage.svelte'
+	import PlayerPageWrapper from './player/PlayerPageWrapper.svelte'
 
 	const { turnState, movementStore, myPlayer, navStore } = getAppManagerContext()
 	const { selectedPlayer } = movementStore
@@ -29,17 +31,25 @@
 	</div>
 </div>
 
-{#if navStore.app_page === 'about'}
+{#if navStore.dynamicPage}
+	<PageContainer>
+		<PlayerPageWrapper />
+	</PageContainer>
+{:else if navStore.appPage === 'about'}
 	<PageContainer>
 		<AboutPage />
 	</PageContainer>
-{:else if navStore.app_page === 'stats'}
+{:else if navStore.appPage === 'stats'}
 	<PageContainer>
 		<StatsPage />
 	</PageContainer>
-{:else if navStore.app_page === 'rules'}
+{:else if navStore.appPage === 'rules'}
 	<PageContainer>
 		<RulesPage />
+	</PageContainer>
+{:else if navStore.appPage === 'presentation'}
+	<PageContainer>
+		<PresentationPage />
 	</PageContainer>
 {/if}
 

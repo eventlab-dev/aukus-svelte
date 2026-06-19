@@ -1,11 +1,10 @@
 <script lang="ts">
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
-	import Socials from '../../../lib/components/Socials.svelte'
+	import Socials from '$lib/components/Socials.svelte'
 	import { fade } from 'svelte/transition'
 	import Summary from './components/Summary.svelte'
-	import MoveCard from '../../../lib/components/moveCard/MoveCard.svelte'
+	import MoveCard from '$lib/components/moveCard/MoveCard.svelte'
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-	import { page } from '$app/state'
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
@@ -13,14 +12,20 @@
 	import { createPlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 	import Footer from '$lib/components/Footer.svelte'
 
+    type Props = {
+		playerSlug: string
+	}
+
+	let { playerSlug }: Props = $props()
+
 	const { playersBySlug, canvasStore, eventDataStore } = getAppManagerContext()
 	const { playerSlug: canvasPlayerSlug, editMode, canvasWidth } = canvasStore
 
 	let gamesMatchesStoreForPlayer = $state(
-		createGamesMatchesStore({ eventDataStore, playerSlug: page.params.player })
+		createGamesMatchesStore({ eventDataStore, playerSlug })
 	)
 	let playersMovesStoreForPlayer = $state(
-		createPlayerMovesStore({ playerSlug: page.params.player })
+		createPlayerMovesStore({ playerSlug })
 	)
 
 	const [playerMoves, movesQueryParams, movesQuery] = $derived([
@@ -37,35 +42,35 @@
 	// const { gamesMatchParams, gamesMatched } = gamesMatchesStoreForPlayer
 
 	$effect(() => {
-		if (!page.params.player) {
+		if (!playerSlug) {
 			return
 		}
 		// console.log('creating store for', page.params.player)
 		gamesMatchesStoreForPlayer = createGamesMatchesStore({
 			eventDataStore,
-			playerSlug: page.params.player
+			playerSlug
 		})
-		playersMovesStoreForPlayer = createPlayerMovesStore({ playerSlug: page.params.player })
+		playersMovesStoreForPlayer = createPlayerMovesStore({ playerSlug })
 
 		movesQueryParams.set({
-			players: [page.params.player],
+			players: [playerSlug],
 			start_ts: null,
 			search_title: null,
 			titles: undefined,
 			exclude_ids: undefined
 		})
-		canvasPlayerSlug.set(page.params.player)
+		canvasPlayerSlug.set(playerSlug)
 	})
 
 	$effect(() => {
-		const currentPlayer = page.params.player
+		const currentPlayer = playerSlug
 
 		if (!currentPlayer || $movesQuery.isLoading || $movesQuery.isFetching) {
 			gamesMatchParams.set({
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
-				exclude_player: page.params.player
+				exclude_player: playerSlug
 			})
 			return
 		}
@@ -86,15 +91,19 @@
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
-				exclude_player: page.params.player
+				exclude_player: playerSlug
 			})
 		}
 	})
 
 	const player = $derived.by(() => {
-		if (!page.params.player) return null
-		return $playersBySlug[page.params.player] || null
+		if (!playerSlug) return null
+		return $playersBySlug[playerSlug] || null
 	})
+
+	$inspect({ player, playerSlug })
+
+
 	const gamesCompleted = $derived(
 		$playerMoves.filter((move) => move.type === 'completed').length || 0
 	)

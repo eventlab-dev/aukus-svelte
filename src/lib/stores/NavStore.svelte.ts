@@ -4,7 +4,6 @@ export type AppPage =
 	| 'about'
 	| 'stats'
 	| 'multistream'
-	| 'not-found'
 	| 'presentation'
 
 const URL_PAGE_MAP: Record<string, AppPage> = {
@@ -14,7 +13,6 @@ const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/about': 'about',
 	'/stats': 'stats',
 	'/streams': 'multistream',
-	'/not-found': 'not-found',
 	'/presentation': 'presentation'
 }
 
@@ -22,42 +20,52 @@ type AppUrl = keyof typeof URL_PAGE_MAP
 
 function pageToUrl(page: AppPage): AppUrl {
 	const pair = Object.entries(URL_PAGE_MAP).find(([, p]) => p === page)
-	return pair ? (pair[0] as AppUrl) : '/not-found'
+	return pair ? (pair[0] as AppUrl) : '/'
 }
 
 const MAIN_PAGE = URL_PAGE_MAP['/']
 
 export class NavStore {
-	app_page: AppPage = $state(getAppPageFromUrl())
-	app_url: AppUrl = $state(getAppUrlFromUrl())
+	appPage: AppPage = $state(getAppPageFromUrl() ?? MAIN_PAGE)
+	appUrl: AppUrl = $state(getAppUrlFromUrl() ?? pageToUrl(MAIN_PAGE))
+	dynamicPage: string | null = $state(null)
 
 	closePage() {
+		console.log('closing page')
 		this.changePage(MAIN_PAGE)
 	}
 
 	changePage(page: AppPage) {
-		if (page === this.app_page) return
 		const url = pageToUrl(page)
-		this.app_page = page
-		this.app_url = url
+		this.appPage = page
+		this.appUrl = url
+		this.dynamicPage = null
 		history.pushState({ page }, '', url)
 	}
 
 	changeUrl(url: AppUrl) {
 		const newPage = URL_PAGE_MAP[url] || 'not-found'
-		if (newPage === this.app_page) {
+		if (newPage === this.appPage) {
 			history.pushState({ url }, '', url)
-			this.app_url = url
+			this.appUrl = url
 			return
 		}
 		this.changePage(newPage)
 	}
 
+	changeDynamicPage(page: string) {
+		this.dynamicPage = page
+		this.appPage = MAIN_PAGE
+		this.appUrl = pageToUrl(MAIN_PAGE)
+		history.pushState({ page }, '', `/${page}`)
+	}
+
 	sync() {
-		this.app_page = getAppPageFromUrl()
-		this.app_url = getAppUrlFromUrl()
-		if (this.app_page === 'not-found') {
-			this.changePage(MAIN_PAGE)
+		const appPage = getAppPageFromUrl()
+		if (appPage) {
+			this.changePage(appPage)
+		} else {
+			this.changeDynamicPage(window.location.pathname.substring(1))
 		}
 	}
 
@@ -69,13 +77,13 @@ export class NavStore {
 	}
 }
 
-function getAppPageFromUrl(): AppPage {
+function getAppPageFromUrl(): AppPage | null {
 	const path = getAppUrlFromUrl()
-	return URL_PAGE_MAP[path] || 'not-found'
+	if (!path) return null
+	return URL_PAGE_MAP[path]
 }
 
-function getAppUrlFromUrl(): AppUrl {
+function getAppUrlFromUrl(): AppUrl | null {
 	const browserPath = window.location.pathname
-	const url = Object.keys(URL_PAGE_MAP).find((key) => key === browserPath) || '/not-found'
-	return url as AppUrl
+	return URL_PAGE_MAP[browserPath] || null
 }
