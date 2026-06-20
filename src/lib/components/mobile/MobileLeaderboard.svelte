@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { StatItem, TableHeaderType } from '$lib/types'
-	import StatTable from '../../../routes/leaderboard/components/StatTable.svelte'
+	import StatTable from '$lib/components/pages/stats/components/StatTable.svelte'
 	import { getPlayerCleanScore } from '$lib/utils'
 
 	type Props = {
