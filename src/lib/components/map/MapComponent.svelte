@@ -195,6 +195,10 @@ init arrow 70 270 510 210
 			{mouseX}, {mouseY}, {mapScale}
 		</div>
 
+		<div class="absolute bottom-2 right-2 z-20 text-black">
+			{Math.round(mouseX / mapScale)}, {Math.round(mouseY / mapScale)}
+		</div>
+
 		{#each Object.keys(mapStore.cellPositionById) as cellId (cellId)}
 			<NewCell cellId={parseInt(cellId)} scale={mapScale} />
 		{/each}

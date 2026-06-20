@@ -55,9 +55,11 @@
 		<div
 			class="absolute flex items-center justify-center rounded-2xl p-3 text-center data-[variant=negative]:bg-red-500 data-[variant=neutral]:bg-secondary data-[variant=positive]:bg-green-500 data-[variant=slow]:bg-yellow-700"
 			data-variant={cellType(startCell, cell.id)}
-			style="top: {cell.position.centerY - 22}px; left: {cell.position.centerX - 22}px;"
+			style="top: {cell.position.centerY - 32}px; left: {cell.position.centerX - 34}px;"
 		>
-			<div class="w-[20px] text-center">{showMinus ? '-' : ''}{idx + Math.abs($myMovementState.minSteps)}</div>
+			<div class="w-[2ch] text-center text-4xl">
+				{showMinus ? '-' : ''}{idx + Math.abs($myMovementState.minSteps)}
+			</div>
 		</div>
 	{/each}
 {/if}

@@ -81,7 +81,7 @@
 	{/each}
 	{#if showUsername}
 		<div class="relative flex h-[10px] w-full justify-center">
-			<div class="absolute top-[-8px] z-50 rounded-md bg-card p-1">
+			<div class="absolute top-[-8px] z-50 rounded-md bg-card p-1 text-2xl">
 				{player.username}
 			</div>
 		</div>

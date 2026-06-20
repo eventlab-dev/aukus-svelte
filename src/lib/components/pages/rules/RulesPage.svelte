@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
 	import { AukusBaseUrl } from '$lib/client'
 	import Footer from '$lib/components/Footer.svelte'
 	import Loader from '$lib/components/Loader.svelte'
@@ -23,10 +22,10 @@
 	let category = $state<RulesCategory>('general')
 
 	$effect(() => {
-		if (navStore.app_url === '/donaters') {
+		if (navStore.appUrl === '/donaters') {
 			category = 'donations'
 		}
-		if (navStore.app_url === '/rules') {
+		if (navStore.appUrl === '/rules') {
 			category = 'general'
 		}
 	})

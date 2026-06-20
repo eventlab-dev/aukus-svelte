@@ -11,15 +11,17 @@
 	const { mapStore } = getAppManagerContext()
 
 	const cell = $derived(mapStore.cellPositionById[cellId])
-	const cellTop = $derived(cell.centerY - mapStore.cellHeight / 2)
-	const cellLeft = $derived(cell.centerX - mapStore.cellWidth / 2)
-	const cellWidth = $derived(mapStore.cellWidth)
-	const cellHeight = $derived(mapStore.cellHeight)
+	const cellTop = $derived(cell.centerY - mapStore.cellSize / 2)
+	const cellLeft = $derived(cell.centerX - mapStore.cellSize / 2)
+	const cellWidth = $derived(mapStore.cellSize)
+	const cellHeight = $derived(mapStore.cellSize)
 </script>
 
 <div
 	class="absolute border-2 border-black rounded-full text-black text-center"
 	style={`left: ${cellLeft * scale}px; top: ${cellTop * scale}px; width: ${cellWidth * scale}px; height: ${cellHeight * scale}px;`}
 >
-	<p style={`transform: scale(${scale})`}>{cellId}</p>
+	<div style={`transform: scale(${scale})`} class="text-5xl flex items-center justify-center h-full">
+		{cellId}
+	</div>
 </div>

@@ -164,7 +164,7 @@
 
 <div
 	bind:this={element}
-	class="absolute -translate-x-1/2 -translate-y-1/2 scale-30
+	class="absolute -translate-x-1/2 -translate-y-1/2 scale-120
     transition-opacity duration-300 data-[active=true]:z-10 data-[active=true]:scale-110 data-[highlighted=true]:z-20
     data-[highlighted=true]:scale-110 data-[win-jump=true]:animate-bounce"
 	style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}"
@@ -178,7 +178,7 @@
 		data-highlighted={isHighlighted}
 	>
 		{#if onlyName}
-			<div class="flex w-full justify-center p-1">
+			<div class="flex w-full items-center justify-center p-1">
 				<div class="relative left-1/2 -translate-x-1/2 rounded-md bg-card p-1">
 					{player.username}
 				</div>
