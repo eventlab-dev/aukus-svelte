@@ -88,7 +88,7 @@
 		</div>
 		<div class="grid w-full font-medium text-card-blue-foreground/80">
 			{#if isHovered}
-				<span class="col-start-1 row-start-1" transition:fly={{ x: -50 }}>На страницу -></span>
+				<span class="col-start-1 row-start-1" transition:fly={{ x: -50 }}>Открыть</span>
 			{:else}
 				<span class="col-start-1 row-start-1 truncate" transition:fly={{ x: 100 }}>
 					{player.current_game || 'Выбирает игру...'}
