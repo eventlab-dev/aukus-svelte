@@ -10,7 +10,7 @@
 	}
 </script>
 
-<div class="fixed w-full h-screen top-0 z-100 flex items-center justify-center bg-black/90 overflow-auto">
+<div class="fixed w-full h-screen top-0 z-20 flex items-center justify-center bg-black/90 overflow-auto">
 	<ScrollArea class="h-full w-full">
 		<slot />
 		<div class="h-60"></div>
