@@ -28,7 +28,6 @@
 	}
 
 	const apps: AppItem[] = [
-		{ icon: MapIcon, label: 'Карта', page: 'map' },
 		{ icon: RulesIcon, label: 'Правила', page: 'rules' },
 		{ icon: StatsIcon, label: 'Статистика', page: 'stats' },
 		{ icon: Trophy, label: 'Ачивки'},
