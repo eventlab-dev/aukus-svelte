@@ -1,7 +1,7 @@
 <script lang="ts">
 	const baseColor = 'rgba(0,0,0,0.5)'
-	const greenColor = 'rgba(0,255,0,0.7)'
-	const redColor = 'rgba(255,0,0,0.7)'
+	const greenColor = 'rgba(0,180,0,0.9)'
+	const redColor = 'rgba(180,0,0,0.9)'
 
 	const arrowPoints = '0 0, 6 2, 0 4'
 </script>
@@ -18,19 +18,19 @@
 			stroke={baseColor}
 			stroke-width="1"
 		>
-			<polygon points={arrowPoints} fill={greenColor} />
+			<polygon points={arrowPoints} fill={greenColor} stroke="none" />
 		</marker>
 		<marker
 			id="green-arrow-end"
 			markerWidth="6"
 			markerHeight="4"
-			refX="5"
+			refX="10"
 			refY="2"
 			orient="auto"
 			stroke={baseColor}
 			stroke-width="1"
 		>
-			<polygon points={arrowPoints} fill={greenColor} />
+			<polygon points={arrowPoints} fill={greenColor} stroke="none" />
 		</marker>
 		<marker
 			id="red-arrow-start"
@@ -42,19 +42,19 @@
 			stroke={baseColor}
 			stroke-width="1"
 		>
-			<polygon points={arrowPoints} fill={redColor} />
+			<polygon points={arrowPoints} fill={redColor} stroke="none" />
 		</marker>
 		<marker
 			id="red-arrow-end"
 			markerWidth="6"
 			markerHeight="4"
-			refX="5"
+			refX="10"
 			refY="2"
 			orient="auto"
 			stroke={baseColor}
 			stroke-width="1"
 		>
-			<polygon points={arrowPoints} fill={redColor} />
+			<polygon points={arrowPoints} fill={redColor} stroke="none" />
 		</marker>
 	</defs>
 </svg>

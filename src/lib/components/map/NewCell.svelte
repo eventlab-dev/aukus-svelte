@@ -21,7 +21,7 @@
 	class="absolute border-2 border-black rounded-full text-black text-center"
 	style={`left: ${cellLeft * scale}px; top: ${cellTop * scale}px; width: ${cellWidth * scale}px; height: ${cellHeight * scale}px;`}
 >
-	<div style={`transform: scale(${scale})`} class="text-5xl flex items-center justify-center h-full">
+	<div style={`transform: scale(${scale})`} class="pointer-events-none select-none text-5xl flex items-center justify-center h-full">
 		{cellId}
 	</div>
 </div>

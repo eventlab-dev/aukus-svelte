@@ -29,7 +29,7 @@
 	x2={toX}
 	y2={toY}
 	stroke="rgba(0,0,0,0.7)"
-	stroke-width="3"
+	stroke-width="2"
 	marker-start={isSnake ? 'url(#red-arrow-start)' : 'url(#green-arrow-start)'}
 	marker-end={isSnake ? 'url(#red-arrow-end)' : 'url(#green-arrow-end)'}
 />
