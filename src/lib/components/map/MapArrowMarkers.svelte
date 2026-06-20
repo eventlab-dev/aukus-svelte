@@ -18,7 +18,7 @@
 			viewBox={`0 0 ${arrowWidth} ${arrowHeight}`}
 			markerWidth={arrowWidth}
 			markerHeight={arrowHeight}
-			refX="-10"
+			refX="-5"
 			refY={arrowHeight / 2}
 			orient="auto"
 			stroke={baseColor}
@@ -30,7 +30,7 @@
 			id="green-arrow-end"
 			markerWidth={arrowWidth}
 			markerHeight={arrowHeight}
-			refX="10"
+			refX="5"
 			refY={arrowHeight / 2}
 			orient="auto"
 			stroke={baseColor}
@@ -42,7 +42,7 @@
 			id="red-arrow-start"
 			markerWidth={arrowWidth}
 			markerHeight={arrowHeight}
-			refX="-10"
+			refX="-5"
 			refY={arrowHeight / 2}
 			orient="auto"
 			stroke={baseColor}
@@ -54,7 +54,7 @@
 			id="red-arrow-end"
 			markerWidth={arrowWidth}
 			markerHeight={arrowHeight}
-			refX="10"
+			refX="5"
 			refY={arrowHeight / 2}
 			orient="auto"
 			stroke={baseColor}
