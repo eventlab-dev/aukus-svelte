@@ -31,7 +31,6 @@ export class NavStore {
 	dynamicPage: string | null = $state(null)
 
 	closePage() {
-		console.log('closing page')
 		this.changePage(MAIN_PAGE)
 	}
 
@@ -40,7 +39,7 @@ export class NavStore {
 		this.appPage = page
 		this.appUrl = url
 		this.dynamicPage = null
-		history.pushState({ page }, '', url)
+		history.pushState({ page, url }, '', url)
 	}
 
 	changeUrl(url: AppUrl) {

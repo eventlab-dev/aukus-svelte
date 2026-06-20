@@ -1,11 +1,6 @@
 <script lang="ts">
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import PlayerCard from './PlayerCard.svelte'
-	import Collapsible from '../collapsible/Collapsible.svelte'
-	import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.svelte'
-	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte'
-	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte'
-	import { createLocalStore } from '$lib/stores/LocalStore.svelte'
 
 	const { playersInOrder } = getAppManagerContext()
 

@@ -14,7 +14,7 @@
 	}
 
 	const { player }: Props = $props()
-	const { movementStore } = getAppManagerContext()
+	const { movementStore, navStore } = getAppManagerContext()
 	const { hoveredPlayer } = movementStore
 
 	let isHovered = $state(false)
@@ -48,10 +48,14 @@
 			}
 		}
 	}
+
+	function openPlayer() {
+		navStore.changeDynamicPage(player.slug)
+	}
 </script>
 
 <Button
-	href="/players/{player.slug}"
+	onclick={openPlayer}
 	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline bg-card-blue! text-card-blue-foreground"
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
