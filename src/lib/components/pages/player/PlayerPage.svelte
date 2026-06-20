@@ -11,8 +11,9 @@
 	import { createGamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
 	import { createPlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 	import Footer from '$lib/components/Footer.svelte'
+	import Loader from '$lib/components/Loader.svelte'
 
-    type Props = {
+	type Props = {
 		playerSlug: string
 	}
 
@@ -21,12 +22,8 @@
 	const { playersBySlug, canvasStore, eventDataStore } = getAppManagerContext()
 	const { playerSlug: canvasPlayerSlug, editMode, canvasWidth } = canvasStore
 
-	let gamesMatchesStoreForPlayer = $state(
-		createGamesMatchesStore({ eventDataStore, playerSlug })
-	)
-	let playersMovesStoreForPlayer = $state(
-		createPlayerMovesStore({ playerSlug })
-	)
+	let gamesMatchesStoreForPlayer = $state(createGamesMatchesStore({ eventDataStore, playerSlug }))
+	let playersMovesStoreForPlayer = $state(createPlayerMovesStore({ playerSlug }))
 
 	const [playerMoves, movesQueryParams, movesQuery] = $derived([
 		playersMovesStoreForPlayer.playerMoves,
@@ -101,9 +98,6 @@
 		return $playersBySlug[playerSlug] || null
 	})
 
-	$inspect({ player, playerSlug })
-
-
 	const gamesCompleted = $derived(
 		$playerMoves.filter((move) => move.type === 'completed').length || 0
 	)
@@ -143,6 +137,8 @@
 	})
 
 	const widthStyle = `width: ${$canvasWidth}px`
+
+	const isLoading = $derived($movesQuery.isLoading || $movesQuery.isFetching)
 </script>
 
 <svelte:head>
@@ -175,33 +171,40 @@
 					size="lg"
 					class="mb-2.5"
 				/>
-				<div class="mb-[30px] flex flex-col items-center gap-5">
-					<div class="text-5xl leading-[58px] font-bold">
-						{player.first_name} «{player.username}»
-					</div>
-					<Socials {player} />
-					<Summary
-						totalScore={player.total_score}
-						{gamesCompleted}
-						gameName={player.current_game || ''}
-						gameImage={player.current_game_cover || ''}
-						gameDuration={player.current_game_duration || 0}
-						mainPlatform={player.main_platform}
-						playerSlug={player.slug}
-					/>
-				</div>
 
-				<div class="mt-5 space-y-[200px]">
-					<div class="space-y-5">
-						<!-- <CurrentGameCard playerSlug={player.slug} /> -->
-						{#each $playerMoves as move (move.id)}
-							{@const matchedGames = $gamesMatched.filter(
-								(game) => game.game_title === move.item_title
-							)}
-							<MoveCard {move} {matchedGames} />
-						{/each}
+				{#if isLoading}
+					<div class="mt-20">
+						<Loader class="size-20" />
 					</div>
-				</div>
+				{:else}
+					<div class="mb-[30px] flex flex-col items-center gap-5">
+						<div class="text-5xl leading-[58px] font-bold">
+							{player.first_name} «{player.username}»
+						</div>
+						<Socials {player} />
+						<Summary
+							totalScore={player.total_score}
+							{gamesCompleted}
+							gameName={player.current_game || ''}
+							gameImage={player.current_game_cover || ''}
+							gameDuration={player.current_game_duration || 0}
+							mainPlatform={player.main_platform}
+							playerSlug={player.slug}
+						/>
+					</div>
+
+					<div class="mt-5 space-y-[200px]">
+						<div class="space-y-5">
+							<!-- <CurrentGameCard playerSlug={player.slug} /> -->
+							{#each $playerMoves as move (move.id)}
+								{@const matchedGames = $gamesMatched.filter(
+									(game) => game.game_title === move.item_title
+								)}
+								<MoveCard {move} {matchedGames} />
+							{/each}
+						</div>
+					</div>
+				{/if}
 			</div>
 		</div>
 	</div>
