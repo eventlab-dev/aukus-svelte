@@ -191,12 +191,8 @@ init arrow 70 270 510 210
 			draggable="false"
 		/>
 
-		<div class="absolute top-0 left-0 z-20 text-black">
-			{mouseX}, {mouseY}, {mapScale}
-		</div>
-
 		<div class="absolute bottom-2 right-2 z-20 text-black">
-			{Math.round(mouseX / mapScale)}, {Math.round(mouseY / mapScale)}
+			{Math.round(mouseX / mapScale)}:{Math.round(mouseY / mapScale)}
 		</div>
 
 		{#each Object.keys(mapStore.cellPositionById) as cellId (cellId)}
