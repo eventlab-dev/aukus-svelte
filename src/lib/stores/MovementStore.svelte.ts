@@ -92,8 +92,8 @@ export function createMovementStore({
 		if (startCell === 0) {
 			// move to the start
 			timeline.add(element, {
-				left: `${mapStore.cellPositionById[0].x + offsetInsideCellX}px`,
-				top: `${mapStore.cellPositionById[0].y + offsetInsideCellY}px`,
+				left: `${mapStore.cellPositionById[0].centerX + offsetInsideCellX}px`,
+				top: `${mapStore.cellPositionById[0].centerY + offsetInsideCellY}px`,
 				duration: 700,
 				easing: 'easeInOutQuad',
 				// add "jump" effect
@@ -107,8 +107,8 @@ export function createMovementStore({
 		cellsPath.forEach((cell) => {
 			const pos = mapStore.cellPositionById[cell.id]
 			timeline.add(element, {
-				left: `${pos.x + offsetInsideCellX}px`,
-				top: `${pos.y + offsetInsideCellY}px`,
+				left: `${pos.centerX + offsetInsideCellX}px`,
+				top: `${pos.centerY + offsetInsideCellY}px`,
 				duration: 700,
 				easing: 'easeInOutQuad',
 				// add "jump" effect
@@ -124,8 +124,8 @@ export function createMovementStore({
 		if (params.moveResponse.ladder_to) {
 			const pos = mapStore.cellPositionById[params.moveResponse.ladder_to]
 			timeline.add(element, {
-				left: `${pos.x + offsetInsideCellX}px`,
-				top: `${pos.y + offsetInsideCellY}px`,
+				left: `${pos.centerX + offsetInsideCellX}px`,
+				top: `${pos.centerY + offsetInsideCellY}px`,
 				duration: 1500,
 				easing: 'easeInOutQuad',
 				// add "climb" effect
@@ -140,8 +140,8 @@ export function createMovementStore({
 		if (params.moveResponse.snake_to) {
 			const pos = mapStore.cellPositionById[params.moveResponse.snake_to]
 			timeline.add(element, {
-				left: `${pos.x + offsetInsideCellX}px`,
-				top: `${pos.y + offsetInsideCellY}px`,
+				left: `${pos.centerX + offsetInsideCellX}px`,
+				top: `${pos.centerY + offsetInsideCellY}px`,
 				duration: 1500,
 				easing: 'easeInOutQuad',
 				keyframes: [
@@ -184,13 +184,13 @@ export function createMovementStore({
 
 		const timeline = createTimeline()
 		timeline.add(element, {
-			top: `${startPos.y - mapStore.cellSize + offsetInsideCellY}px`,
-			left: `${startPos.x + offsetInsideCellX}px`,
+			top: `${startPos.centerY - mapStore.cellSize + offsetInsideCellY}px`,
+			left: `${startPos.centerX + offsetInsideCellX}px`,
 			duration: 2000,
 			easing: 'easeInOutQuad'
 		})
 		timeline.add(element, {
-			top: `${startPos.y - mapStore.cellSize + offsetInsideCellY}px`,
+			top: `${startPos.centerY - mapStore.cellSize + offsetInsideCellY}px`,
 			left: `${finalPos.x}px`,
 			duration: 4000,
 			easing: 'easeInOutQuad',
@@ -271,8 +271,8 @@ export function createMovementStore({
 			// console.log('animating player', player)
 
 			const cellPosition = mapStore.cellPositionById[previousPlayer.map_position]
-			element.style.top = `${cellPosition.y + offsetInsideCellY}px`
-			element.style.left = `${cellPosition.x + offsetInsideCellX}px`
+			element.style.top = `${cellPosition.centerY + offsetInsideCellY}px`
+			element.style.left = `${cellPosition.centerX + offsetInsideCellX}px`
 
 			const finalCell = last_move.ladder_from ?? last_move.snake_from ?? last_move.cell_to
 			const steps = finalCell - previousPlayer.map_position
