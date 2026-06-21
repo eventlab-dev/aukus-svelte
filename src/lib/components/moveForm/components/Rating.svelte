@@ -28,7 +28,7 @@
 	const itemIndex = $derived(isHovered ? hoveredItemIndex : lockedItemIndex)
 	const color = $derived.by(getColor)
 
-	let timeoutId: number
+	let timeoutId: ReturnType<typeof setTimeout>
 
 	function getColor() {
 		if (itemIndex === null || itemIndex <= 3) return 'bg-red-500'

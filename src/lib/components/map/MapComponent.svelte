@@ -6,7 +6,6 @@
 	import CellNumber from './CellNumber.svelte'
 	import MapArrow from './MapArrow.svelte'
 	import MapArrowMarkers from './MapArrowMarkers.svelte'
-	import MapCharacters from './MapCharacters.svelte'
 	import MapCountdowwn from './MapCountdowwn.svelte'
 	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'

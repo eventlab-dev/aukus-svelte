@@ -20,10 +20,10 @@
 	const { cellPosition, size } = $derived.by(() => {
 		const pos = mapStore.cellPositionById[cellId]
 		if (cellId === 0) {
-			return { cellPosition: { x: pos.x + 50, y: pos.y + 10 }, size: 2 }
+			return { cellPosition: { centerX: pos.centerX + 50, centerY: pos.centerY + 10 }, size: 2 }
 		}
 		if (cellId === LastMapPosition) {
-			return { cellPosition: { x: pos.x, y: pos.y }, size: 2 }
+			return { cellPosition: { centerX: pos.centerX, centerY: pos.centerY }, size: 2 }
 		}
 		return { cellPosition: pos, size: 1 }
 	})
@@ -64,7 +64,7 @@
 
 <div
 	class="absolute flex h-[35px] w-[35px] items-center justify-center text-black"
-	style="top: {cellPosition.y + 1}px; left: {cellPosition.x + 3}px; width: {35 *
+	style="top: {cellPosition.centerY + 1}px; left: {cellPosition.centerX + 3}px; width: {35 *
 		size}px; height: {35 * size}px;"
 >
 	<img src={markerUrl} alt="marker" class="absolute inset-0" />

@@ -16,7 +16,7 @@
 
 	let isVisible = $state(false);
 
-	let timeoutId: number;
+	let timeoutId: ReturnType<typeof setTimeout>;
 
 	function hide() {
 		clearTimeout(timeoutId);

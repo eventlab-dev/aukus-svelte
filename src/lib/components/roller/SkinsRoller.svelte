@@ -461,13 +461,3 @@
 		{/if}
 	</DialogContent>
 </Dialog>
-
-<style>
-	/* small local styles; keep tailwind classes in markup where possible */
-	.roulette-wrapper {
-		display: flex;
-		align-items: center;
-		transition: transform 0.1s linear;
-		gap: /* fallback if custom property missing */ 8px;
-	}
-</style>

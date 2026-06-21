@@ -22,7 +22,7 @@
 
 	let open = $state(false)
 
-	let closeTimeout: number | undefined = undefined
+	let closeTimeout: ReturnType<typeof setTimeout> | undefined = undefined
 
 	function handleMouseEnter() {
 		clearTimeout(closeTimeout)

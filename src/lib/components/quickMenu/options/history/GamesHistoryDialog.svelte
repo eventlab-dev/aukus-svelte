@@ -49,7 +49,7 @@
 		}
 	})
 
-	let timer: number = 0
+	let timer: ReturnType<typeof setTimeout>
 	const debounceSearch = (v: string) => {
 		clearTimeout(timer)
 		if (v.length >= 3 || v.length === 0) {
