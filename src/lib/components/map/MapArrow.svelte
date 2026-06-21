@@ -21,7 +21,7 @@
 	const toX = $derived(cellToPos.centerX * scale)
 	const toY = $derived(cellToPos.centerY * scale)
 
-	const trim = 12 // pixels to remove from each end
+	const trim = $derived(45 * scale) // pixels to remove from each end
 
 	const dx = $derived(toX - fromX)
 	const dy = $derived(toY - fromY)
