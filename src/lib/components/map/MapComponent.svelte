@@ -18,6 +18,7 @@
 
 	let mapImg = $state<HTMLImageElement | null>(null)
 	let viewport: HTMLDivElement | null = $state(null)
+	let viewportHeight = $state(0)
 
 	function updateScale() {
 		if (mapImg) {
@@ -163,7 +164,11 @@
 init arrow 70 270 510 210
 </div> -->
 
-<div class="viewport relative w-full overflow-hidden" bind:this={viewport} style="height: {mapImg?.clientHeight ?? 0}px;">
+<div
+	class="viewport relative w-full overflow-hidden"
+	bind:this={viewport}
+	style="height: {viewportHeight}px;"
+>
 	<div
 		id={MapContainerId}
 		class="map-transform absolute top-0 left-0 h-full w-full origin-top-left overflow-hidden"
@@ -183,6 +188,8 @@ init arrow 70 270 510 210
     `}
 	>
 		<img
+		
+			bind:clientHeight={viewportHeight}
 			bind:this={mapImg}
 			src={MAP_IMAGE}
 			alt="map"
@@ -190,7 +197,7 @@ init arrow 70 270 510 210
 			draggable="false"
 		/>
 
-		<div class="absolute bottom-2 right-2 z-20 text-black">
+		<div class="absolute right-2 bottom-2 z-20 text-black">
 			{Math.round(mouseX / mapScale)}:{Math.round(mouseY / mapScale)}
 		</div>
 
