@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import {
 		laddersByCell,
 		snakesByCell,
@@ -7,6 +6,7 @@
 	import type { PlayerData } from '$lib/types'
 	import { onMount } from 'svelte'
 	import PlayerModel from './PlayerModel.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		player: PlayerData
@@ -16,43 +16,38 @@
 
 	const { player, asWinner, scale = 1 }: Props = $props()
 
+	const app = getAppManager()
 	const {
-		players,
 		eventDataStore,
 		movementStore,
-		myPlayer,
-		turnState,
-		playersCompletedMap,
-		winners,
-		frontendState,
 		mapStore
-	} = getAppManagerContext()
+	} = app
 
 	let element: HTMLDivElement
 
 	const startWinAnimation = $derived(
-		player.slug === myPlayer?.slug &&
+		player.slug === app.myPlayer?.slug &&
 			player.map_position === 102 &&
-			turnState === 'player-win-animation'
+			app.turnState === 'player-win-animation'
 	)
 
 	$effect(() => {
 		if (startWinAnimation && element) {
-			const position = playersCompletedMap.findIndex((p) => p.slug === player.slug) + 1
+			const position = app.playersCompletedMap.findIndex((p) => p.slug === player.slug) + 1
 			movementStore.moveToWinPosition({ playerSlug: player.slug, position }).then(() => {
-				frontendState.set('event-completed')
+				app.frontendState.set('event-completed')
 			})
 		}
 	})
 
 	const playersOnCell = $derived(
-		players
+		app.players
 			.filter((p) => p.map_position === player.map_position)
 			.sort((a, b) => a.slug.localeCompare(b.slug))
 	)
 
 	const doWinJumpAnimation = $derived(
-		(asWinner && winners[0]?.slug === player.slug) || playersCompletedMap[0]?.slug === player.slug
+		(asWinner && app.winners[0]?.slug === player.slug) || app.playersCompletedMap[0]?.slug === player.slug
 	)
 
 	const {
@@ -61,7 +56,7 @@
 		cellPosition,
 		onlyName
 	} = $derived.by(() => {
-		const winnerIndex = winners.findIndex((p) => p.slug === player.slug)
+		const winnerIndex = app.winners.findIndex((p) => p.slug === player.slug)
 
 		if (winnerIndex !== -1) {
 			// if (asWinner) {
@@ -107,7 +102,7 @@
 	const finalLeft = $derived(cellPosition.centerX)
 
 	$effect(() => {
-		if (element && turnState === 'selecting-dice' && player.slug === myPlayer?.slug) {
+		if (element && app.turnState === 'selecting-dice' && player.slug === app.myPlayer?.slug) {
 			element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
 		}
 	})

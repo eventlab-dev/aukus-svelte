@@ -2,7 +2,7 @@
 	import ImageLoader from '$lib/components/ImageLoader.svelte';
 	import { FALLBACK_GAME_POSTER } from '$lib/constants';
 	import { formatMs, getPlayerCleanScore } from '$lib/utils';
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		totalScore: number;
@@ -16,7 +16,8 @@
 
 	const { totalScore, gamesCompleted, gameName, gameImage, gameDuration, mainPlatform, playerSlug }: Props = $props();
 
-	const { statsStore } = getAppManagerContext();
+	const app = getAppManager()
+	const { statsStore } = app;
 
 	const cleanScore = $derived.by(() => {
 		const stats = statsStore.statsBySlug.get(playerSlug);

@@ -2,11 +2,12 @@
 	import { fly } from 'svelte/transition'
 	import StatsCards from './StatsCards.svelte'
 	import GameCard from './GameCard.svelte'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { onMount } from 'svelte'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { statsStore, eventDataStore, playersBySlug } = getAppManagerContext()
+	const app = getAppManager()
+	const { statsStore, eventDataStore } = app
 
 	const showStats = $derived.by(() => {
 		const completed = statsStore.stats.reduce((acc, item) => acc + item.games_completed, 0)
@@ -80,10 +81,10 @@
 	})
 
 	const bestGamePlayerName = $derived(
-		bestGame ? playersBySlug.get(bestGame.player_slug)?.username : null
+		bestGame ? app.playersBySlug.get(bestGame.player_slug)?.username : null
 	)
 	const worstGamePlayerName = $derived(
-		worstGame ? playersBySlug.get(worstGame.player_slug)?.username : null
+		worstGame ? app.playersBySlug.get(worstGame.player_slug)?.username : null
 	)
 
 	let show = $state(false)

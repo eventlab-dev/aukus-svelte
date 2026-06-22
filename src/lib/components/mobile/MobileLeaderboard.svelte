@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { StatItem, TableHeaderType } from '$lib/types'
 	import StatTable from '$lib/components/pages/stats/components/StatTable.svelte'
 	import { getPlayerCleanScore } from '$lib/utils'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		navigateToPlayer: (slug: string) => void
@@ -13,10 +13,11 @@
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
 
-	const { statsStore, playersInOrder } = getAppManagerContext()
+	const app = getAppManager()
+	const { statsStore } = app
 
 	const statsWithPlayerInfo = $derived.by(() => {
-		return playersInOrder.map((player, idx) => {
+		return app.playersInOrder.map((player, idx) => {
 			const playerStat = statsStore.statsBySlug.get(player.slug)!
 			return {
 				...player,

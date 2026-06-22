@@ -1,9 +1,11 @@
 <script lang="ts">
 	import Login from '$lib/components/Login.svelte'
 	import { Dialog, DialogContent } from '$lib/components/ui/dialog'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
-	const { usersStore, navStore } = getAppManagerContext()
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
+
+	const app = getAppManager()
+	const { usersStore, navStore } = app
 
 	function handleOpenChange(open: boolean) {
 		if (!open) {

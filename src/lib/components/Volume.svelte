@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
 	import Volume1 from '@lucide/svelte/icons/volume-1';
 	import VolumeX from '@lucide/svelte/icons/volume-x';
 	import { Slider } from './ui/slider';
 	import { fade } from 'svelte/transition';
 	import { Toggle } from './ui/toggle';
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		class?: string;
@@ -12,7 +12,8 @@
 
 	const { class: className }: Props = $props();
 
-	const { soundManager } = getAppManagerContext();
+	const app = getAppManager()
+	const { soundManager } = app
 
 	let isVisible = $state(false);
 

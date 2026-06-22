@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { Button } from '../ui/button'
 	import type { DiceOption } from '$lib/heyapi/aukus/types.gen'
 	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
@@ -12,6 +11,7 @@
 	import { FALLBACK_GAME_POSTER, FALLBACK_AVATAR_URL } from '$lib/constants'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import KickPlayerDialog from '../quickMenu/options/shitMenu/KickPlayerDialog.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
@@ -29,15 +29,15 @@
 
 	const { player, canRollDice, diceOptions }: Props = $props()
 
+	const app = getAppManager()
+
 	const {
 		usersStore,
 		eventDataStore,
 		movementStore,
-		myPlayer,
-		frontendState,
 		notificationStore,
 		statsStore
-	} = getAppManagerContext()
+	} = app
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions: Option[] = [
@@ -87,7 +87,7 @@
 		const steps = moveParams.move_to - player.map_position
 		await movementStore.doRollAnimation(rollResult.roll_values, steps)
 		await movementStore.moveToCell({
-			playerSlug: myPlayer!.slug,
+			playerSlug: app.myPlayer!.slug,
 			steps: steps,
 			moveResponse: moveParams,
 			updatePlayerPosition: true
@@ -98,7 +98,7 @@
 		}
 		await eventDataStore.eventDataQuery.refetch()
 		await statsStore.statsQuery.refetch()
-		frontendState.set(null)
+		app.frontendState.set(null)
 	}
 
 	const { ladderChance, snakeChance, maxRoll, minRoll, ladders, snakes } = $derived.by(() => {
@@ -243,7 +243,7 @@
 		return '1d6'
 	}
 
-	const canKick = $derived(player.slug !== myPlayer?.slug)
+	const canKick = $derived(player.slug !== app.myPlayer?.slug)
 </script>
 
 {#if canRollDice}

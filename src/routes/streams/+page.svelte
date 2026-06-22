@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { hasStream } from '$lib/utils/streamUtils'
 	import StreamPlayer from '$lib/components/streams/StreamPlayer.svelte'
 	import StreamChat from '$lib/components/streams/StreamChat.svelte'
 	import { onMount } from 'svelte'
 	import { SvelteSet } from 'svelte/reactivity'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { players } = getAppManagerContext()
+	const app = getAppManager()
 
 	const onlineStreamers = $derived(
-		players.filter((player) => player.is_online && hasStream(player))
+		app.players.filter((player) => player.is_online && hasStream(player))
 	)
 
 	let expandedStreamId = $state<string | null>(null)

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Badge } from '$lib/components/ui/badge'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { getMoveTypeStyles } from '$lib/utils'
 
 	type Props = {
@@ -10,9 +10,9 @@
 
 	const { move }: Props = $props()
 
-	const { playersBySlug } = getAppManagerContext()
+	const app = getAppManager()
 
-	const player = $derived(playersBySlug.get(move.player_slug))
+	const player = $derived(app.playersBySlug.get(move.player_slug))
 	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type))
 </script>
 

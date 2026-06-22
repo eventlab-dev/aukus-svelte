@@ -1,5 +1,5 @@
-import { getAppManager, type AppManager } from '$lib/stores/AppManager.svelte';
+// import { getAppManager, type AppManager } from '$lib/stores/AppManager.svelte';
 
-export function getAppManagerContext(): AppManager {
-	return getAppManager();
-}
+// export function getAppManagerContext(): AppManager {
+// 	return getAppManager();
+// }

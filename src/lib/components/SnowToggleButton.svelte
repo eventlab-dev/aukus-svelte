@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import SnowflakeIcon from './icons/SnowflakeIcon.svelte'
 	import { Button } from './ui/button'
 	import * as Tooltip from './ui/tooltip'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { snowStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { snowStore } = app
 
 	const isActive = $derived(snowStore.snowState.value !== 'off')
 </script>

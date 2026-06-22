@@ -1,6 +1,6 @@
 import { LastMapPosition, SOUNDS } from '$lib/constants'
 import { createContext, untrack } from 'svelte'
-import { fromStore, readable, writable } from 'svelte/store'
+import { fromStore, writable } from 'svelte/store'
 import { EventDataStore } from './EventDataStore.svelte'
 import { GameHistoryStore } from './GamesHistoryStore.svelte'
 import { PlayerMovesStore } from './PlayersMovesStore.svelte'
@@ -72,13 +72,20 @@ export class AppManager {
 	frontendStateRune = fromStore(this.frontendState)
 	soundManager = new SoundManager()
 
-
 	constructor() {
 		$effect(() => {
 			if (this.myUser) {
 				untrack(() => this.soundManager.preloadSounds(SOUNDS))
 			}
 		})
+
+		const query = window.matchMedia('(max-width: 768px)')
+		this.isMobile = query.matches
+
+		const listener = (e: MediaQueryListEvent) => {
+			this.isMobile = e.matches
+		}
+		query.addEventListener('change', listener)
 	}
 
 	players = $derived.by(() => {
@@ -87,7 +94,7 @@ export class AppManager {
 			const slug = player.slug
 			const user = this.usersStore.usersBySlug.get(slug)
 			const stats = this.statsStore.statsBySlug.get(slug)
-			console.log({slug, user, stats})
+			console.log({ slug, user, stats })
 			if (!user || !stats) {
 				console.warn('Missing data for player:', slug, user, stats)
 				continue
@@ -101,9 +108,7 @@ export class AppManager {
 		return list
 	})
 
-	playersBySlug = $derived(new SvelteMap(
-		this.players.map((player) => [player.slug, player])
-	))
+	playersBySlug = $derived(new SvelteMap(this.players.map((player) => [player.slug, player])))
 
 	myPlayer = $derived(this.players.find((p) => p.slug === this.myUser?.slug) || null)
 
@@ -176,15 +181,7 @@ export class AppManager {
 		return this.playersCompletedMap
 	})
 
-	isMobile = readable(false, (set) => {
-		const query = window.matchMedia('(max-width: 768px)')
-		set(query.matches)
-
-		const listener = (e: MediaQueryListEvent) => set(e.matches)
-		query.addEventListener('change', listener)
-
-		return () => query.removeEventListener('change', listener)
-	})
+	isMobile = $state(false)
 }
 
 export const [getAppManager, setAppManager] = createContext<AppManager>()

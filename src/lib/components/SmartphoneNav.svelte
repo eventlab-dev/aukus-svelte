@@ -10,11 +10,12 @@
 	import Shirt from '@lucide/svelte/icons/shirt'
 	import ShipWheel from '@lucide/svelte/icons/ship-wheel'
 	import Calculator from '@lucide/svelte/icons/calculator'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	let isOpen = $state(false)
 
-	const { navStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { navStore } = app
 
 	import Trophy from '@lucide/svelte/icons/trophy'
 	import History from '@lucide/svelte/icons/history'

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import PlayerCard from './PlayerCard.svelte'
 
-	const app = getAppManagerContext()
+	const app = getAppManager()
 
 	function currentMskTime() {
 		const date = new Date()

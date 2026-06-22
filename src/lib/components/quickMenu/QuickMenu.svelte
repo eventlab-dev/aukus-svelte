@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { FALLBACK_AVATAR_URL } from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
 	import Collapsible from '../collapsible/Collapsible.svelte'
 	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte'
@@ -20,9 +19,10 @@
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
 	import { LocalStore } from '$lib/stores/LocalStore.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { usersStore, myPlayer, eventFinished } = getAppManagerContext()
-
+	const app = getAppManager()
+	
 	const collapsed = new LocalStore('quickMenuCollapsed', false)
 
 	let isTimelapseShown = $state(false)
@@ -53,15 +53,15 @@
 	// }
 </script>
 
-{#key [usersStore.myUser?.slug, eventFinished]}
+{#key [app.myUser?.slug, app.eventFinished]}
 	<Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
 		<CollapsibleTrigger class="w-full">
-			{#if usersStore.myUser}
+			{#if app.myUser}
 				<Avatar class="size-[27px]">
-					<AvatarImage src={usersStore.myUser.avatar_link || FALLBACK_AVATAR_URL} />
-					<AvatarFallback class="uppercase">{usersStore.myUser.username.slice(0, 2)}</AvatarFallback>
+					<AvatarImage src={app.myUser.avatar_link || FALLBACK_AVATAR_URL} />
+					<AvatarFallback class="uppercase">{app.myUser.username.slice(0, 2)}</AvatarFallback>
 				</Avatar>
-				{usersStore.myUser.username}
+				{app.myUser.username}
 			{:else}
 				Быстрый доступ
 			{/if}
@@ -69,7 +69,7 @@
 
 		<CollapsibleContent>
 			<CollapsibleGroup>
-				{#if eventFinished}
+				{#if app.eventFinished}
 					<Button class="bg-primary!" href="/presentation">
 						<WinIcon /> Итоги
 					</Button>
@@ -81,7 +81,7 @@
 				</Button>
 			</CollapsibleGroup>
 
-			{#if myPlayer}
+			{#if app.myPlayer}
 				<CollapsibleGroup>
 					<SkinEditorDialog />
 					<SkinRollerMenu />
@@ -97,9 +97,9 @@
 				</Button>
 			</CollapsibleGroup> -->
 
-			{#if usersStore.myUser}
+			{#if app.myUser}
 				<CollapsibleGroup>
-					<Button onclick={() => usersStore.logout()}><ProfileIcon />Выйти</Button>
+					<Button onclick={() => app.usersStore.logout()}><ProfileIcon />Выйти</Button>
 				</CollapsibleGroup>
 			{:else}
 				<CollapsibleGroup>

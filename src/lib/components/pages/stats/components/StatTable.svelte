@@ -10,10 +10,10 @@
 		TableRow
 	} from '$lib/components/ui/table'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { StatItem, TableHeaderType } from '$lib/types'
 	import { getPlayerScoreDescription, getPlayerCleanScoreDescription, formatMs, formatDuration } from '$lib/utils'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-
+	
 	type Props = {
 		data: T[]
 		headers: TableHeaderType<T>[]
@@ -22,7 +22,7 @@
 
 	const { data, headers, navigateToPlayer }: Props = $props()
 
-	const { isMobile } = getAppManagerContext()
+	const app = getAppManager()
 
 	let sortByKey: keyof T | null = $state(null)
 	let sortOrder: 1 | -1 = $state(1)
@@ -107,11 +107,11 @@
 						<TableCell class="p-0">
 							<Button
 								variant="link"
-								href={$isMobile ? '' : `/players/${player.player_slug}`}
+								href={app.isMobile ? '' : `/players/${player.player_slug}`}
 								class="p-0 text-foreground no-underline hover:text-[var(--player-color)]"
 								style="--player-color: {player.color}"
 								onclick={(e) => {
-									if ($isMobile && navigateToPlayer) {
+									if (app.isMobile && navigateToPlayer) {
 										e.preventDefault()
 										navigateToPlayer(player.player_slug)
 									}
@@ -168,11 +168,11 @@
 						>
 							<Button
 								variant="link"
-								href={$isMobile ? '' : `/players/${player.player_slug}`}
+								href={app.isMobile ? '' : `/players/${player.player_slug}`}
 								class="p-0 text-foreground no-underline hover:text-[var(--player-color)]"
 								style="--player-color: {player.color}"
 								onclick={(e) => {
-									if ($isMobile && navigateToPlayer) {
+									if (app.isMobile && navigateToPlayer) {
 										e.preventDefault()
 										navigateToPlayer(player.player_slug)
 									}

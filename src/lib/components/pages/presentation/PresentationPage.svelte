@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import TotalStats from './components/TotalStats.svelte'
 	import PlayerStats from './components/PlayerStats.svelte'
 	import SnowflakeIcon from '$lib/components/icons/SnowflakeIcon.svelte'
 	import { FINAL_VIDEO_POSTER } from '$lib/constants'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { playersInOrder, eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore } = app
 
 	const videoFinalUrl = $derived(
 		typeof eventDataStore.eventSettings?.video_final_url === 'string'
@@ -16,7 +17,7 @@
 
 	let pageId = $state(0)
 
-	const pagesAmount = $derived(playersInOrder.length + 2)
+	const pagesAmount = $derived(app.playersInOrder.length + 2)
 
 	function nextPage() {
 		pageId = pageId + 1
@@ -29,7 +30,7 @@
 	const onFirstPage = $derived(pageId === 0)
 	const onLastPage = $derived(pageId + 1 === pagesAmount)
 
-	const currentPlayer = $derived(playersInOrder[playersInOrder.length - pageId] ?? null)
+	const currentPlayer = $derived(app.playersInOrder[app.playersInOrder.length - pageId] ?? null)
 
 	const color = $derived(currentPlayer?.color ?? 'oklch(0.56 0.23 279.32)')
 
@@ -66,7 +67,7 @@
 		</div>
 	{:else if currentPlayer}
 		<div class="mt-[100px]">
-			<PlayerStats player={currentPlayer} position={playersInOrder.length - pageId + 1} />
+			<PlayerStats player={currentPlayer} position={app.playersInOrder.length - pageId + 1} />
 		</div>
 	{:else if pageId === pagesAmount - 1}
 		<div class="mt-[100px] flex justify-center">

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { LastMapPosition, LOGO_BG_URL, LOGO_URL, MAP_IMAGE } from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
 	import { Fireworks, type FireworksOptions } from '@fireworks-js/svelte'
 	import CellNumber from './CellNumber.svelte'
@@ -10,8 +9,10 @@
 	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'
 	import NewCell from './NewCell.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { players, movementStore, eventFinished, winners, mapStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { movementStore, mapStore } = app
 
 	let mapScale = $state(1)
 	let hideArrows = $state(false)
@@ -224,13 +225,13 @@ init arrow 70 270 510 210
 			style="transform: scale({mapScale}); transform-origin: top left;"
 		>
 			<MovementMarkers />
-			{#each players as player (player.slug)}
+			{#each app.players as player (player.slug)}
 				{#if player.map_position !== 102}
 					<PlayerCharacter {player} />
 				{/if}
 			{/each}
 
-			{#each winners as player (player.slug)}
+			{#each app.winners as player (player.slug)}
 				<PlayerCharacter {player} asWinner />
 			{/each}
 		</div>

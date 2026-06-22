@@ -4,15 +4,16 @@
 	import GrammerlyIcon from '../icons/GrammerlyIcon.svelte'
 	import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 	import Toggle from '../ui/toggle/toggle.svelte'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
 	import Button from '../ui/button/button.svelte'
 	import { SvelteSet } from 'svelte/reactivity'
 	import PlayerModel from '../map/PlayerModel.svelte'
 	import DicePreview from './DicePreview.svelte'
 	import SkinPreview from './SkinPreview.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { eventDataStore, myPlayer, usersStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore, usersStore } = app
 
 	let selectedSkins = $state<{ [k in SkinSlot]: number | null }>({
 		head: null,
@@ -42,10 +43,10 @@
 	})
 
 	const equippedSkins = $derived.by(() => {
-		if (!myPlayer) {
+		if (!app.myPlayer) {
 			return []
 		}
-		return myPlayer.equipped_skins.map((id) => eventDataStore.skinsById.get(id)).filter((s) => s !== undefined)
+		return app.myPlayer.equipped_skins.map((id) => eventDataStore.skinsById.get(id)).filter((s) => s !== undefined)
 	})
 
 	const selectedDiceSkin = $derived(selectedSkinItems.find((s) => s.slot === 'dice'))
@@ -61,10 +62,10 @@
 	}
 
 	const availableSkins = $derived.by(() => {
-		if (!myPlayer) {
+		if (!app.myPlayer) {
 			return []
 		}
-		const available = myPlayer.available_skins
+		const available = app.myPlayer.available_skins
 			.map((id) => eventDataStore.skinsById.get(id))
 			.filter((s) => s !== undefined)
 			.sort((a, b) => a.id - b.id)
@@ -112,8 +113,8 @@
 		</DialogHeader>
 		<div class="relative flex w-full justify-center">
 			<div class="relative w-fit">
-				{#if myPlayer}
-					<PlayerModel player={myPlayer} selectedSkins={selectedSkinItems} variant="big" />
+				{#if app.myPlayer}
+					<PlayerModel player={app.myPlayer} selectedSkins={selectedSkinItems} variant="big" />
 				{/if}
 			</div>
 			<div class="absolute right-30 bottom-5">

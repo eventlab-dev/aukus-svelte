@@ -4,7 +4,7 @@
 	import { Badge } from '$lib/components/ui/badge'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { EventTitles } from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { CommonGameItem } from '$lib/types'
 	import { formatDateTime, formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade } from 'svelte/transition'
@@ -16,9 +16,9 @@
 
 	const { game, matchedGames }: Props = $props()
 
-	const { playersBySlug } = getAppManagerContext()
+	const app = getAppManager()
 
-	const player = $derived(playersBySlug.get(game.player_name.toLowerCase()))
+	const player = $derived(app.playersBySlug.get(game.player_name.toLowerCase()))
 	const categoryDuration = $derived(formatDuration(game.game_time))
 
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))

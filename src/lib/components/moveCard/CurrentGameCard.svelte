@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 	import { formatDateTime, formatDuration } from '$lib/utils'
 	import { fade } from 'svelte/transition'
 	import ImageLoader from '../ImageLoader.svelte'
 	import { Badge } from '../ui/badge'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		playerSlug: string
@@ -12,8 +12,8 @@
 
 	const { playerSlug }: Props = $props()
 
-	const { playersBySlug } = getAppManagerContext()
-	const player = $derived(playersBySlug.get(playerSlug)!)
+	const app = getAppManager()
+	const player = $derived(app.playersBySlug.get(playerSlug)!)
 </script>
 
 <div

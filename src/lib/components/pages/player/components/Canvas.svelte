@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { Stage, Layer, type KonvaMouseEvent } from 'svelte-konva'
 	import CanvasImage from './CanvasImage.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		canvasCenter: number
@@ -10,7 +10,8 @@
 
 	const { canvasCenter, contentHeight }: Props = $props()
 
-	const { canvasStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { canvasStore } = app
 
 	const canvasMaxHeight = 10000
 	const canvasMaxWidth = 2500

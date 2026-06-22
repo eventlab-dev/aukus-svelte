@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import Profile2Icon from './icons/Profile2Icon.svelte'
 	import TwitchIcon from './icons/TwitchIcon.svelte'
 	import { Button } from './ui/button'
 	import { Input } from './ui/input'
 
-	const { usersStore, navStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { usersStore, navStore } = app
 
 	let name = $state('')
 	let password = $state('')

@@ -7,7 +7,7 @@
 	import MobileLeaderboard from './MobileLeaderboard.svelte'
 	import MobilePlayer from './MobilePlayer.svelte'
 	import type { MobilePage } from './types'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { Button } from '../ui/button'
 	import { page } from '$app/state'
 	import { goto } from '$app/navigation'
@@ -15,11 +15,11 @@
 	let pageState = $state<MobilePage>('map')
 	let selectedPlayerSlug = $state<string | null>(null)
 
-	const { playersBySlug } = getAppManagerContext()
+	const app = getAppManager()
 
 	const selectedPlayer = $derived.by(() => {
 		if (!selectedPlayerSlug) return null
-		return playersBySlug.get(selectedPlayerSlug) || null
+		return app.playersBySlug.get(selectedPlayerSlug) || null
 	})
 
 	function navigateToPlayer(slug: string) {
@@ -41,7 +41,7 @@
 		
 		if (playerMatch) {
 			const slug = playerMatch[1]
-			if (playersBySlug.get(slug)) {
+			if (app.playersBySlug.get(slug)) {
 				selectedPlayerSlug = slug
 				pageState = 'player'
 			} else {

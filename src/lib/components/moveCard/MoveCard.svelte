@@ -11,7 +11,6 @@
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
@@ -23,6 +22,7 @@
 	import type { EmoteItem } from '$lib/api/emotes'
 	import type { Editor } from '@tiptap/core'
 	import type { CommonGameItem } from '$lib/types'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		move: PlayerMoveItem
@@ -31,10 +31,11 @@
 
 	const { move, matchedGames }: Props = $props()
 
-	const { myPlayer, usersStore, playersMovesStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { usersStore, playersMovesStore } = app
 
 	const canEdit = $derived.by(() => {
-		if (move.player_slug === myPlayer?.slug) {
+		if (move.player_slug === app.myPlayer?.slug) {
 			return true
 		}
 		if (usersStore.myUser?.moder_for?.includes(move.player_slug)) {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import PlayerAvatar from '../player/PlayerAvatar.svelte'
 	import Socials from '../Socials.svelte'
 	import ImageLoader from '../ImageLoader.svelte'
@@ -8,13 +7,15 @@
 	import MoveCard from '../moveCard/MoveCard.svelte'
 	import { GamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
 	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		playerSlug: string
 	}
 
 	const { playerSlug }: Props = $props()
-	const { playersBySlug, eventDataStore, statsStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore, statsStore } = app
 
 	const playerSlugs = $derived(eventDataStore.players.map((p) => p.slug))
 
@@ -91,7 +92,7 @@
 
 	const player = $derived.by(() => {
 		if (!playerSlug) return null
-		return playersBySlug.get(playerSlug) || null
+		return app.playersBySlug.get(playerSlug) || null
 	})
 
 	const gamesCompleted = $derived(

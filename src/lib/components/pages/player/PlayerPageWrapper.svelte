@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import NotFoundPage from '../NotFoundPage.svelte'
 	import PlayerPage from './PlayerPage.svelte'
 
-	const { navStore, playersBySlug } = getAppManagerContext()
+	const app = getAppManager()
+	const { navStore } = app
 
 	const playerSlug = $derived(
-		navStore.dynamicPage ? playersBySlug.get(navStore.dynamicPage)?.slug : undefined
+		navStore.dynamicPage ? app.playersBySlug.get(navStore.dynamicPage)?.slug : undefined
 	)
 </script>
 

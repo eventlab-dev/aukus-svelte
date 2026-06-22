@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button'
 	import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '$lib/components/ui/dialog'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { shitStore, eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { shitStore, eventDataStore } = app
 
 	let open = $state(false)
 

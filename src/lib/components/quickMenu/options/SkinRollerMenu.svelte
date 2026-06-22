@@ -3,12 +3,13 @@
 	import SkinPreview from '$lib/components/skinEditor/SkinPreview.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { Dialog, DialogContent } from '$lib/components/ui/dialog'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { type SkinItem } from '$lib/heyapi/aukus/types.gen'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { getConfirmationText } from '$lib/utils'
 	import Gift from '@lucide/svelte/icons/gift'
 
-	const { usersStore, myPlayer, eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { usersStore, eventDataStore } = app
 
 	const rollOptions: WeightedOption<SkinItem>[] = $derived(
 		usersStore.unlockableSkins.map((s) => ({
@@ -43,17 +44,17 @@
 	}
 </script>
 
-{#if myPlayer}
+{#if app.myPlayer}
 	<Button
 		onclick={handleClick}
-		data-active={myPlayer.skin_rolls > 0}
+		data-active={app.myPlayer.skin_rolls > 0}
 		class="data-[active=true]:bg-primary"
 	>
 		<Gift />
-		Ролл скинов ({myPlayer.skin_rolls})
+		Ролл скинов ({app.myPlayer.skin_rolls})
 	</Button>
 
-	{#if myPlayer.skin_rolls === 0}
+	{#if app.myPlayer.skin_rolls === 0}
 		<Dialog open={isOpen} onOpenChange={handleClose}>
 			<DialogContent>
 				<div class="p-2 text-3xl">Проходи игры чтобы получить роллы скинов!</div>

@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { eventNotStarted, eventFinished, eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore } = app
 
 	function formatDateToMSK(timestamp: number): string {
 		const date = new Date(timestamp * 1000)
@@ -17,14 +18,14 @@
 	}
 
 	const bannerText = $derived.by(() => {
-		if (eventNotStarted && eventDataStore.eventSettings?.event_start_time) {
+		if (app.eventNotStarted && eventDataStore.eventSettings?.event_start_time) {
 			const dateStr = formatDateToMSK(Number(eventDataStore.eventSettings.event_start_time))
 			return `Ивент начнется ${dateStr} MSK`
 		}
 		return null
 	})
 
-	const shouldShowBanner = $derived(eventNotStarted || eventFinished)
+	const shouldShowBanner = $derived(app.eventNotStarted || app.eventFinished)
 </script>
 
 {#if shouldShowBanner && bannerText}

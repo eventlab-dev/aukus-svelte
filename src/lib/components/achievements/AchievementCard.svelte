@@ -1,25 +1,28 @@
 <script lang="ts">
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { AchievementItem } from '$lib/heyapi/aukus/types.gen'
 	import { getSkinIconUrl } from '$lib/utils'
 	import SkinPreview from '$lib/components/skinEditor/SkinPreview.svelte'
 	import { scale } from 'svelte/transition'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = { achievement: AchievementItem }
 
 	const { achievement }: Props = $props()
 
-	const { eventDataStore, players, playersBySlug } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore } = app
 
 	const skin = $derived(eventDataStore.skinsById.get(achievement.reward_skin_id))
 
 	const playersWithAchievement = $derived(
-		players.filter((player) => player.unlocked_achievements.find((a) => a.id === achievement.id))
+		app.players.filter((player) =>
+			player.unlocked_achievements.find((a) => a.id === achievement.id)
+		)
 	)
 
 	const playersWithFirstAchievement = $derived(
-		players.filter((player) =>
+		app.players.filter((player) =>
 			player.unlocked_achievements.find((a) => a.id === achievement.id && a.is_first)
 		)
 	)
@@ -58,7 +61,7 @@
 				</div>
 				<div>
 					<p class="text-right text-xs font-medium text-muted-foreground">
-						Получили {playersWithAchievement.length}/{players.length}
+						Получили {playersWithAchievement.length}/{app.players.length}
 					</p>
 				</div>
 			</div>
@@ -66,16 +69,16 @@
 		<TooltipContent side="bottom" align="start" class="flex flex-col gap-1.5">
 			{#each playersWithAchievement as player (player.slug)}
 				{#if playersWithFirstAchievement.find((p) => p.slug === player.slug)}
-					<div class="text-[#FF881E]">{playersBySlug.get(player.slug)?.username} - первый</div>
+					<div class="text-[#FF881E]">{app.playersBySlug.get(player.slug)?.username} - первый</div>
 				{:else}
-					<div>{playersBySlug.get(player.slug)?.username}</div>
+					<div>{app.playersBySlug.get(player.slug)?.username}</div>
 				{/if}
 			{/each}
 
 			<div class="mt-3"></div>
-			{#each players as player (player.slug)}
+			{#each app.players as player (player.slug)}
 				{#if !playersWithAchievement.find((p) => p.slug === player.slug)}
-					<div class="text-muted-foreground">{playersBySlug.get(player.slug)?.username}</div>
+					<div class="text-muted-foreground">{app.playersBySlug.get(player.slug)?.username}</div>
 				{/if}
 			{/each}
 		</TooltipContent>

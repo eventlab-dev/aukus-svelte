@@ -5,8 +5,8 @@
 	// import X from '@/components/icons/X.svelte'
 	import { Button } from '../ui/button'
 	import X from '@lucide/svelte/icons/x'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import Volume from '$lib/components/Volume.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	// --- CONSTANTS (same as original)
 	const FAST_SPIN_DURATION = 2000
@@ -23,7 +23,8 @@
 	const IDLE_CARD_COUNT = 21
 	const MIN_CARD_IN_ROLL = 75
 
-	const { soundManager } = getAppManagerContext()
+	const app = getAppManager()
+	const { soundManager } = app
 
 	// --- utility types (simple)
 	export type WeightedOption<T> = {

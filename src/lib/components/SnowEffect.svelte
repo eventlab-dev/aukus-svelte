@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { snowStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { snowStore } = app
 </script>
 
 {#if browser && snowStore.snowState.value !== 'off'}

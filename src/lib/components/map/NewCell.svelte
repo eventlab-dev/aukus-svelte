@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from "$lib/stores/AppManager.svelte"
 
+	
 	type Props = {
 		cellId: number
 		scale?: number
@@ -8,7 +9,8 @@
 
 	const { cellId, scale = 1 }: Props = $props()
 
-	const { mapStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { mapStore } = app
 
 	const cell = $derived(mapStore.cellPositionById[cellId])
 	const cellTop = $derived(cell.centerY - mapStore.cellSize / 2)

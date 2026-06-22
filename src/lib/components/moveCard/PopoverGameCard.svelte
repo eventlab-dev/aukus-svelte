@@ -3,7 +3,7 @@
 	import { buttonVariants } from '$lib/components/ui/button'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { EventTitles } from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { CommonGameItem } from '$lib/types'
 	import { formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 
@@ -13,7 +13,8 @@
 
 	const { game }: Props = $props()
 
-	const { usersStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { usersStore } = app
 
 	const parsedReview = $derived(renderToHTML(game.review || ''))
 	const playerName = $derived(usersStore.usersBySlug.get(game.player_name)?.username ?? game.player_name)

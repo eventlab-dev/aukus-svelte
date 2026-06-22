@@ -8,7 +8,6 @@
 		DialogTrigger
 	} from '$lib/components/ui/dialog'
 	import { Input } from '$lib/components/ui/input'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import GameCard from './GameCard.svelte'
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import { Toggle } from '$lib/components/ui/toggle'
@@ -19,9 +18,11 @@
 	import type { CommonGameItem } from '$lib/types'
 	import { playerMoveToCommonGame, uniqBy } from '$lib/utils'
 	import Loader from '$lib/components/Loader.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { gamesHistoryStore, players, playersBySlug, playersMovesStore, gamesMatchesStore } =
-		getAppManagerContext()
+	const app = getAppManager()
+
+	const { gamesHistoryStore, playersMovesStore, gamesMatchesStore } = app
 	// const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
 	// const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
@@ -173,7 +174,7 @@
 		</DialogHeader>
 		<div class="mt-10 flex flex-col gap-5">
 			<div class="flex w-full flex-wrap gap-2">
-				{#each players as player (player.slug)}
+				{#each app.players as player (player.slug)}
 					<Toggle
 						variant="default"
 						bind:pressed={() => player.slug === selectedPlayer, (v) => selectPlayer(v, player.slug)}
@@ -228,7 +229,7 @@
 						{#if aukus4GamesDisplay.length !== 0}
 							<div class="p-0 text-center text-3xl">Аукус 4</div>
 							{#each aukus4GamesDisplay as game (game.id)}
-								{#if playersBySlug.get(game.player_name) !== undefined}
+								{#if app.playersBySlug.get(game.player_name) !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
@@ -244,7 +245,7 @@
 								</Button>
 							</div>
 							{#each aukus3Games as game (game.id)}
-								{#if playersBySlug.get(game.player_name)}
+								{#if app.playersBySlug.get(game.player_name)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
@@ -260,7 +261,7 @@
 								</Button>
 							</div>
 							{#each aukus2Games as game (game.id)}
-								{#if playersBySlug.get(game.player_name)}
+								{#if app.playersBySlug.get(game.player_name)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
@@ -276,7 +277,7 @@
 								</Button>
 							</div>
 							{#each aukus1Games as game (game.id)}
-								{#if playersBySlug.get(game.player_name)}
+								{#if app.playersBySlug.get(game.player_name)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}

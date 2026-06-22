@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { CanvasFile } from '$lib/heyapi/aukus/types.gen'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { onMount } from 'svelte'
 	import {
 		Image,
@@ -18,7 +18,8 @@
 
 	const { file, editable, centerX }: Props = $props()
 
-	const { canvasStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { canvasStore } = app
 
 	let image = $state<HTMLImageElement | undefined>(undefined)
 

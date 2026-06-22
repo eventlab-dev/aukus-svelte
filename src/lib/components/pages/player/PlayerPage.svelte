@@ -4,7 +4,6 @@
 	import { fade } from 'svelte/transition'
 	import Summary from './components/Summary.svelte'
 	import MoveCard from '$lib/components/moveCard/MoveCard.svelte'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
@@ -12,6 +11,7 @@
 	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 	import Footer from '$lib/components/Footer.svelte'
 	import Loader from '$lib/components/Loader.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		playerSlug: string
@@ -19,7 +19,8 @@
 
 	let { playerSlug }: Props = $props()
 
-	const { playersBySlug, canvasStore, eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { canvasStore, eventDataStore } = app
 
 	const playerSlugs = $derived(eventDataStore.players.map((p) => p.slug))
 
@@ -105,7 +106,7 @@
 
 	const player = $derived.by(() => {
 		if (!playerSlug) return null
-		return playersBySlug.get(playerSlug) ?? null
+		return app.playersBySlug.get(playerSlug) ?? null
 	})
 
 	const gamesCompleted = $derived(

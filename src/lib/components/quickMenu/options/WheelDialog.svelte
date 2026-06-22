@@ -3,9 +3,9 @@
 	import { Button } from '$lib/components/ui/button'
 	import { Dialog, DialogClose, DialogContent, DialogTrigger } from '$lib/components/ui/dialog'
 	import Wheel, { type WheelEntry } from '$lib/components/wheel/Wheel.svelte'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import X from '@lucide/svelte/icons/x'
 	import Volume from '$lib/components/Volume.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type EntriesType = 'moment' | 'difficulty'
 
@@ -20,7 +20,8 @@
 		{ id: 2, label: 'Не дроп', color: '#34C759', weight: 0.5 }
 	]
 
-	const { soundManager } = getAppManagerContext()
+	const app = getAppManager()
+	const { soundManager } = app
 
 	let currentType: EntriesType = $state('difficulty')
 

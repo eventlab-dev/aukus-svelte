@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { Button } from './ui/button'
 	import { ScrollArea } from './ui/scroll-area'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const {navStore} = getAppManagerContext()
+	const app = getAppManager()
+	const {navStore} = app
 	
 	function closePage() {
 		navStore.closePage()

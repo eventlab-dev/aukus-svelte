@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import StaticImage from './StaticImage.svelte'
 
 	type Props = {
@@ -11,7 +11,8 @@
 
 	const { canvasCenter, contentHeight }: Props = $props()
 
-	const { canvasStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { canvasStore } = app
 
 	let container = $state<HTMLDivElement | null>(null)
 </script>

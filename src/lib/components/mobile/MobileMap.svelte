@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { PlayerData } from '$lib/types'
 	import { LOGO_URL } from '$lib/constants'
 	import { SvelteMap } from 'svelte/reactivity'
@@ -9,6 +8,7 @@
 	import PlayerAvatar from '../player/PlayerAvatar.svelte'
 	import { Dialog, DialogContent, DialogTitle } from '../ui/dialog'
 	import { Button } from '../ui/button'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		navigateToPlayer: (slug: string) => void
@@ -16,11 +16,11 @@
 
 	let { navigateToPlayer }: Props = $props()
 
-	const { players, winners } = getAppManagerContext()
-
+	const app = getAppManager()
+	
 	const playersByPosition = $derived.by(() => {
 		const map = new SvelteMap<number, PlayerData[]>()
-		for (const player of players) {
+		for (const player of app.players) {
 			if (!map.has(player.map_position)) {
 				map.set(player.map_position, [])
 			}
@@ -99,20 +99,20 @@
 			</div>
 			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
 				<div>1</div>
-				{#if winners[0]}
-					{@render playerIcon(winners[0])}
+				{#if app.winners[0]}
+					{@render playerIcon(app.winners[0])}
 				{/if}
 			</div>
 			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
 				<div>2</div>
-				{#if winners[1]}
-					{@render playerIcon(winners[1])}
+				{#if app.winners[1]}
+					{@render playerIcon(app.winners[1])}
 				{/if}
 			</div>
 			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
 				<div>3</div>
-				{#if winners[2]}
-					{@render playerIcon(winners[2])}
+				{#if app.winners[2]}
+					{@render playerIcon(app.winners[2])}
 				{/if}
 			</div>
 		</div>

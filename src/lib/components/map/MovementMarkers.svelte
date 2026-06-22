@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { LastMapPosition } from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { movementStore, turnState, mapStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { movementStore, mapStore } = app
 
 	const cells = $derived.by(() => {
 		const { startCell, steps, minSteps } = movementStore.myMovementState
@@ -32,9 +33,9 @@
 	}
 
 	const showMarkers = $derived(
-		turnState === 'selecting-dice' ||
-			turnState === 'dice-results' ||
-			turnState === 'player-map-animation' ||
+		app.turnState === 'selecting-dice' ||
+			app.turnState === 'dice-results' ||
+			app.turnState === 'player-map-animation' ||
 			movementStore.selectedPlayer
 	)
 

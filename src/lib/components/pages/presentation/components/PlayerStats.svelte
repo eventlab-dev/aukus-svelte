@@ -3,7 +3,6 @@
 	import GameCard from './GameCard.svelte'
 	import { formatDuration } from '$lib/utils'
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import GamepadIcon from '$lib/components/icons/new/GamepadIcon.svelte'
 	import StatsCards from './StatsCards.svelte'
 	import { fly } from 'svelte/transition'
@@ -11,6 +10,7 @@
 	import PlayerModel from '$lib/components/map/PlayerModel.svelte'
 	import SkinPreview from '$lib/components/skinEditor/SkinPreview.svelte'
 	import type { UnlockedAchievementItem } from '$lib/heyapi/aukus/types.gen'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		player: PlayerData
@@ -19,7 +19,8 @@
 
 	let { player, position }: Props = $props()
 
-	const { statsStore, eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { statsStore, eventDataStore } = app
 	
 	const playerStats = $derived.by(() => {
 		const stats = statsStore.statsBySlug.get(player.slug)

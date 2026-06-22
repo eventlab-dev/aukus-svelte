@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { DiceOption } from '$lib/heyapi/aukus/types.gen'
 	import DicePanelContent from './DicePanelContent.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
-	const { eventDataStore, movementStore, myPlayer, turnState, eventActive } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore, movementStore } = app
 
 	function diceOptionsForPosition(mapPosition: number): DiceOptionOrDrop[] {
 		if (mapPosition >= 81) {
@@ -22,14 +23,14 @@
 				diceOptinos: diceOptionsForPosition(movementStore.selectedPlayer.map_position)
 			}
 		}
-		if (myPlayer && turnState === 'selecting-dice') {
+		if (app.myPlayer && app.turnState === 'selecting-dice') {
 			let options: DiceOptionOrDrop[] = eventDataStore.diceOptions
-			if (myPlayer.last_move?.type === 'drop' || myPlayer.last_move?.type === 'sheikh_moment') {
+			if (app.myPlayer.last_move?.type === 'drop' || app.myPlayer.last_move?.type === 'sheikh_moment') {
 				options = ['drop']
 			}
 			return {
-				playerToShow: myPlayer,
-				canRollDice: eventActive,
+				playerToShow: app.myPlayer,
+				canRollDice: app.eventActive,
 				diceOptinos: options
 			}
 		}

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { CanvasFile, PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		playerSlug: string
@@ -10,7 +10,8 @@
 
 	const { playerSlug }: Props = $props()
 
-	const { usersStore, canvasStore, playersMovesStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { usersStore, canvasStore, playersMovesStore } = app
 
 	const canEdit = $derived(
 		Boolean(

@@ -2,17 +2,18 @@
 	import { fade } from 'svelte/transition'
 	import StatTable from './components/StatTable.svelte'
 	import type { StatItem, TableHeaderType } from '$lib/types'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { getPlayerCleanScore } from '$lib/utils'
 	import Footer from '$lib/components/Footer.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type LeaderboardHeadersType = TableHeaderType<StatItem>[]
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
 
-	const { statsStore, playersInOrder } = getAppManagerContext()
+	const app = getAppManager()
+	const { statsStore } = app
 
 	const statsWithPlayerInfo = $derived.by(() => {
-		return playersInOrder.map((player, idx) => {
+		return app.playersInOrder.map((player, idx) => {
 			const playerStat = statsStore.statsBySlug.get(player.slug)
 			return {
 				...player,

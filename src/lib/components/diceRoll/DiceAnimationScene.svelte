@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { T } from '@threlte/core'
 	import { utils, animate } from 'animejs'
 	import { HTML } from '@threlte/extras'
 	import * as THREE from 'three'
 	import { DefaultDiceTexture, DICE_ROLL_ANIMATION_TIME, DiceModelUrl } from '$lib/constants'
 	import { GLTFLoader, type GLTF } from 'three/examples/jsm/Addons.js'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Vector3 = [number, number, number]
 	type ModelParams = {
@@ -15,11 +15,12 @@
 		valuePosition: Vector3
 	}
 
-	const { turnState, movementStore, eventDataStore, myPlayer } = getAppManagerContext()
+	const app = getAppManager()
+	const { movementStore, eventDataStore } = app
 
 	const diceSkin = $derived.by(() => {
-		if (myPlayer?.equipped_skins) {
-			const skins = myPlayer.equipped_skins
+		if (app.myPlayer?.equipped_skins) {
+			const skins = app.myPlayer.equipped_skins
 				.map((s) => eventDataStore.skinsById.get(s))
 				.filter((s) => s !== undefined)
 			const diceSkin = skins.find((s) => s.slot === 'dice')
@@ -29,7 +30,7 @@
 	})
 
 	const modelsParams: ModelParams[] = $derived.by(() => {
-		if (turnState === 'dice-animation' || turnState === 'dice-results') {
+		if (app.turnState === 'dice-animation' || app.turnState === 'dice-results') {
 			const n = movementStore.myMovementState.rollValues.length
 			const baseZ = -5
 			const spread = 7
@@ -83,7 +84,7 @@
 	})
 
 	$effect(() => {
-		if (turnState === 'dice-animation') {
+		if (app.turnState === 'dice-animation') {
 			const xRotation = utils.random(70, 100)
 			const yRotation = utils.random(70, 100)
 			const zRotation = utils.random(70, 100)
@@ -105,7 +106,7 @@
 	<!-- <T.DirectionalLight position={[0, 10, 10]} intensity={1} /> -->
 	<!-- <T.AmbientLight intensity={0} /> -->
 
-	{#if turnState === 'dice-results' && modelsParams.length > 1}
+	{#if app.turnState === 'dice-results' && modelsParams.length > 1}
 		<HTML position={[-3, 6, -5]}>
 			<div
 				class="pointer-events-none rounded-md bg-black px-4 py-2 text-center text-3xl font-bold whitespace-nowrap text-white select-none"
@@ -134,7 +135,7 @@
 				<T.MeshStandardMaterial color="black" side={THREE.BackSide} flatShading={true} />
 			</T>
 
-			{#if turnState === 'dice-results'}
+			{#if app.turnState === 'dice-results'}
 				<HTML position={params.valuePosition}>
 					<div
 						class="pointer-events-none rounded-md bg-black/70 px-2 py-1 text-center text-5xl font-bold text-white select-none"

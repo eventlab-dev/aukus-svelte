@@ -9,9 +9,10 @@
 	} from '$lib/components/ui/dialog'
 	import { Input } from '$lib/components/ui/input'
 	import { Label } from '$lib/components/ui/label'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { myPlayer } = getAppManagerContext()
+	const app = getAppManager()
 
 	const ranges = [
 		{ max: 10000, shots: 1, pushups: 30, squats: 50 },
@@ -83,8 +84,8 @@
 	}
 
 	const lastDrop = $derived.by(() => {
-		if (myPlayer?.last_move?.type === 'drop') {
-			return myPlayer.last_move.item_title
+		if (app.myPlayer?.last_move?.type === 'drop') {
+			return app.myPlayer.last_move.item_title
 		}
 	})
 </script>
@@ -107,8 +108,8 @@
 				aria-describedby="punishment calculator"
 			>
 				<span>Наказание за дроп</span>
-				{#if myPlayer?.current_game && false}
-					<span> — {myPlayer?.current_game}</span>
+				{#if app.myPlayer?.current_game && false}
+					<span> — {app.myPlayer?.current_game}</span>
 				{:else if lastDrop}
 					<span> — {lastDrop}</span>
 				{/if}

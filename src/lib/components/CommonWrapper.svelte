@@ -51,14 +51,14 @@
 		wallpaper.init()
 	})
 
-	const { isMobile, errorNotificationStore } = appManager
+	const { errorNotificationStore } = appManager
 
 	const hidePanels = $derived(page.url.pathname === '/presentation' || true)
 </script>
 
 <ErrorNotifications {errorNotificationStore} />
 
-{#if $isMobile}
+{#if appManager.isMobile}
 	<MobilePage />
 {:else}
 	<div id="wallpaper"></div>

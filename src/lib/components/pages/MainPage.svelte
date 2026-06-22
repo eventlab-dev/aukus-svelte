@@ -5,7 +5,6 @@
 	import MapComponent from '$lib/components/map/MapComponent.svelte'
 	import MoveForm from '$lib/components/moveForm/MoveForm.svelte'
 	import EventStatusBanner from '$lib/components/EventStatusBanner.svelte'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import PlayersList from '$lib/components/player/PlayersList.svelte'
 	import PageContainer from '$lib/components/PageContainer.svelte'
 	import AboutPage from '$lib/components/pages/AboutPage.svelte'
@@ -14,9 +13,10 @@
 	import PresentationPage from './presentation/PresentationPage.svelte'
 	import PlayerPageWrapper from './player/PlayerPageWrapper.svelte'
 	import LoginDialog from '../quickMenu/options/LoginDialog.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { turnState, movementStore, myPlayer, navStore } = getAppManagerContext()
-	const { selectedPlayer } = movementStore
+	const app = getAppManager()
+	const { movementStore, navStore } = app
 </script>
 
 <svelte:head>
@@ -56,17 +56,17 @@
 	<LoginDialog />
 {/if}
 
-{#if turnState === 'filling-form' && !selectedPlayer}
+{#if app.turnState === 'filling-form' && !movementStore.selectedPlayer}
 	<div class="sticky bottom-10 left-1/2 z-49 mt-10 flex w-fit -translate-x-1/2 justify-center">
 		<MoveForm />
 	</div>
 {/if}
 
-{#if turnState === 'dice-animation' || turnState === 'dice-results'}
+{#if app.turnState === 'dice-animation' || app.turnState === 'dice-results'}
 	<DiceAnimationPanel />
 {/if}
 
-{#if turnState === 'selecting-dice' || selectedPlayer}
+{#if app.turnState === 'selecting-dice' || movementStore.selectedPlayer}
 	<div class="pointer-events-none sticky bottom-10 z-49 mt-10 flex justify-center">
 		<div class="pointer-events-auto flex">
 			<DicePanel />
@@ -74,7 +74,7 @@
 	</div>
 {/if}
 
-{#if myPlayer}
+{#if app.myPlayer}
 	<AchievementsNotifications />
 {/if}
 

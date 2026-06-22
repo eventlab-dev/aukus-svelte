@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { AchievementBackgroundUrl } from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { getConfirmationText } from '$lib/utils'
 	import SkinPreview from '../skinEditor/SkinPreview.svelte'
 	import { Button } from '../ui/button'
 	import { Dialog, DialogClose, DialogContent } from '../ui/dialog'
 
-	const { notificationStore, eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { notificationStore, eventDataStore } = app
 	// const { achievements, hideNotification } = notificationStore
 	// const { skinsById } = eventDataStore
 

@@ -8,12 +8,12 @@
 	import { fade, slide } from 'svelte/transition'
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import { onMount } from 'svelte'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { createQuery } from '@tanstack/svelte-query'
 	import { searchIgdbGamesGetApiIgdbGamesSearchGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 	import { EventlabBaseUrl } from '$lib/client'
 	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'
 	import Loader from '$lib/components/Loader.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		value: string
@@ -22,7 +22,7 @@
 
 	let { value = $bindable(''), selectedGame = $bindable(null) }: Props = $props()
 
-	const { myPlayer } = getAppManagerContext()
+	const app = getAppManager()
 
 	let isFocused = $state(false)
 	let inputRef: HTMLInputElement | null = $state(null)
@@ -50,8 +50,8 @@
 	const isSearching = $derived(igdbSearchQuery.isFetching && searchQuery !== '')
 
 	onMount(() => {
-		if (myPlayer) {
-			value = myPlayer.current_game || ''
+		if (app.myPlayer) {
+			value = app.myPlayer.current_game || ''
 			if (value) {
 				searchQuery = value
 			}

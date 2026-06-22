@@ -1,11 +1,11 @@
 <script lang="ts">
 	import CalendarIcon from '$lib/components/icons/CalendarIcon.svelte'
 	import { Button } from '$lib/components/ui/button'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { formatDateTime } from '$lib/utils'
 	import X from '@lucide/svelte/icons/x'
 	import { fade, fly } from 'svelte/transition'
 	import Move from './Move.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		close?: () => void
@@ -16,8 +16,8 @@
 	const currentDay = new Date().getDate()
 	const daysInMonth = Array(31)
 
-	const { playersMovesStore } = getAppManagerContext()
-	const { playerMoves } = playersMovesStore
+	const app = getAppManager()
+	const { playerMoves } = app.playersMovesStore
 
 	let selectedDay = $state(currentDay)
 	let currentPage = $state(0)

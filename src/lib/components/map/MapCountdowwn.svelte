@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { formatMs } from '$lib/utils'
 	import { Button } from '../ui/button'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore } = app
 
 	const startTs = $derived.by(() => {
 		if (!eventDataStore.eventSettings || !eventDataStore.eventSettings.event_start_time) {

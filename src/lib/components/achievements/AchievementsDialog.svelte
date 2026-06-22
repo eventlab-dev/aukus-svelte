@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Toggle } from '$lib/components/ui/toggle'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import { flip } from 'svelte/animate'
 	import AchievementCard from './AchievementCard.svelte'
 	import { sineInOut } from 'svelte/easing'
@@ -8,15 +7,17 @@
 	import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 	import CrownIcon from '../icons/CrownIcon.svelte'
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { eventDataStore, players, myPlayer, playersBySlug } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore } = app
 
 
 	let selectedPlayerSlug: string | null = $state(null)
 
 	const filteredAchievements = $derived.by(() => {
 		if (!selectedPlayerSlug) return eventDataStore.achievements
-		const player = playersBySlug.get(selectedPlayerSlug)
+		const player = app.playersBySlug.get(selectedPlayerSlug)
 		if (!player) return eventDataStore.achievements
 
 		return eventDataStore.achievements.filter((a) => player.unlocked_achievements.find((pa) => pa.id === a.id))
@@ -35,9 +36,9 @@
 	}
 
 	function handleOpenChange(open: boolean) {
-		if (open && myPlayer) {
+		if (open && app.myPlayer) {
 			if (!selectedPlayerSlug) {
-				selectedPlayerSlug = myPlayer.slug
+				selectedPlayerSlug = app.myPlayer.slug
 			}
 		}
 	}
@@ -56,7 +57,7 @@
 
 		<div class="space-y-5">
 			<div class="flex w-full flex-wrap gap-2">
-				{#each players as player (player.slug)}
+				{#each app.players as player (player.slug)}
 					<Toggle
 						variant="default"
 						bind:pressed={() => getPressed(player.slug), (v) => setPressed(v, player.slug)}

@@ -11,7 +11,6 @@
 	import GameTitle from './components/GameTitle.svelte'
 	import EmotesPopover from './components/EmotesPopover.svelte'
 	import type { EmoteItem } from '$lib/api/emotes'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import {
 		Dialog,
 		DialogClose,
@@ -29,6 +28,7 @@
 	import DifficultySelector from './components/DifficultySelector.svelte'
 	import FinalTimeSelector from './components/FinalTimeSelector.svelte'
 	import type { Difficulty } from '$lib/types'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type FormType = {
 		title: string
@@ -39,8 +39,8 @@
 		difficulty?: Difficulty
 	}
 
-	const { usersStore, eventDataStore, myPlayer, frontendState, eventActive, gameTimeStore } =
-		getAppManagerContext()
+	const app = getAppManager()
+	const { usersStore, eventDataStore, gameTimeStore } = app
 
 	// const { saveMoveForm } = usersStore
 	// const { eventDataQuery } = eventDataStore
@@ -105,7 +105,7 @@
 			}
 		}
 
-		if (myPlayer?.map_position === LastMapPosition) {
+		if (app.myPlayer?.map_position === LastMapPosition) {
 			return {
 				isFormFilled: true,
 				buttonText: 'Победить в АУКУСЕ 4',
@@ -157,7 +157,7 @@
 			}
 		})
 
-		frontendState.set('form-sent')
+		app.frontendState.set('form-sent')
 
 		isDialogOpen = false
 
@@ -205,13 +205,13 @@
 <Dialog bind:open={isDialogOpen}>
 	<DialogTrigger>
 		{#snippet child({ props })}
-			<Button {...props} class="w-80" disabled={!eventActive}>Сделать ход</Button>
+			<Button {...props} class="w-80" disabled={!app.eventActive}>Сделать ход</Button>
 		{/snippet}
 	</DialogTrigger>
 	<DialogContent class="gap-3 overflow-hidden p-3 sm:max-w-[800px]" showCloseButton={false}>
 		<DialogHeader>
 			<DialogTitle aria-describedby="move form">
-				Новый ход — {form.title || myPlayer?.current_game}
+				Новый ход — {form.title || app.myPlayer?.current_game}
 			</DialogTitle>
 		</DialogHeader>
 

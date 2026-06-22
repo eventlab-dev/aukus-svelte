@@ -9,13 +9,12 @@
 		MapMarkerStart,
 		MapMarkerSwamp
 	} from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
-
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	const { cellId } = $props<{ cellId: number }>()
 
-	const appManager = getAppManagerContext()
-	const { mapStore } = appManager
+	const app = getAppManager()
+	const { mapStore } = app
 
 	const { cellPosition, size } = $derived.by(() => {
 		const pos = mapStore.cellPositionById[cellId]

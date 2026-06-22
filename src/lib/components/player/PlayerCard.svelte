@@ -3,18 +3,20 @@
 	import { Button } from '../ui/button'
 	import PlayerAvatar from './PlayerAvatar.svelte'
 	import type { PlayerData } from '$lib/types'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
 	import FireIcon from '../icons/new/FireIcon.svelte'
 	import StarIcon from '../icons/new/StarIcon.svelte'
 	import { getDirectStreamUrl } from '$lib/utils/streamUtils'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
 		player: PlayerData
 	}
 
 	const { player }: Props = $props()
-	const { movementStore, navStore } = getAppManagerContext()
+
+	const app = getAppManager()
+	const { movementStore, navStore } = app
 
 	let isHovered = $state(false)
 	let hoverTimeout: ReturnType<typeof setTimeout> | null = null

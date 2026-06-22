@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { PlayerBaseModelUrl } from '$lib/constants'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import type { SkinItem } from '$lib/heyapi/aukus/types.gen'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { PlayerData } from '$lib/types'
 
 	type Props = {
@@ -13,7 +13,8 @@
 
 	const { player, showUsername, selectedSkins, variant }: Props = $props()
 
-	const { eventDataStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { eventDataStore } = app
 
 	const sizeStyle = $derived.by(() => {
 		switch (variant) {

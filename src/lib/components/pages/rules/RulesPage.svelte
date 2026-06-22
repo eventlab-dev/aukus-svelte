@@ -4,7 +4,6 @@
 	import Loader from '$lib/components/Loader.svelte'
 	import TiptapEditor from '$lib/components/richEditor/TiptapEditor.svelte'
 	import { Button } from '$lib/components/ui/button'
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import {
 		createNewRulesVersionApiRulesPostMutation,
 		getCurrentRulesVersionApiRulesCurrentGetOptions
@@ -12,8 +11,11 @@
 	import { type RulesCategory } from '$lib/heyapi/aukus/types.gen'
 	import { defaultAuth } from '$lib/utils'
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
-	const { usersStore, navStore } = getAppManagerContext()
+	const app = getAppManager()
+	const { usersStore, navStore } = app
+	
 	const canEdit = $derived(
 		usersStore.myUser?.roles.includes('admin') || usersStore.myUser?.roles.includes('rules.edit')
 	)
