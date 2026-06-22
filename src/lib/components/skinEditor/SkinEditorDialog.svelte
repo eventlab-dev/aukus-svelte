@@ -11,6 +11,13 @@
 	import DicePreview from './DicePreview.svelte'
 	import SkinPreview from './SkinPreview.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import type { Snippet } from 'svelte'
+
+	type Props = {
+		children?: Snippet
+	}
+
+	let { children }: Props = $props()
 
 	const app = getAppManager()
 	const { eventDataStore, usersStore } = app
@@ -84,7 +91,7 @@
 		return availableUnique
 	})
 
-	async function handleOpenChange(open: boolean) {
+	async function onOpenChange(open: boolean) {
 		if (open) {
 			for (const skin of equippedSkins) {
 				selectedSkins[skin.slot] = skin.id
@@ -105,8 +112,10 @@
 	}
 </script>
 
-<Dialog onOpenChange={handleOpenChange}>
-	<DialogTrigger><GrammerlyIcon /> Кастомизация</DialogTrigger>
+<Dialog {onOpenChange}>
+	<DialogTrigger>
+		{@render children?.()}
+	</DialogTrigger>
 	<DialogContent>
 		<DialogHeader>
 			<DialogTitle>Кастомизация персонажа</DialogTitle>
