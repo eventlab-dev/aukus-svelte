@@ -51,11 +51,12 @@
 	function onOpenChange(open: boolean) {
 		if (!open) {
 			soundManager.stop()
+			app.navStore.closePage()
 		}
 	}
 </script>
 
-<Dialog {onOpenChange}>
+<Dialog {onOpenChange} open>
 	<DialogTrigger>
 		<LifebuoyIcon /> Колёса
 	</DialogTrigger>
