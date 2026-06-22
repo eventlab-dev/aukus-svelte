@@ -1,5 +1,5 @@
 import { LastMapPosition, SOUNDS } from '$lib/constants'
-import { createContext } from 'svelte'
+import { createContext, untrack } from 'svelte'
 import { fromStore, readable, writable } from 'svelte/store'
 import { EventDataStore } from './EventDataStore.svelte'
 import { GameHistoryStore } from './GamesHistoryStore.svelte'
@@ -76,7 +76,7 @@ export class AppManager {
 	constructor() {
 		$effect(() => {
 			if (this.myUser) {
-				this.soundManager.preloadSounds(SOUNDS)
+				untrack(() => this.soundManager.preloadSounds(SOUNDS))
 			}
 		})
 	}
@@ -87,6 +87,7 @@ export class AppManager {
 			const slug = player.slug
 			const user = this.usersStore.usersBySlug.get(slug)
 			const stats = this.statsStore.statsBySlug.get(slug)
+			console.log({slug, user, stats})
 			if (!user || !stats) {
 				console.warn('Missing data for player:', slug, user, stats)
 				continue

@@ -2,9 +2,7 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 	import PlayerCard from './PlayerCard.svelte'
 
-	const { playersInOrder } = getAppManagerContext()
-
-	$inspect("players", playersInOrder)
+	const app = getAppManagerContext()
 
 	function currentMskTime() {
 		const date = new Date()
@@ -27,9 +25,9 @@
 	})
 </script>
 
-{#key playersInOrder.length}
+{#key app.playersInOrder.length}
 	<div class="flex flex-col gap-[6px]">
-		{#each playersInOrder as player (player.slug)}
+		{#each app.playersInOrder as player (player.slug)}
 			<PlayerCard {player} />
 		{/each}
 	</div>

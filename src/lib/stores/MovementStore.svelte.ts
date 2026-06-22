@@ -31,9 +31,9 @@ export class MovementStore {
 			const eventDataStore = this.getEventDataStore()
 			const newPlayers = eventDataStore.playersRaw
 			const currPlayers = untrack(() => eventDataStore.players)
-			
+
 			if (currPlayers.length === 0) {
-				eventDataStore.players = newPlayers
+				eventDataStore.players = [...newPlayers]
 				return
 			}
 
