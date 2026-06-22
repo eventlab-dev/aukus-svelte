@@ -88,6 +88,12 @@
 			return app.myPlayer.last_move.item_title
 		}
 	})
+
+	function onOpenChange(open: boolean) {
+		if (!open) {
+			app.navStore.closePage()
+		}
+	}
 </script>
 
 {#snippet readonlyInput({ title, value }: { title: string; value: number })}
@@ -97,7 +103,7 @@
 	</div>
 {/snippet}
 
-<Dialog>
+<Dialog open {onOpenChange}>
 	<DialogTrigger>
 		<MathIcon /> Калькулятор наказаний
 	</DialogTrigger>

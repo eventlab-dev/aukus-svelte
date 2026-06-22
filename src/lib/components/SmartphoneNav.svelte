@@ -39,7 +39,7 @@
 		{ icon: ShieldX, label: 'Подсеры' },
 		{ icon: Shirt, label: 'Одежда' },
 		{ icon: ShipWheel, label: 'Колеса' },
-		{ icon: Calculator, label: 'Калькулятор' },
+		{ icon: Calculator, label: 'Калькулятор', page: 'calculator' },
 		{ icon: DevelopersIcon, label: 'Создатели', page: 'about' },
 		{ icon: ProfileIcon, label: 'Логин', page: 'login' },
 	]

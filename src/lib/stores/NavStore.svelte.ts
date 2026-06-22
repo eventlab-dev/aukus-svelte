@@ -6,6 +6,7 @@ export type AppPage =
 	| 'multistream'
 	| 'presentation'
 	| 'login'
+	| 'calculator'
 
 const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/': 'map',
@@ -15,8 +16,11 @@ const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/stats': 'stats',
 	'/streams': 'multistream',
 	'/presentation': 'presentation',
-	'/login': 'login'
+	'/login': 'login',
+	'/calc': 'calculator',
 }
+
+const STATIC_PAGES = new Set(Object.keys(URL_PAGE_MAP)) as Set<AppUrl>
 
 type AppUrl = keyof typeof URL_PAGE_MAP
 
@@ -86,5 +90,8 @@ function getAppPageFromUrl(): AppPage | null {
 
 function getAppUrlFromUrl(): AppUrl | null {
 	const browserPath = window.location.pathname
-	return URL_PAGE_MAP[browserPath] || null
+	if (STATIC_PAGES.has(browserPath as AppUrl)) {
+		return browserPath as AppUrl
+	}
+	return null
 }

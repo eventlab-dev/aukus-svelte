@@ -14,6 +14,7 @@
 	import PlayerPageWrapper from './player/PlayerPageWrapper.svelte'
 	import LoginDialog from '../quickMenu/options/LoginDialog.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import PunishmentCalculator from '../quickMenu/options/PunishmentCalculator.svelte'
 
 	const app = getAppManager()
 	const { movementStore, navStore } = app
@@ -54,6 +55,8 @@
 	</PageContainer>
 {:else if navStore.appPage === 'login'}
 	<LoginDialog />
+{:else if navStore.appPage === 'calculator'}
+	<PunishmentCalculator />
 {/if}
 
 {#if app.turnState === 'filling-form' && !movementStore.selectedPlayer}
