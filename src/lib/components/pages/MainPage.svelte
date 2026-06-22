@@ -13,6 +13,7 @@
 	import RulesPage from './rules/RulesPage.svelte'
 	import PresentationPage from './presentation/PresentationPage.svelte'
 	import PlayerPageWrapper from './player/PlayerPageWrapper.svelte'
+	import LoginDialog from '../quickMenu/options/LoginDialog.svelte'
 
 	const { turnState, movementStore, myPlayer, navStore } = getAppManagerContext()
 	const { selectedPlayer } = movementStore
@@ -51,6 +52,8 @@
 	<PageContainer>
 		<PresentationPage />
 	</PageContainer>
+{:else if navStore.appPage === 'login'}
+	<LoginDialog />
 {/if}
 
 {#if turnState === 'filling-form' && !selectedPlayer}

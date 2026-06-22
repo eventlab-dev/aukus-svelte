@@ -5,6 +5,7 @@ export type AppPage =
 	| 'stats'
 	| 'multistream'
 	| 'presentation'
+	| 'login'
 
 const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/': 'map',
@@ -13,7 +14,8 @@ const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/about': 'about',
 	'/stats': 'stats',
 	'/streams': 'multistream',
-	'/presentation': 'presentation'
+	'/presentation': 'presentation',
+	'/login': 'login'
 }
 
 type AppUrl = keyof typeof URL_PAGE_MAP

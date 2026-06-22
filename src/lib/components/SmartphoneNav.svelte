@@ -20,11 +20,13 @@
 	import History from '@lucide/svelte/icons/history'
 	import { Button } from './ui/button'
 	import type { AppPage } from '$lib/stores/NavStore.svelte'
+	import ProfileIcon from './icons/ProfileIcon.svelte'
 
 	type AppItem = {
 		icon: import('svelte').Component
 		label: string
 		page?: AppPage
+		onclick?: () => void
 	}
 
 	const apps: AppItem[] = [
@@ -37,7 +39,8 @@
 		{ icon: Shirt, label: 'Одежда' },
 		{ icon: ShipWheel, label: 'Колеса' },
 		{ icon: Calculator, label: 'Калькулятор' },
-		{ icon: DevelopersIcon, label: 'Создатели', page: 'about' }
+		{ icon: DevelopersIcon, label: 'Создатели', page: 'about' },
+		{ icon: ProfileIcon, label: 'Логин', page: 'login' },
 	]
 
 	function togglePhone() {

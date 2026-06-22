@@ -38,35 +38,35 @@ export class UsersStore {
 
 	loginError = $state<string | null>(null)
 
-	login(username: string, password: string) {
+	async login(username: string, password: string) {
 		this.loginError = null
-		this.loginMutation
-			.mutateAsync({ body: { username, password } })
-			.then((response) => {
-				if (response.token) {
-					localStorage.setItem('auth_token', response.token)
-					this.accessToken = response.token
-					this.myUserQuery.refetch().then(() => {
-						goto('/')
-					})
-				}
-			})
-			.catch((error) => {
-				let statusCode = 0
-				if (error && typeof error === 'object') {
-					const errorObj = error as Record<string, unknown>
-					if ('response' in errorObj && errorObj.response instanceof Response) {
-						statusCode = errorObj.response.status
-					}
-				}
 
-				const errorMessage =
-					statusCode === 401
-						? 'Неверный логин или пароль'
-						: `Неизвестная ошибка при входе (${statusCode})`
+		try {
+			const response = await this.loginMutation.mutateAsync({ body: { username, password } })
 
-				this.loginError = errorMessage
-			})
+			if (response.token) {
+				localStorage.setItem('auth_token', response.token)
+				this.accessToken = response.token
+				await this.myUserQuery.refetch()
+				return true
+			}
+		} catch (error) {
+			let statusCode = 0
+			if (error && typeof error === 'object') {
+				const errorObj = error as Record<string, unknown>
+				if ('response' in errorObj && errorObj.response instanceof Response) {
+					statusCode = errorObj.response.status
+				}
+			}
+
+			const errorMessage =
+				statusCode === 401
+					? 'Неверный логин или пароль'
+					: `Неизвестная ошибка при входе (${statusCode})`
+
+			this.loginError = errorMessage
+			return false
+		}
 	}
 
 	logout() {
@@ -86,35 +86,35 @@ export class UsersStore {
 	users = $derived(this.usersQuery.data?.users ?? [])
 	usersBySlug = $derived(new SvelteMap(this.users.map((user) => [user.slug, user])))
 
-	saveMoveForm = createMutation(() => 
+	saveMoveForm = createMutation(() =>
 		createPlayerMoveApiPlayersMovePostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	finishMove = createMutation(() => 
+	finishMove = createMutation(() =>
 		finishPlayerMoveApiPlayersMoveFinishPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	rollDice = createMutation(() => 
+	rollDice = createMutation(() =>
 		makeDiceRollApiDiceRollsPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	setSkins = createMutation(() => 
+	setSkins = createMutation(() =>
 		setPlayerSkinsApiPlayersSkinsPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	unlockableSkinsQuery = createQuery(() => 	
+	unlockableSkinsQuery = createQuery(() =>
 		getUnlockableSkinsApiPlayersUnlockableSkinsGetOptions({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth

@@ -5,15 +5,18 @@
 	import { Button } from './ui/button'
 	import { Input } from './ui/input'
 
-	const { usersStore } = getAppManagerContext()
+	const { usersStore, navStore } = getAppManagerContext()
 
 	let name = $state('')
 	let password = $state('')
 
 	const isValid = $derived(!!name && !!password)
 
-	function login() {
-		usersStore.login(name, password)
+	async function login() {
+		const success = await usersStore.login(name, password)
+		if (success) {
+			navStore.closePage()
+		}
 	}
 
 	function clearError() {
