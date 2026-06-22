@@ -18,6 +18,7 @@
 	import WheelDialog from '../quickMenu/options/WheelDialog.svelte'
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
 	import GamesHistoryDialog from '../quickMenu/options/history/GamesHistoryDialog.svelte'
+	import StreamsPage from './streams/StreamsPage.svelte'
 
 	const app = getAppManager()
 	const { movementStore, navStore } = app
@@ -66,10 +67,14 @@
 	<AchievementsDialog />
 {:else if navStore.appPage === 'history'}
 	<GamesHistoryDialog />
+{:else if navStore.appPage === 'streams'}
+	<PageContainer bottomSpace={false}>
+		<StreamsPage />
+	</PageContainer>
 {/if}
 
 {#if app.turnState === 'filling-form' && !movementStore.selectedPlayer}
-	<div class="sticky bottom-10 left-1/2 z-49 mt-10 flex w-fit -translate-x-1/2 justify-center">
+	<div class="sticky bottom-10 left-1/2 z-15 mt-10 flex w-fit -translate-x-1/2 justify-center">
 		<MoveForm />
 	</div>
 {/if}

@@ -189,12 +189,11 @@ init arrow 70 270 510 210
     `}
 	>
 		<img
-		
 			bind:clientHeight={viewportHeight}
 			bind:this={mapImg}
 			src={MAP_IMAGE}
 			alt="map"
-			class="z-1 h-auto w-full cursor-grab select-none active:cursor-grabbing"
+			class="h-auto w-full cursor-grab select-none active:cursor-grabbing"
 			draggable="false"
 		/>
 

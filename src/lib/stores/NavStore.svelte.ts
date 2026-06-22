@@ -3,13 +3,14 @@ export type AppPage =
 	| 'rules'
 	| 'about'
 	| 'stats'
-	| 'multistream'
+	| 'streams'
 	| 'presentation'
 	| 'login'
 	| 'calculator'
 	| 'wheels'
 	| 'achievements'
 	| 'history'
+	| 'streams'
 
 const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/': 'map',
@@ -17,14 +18,13 @@ const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/donaters': 'rules',
 	'/about': 'about',
 	'/stats': 'stats',
-	'/streams': 'multistream',
+	'/streams': 'streams',
 	'/presentation': 'presentation',
 	'/login': 'login',
 	'/calc': 'calculator',
 	'/wheels': 'wheels',
 	'/achievements': 'achievements',
-	'/history': 'history'
-	
+	'/history': 'history',
 }
 
 const STATIC_PAGES = new Set(Object.keys(URL_PAGE_MAP)) as Set<AppUrl>
