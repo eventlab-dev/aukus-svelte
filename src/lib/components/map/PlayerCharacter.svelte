@@ -35,7 +35,7 @@
 		if (startWinAnimation && element) {
 			const position = app.playersCompletedMap.findIndex((p) => p.slug === player.slug) + 1
 			movementStore.moveToWinPosition({ playerSlug: player.slug, position }).then(() => {
-				app.frontendState.set('event-completed')
+				app.frontendState = 'event-completed'
 			})
 		}
 	})

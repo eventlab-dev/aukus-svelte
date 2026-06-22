@@ -98,7 +98,7 @@
 		}
 		await eventDataStore.eventDataQuery.refetch()
 		await statsStore.statsQuery.refetch()
-		app.frontendState.set(null)
+		app.frontendState = null
 	}
 
 	const { ladderChance, snakeChance, maxRoll, minRoll, ladders, snakes } = $derived.by(() => {

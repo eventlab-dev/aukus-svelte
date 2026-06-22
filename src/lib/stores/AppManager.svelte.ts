@@ -1,6 +1,5 @@
 import { LastMapPosition, SOUNDS } from '$lib/constants'
 import { createContext, untrack } from 'svelte'
-import { fromStore, writable } from 'svelte/store'
 import { EventDataStore } from './EventDataStore.svelte'
 import { GameHistoryStore } from './GamesHistoryStore.svelte'
 import { PlayerMovesStore } from './PlayersMovesStore.svelte'
@@ -54,7 +53,7 @@ export class AppManager {
 	movementStore = new MovementStore({
 		getEventDataStore: () => this.eventDataStore,
 		updateFrontendTurnState: (state) => {
-			this.frontendState.set(state)
+			this.frontendState = state
 		},
 		getMapStore: () => this.mapStore,
 		getPlayerSlug: () => this.myUser?.slug ?? null
@@ -68,8 +67,7 @@ export class AppManager {
 		getMyUser: () => this.myUser
 	})
 
-	frontendState = writable<TurnState>(null)
-	frontendStateRune = fromStore(this.frontendState)
+	frontendState = $state<TurnState>(null)
 	soundManager = new SoundManager()
 
 	constructor() {
@@ -128,13 +126,13 @@ export class AppManager {
 	})
 
 	turnState = $derived.by(() => {
-		if (this.frontendStateRune.current === 'form-sent') {
+		if (this.frontendState === 'form-sent') {
 			if (this.backendState === 'event-completed') {
 				return 'player-win-animation'
 			}
 			return this.backendState
 		}
-		return this.frontendStateRune.current || this.backendState
+		return this.frontendState || this.backendState
 	})
 
 	playersCompletedMap = $derived(

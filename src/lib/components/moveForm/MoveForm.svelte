@@ -157,7 +157,7 @@
 			}
 		})
 
-		app.frontendState.set('form-sent')
+		app.frontendState = 'form-sent'
 
 		isDialogOpen = false
 
