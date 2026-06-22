@@ -1,5 +1,3 @@
-import { writable } from 'svelte/store'
-
 export type ErrorNotification = {
 	id: string
 	path: string
@@ -7,29 +5,19 @@ export type ErrorNotification = {
 	message: string
 }
 
-export function createErrorNotificationStore() {
-	const notifications = writable<ErrorNotification[]>([])
+export class ErrorNotificationStore {
+	notifications = $state<ErrorNotification[]>([])
 
-	function addError(path: string, statusCode: number, message: string) {
+	addError(path: string, statusCode: number, message: string) {
 		const id = `${Date.now()}-${Math.random()}`
-		notifications.update((current) => [...current, { id, path, statusCode, message }])
+		this.notifications = [...this.notifications, { id, path, statusCode, message }]
 	}
 
-	function removeError(id: string) {
-		notifications.update((current) => current.filter((n) => n.id !== id))
+	removeError(id: string) {
+		this.notifications = this.notifications.filter((n) => n.id !== id)
 	}
 
-	function clear() {
-		notifications.set([])
-	}
-
-	return {
-		notifications,
-		addError,
-		removeError,
-		clear
+	clear() {
+		this.notifications = []
 	}
 }
-
-export type ErrorNotificationStore = ReturnType<typeof createErrorNotificationStore>
-

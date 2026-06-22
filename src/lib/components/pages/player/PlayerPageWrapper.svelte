@@ -6,7 +6,7 @@
 	const { navStore, playersBySlug } = getAppManagerContext()
 
 	const playerSlug = $derived(
-		navStore.dynamicPage ? $playersBySlug[navStore.dynamicPage]?.slug : undefined
+		navStore.dynamicPage ? playersBySlug.get(navStore.dynamicPage)?.slug : undefined
 	)
 </script>
 

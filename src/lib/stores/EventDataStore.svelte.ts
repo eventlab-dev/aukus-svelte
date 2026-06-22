@@ -1,96 +1,46 @@
 import { createQuery } from '@tanstack/svelte-query'
-import { derived, writable } from 'svelte/store'
 import { getEventDataApiEventDataGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
-import { type PlayerItem, type SkinItem } from '$lib/heyapi/aukus/types.gen'
 import { SvelteMap } from 'svelte/reactivity'
 import { AukusBaseUrl } from '$lib/client'
 import { defaultAuth } from '$lib/utils'
+import type { PlayerItem } from '$lib/heyapi/aukus/types.gen'
 
-export function createEventDataStore() {
-	const eventDataQuery = createQuery({
+export class EventDataStore {
+	eventDataQuery = createQuery(() => ({
 		...getEventDataApiEventDataGetOptions({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		}),
 		refetchInterval: 2 * 60 * 1000
-	})
+	}))
 
-	const eventData = derived(eventDataQuery, ($query) => {
-		if ($query.isSuccess) {
-			return $query.data
-		}
-		return null
-	})
+	eventData = $derived(this.eventDataQuery.data)
+	playersRaw = $derived(this.eventData?.players ?? [])
 
-	const players = writable<PlayerItem[]>([])
-	const updatedPlayers = derived(eventData, ($eventData) => $eventData?.players ?? [])
+	players = $state<PlayerItem[]>([])
 
-	// const players = derived(eventData, ($eventData) => $eventData?.players ?? [])
+	skins = $derived(this.eventData?.skins ?? [])
+	achievements = $derived(this.eventData?.achievements ?? [])
+	eventSettings = $derived(this.eventData?.event_settings ?? {})
+	diceOptions = $derived(this.eventData?.dice_options ?? [])
 
-	const skins = derived(eventData, ($eventData) => $eventData?.skins ?? [])
-	const achievements = derived(eventData, ($eventData) => $eventData?.achievements ?? [])
-	const eventSettings = derived(eventData, ($eventData) => $eventData?.event_settings ?? {})
-	const diceOptions = derived(eventData, ($eventData) => $eventData?.dice_options ?? [])
-
-	const skinsById = derived(skins, ($skins) => {
-		const map = new SvelteMap<number, SkinItem>()
-		$skins.forEach((skin) => {
-			map.set(skin.id, skin)
-		})
-		return map
-	})
-
-	const playersBySlug = derived(players, ($players) => {
-		const map = new SvelteMap<string, (typeof $players)[0]>()
-		$players.forEach((player) => {
-			map.set(player.slug, player)
-		})
-		return map
-	})
-
-	const achievementsById = derived(achievements, ($achievements) => {
-		const map = new SvelteMap<number, (typeof $achievements)[0]>()
-		$achievements.forEach((achievement) => {
-			map.set(achievement.id, achievement)
-		})
-		return map
-	})
-
-	const achievementsWithScores = derived(achievements, ($achievements) => {
-		return $achievements.filter((a) => a.points > 0)
-	})
-
-	const chatMessages = derived(eventData, ($eventData) => $eventData?.chat_messages ?? [])
-
-	const achievementsRarity = derived(
-		[achievementsWithScores, players],
-		([$achievements, $players]) => {
-			const rarityMap = new SvelteMap<number, number>()
-			$achievements.forEach((achievement) => {
-				const unlockedPlayers = $players.filter((player) =>
-					player.unlocked_achievements.some((a) => a.id === achievement.id)
-				)
-				rarityMap.set(achievement.id, unlockedPlayers.length)
-			})
-			return rarityMap
-		}
+	skinsById = $derived(new SvelteMap(this.skins.map((skin) => [skin.id, skin])))
+	achievementsById = $derived(
+		new SvelteMap(this.achievements.map((achievement) => [achievement.id, achievement]))
 	)
-
-	return {
-		eventDataQuery,
-		players,
-		playersBySlug,
-		updatedPlayers,
-		skins,
-		skinsById,
-		achievements,
-		achievementsById,
-		eventSettings,
-		diceOptions,
-		chatMessages,
-		achievementsWithScores,
-		achievementsRarity
-	}
+	playersBySlug = $derived(new SvelteMap(this.playersRaw.map((player) => [player.slug, player])))
+	achievementsWithScores = $derived(
+		this.achievements.filter((achievement) => achievement.points > 0)
+	)
+	chatMessages = $derived(this.eventData?.chat_messages ?? [])
+	achievementsRarity = $derived.by(() => {
+		const rarityMap = new SvelteMap<number, number>()
+		for (const achievement of this.achievements) {
+			const unlockedPlayers = this.playersRaw.filter((player) =>
+				player.unlocked_achievements.some((a) => a.id === achievement.id)
+			)
+			rarityMap.set(achievement.id, unlockedPlayers.length)
+		}
+		return rarityMap
+	})
 }
-
-export type EventDataStore = ReturnType<typeof createEventDataStore>

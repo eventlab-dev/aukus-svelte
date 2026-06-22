@@ -11,7 +11,6 @@
 	const { canvasCenter, contentHeight }: Props = $props()
 
 	const { canvasStore } = getAppManagerContext()
-	const { displayImages, selectImage } = canvasStore
 
 	const canvasMaxHeight = 10000
 	const canvasMaxWidth = 2500
@@ -23,7 +22,7 @@
 
 	function handleStageClick(event: KonvaMouseEvent) {
 		if (event.target === event.target.getStage()) {
-			selectImage(null)
+			canvasStore.selectImage(null)
 		}
 	}
 </script>
@@ -35,7 +34,7 @@
 >
 	<Stage width={canvasWidth - 2} height={canvasHeight} onclick={handleStageClick}>
 		<Layer>
-			{#each $displayImages as img (img.id)}
+			{#each canvasStore.displayImages as img (img.id)}
 				<CanvasImage file={img} editable centerX={canvasCenter} />
 			{/each}
 		</Layer>

@@ -15,7 +15,6 @@
 
 	const { player }: Props = $props()
 	const { movementStore, navStore } = getAppManagerContext()
-	const { hoveredPlayer } = movementStore
 
 	let isHovered = $state(false)
 	let hoverTimeout: ReturnType<typeof setTimeout> | null = null
@@ -24,7 +23,7 @@
 		isHovered = true
 
 		hoverTimeout = setTimeout(() => {
-			hoveredPlayer.set(player.slug)
+			movementStore.hoveredPlayer = player.slug
 		}, 400)
 	}
 
@@ -36,7 +35,7 @@
 			hoverTimeout = null
 		}
 
-		hoveredPlayer.set(null)
+		movementStore.hoveredPlayer = null
 	}
 
 	function handleAuxClick(event: MouseEvent) {

@@ -4,10 +4,9 @@
 	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
 
 	const { movementStore, turnState, mapStore } = getAppManagerContext()
-	const { myMovementState, selectedPlayer } = movementStore
 
 	const cells = $derived.by(() => {
-		const { startCell, steps, minSteps } = $myMovementState
+		const { startCell, steps, minSteps } = movementStore.myMovementState
 		const cells = []
 		for (let i = Math.abs(minSteps); i <= Math.abs(steps); i++) {
 			cells.push(steps > 0 ? startCell + i : startCell - i)
@@ -17,7 +16,7 @@
 			.map((cell) => ({ id: cell, position: mapStore.cellPositionById[cell] }))
 	})
 
-	const showMinus = $derived($myMovementState.steps < 0)
+	const showMinus = $derived(movementStore.myMovementState.steps < 0)
 
 	function cellType(startCell: number, cellId: number) {
 		if (snakesByCell[cellId]) {
@@ -33,18 +32,18 @@
 	}
 
 	const showMarkers = $derived(
-		$turnState === 'selecting-dice' ||
-			$turnState === 'dice-results' ||
-			$turnState === 'player-map-animation' ||
-			$selectedPlayer
+		turnState === 'selecting-dice' ||
+			turnState === 'dice-results' ||
+			turnState === 'player-map-animation' ||
+			movementStore.selectedPlayer
 	)
 
 	const startCell = $derived.by(() => {
-		if ($myMovementState) {
-			return $myMovementState.startCell
+		if (movementStore.myMovementState) {
+			return movementStore.myMovementState.startCell
 		}
-		if ($selectedPlayer) {
-			return $selectedPlayer.map_position
+		if (movementStore.selectedPlayer) {
+			return movementStore.selectedPlayer.map_position
 		}
 		return null
 	})
@@ -58,7 +57,7 @@
 			style="top: {cell.position.centerY - 32}px; left: {cell.position.centerX - 34}px;"
 		>
 			<div class="w-[2ch] text-center text-4xl">
-				{showMinus ? '-' : ''}{idx + Math.abs($myMovementState.minSteps)}
+				{showMinus ? '-' : ''}{idx + Math.abs(movementStore.myMovementState.minSteps)}
 			</div>
 		</div>
 	{/each}

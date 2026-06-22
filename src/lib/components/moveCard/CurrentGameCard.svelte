@@ -13,7 +13,7 @@
 	const { playerSlug }: Props = $props()
 
 	const { playersBySlug } = getAppManagerContext()
-	const player = $derived($playersBySlug[playerSlug])
+	const player = $derived(playersBySlug.get(playerSlug)!)
 </script>
 
 <div

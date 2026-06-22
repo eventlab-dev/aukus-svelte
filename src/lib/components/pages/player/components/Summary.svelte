@@ -17,10 +17,9 @@
 	const { totalScore, gamesCompleted, gameName, gameImage, gameDuration, mainPlatform, playerSlug }: Props = $props();
 
 	const { statsStore } = getAppManagerContext();
-	const { statsBySlug } = statsStore;
 
 	const cleanScore = $derived.by(() => {
-		const stats = $statsBySlug[playerSlug];
+		const stats = statsStore.statsBySlug.get(playerSlug);
 		if (!stats) return 0;
 		return getPlayerCleanScore(stats);
 	});

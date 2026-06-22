@@ -19,7 +19,7 @@
 
 	const selectedPlayer = $derived.by(() => {
 		if (!selectedPlayerSlug) return null
-		return $playersBySlug[selectedPlayerSlug] || null
+		return playersBySlug.get(selectedPlayerSlug) || null
 	})
 
 	function navigateToPlayer(slug: string) {
@@ -41,7 +41,7 @@
 		
 		if (playerMatch) {
 			const slug = playerMatch[1]
-			if ($playersBySlug[slug]) {
+			if (playersBySlug.get(slug)) {
 				selectedPlayerSlug = slug
 				pageState = 'player'
 			} else {

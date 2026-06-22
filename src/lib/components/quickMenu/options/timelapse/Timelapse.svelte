@@ -25,7 +25,7 @@
 
 	const filteredMoves = $derived.by(() => {
 		const today = new Date(new Date().toDateString())
-		return $playerMoves.filter(({ created_at }) => {
+		return playerMoves.filter(({ created_at }) => {
 			return new Date(created_at).toDateString() === today.toDateString()
 		})
 	})

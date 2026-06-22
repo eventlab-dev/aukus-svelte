@@ -4,20 +4,19 @@
 	import { Button } from '../ui/button'
 
 	const { eventDataStore } = getAppManagerContext()
-	const { eventSettings } = eventDataStore
 
 	const startTs = $derived.by(() => {
-		if (!$eventSettings || !$eventSettings.event_start_time) {
+		if (!eventDataStore.eventSettings || !eventDataStore.eventSettings.event_start_time) {
 			return null
 		}
-		return Number($eventSettings.event_start_time) * 1000
+		return Number(eventDataStore.eventSettings.event_start_time) * 1000
 	})
 
 	const endTs = $derived.by(() => {
-		if (!$eventSettings || !$eventSettings.event_end_time) {
+		if (!eventDataStore.eventSettings || !eventDataStore.eventSettings.event_end_time) {
 			return null
 		}
-		return Number($eventSettings.event_end_time) * 1000
+		return Number(eventDataStore.eventSettings.event_end_time) * 1000
 	})
 
 	let nowTs = $state(Date.now())

@@ -12,7 +12,6 @@
 	import { createQuery } from '@tanstack/svelte-query'
 	import { searchIgdbGamesGetApiIgdbGamesSearchGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 	import { EventlabBaseUrl } from '$lib/client'
-	import { derived, writable } from 'svelte/store'
 	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'
 	import Loader from '$lib/components/Loader.svelte'
 
@@ -28,35 +27,33 @@
 	let isFocused = $state(false)
 	let inputRef: HTMLInputElement | null = $state(null)
 
-	const searchQuery = writable('')
+	let searchQuery = $state('')
 
-	const igdbSearchQuery = createQuery(
-		derived(searchQuery, ($searchQuery) => {
-			return searchIgdbGamesGetApiIgdbGamesSearchGetOptions({
-				baseUrl: EventlabBaseUrl,
-				auth: defaultAuth,
-				query: {
-					query: $searchQuery,
-					limit: 10
-				}
-			})
+	const igdbSearchQuery = createQuery(() =>
+		searchIgdbGamesGetApiIgdbGamesSearchGetOptions({
+			baseUrl: EventlabBaseUrl,
+			auth: defaultAuth,
+			query: {
+				query: searchQuery,
+				limit: 10
+			}
 		})
 	)
 
 	const searchResults = $derived.by(() => {
-		if ($searchQuery === '' || !$igdbSearchQuery.isSuccess) {
+		if (searchQuery === '' || !igdbSearchQuery.isSuccess) {
 			return []
 		}
-		return $igdbSearchQuery.data?.games || []
+		return igdbSearchQuery.data?.games || []
 	})
 
-	const isSearching = $derived($igdbSearchQuery.isFetching && $searchQuery !== '')
+	const isSearching = $derived(igdbSearchQuery.isFetching && searchQuery !== '')
 
 	onMount(() => {
-		if ($myPlayer) {
-			value = $myPlayer.current_game || ''
+		if (myPlayer) {
+			value = myPlayer.current_game || ''
 			if (value) {
-				searchQuery.set(value)
+				searchQuery = value
 			}
 		}
 		setTimeout(() => {
@@ -66,7 +63,7 @@
 
 	const debouncedInput = debounce((val: string) => {
 		value = val
-		searchQuery.set(val)
+		searchQuery = val
 		if (selectedGame && selectedGame.name !== val) {
 			selectedGame = null
 		}
@@ -75,7 +72,7 @@
 	function onGameClick(game: IgdbGameSummary) {
 		value = game.name
 		selectedGame = game
-		searchQuery.set('')
+		searchQuery = ''
 	}
 
 	function onblur() {

@@ -32,17 +32,15 @@
 	const { move, matchedGames }: Props = $props()
 
 	const { myPlayer, usersStore, playersMovesStore } = getAppManagerContext()
-	const { myUser } = usersStore
-	const { updatePlayerMove } = playersMovesStore
 
 	const canEdit = $derived.by(() => {
-		if (move.player_slug === $myPlayer?.slug) {
+		if (move.player_slug === myPlayer?.slug) {
 			return true
 		}
-		if ($myUser?.moder_for?.includes(move.player_slug)) {
+		if (usersStore.myUser?.moder_for?.includes(move.player_slug)) {
 			return true
 		}
-		if ($myUser?.roles.includes('admin')) {
+		if (usersStore.myUser?.roles.includes('admin')) {
 			return true
 		}
 		return false
@@ -73,7 +71,7 @@
 		if (!pressed && isEditMode) {
 			isSaving = true
 			try {
-				await $updatePlayerMove.mutateAsync({
+				await playersMovesStore.updatePlayerMove.mutateAsync({
 					moveId: move.id,
 					data: {
 						item_review: review,

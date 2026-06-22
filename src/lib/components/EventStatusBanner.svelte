@@ -2,7 +2,6 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	const { eventNotStarted, eventFinished, eventDataStore } = getAppManagerContext()
-	const { eventSettings } = eventDataStore
 
 	function formatDateToMSK(timestamp: number): string {
 		const date = new Date(timestamp * 1000)
@@ -18,14 +17,14 @@
 	}
 
 	const bannerText = $derived.by(() => {
-		if ($eventNotStarted && $eventSettings?.event_start_time) {
-			const dateStr = formatDateToMSK(Number($eventSettings.event_start_time))
+		if (eventNotStarted && eventDataStore.eventSettings?.event_start_time) {
+			const dateStr = formatDateToMSK(Number(eventDataStore.eventSettings.event_start_time))
 			return `Ивент начнется ${dateStr} MSK`
 		}
 		return null
 	})
 
-	const shouldShowBanner = $derived($eventNotStarted || $eventFinished)
+	const shouldShowBanner = $derived(eventNotStarted || eventFinished)
 </script>
 
 {#if shouldShowBanner && bannerText}

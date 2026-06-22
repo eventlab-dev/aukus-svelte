@@ -14,9 +14,8 @@
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 
 	const { usersStore, navStore } = getAppManagerContext()
-	const { myUser } = usersStore
 	const canEdit = $derived(
-		$myUser?.roles.includes('admin') || $myUser?.roles.includes('rules.edit')
+		usersStore.myUser?.roles.includes('admin') || usersStore.myUser?.roles.includes('rules.edit')
 	)
 
 	let category = $state<RulesCategory>('general')
@@ -30,10 +29,10 @@
 		}
 	})
 
-	const rulesQuery = createQuery(
+	const rulesQuery = createQuery(() => 
 		getCurrentRulesVersionApiRulesCurrentGetOptions({ baseUrl: AukusBaseUrl })
 	)
-	const saveQuery = createMutation(
+	const saveQuery = createMutation(() => 
 		createNewRulesVersionApiRulesPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth()
@@ -43,8 +42,8 @@
 	const defaultRuleValue = JSON.stringify('<h3><u>Правила не найдены</u></h3>')
 
 	const { generalRules, donationsRules } = $derived.by(() => {
-		const general = $rulesQuery.data?.versions.find((v) => v.category === 'general')?.content
-		const donations = $rulesQuery.data?.versions.find((v) => v.category === 'donations')?.content
+		const general = rulesQuery.data?.versions.find((v) => v.category === 'general')?.content
+		const donations = rulesQuery.data?.versions.find((v) => v.category === 'donations')?.content
 		return {
 			generalRules: general || defaultRuleValue,
 			donationsRules: donations || defaultRuleValue
@@ -60,11 +59,11 @@
 
 	function saveRules() {
 		editorMode = false
-		$saveQuery.mutate(
+		saveQuery.mutate(
 			{ body: { category, content: editedRules } },
 			{
 				onSettled: () => {
-					$rulesQuery.refetch()
+					rulesQuery.refetch()
 				}
 			}
 		)
@@ -109,7 +108,7 @@
 				{/if}
 			{/if}
 		</div>
-		{#if $rulesQuery.isLoading}
+		{#if rulesQuery.isLoading}
 			<Loader class="inline size-20" />
 		{:else if editorMode}
 			<TiptapEditor

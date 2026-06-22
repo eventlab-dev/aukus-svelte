@@ -6,8 +6,8 @@
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 	import { formatMs, getPlayerCleanScore } from '$lib/utils'
 	import MoveCard from '../moveCard/MoveCard.svelte'
-	import { createGamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
-	import { createPlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
+	import { GamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
+	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 
 	type Props = {
 		playerSlug: string
@@ -15,79 +15,87 @@
 
 	const { playerSlug }: Props = $props()
 	const { playersBySlug, eventDataStore, statsStore } = getAppManagerContext()
-	const { statsBySlug } = statsStore
+
+	const playerSlugs = $derived(eventDataStore.players.map((p) => p.slug))
+
+	const playerSlugReactive = $derived(playerSlug)
 
 	let gamesMatchesStoreForPlayer = $state(
-		createGamesMatchesStore({ eventDataStore, playerSlug })
+		new GamesMatchesStore({
+			getPlayerSlug: () => playerSlugReactive,
+			getPlayersSlugs: () => playerSlugs
+		})
 	)
-	let playersMovesStoreForPlayer = $state(createPlayerMovesStore({ playerSlug }))
+	let playersMovesStoreForPlayer = $state(
+		new PlayerMovesStore({
+			getPlayerSlug: () => playerSlugReactive
+		})
+	)
 
-	const [playerMoves, movesQueryParams, movesQuery] = $derived([
+	const [playerMoves, movesQuery] = $derived([
 		playersMovesStoreForPlayer.playerMoves,
-		playersMovesStoreForPlayer.queryParams,
 		playersMovesStoreForPlayer.movesQuery
 	])
 
-	const [gamesMatchParams, gamesMatched] = $derived([
-		gamesMatchesStoreForPlayer.gamesMatchParams,
+	const gamesMatched = $derived(
 		gamesMatchesStoreForPlayer.gamesMatched
-	])
+	)
 
 	$effect(() => {
 		if (!playerSlug) {
 			return
 		}
-		gamesMatchesStoreForPlayer = createGamesMatchesStore({ eventDataStore, playerSlug })
-		playersMovesStoreForPlayer = createPlayerMovesStore({ playerSlug })
+		// gamesMatchesStoreForPlayer = createGamesMatchesStore({ eventDataStore, playerSlug })
+		// playersMovesStoreForPlayer = createPlayerMovesStore({ playerSlug })
 
-		movesQueryParams.set({
+	 	playersMovesStoreForPlayer.queryParams = {
 			players: [playerSlug],
 			start_ts: null,
 			search_title: null,
 			titles: undefined,
 			exclude_ids: undefined
-		})
+		}
 	})
 
 	$effect(() => {
-		if (!playerSlug || $movesQuery.isLoading || $movesQuery.isFetching) {
-			gamesMatchParams.set({
+		if (!playerSlug || movesQuery.isLoading || movesQuery.isFetching) {
+			gamesMatchesStoreForPlayer.gamesMatchParams = {
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
 				exclude_player: undefined
-			})
+			}
 			return
 		}
 
-		const movesForCurrentPlayer = $playerMoves.filter((move) => move.player_slug === playerSlug)
+		const movesForCurrentPlayer = playerMoves.filter((move) => move.player_slug === playerSlug)
 
 		if (movesForCurrentPlayer.length > 0) {
-			gamesMatchParams.set({
+			gamesMatchesStoreForPlayer.gamesMatchParams = {
 				titles: movesForCurrentPlayer.map((move) => move.item_title),
 				exclude_ids_moves: movesForCurrentPlayer
 					.map((move) => move.game_id)
 					.filter(Boolean) as number[],
 				exclude_ids_history: [],
 				exclude_player: playerSlug
-			})
+			}
 		} else {
-			gamesMatchParams.set({
+			gamesMatchesStoreForPlayer.gamesMatchParams = {
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
 				exclude_player: undefined
-			})
+			}
 		}
 	})
 
 	const player = $derived.by(() => {
 		if (!playerSlug) return null
-		return $playersBySlug[playerSlug] || null
+		return playersBySlug.get(playerSlug) || null
 	})
 
 	const gamesCompleted = $derived(
-		$playerMoves.filter((move) => move.type === 'completed').length || 0
+		playerMoves.filter((move) => move.type === 'completed').length || 0
 	)
 
 	function getPlatformName(platform: string | null): string {
@@ -107,7 +115,7 @@
 
 	const cleanScore = $derived.by(() => {
 		if (!playerSlug) return 0;
-		const stats = $statsBySlug[playerSlug];
+		const stats = statsStore.statsBySlug.get(playerSlug);
 		if (!stats) return 0;
 		return getPlayerCleanScore(stats);
 	});
@@ -160,8 +168,8 @@
 		</div>
 
 		<div class="mt-4 w-full space-y-4">
-			{#each $playerMoves as move (move.id)}
-				{@const matchedGames = $gamesMatched.filter((game) => game.game_title === move.item_title)}
+			{#each playerMoves as move (move.id)}
+				{@const matchedGames = gamesMatched.filter((game) => game.game_title === move.item_title)}
 				<MoveCard {move} {matchedGames} />
 			{/each}
 		</div>

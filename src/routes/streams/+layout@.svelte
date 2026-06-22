@@ -2,15 +2,14 @@
 	import './streams.css'
 	import { QueryClientProvider } from '@tanstack/svelte-query'
 	import { queryClient } from '$lib/client'
-	import { createAppManager } from '$lib/stores/AppManager.svelte'
-	import { setAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { setAppManager, AppManager } from '$lib/stores/AppManager.svelte'
 	import { setErrorCallback } from '$lib/client'
 	import { initializeClientInterceptors } from '$lib/clientInterceptors'
 
 	let { children } = $props()
 
-	const appManager = createAppManager()
-	setAppManagerContext(appManager)
+	const appManager = new AppManager()
+	setAppManager(appManager)
 
 	initializeClientInterceptors()
 

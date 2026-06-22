@@ -14,7 +14,6 @@
 	const { player, showUsername, selectedSkins, variant }: Props = $props()
 
 	const { eventDataStore } = getAppManagerContext()
-	const { skinsById } = eventDataStore
 
 	const sizeStyle = $derived.by(() => {
 		switch (variant) {
@@ -37,7 +36,7 @@
 		if (selectedSkins) {
 			return selectedSkins
 		}
-		return player.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
+		return player.equipped_skins.map((id) => eventDataStore.skinsById.get(id)).filter((s) => s !== undefined)
 	})
 </script>
 

@@ -2,38 +2,39 @@ import { AukusBaseUrl } from '$lib/client'
 import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { GetPlayerMovesApiPlayersMovesGetData } from '$lib/heyapi/aukus/types.gen'
 import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query'
-import { derived, writable } from 'svelte/store'
 
-type QueryParams = GetPlayerMovesApiPlayersMovesGetData['query']
+type QueryParams = NonNullable<GetPlayerMovesApiPlayersMovesGetData['query']>
 
-export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) {
-	const queryClient = useQueryClient()
+type Params = {
+	getPlayerSlug: () => string | undefined
+}
 
-	const queryParams = writable<QueryParams>({
-		players: playerSlug ? [playerSlug] : [],
-		start_ts: null,
-		search_title: null
-	})
+export class PlayerMovesStore {
+	queryClient = useQueryClient()
 
-	const movesQuery = createQuery(
-		derived(queryParams, ($queryParams) => {
-			return {
-				...getPlayerMovesApiPlayersMovesGetOptions({
-					baseUrl: AukusBaseUrl,
-					query: $queryParams
-				})
-			}
-		})
-	)
+	getPlayerSlug: Params['getPlayerSlug'] = () => undefined
+	
+	constructor(params: Params) {
+		this.getPlayerSlug = params.getPlayerSlug
+	}
 
-	const playerMoves = derived([movesQuery], ([$movesQuery]) => {
-		if ($movesQuery.isLoading || $movesQuery.isFetching) {
-			return []
+	queryParams = $derived.by<QueryParams>(() => {
+		const slug = this.getPlayerSlug()
+		return {
+			players: slug ? [slug] : [],
+			start_ts: null,
+			search_title: null
 		}
-		return $movesQuery.data?.moves ?? []
 	})
 
-	const updatePlayerMove = createMutation({
+	movesQuery = createQuery(() => getPlayerMovesApiPlayersMovesGetOptions({
+		baseUrl: AukusBaseUrl,
+		query: this.queryParams
+	}))
+
+	playerMoves = $derived(this.movesQuery.data?.moves ?? [])
+
+	updatePlayerMove = createMutation(() => ({
 		mutationFn: async ({
 			moveId,
 			data
@@ -46,6 +47,7 @@ export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) 
 				throw new Error('Not authenticated')
 			}
 
+			// TODO FIX TO USE GEN API CODE
 			const response = await fetch(`${AukusBaseUrl}/api/players/moves/${moveId}`, {
 				method: 'PATCH',
 				headers: {
@@ -56,25 +58,17 @@ export function createPlayerMovesStore({ playerSlug }: { playerSlug?: string }) 
 			})
 
 			if (!response.ok) {
-				const error = await response.json().catch(() => ({}))
-				throw new Error(error.detail || `Failed to update move: ${response.statusText}`)
+				throw new Error('Failed to update player move')
 			}
 
 			return response.json()
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({
+			this.queryClient.invalidateQueries({
 				queryKey: getPlayerMovesApiPlayersMovesGetOptions({
 					baseUrl: AukusBaseUrl
 				}).queryKey
 			})
 		}
-	})
-
-	return {
-		queryParams,
-		movesQuery,
-		playerMoves,
-		updatePlayerMove
-	}
+	}))
 }

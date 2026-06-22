@@ -12,7 +12,6 @@
 	const { canvasCenter, contentHeight }: Props = $props()
 
 	const { canvasStore } = getAppManagerContext()
-	const { displayImages } = canvasStore
 
 	let container = $state<HTMLDivElement | null>(null)
 </script>
@@ -22,7 +21,7 @@
 	class="absolute top-0 z-0 min-h-screen transform overflow-x-auto"
 	style="width: {canvasMaxWidth}px; height: {contentHeight}px;"
 >
-	{#each $displayImages as image (image.id)}
+	{#each canvasStore.displayImages as image (image.id)}
 		<StaticImage file={image} centerX={canvasCenter} />
 	{/each}
 </div>

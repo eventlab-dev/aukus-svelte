@@ -16,13 +16,11 @@
 	}
 
 	const { turnState, movementStore, eventDataStore, myPlayer } = getAppManagerContext()
-	const { myMovementState } = movementStore
-	const { skinsById } = eventDataStore
 
 	const diceSkin = $derived.by(() => {
-		if ($myPlayer?.equipped_skins) {
-			const skins = $myPlayer.equipped_skins
-				.map((s) => $skinsById.get(s))
+		if (myPlayer?.equipped_skins) {
+			const skins = myPlayer.equipped_skins
+				.map((s) => eventDataStore.skinsById.get(s))
 				.filter((s) => s !== undefined)
 			const diceSkin = skins.find((s) => s.slot === 'dice')
 			return diceSkin ?? null
@@ -31,13 +29,13 @@
 	})
 
 	const modelsParams: ModelParams[] = $derived.by(() => {
-		if ($turnState === 'dice-animation' || $turnState === 'dice-results') {
-			const n = $myMovementState.rollValues.length
+		if (turnState === 'dice-animation' || turnState === 'dice-results') {
+			const n = movementStore.myMovementState.rollValues.length
 			const baseZ = -5
 			const spread = 7
 			const centerOffset = (n - 1) / 2
 
-			return $myMovementState.rollValues.map((v, i) => {
+			return movementStore.myMovementState.rollValues.map((v, i) => {
 				const x = (i - centerOffset) * spread
 				const z = baseZ - Math.abs(i - centerOffset) * 0.5 // push side dice slightly back
 				const scale = 2.8 - Math.abs(i - centerOffset) * 0.2
@@ -85,7 +83,7 @@
 	})
 
 	$effect(() => {
-		if ($turnState === 'dice-animation') {
+		if (turnState === 'dice-animation') {
 			const xRotation = utils.random(70, 100)
 			const yRotation = utils.random(70, 100)
 			const zRotation = utils.random(70, 100)
@@ -100,14 +98,14 @@
 		}
 	})
 
-	const totalSum = $derived($myMovementState.rollValues.reduce((a, b) => a + b, 0))
+	const totalSum = $derived(movementStore.myMovementState.rollValues.reduce((a, b) => a + b, 0))
 </script>
 
 {#if modelsParams.length > 0}
 	<!-- <T.DirectionalLight position={[0, 10, 10]} intensity={1} /> -->
 	<!-- <T.AmbientLight intensity={0} /> -->
 
-	{#if $turnState === 'dice-results' && modelsParams.length > 1}
+	{#if turnState === 'dice-results' && modelsParams.length > 1}
 		<HTML position={[-3, 6, -5]}>
 			<div
 				class="pointer-events-none rounded-md bg-black px-4 py-2 text-center text-3xl font-bold whitespace-nowrap text-white select-none"
@@ -136,7 +134,7 @@
 				<T.MeshStandardMaterial color="black" side={THREE.BackSide} flatShading={true} />
 			</T>
 
-			{#if $turnState === 'dice-results'}
+			{#if turnState === 'dice-results'}
 				<HTML position={params.valuePosition}>
 					<div
 						class="pointer-events-none rounded-md bg-black/70 px-2 py-1 text-center text-5xl font-bold text-white select-none"

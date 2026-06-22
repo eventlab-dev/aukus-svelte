@@ -1,71 +1,89 @@
 import { createTimeline } from 'animejs'
-import {
-	getMapCellById,
-	getWinnerPosition,
-	type MapCell
-} from '$lib/mapUtils'
+import { getMapCellById, getWinnerPosition, type MapCell } from '$lib/mapUtils'
 import { SvelteMap } from 'svelte/reactivity'
-import { get, writable, type Writable } from 'svelte/store'
 import type { EventDataStore } from './EventDataStore.svelte'
 import { type PlayerData, type PlayerMovementState, type TurnState } from '$lib/types'
 import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME, LastMapPosition } from '$lib/constants'
 import type { FinishPlayerMoveResponse, PlayerItem } from '$lib/heyapi/aukus/types.gen'
-import type { UsersStore } from './UsersStore.svelte'
 import type { MapStore } from './MapStore.svelte'
+import { untrack } from 'svelte'
 
-export function createMovementStore({
-	eventDataStore,
-	frontendTurnState,
-	usersStore,
-	mapStore
-}: {
-	eventDataStore: EventDataStore
-	frontendTurnState: Writable<TurnState | null>
-	usersStore: UsersStore
-	mapStore: MapStore
-}) {
-	const playerElements = writable(new SvelteMap<string, HTMLElement>())
+type Props = {
+	getEventDataStore: () => EventDataStore
+	getMapStore: () => MapStore
+	updateFrontendTurnState: (state: TurnState) => void
+	getPlayerSlug: () => string | null
+}
 
-	const myMovementState = writable<PlayerMovementState>({
+export class MovementStore {
+	getPlayerSlug: () => string | null
+	getEventDataStore: () => EventDataStore
+	updateFrontendTurnState: (state: TurnState) => void
+	getMapStore: () => MapStore
+
+	constructor(props: Props) {
+		this.getEventDataStore = props.getEventDataStore
+		this.updateFrontendTurnState = props.updateFrontendTurnState
+		this.getMapStore = props.getMapStore
+		this.getPlayerSlug = props.getPlayerSlug
+
+		$effect(() => {
+			const eventDataStore = this.getEventDataStore()
+			const newPlayers = eventDataStore.playersRaw
+			const currPlayers = untrack(() => eventDataStore.players)
+			
+			if (currPlayers.length === 0) {
+				eventDataStore.players = newPlayers
+				return
+			}
+
+			for (const newPlayer of newPlayers) {
+				const currPlayer = currPlayers.find((p) => p.slug === newPlayer.slug)
+				if (currPlayer && currPlayer.map_position !== newPlayer.map_position) {
+					this.animateOtherPlayer(currPlayer, newPlayer)
+				}
+			}
+		})
+	}
+
+	updatePlayer(slug: string, player: Partial<PlayerData>) {
+		this.getEventDataStore().players.forEach((p) => {
+			if (p.slug === slug) {
+				Object.assign(p, player)
+			}
+		})
+	}
+
+	playerElements = $state(new SvelteMap<string, HTMLElement>())
+	myMovementState = $state<PlayerMovementState>({
 		rollValues: [],
 		startCell: 0,
 		steps: 0,
 		minSteps: 1
 	})
 
-	const registerPlayer = (playerId: string, element: HTMLElement) => {
-		playerElements.update((map) => {
-			map.set(playerId, element)
-			return map
-		})
+	registerPlayer(playerId: string, element: HTMLElement) {
+		this.playerElements.set(playerId, element)
 	}
 
-	function setPlayerItem(player: PlayerItem) {
-		eventDataStore.players.update((curr) => {
-			const idx = curr.findIndex((p) => p.slug === player.slug)
-			if (idx !== -1) {
-				curr[idx] = player
-			}
-			return [...curr]
-		})
-	}
+	offsetInsideCellX = 25
+	offsetInsideCellY = 15
 
-	const offsetInsideCellX = 25
-	const offsetInsideCellY = 15
-
-	const moveToCell = async (params: {
+	async moveToCell(params: {
 		playerSlug: string
 		steps: number
 		moveResponse: FinishPlayerMoveResponse
 		updatePlayerPosition?: boolean
-	}) => {
-		const element = get(playerElements).get(params.playerSlug)
+	}) {
+		const element = this.playerElements.get(params.playerSlug)
 		if (!element) return
 
-		const player = get(eventDataStore.playersBySlug).get(params.playerSlug)
+		const eventDataStore = this.getEventDataStore()
+
+		const player = eventDataStore.playersBySlug.get(params.playerSlug)
 		if (!player) return
 
-		const isMyPlayer = get(usersStore.myUser)?.slug === player.slug
+		const isMyPlayer = this.getPlayerSlug() === player.slug
 
 		const startCell = player.map_position
 
@@ -75,13 +93,17 @@ export function createMovementStore({
 		const direction = params.steps > 0 ? 1 : -1
 
 		if (isMyPlayer) {
-			frontendTurnState.set('player-map-animation')
-			myMovementState.update((s) => ({
-				...s,
+			this.updateFrontendTurnState('player-map-animation')
+			this.myMovementState = {
+				...this.myMovementState,
 				steps: params.steps,
 				startCell
-			}))
+			}
 		}
+
+		const mapStore = this.getMapStore()
+		const offsetInsideCellX = this.offsetInsideCellX
+		const offsetInsideCellY = this.offsetInsideCellY
 
 		const cellsPath: MapCell[] = []
 		for (let i = 1; i <= Math.abs(params.steps); i++) {
@@ -161,26 +183,27 @@ export function createMovementStore({
 		})
 
 		if (params.updatePlayerPosition) {
-			eventDataStore.players.update((curr) => {
-				const idx = curr.findIndex((p) => p.slug === params.playerSlug)
-				if (idx !== -1) {
-					curr[idx] = { ...curr[idx], map_position: finalCell }
-				}
-				return [...curr]
+			this.updatePlayer(params.playerSlug, {
+				map_position: finalCell
 			})
 		}
 
 		return finalCell
 	}
 
-	async function moveToWinPosition(params: { playerSlug: string; position: number }) {
-		const element = get(playerElements).get(params.playerSlug)
+	async moveToWinPosition(params: { playerSlug: string; position: number }) {
+		const element = this.playerElements.get(params.playerSlug)
 		if (!element) return
+
+		const mapStore = this.getMapStore()
 
 		const startPos = mapStore.cellPositionById[LastMapPosition]
 		const finalPos = getWinnerPosition(params.position)
 
-		frontendTurnState.set('player-map-animation')
+		this.updateFrontendTurnState('player-map-animation')
+
+		const offsetInsideCellX = this.offsetInsideCellX
+		const offsetInsideCellY = this.offsetInsideCellY
 
 		const timeline = createTimeline()
 		timeline.add(element, {
@@ -228,77 +251,56 @@ export function createMovementStore({
 		})
 	}
 
-	async function doRollAnimation(rollValues: number[], steps: number) {
+	async doRollAnimation(rollValues: number[], steps: number) {
 		if (rollValues.length === 0) {
 			throw new Error('rollValues cannot be empty')
 		}
-		myMovementState.update((s) => ({ ...s, rollValues }))
-		frontendTurnState.set('dice-animation')
+		this.myMovementState.rollValues = rollValues
+		this.updateFrontendTurnState('dice-animation')
 		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_ANIMATION_TIME))
-		frontendTurnState.set('dice-results')
-		myMovementState.update((s) => ({ ...s, steps }))
+		this.updateFrontendTurnState('dice-results')
+		this.myMovementState.steps = steps
 		await new Promise((resolve) => setTimeout(resolve, DICE_ROLL_IDLE_TIME))
 	}
 
-	const selectedPlayer = writable<PlayerData | null>(null)
-	const hoveredPlayer = writable<string | null>(null)
+	selectedPlayer = $state<PlayerData | null>(null)
+	hoveredPlayer = $state<string | null>(null)
 
-	eventDataStore.updatedPlayers.subscribe(($players) => {
-		const previous = get(eventDataStore.players)
-		// console.log('previous players', previous)
-		if (previous.length === 0) {
-			eventDataStore.players.set($players)
+	animateOtherPlayer(currPlayer: PlayerItem, newPlayer: PlayerItem) {
+		const last_move = newPlayer.last_move
+		const element = this.playerElements.get(newPlayer.slug)
+		if (
+			!element ||
+			!last_move ||
+			currPlayer.map_position === newPlayer.map_position ||
+			newPlayer.map_position > LastMapPosition
+		) {
+			this.updatePlayer(newPlayer.slug, newPlayer)
 			return
 		}
 
-		// animate only players that moved
-		$players.forEach((player) => {
-			const last_move = player.last_move
-			const previousPlayer = previous.find((p) => p.slug === player.slug)
-			const element = get(playerElements).get(player.slug)
+		const mapStore = this.getMapStore()
+		const offsetInsideCellY = this.offsetInsideCellY
+		const offsetInsideCellX = this.offsetInsideCellX
 
-			if (
-				!element ||
-				!previousPlayer ||
-				!last_move ||
-				previousPlayer.map_position === player.map_position ||
-				player.map_position > LastMapPosition
-			) {
-				setPlayerItem(player)
-				return
-			}
+		const cellPosition = mapStore.cellPositionById[currPlayer.map_position]
+		element.style.top = `${cellPosition.centerY + offsetInsideCellY}px`
+		element.style.left = `${cellPosition.centerX + offsetInsideCellX}px`
 
-			// console.log('animating player', player)
+		const finalCell = last_move.ladder_from ?? last_move.snake_from ?? last_move.cell_to
+		const steps = finalCell - currPlayer.map_position
 
-			const cellPosition = mapStore.cellPositionById[previousPlayer.map_position]
-			element.style.top = `${cellPosition.centerY + offsetInsideCellY}px`
-			element.style.left = `${cellPosition.centerX + offsetInsideCellX}px`
-
-			const finalCell = last_move.ladder_from ?? last_move.snake_from ?? last_move.cell_to
-			const steps = finalCell - previousPlayer.map_position
-
-			moveToCell({
-				playerSlug: player.slug,
-				moveResponse: {
-					unlocked_achievements: [],
-					move_to: finalCell,
-					ladder_to: last_move.ladder_to,
-					snake_to: last_move.snake_to
-				},
-				steps
-			}).then(() => {
-				setPlayerItem(player)
-			})
+		this.moveToCell({
+			playerSlug: newPlayer.slug,
+			moveResponse: {
+				unlocked_achievements: [],
+				move_to: finalCell,
+				ladder_to: last_move.ladder_to,
+				snake_to: last_move.snake_to
+			},
+			steps
+		}).then(() => {
+			this.updatePlayer(newPlayer.slug, newPlayer)
 		})
-	})
-
-	return {
-		registerPlayer,
-		moveToCell,
-		moveToWinPosition,
-		myMovementState,
-		doRollAnimation,
-		selectedPlayer,
-		hoveredPlayer
 	}
 }

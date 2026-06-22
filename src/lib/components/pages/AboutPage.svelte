@@ -54,13 +54,13 @@
 		].sort((a, b) => a.name.localeCompare(b.name))
 	]
 
-	const sponsorsQuery = createQuery(
+	const sponsorsQuery = createQuery(() =>
 		getDonationsApiDonationsGetOptions({
 			baseUrl: AukusBaseUrl
 		})
 	)
 
-	const sponsors = $derived($sponsorsQuery.data?.donations ?? [])
+	const sponsors = $derived(sponsorsQuery.data?.donations ?? [])
 
 	function openLink(link: 'boosty' | 'tg' | 'eventlab') {
 		let url = ''

@@ -10,21 +10,20 @@
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
 
 	const { statsStore, playersInOrder } = getAppManagerContext()
-	const { statsBySlug } = statsStore
 
 	const statsWithPlayerInfo = $derived.by(() => {
-		return $playersInOrder.map((player, idx) => {
-			const playerStat = $statsBySlug[player.slug]
+		return playersInOrder.map((player, idx) => {
+			const playerStat = statsStore.statsBySlug.get(player.slug)
 			return {
 				...player,
-				...playerStat,
+				...playerStat!,
 				username: player.username,
 				avatarLink: player.avatar_link ?? '',
 				currentGame: player.current_game ?? 'Выбирает игру...',
 				currentGameDuration: player.current_game_duration ?? null,
 				position: idx + 1,
-				games_time: playerStat.games_time * 1000,
-				clean_score: getPlayerCleanScore(playerStat)
+				games_time: playerStat!.games_time * 1000,
+				clean_score: getPlayerCleanScore(playerStat!)
 			}
 		})
 	})

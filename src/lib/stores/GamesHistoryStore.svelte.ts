@@ -1,118 +1,104 @@
 import { EventlabBaseUrl } from '$lib/client'
 import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import type {
-	EventName,
 	GameHistoryItem,
 	GetGamesApiGamesHistoryGetData
 } from '$lib/heyapi/eventlab/types.gen'
 import { createQuery } from '@tanstack/svelte-query'
-import { derived, get, writable } from 'svelte/store'
-import type { EventDataStore } from './EventDataStore.svelte'
+import type { PlayerData } from '$lib/types'
+import { SvelteMap } from 'svelte/reactivity'
 
-type QueryParams = GetGamesApiGamesHistoryGetData['query']
+type QueryParams = NonNullable<GetGamesApiGamesHistoryGetData['query']>
 
-export function createGamesHistoryStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
-	const searchIdFrom = writable<number | null>(null)
+type Props = {
+	getPlayers: () => PlayerData[]
+}
 
-	const fullPlayersList = derived(eventDataStore.players, ($players) => $players.map((p) => p.slug))
+export class GameHistoryStore {
+	allLoadedGames = $state<GameHistoryItem[]>([])
 
-	const searchParams = writable<QueryParams>({
+	getPlayers: Props['getPlayers'] = () => []
+
+	constructor(props: Props) {
+		this.getPlayers = props.getPlayers
+
+		$effect(() => {
+			const games = this.historyQuery.data?.games
+			if (games) {
+				if (this.resetLoadedGames) {
+					this.allLoadedGames = games
+					this.resetLoadedGames = false
+				} else {
+					const newGames = games.filter(
+						(newGame) => !this.allLoadedGames.some((existingGame) => existingGame.id === newGame.id)
+					)
+					this.allLoadedGames = [...this.allLoadedGames, ...newGames]
+				}
+			}
+		})
+
+		let previousSearchParams: QueryParams | null = null
+		$effect(() => {
+			if (previousSearchParams && this.searchParams) {
+				const hasChanged =
+					JSON.stringify(previousSearchParams.events) !== JSON.stringify(this.searchParams.events) ||
+					JSON.stringify(previousSearchParams.players) !== JSON.stringify(this.searchParams.players) ||
+					previousSearchParams.title_search !== this.searchParams.title_search
+
+				if (hasChanged) {
+					this.resetLoadedGames = true
+					this.searchIdFrom = null
+				}
+			}
+			if (this.searchParams) {
+				previousSearchParams = { ...this.searchParams }
+			} else {
+				previousSearchParams = null
+			}
+		})
+	}
+
+	searchIdFrom = $state<number | null>(null)
+	fullPlayersList = $derived.by(() => this.getPlayers().map((p) => p.slug))
+
+	searchParams = $state<QueryParams>({
 		events: [],
 		players: [],
 		title_search: null
 	})
 
-	const resetLoadedGames = writable(false)
+	resetLoadedGames = $state(false)
 
-	const historyQuery = createQuery(
-		derived(
-			[searchParams, searchIdFrom, fullPlayersList],
-			([$search, $searchIdFrom, $fullPlayersList]) => {
-				let playersFilter = $fullPlayersList
-				if ($search?.players && $search.players.length > 0) {
-					playersFilter = $search.players
-				}
-				const params = getGamesApiGamesHistoryGetOptions({
-					baseUrl: EventlabBaseUrl,
-					query: { ...$search, start_id: $searchIdFrom, players: playersFilter }
-				})
-				// params.placeholderData = (data) => data
-				params.enabled = playersFilter.length > 0
-				params.refetchOnWindowFocus = false
-				return params
+	historyQuery = createQuery(() => {
+		let playersFilter = this.fullPlayersList
+		if (this.searchParams?.players && this.searchParams.players.length > 0) {
+			playersFilter = this.searchParams.players
+		}
+		const params = getGamesApiGamesHistoryGetOptions({
+			baseUrl: EventlabBaseUrl,
+			query: { ...this.searchParams, start_id: this.searchIdFrom, players: playersFilter }
+		})
+		// params.placeholderData = (data) => data
+		params.enabled = playersFilter.length > 0
+		params.refetchOnWindowFocus = false
+		return params
+	})
+
+	gamesHistoryByEvent = $derived(
+		this.allLoadedGames.reduce((acc, game) => {
+			if (!acc.has(game.event_name)) {
+				acc.set(game.event_name, [])
 			}
-		)
+			acc.get(game.event_name)!.push(game)
+			return acc
+		}, new SvelteMap<string, GameHistoryItem[]>())
 	)
 
-	const allLoadedGames = writable<GameHistoryItem[]>([])
-
-	historyQuery.subscribe(($historyQuery) => {
-		if ($historyQuery.data?.games) {
-			allLoadedGames.update((current) => {
-				if (get(resetLoadedGames)) {
-					resetLoadedGames.set(false)
-					return $historyQuery.data.games
-				}
-				const newGames = $historyQuery.data.games.filter(
-					(newGame) => !current.some((existingGame) => existingGame.id === newGame.id)
-				)
-				return [...current, ...newGames]
-			})
-		}
-	})
-
-	let previousSearchParams: QueryParams | null = null
-	searchParams.subscribe((current) => {
-		if (previousSearchParams && current) {
-			const hasChanged =
-				JSON.stringify(previousSearchParams.events) !== JSON.stringify(current.events) ||
-				JSON.stringify(previousSearchParams.players) !== JSON.stringify(current.players) ||
-				previousSearchParams.title_search !== current.title_search
-
-			if (hasChanged) {
-				resetLoadedGames.set(true)
-				searchIdFrom.set(null)
-			}
-		}
-		if (current) {
-			previousSearchParams = { ...current }
-		} else {
-			previousSearchParams = null
-		}
-	})
-
-	const gamesHistoryByEvent = derived(allLoadedGames, ($allLoadedGames) => {
-		const byEvent: Record<EventName, GameHistoryItem[]> = {} as Record<
-			EventName,
-			typeof $allLoadedGames
-		>
-		$allLoadedGames.forEach((game) => {
-			const event = game.event_name
-			if (!byEvent[event]) {
-				byEvent[event] = []
-			}
-
-			byEvent[event].push(game)
-		})
-		return byEvent
-	})
-
-	const hasMore = derived(historyQuery, ($historyQuery) => {
-		return Boolean($historyQuery.data?.next_id)
-	})
-
-	function loadMore() {
-		const nextId = get(historyQuery).data?.next_id
+	hasMore = $derived(Boolean(this.historyQuery.data?.next_id))
+	loadMore() {
+		const nextId = this.historyQuery.data?.next_id
 		if (nextId) {
-			searchIdFrom.set(nextId)
+			this.searchIdFrom = nextId
 		}
-	}
-
-	return {
-		searchParams,
-		historyQuery,
-		gamesHistoryByEvent,
-		hasMore,
-		loadMore
 	}
 }

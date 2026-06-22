@@ -8,8 +8,8 @@
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
-	import { createGamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
-	import { createPlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
+	import { GamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
+	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 	import Footer from '$lib/components/Footer.svelte'
 	import Loader from '$lib/components/Loader.svelte'
 
@@ -20,102 +20,112 @@
 	let { playerSlug }: Props = $props()
 
 	const { playersBySlug, canvasStore, eventDataStore } = getAppManagerContext()
-	const { playerSlug: canvasPlayerSlug, editMode, canvasWidth } = canvasStore
 
-	let gamesMatchesStoreForPlayer = $state(createGamesMatchesStore({ eventDataStore, playerSlug }))
-	let playersMovesStoreForPlayer = $state(createPlayerMovesStore({ playerSlug }))
+	const playerSlugs = $derived(eventDataStore.players.map((p) => p.slug))
 
-	const [playerMoves, movesQueryParams, movesQuery] = $derived([
+	const playerSlugReactive = $derived(playerSlug)
+
+	let gamesMatchesStoreForPlayer = $state(
+		new GamesMatchesStore({
+			getPlayerSlug: () => playerSlugReactive,
+			getPlayersSlugs: () => playerSlugs
+		})
+	)
+	let playersMovesStoreForPlayer = $state(
+		new PlayerMovesStore({
+			getPlayerSlug: () => playerSlugReactive
+		})
+	)
+
+	const [playerMoves, movesQuery] = $derived([
 		playersMovesStoreForPlayer.playerMoves,
-		playersMovesStoreForPlayer.queryParams,
 		playersMovesStoreForPlayer.movesQuery
 	])
 
-	const [gamesMatchParams, gamesMatched] = $derived([
-		gamesMatchesStoreForPlayer.gamesMatchParams,
+	const gamesMatched = $derived(
 		gamesMatchesStoreForPlayer.gamesMatched
-	])
-
-	// const { gamesMatchParams, gamesMatched } = gamesMatchesStoreForPlayer
+	)
 
 	$effect(() => {
 		if (!playerSlug) {
 			return
 		}
 		// console.log('creating store for', page.params.player)
-		gamesMatchesStoreForPlayer = createGamesMatchesStore({
-			eventDataStore,
-			playerSlug
-		})
-		playersMovesStoreForPlayer = createPlayerMovesStore({ playerSlug })
+		// gamesMatchesStoreForPlayer = new GamesMatchesStore({
+		// 	getPlayerSlug: () => playerSlugReactive,
+		// 	getPlayersSlugs: () => playerSlugs
+		// })
+		// playersMovesStoreForPlayer = new PlayerMovesStore({
+		// 	getPlayerSlug: () => playerSlugReactive
+		// })
 
-		movesQueryParams.set({
+		playersMovesStoreForPlayer.queryParams = {
 			players: [playerSlug],
 			start_ts: null,
 			search_title: null,
 			titles: undefined,
 			exclude_ids: undefined
-		})
-		canvasPlayerSlug.set(playerSlug)
+		}
+		canvasStore.playerSlug = playerSlug
 	})
 
 	$effect(() => {
 		const currentPlayer = playerSlug
 
-		if (!currentPlayer || $movesQuery.isLoading || $movesQuery.isFetching) {
-			gamesMatchParams.set({
+		if (!currentPlayer || movesQuery.isLoading || movesQuery.isFetching) {
+		    gamesMatchesStoreForPlayer.gamesMatchParams = {
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
 				exclude_player: playerSlug
-			})
+			}
 			return
 		}
 
-		const movesForCurrentPlayer = $playerMoves.filter((move) => move.player_slug === currentPlayer)
+		const movesForCurrentPlayer = playerMoves.filter((move) => move.player_slug === currentPlayer)
 
 		if (movesForCurrentPlayer.length > 0) {
-			gamesMatchParams.set({
+			gamesMatchesStoreForPlayer.gamesMatchParams = {
 				titles: movesForCurrentPlayer.map((move) => move.item_title),
 				exclude_ids_moves: movesForCurrentPlayer
 					.map((move) => move.game_id)
 					.filter(Boolean) as number[],
 				exclude_ids_history: [],
 				exclude_player: currentPlayer
-			})
+			}
 		} else {
-			gamesMatchParams.set({
+			gamesMatchesStoreForPlayer.gamesMatchParams = {
 				titles: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
 				exclude_player: playerSlug
-			})
+			}
 		}
 	})
 
 	const player = $derived.by(() => {
 		if (!playerSlug) return null
-		return $playersBySlug[playerSlug] || null
+		return playersBySlug.get(playerSlug) ?? null
 	})
 
 	const gamesCompleted = $derived(
-		$playerMoves.filter((move) => move.type === 'completed').length || 0
+		playerMoves.filter((move) => move.type === 'completed').length || 0
 	)
 
 	let contentContainer = $state<HTMLDivElement | null>(null)
 	let contentHeight = $state(0)
 
-	const canvasCenter = $derived($canvasWidth / 2)
+	const canvasCenter = $derived(canvasStore.canvasWidth / 2)
 
 	function handleResize() {
 		if (contentContainer) {
-			const left = ($canvasWidth - window.innerWidth) / 2
+			const left = (canvasStore.canvasWidth - window.innerWidth) / 2
 			document.getElementById('canvas-container')?.scrollTo({ left, behavior: 'instant' })
 
 			console.log({
 				containerWidth: contentContainer.clientWidth,
 				windowWidth: window.innerWidth,
-				canvasWidth: $canvasWidth,
+				canvasWidth: canvasStore.canvasWidth,
 				canvasCenter,
 				left
 			})
@@ -136,9 +146,9 @@
 		}
 	})
 
-	const widthStyle = `width: ${$canvasWidth}px`
+	const widthStyle = $derived(`width: ${canvasStore.canvasWidth}px`)
 
-	const isLoading = $derived($movesQuery.isLoading || $movesQuery.isFetching)
+	const isLoading = $derived(movesQuery.isLoading || movesQuery.isFetching)
 </script>
 
 <svelte:head>
@@ -155,7 +165,7 @@
 		bind:this={contentContainer}
 	>
 		<div class="mx-auto mb-80" style={widthStyle}>
-			{#if $editMode}
+			{#if canvasStore.editMode}
 				<Canvas {canvasCenter} {contentHeight} />
 			{:else}
 				<StaticCanvas {canvasCenter} {contentHeight} />
@@ -196,8 +206,8 @@
 					<div class="mt-5 space-y-[200px]">
 						<div class="space-y-5">
 							<!-- <CurrentGameCard playerSlug={player.slug} /> -->
-							{#each $playerMoves as move (move.id)}
-								{@const matchedGames = $gamesMatched.filter(
+							{#each playerMoves as move (move.id)}
+								{@const matchedGames = gamesMatched.filter(
 									(game) => game.game_title === move.item_title
 								)}
 								<MoveCard {move} {matchedGames} />

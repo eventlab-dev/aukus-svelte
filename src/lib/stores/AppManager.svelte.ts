@@ -1,107 +1,118 @@
 import { LastMapPosition, SOUNDS } from '$lib/constants'
-import { derived, readable, writable, type Readable } from 'svelte/store'
-import { createEventDataStore } from './EventDataStore.svelte'
-import { createGamesHistoryStore } from './GamesHistoryStore.svelte'
-import { createPlayerMovesStore } from './PlayersMovesStore.svelte'
+import { createContext } from 'svelte'
+import { fromStore, readable, writable } from 'svelte/store'
+import { EventDataStore } from './EventDataStore.svelte'
+import { GameHistoryStore } from './GamesHistoryStore.svelte'
+import { PlayerMovesStore } from './PlayersMovesStore.svelte'
 import SoundManager from './SoundManager.svelte'
-import { createUsersStore } from './UsersStore.svelte'
+import { UsersStore } from './UsersStore.svelte'
 import { type PlayerData, type TurnState } from '$lib/types'
-import { createMovementStore } from './MovementStore.svelte'
-import { createStatsStore } from './StatsStore.svelte'
-import { createNotificationStore } from './NotificationStore.svelte'
+import { MovementStore } from './MovementStore.svelte'
+import { StatsStore } from './StatsStore.svelte'
+import { NotificationStore } from './NotificationStore.svelte'
 import { getPlayerScore } from '$lib/utils'
-import { createCanvasStore } from './CanvasStore.svelte'
-import { createGamesMatchesStore } from './GamesMatchesStore.svelte'
-import { createErrorNotificationStore } from './ErrorNotificationStore.svelte'
-import { createShitStore } from './ShitStore.svelte'
-import { createGameTimeStore } from './gameTimeStore'
-import { createNowStore } from './NowStore.svelte'
-import { createSnowStore } from './SnowStore.svelte'
+import { CanvasStore } from './CanvasStore.svelte'
+import { GamesMatchesStore } from './GamesMatchesStore.svelte'
+import { ErrorNotificationStore } from './ErrorNotificationStore.svelte'
+import { ShitStore } from './ShitStore.svelte'
+import { GameTimeStore } from './gameTimeStore.svelte'
+import { SnowStore } from './SnowStore.svelte'
 import { MapStore } from './MapStore.svelte'
 import { NavStore } from './NavStore.svelte'
+import { NowStore } from './NowStore.svelte'
+import { SvelteMap } from 'svelte/reactivity'
 
-export function createAppManager() {
-	const usersStore = createUsersStore()
-	const eventDataStore = createEventDataStore()
-	const playersMovesStore = createPlayerMovesStore({})
-	const statsStore = createStatsStore()
-	const gamesHistoryStore = createGamesHistoryStore({ eventDataStore })
-	const gamesMatchesStore = createGamesMatchesStore({ eventDataStore })
+export class AppManager {
+	usersStore = new UsersStore()
+	users = $derived(this.usersStore.users)
+	myUser = $derived(this.usersStore.myUser)
 
-	const frontendState = writable<TurnState>(null)
+	eventDataStore = new EventDataStore()
+	statsStore = new StatsStore()
 
-	const { users, myUser } = usersStore
+	mapStore = new MapStore()
+	canvasStore = new CanvasStore()
+	errorNotificationStore = new ErrorNotificationStore()
+	shitStore = new ShitStore()
 
-	const mapStore = new MapStore()
+	nowStore = new NowStore()
+	snowStore = new SnowStore()
+	navStore = new NavStore()
 
-	const movementStore = createMovementStore({
-		eventDataStore,
-		frontendTurnState: frontendState,
-		usersStore,
-		mapStore
+	playersSlugs = $derived(this.eventDataStore.players.map((p) => p.slug))
+
+	playersMovesStore = new PlayerMovesStore({
+		getPlayerSlug: () => this.myUser?.slug
+	})
+	gamesHistoryStore = new GameHistoryStore({
+		getPlayers: () => this.players
+	})
+	gamesMatchesStore = new GamesMatchesStore({
+		getPlayerSlug: () => this.myUser?.slug,
+		getPlayersSlugs: () => this.playersSlugs
+	})
+	movementStore = new MovementStore({
+		getEventDataStore: () => this.eventDataStore,
+		updateFrontendTurnState: (state) => {
+			this.frontendState.set(state)
+		},
+		getMapStore: () => this.mapStore,
+		getPlayerSlug: () => this.myUser?.slug ?? null
 	})
 
-	const notificationStore = createNotificationStore({ eventDataStore })
-	const canvasStore = createCanvasStore()
-	const errorNotificationStore = createErrorNotificationStore()
-	const shitStore = createShitStore()
-
-	const nowStore = createNowStore()
-	const snowStore = createSnowStore()
-
-	const soundManager = new SoundManager()
-
-	myUser.subscribe((user) => {
-		if (user) {
-			soundManager.preloadSounds(SOUNDS)
-		}
+	notificationStore = new NotificationStore({
+		getAchievementsById: () => this.eventDataStore.achievementsById
 	})
 
-	const { players: playersData } = eventDataStore
-	const { statsBySlug } = statsStore
+	gameTimeStore = new GameTimeStore({
+		getMyUser: () => this.myUser
+	})
 
-	const players: Readable<PlayerData[]> = derived(
-		[users, playersData, statsBySlug],
-		([$users, $players, $statsBySlug]) => {
-			const list: PlayerData[] = []
-			for (const player of $players) {
-				const slug = player.slug
-				const user = $users.find((u) => u.slug === slug)
-				const stats = $statsBySlug[slug]
-				if (!user || !stats) {
-					console.warn('Missing data for player:', slug, user, stats)
-					continue
-				}
-				list.push({
-					...user,
-					...player,
-					total_score: getPlayerScore(stats)
-				})
+	frontendState = writable<TurnState>(null)
+	frontendStateRune = fromStore(this.frontendState)
+	soundManager = new SoundManager()
+
+
+	constructor() {
+		$effect(() => {
+			if (this.myUser) {
+				this.soundManager.preloadSounds(SOUNDS)
 			}
-			return list
-		}
-	)
-
-	const playersBySlug = derived(players, ($players) => {
-		const map: Record<string, (typeof $players)[0]> = {}
-		$players.forEach((player) => {
-			map[player.slug] = player
 		})
-		return map
+	}
+
+	players = $derived.by(() => {
+		const list: PlayerData[] = []
+		for (const player of this.eventDataStore.players) {
+			const slug = player.slug
+			const user = this.usersStore.usersBySlug.get(slug)
+			const stats = this.statsStore.statsBySlug.get(slug)
+			if (!user || !stats) {
+				console.warn('Missing data for player:', slug, user, stats)
+				continue
+			}
+			list.push({
+				...user,
+				...player,
+				total_score: getPlayerScore(stats)
+			})
+		}
+		return list
 	})
 
-	const myPlayer = derived([players, myUser], ([$players, $myUser]) => {
-		if (!$myUser) return null
-		return $players.find((p) => p.slug === $myUser.slug) || null
-	})
+	playersBySlug = $derived(new SvelteMap(
+		this.players.map((player) => [player.slug, player])
+	))
 
-	const backendState: Readable<TurnState> = derived(myPlayer, ($myPlayer) => {
-		if ($myPlayer) {
-			if ($myPlayer.last_move) {
-				if ($myPlayer.last_move.type === 'completed' && $myPlayer.map_position === 102) {
+	myPlayer = $derived(this.players.find((p) => p.slug === this.myUser?.slug) || null)
+
+	backendState = $derived.by(() => {
+		if (this.myPlayer) {
+			if (this.myPlayer.last_move) {
+				if (this.myPlayer.last_move.type === 'completed' && this.myPlayer.map_position === 102) {
 					return 'event-completed'
 				}
-				if (!$myPlayer.last_move.dice_roll_id && $myPlayer.last_move.type !== 'reroll') {
+				if (!this.myPlayer.last_move.dice_roll_id && this.myPlayer.last_move.type !== 'reroll') {
 					return 'selecting-dice'
 				}
 			}
@@ -110,71 +121,61 @@ export function createAppManager() {
 		return null
 	})
 
-	const turnState = derived([backendState, frontendState], ([$backendState, $frontendState]) => {
-		if ($frontendState === 'form-sent') {
-			if ($backendState === 'event-completed') {
+	turnState = $derived.by(() => {
+		if (this.frontendStateRune.current === 'form-sent') {
+			if (this.backendState === 'event-completed') {
 				return 'player-win-animation'
 			}
-			return $backendState
+			return this.backendState
 		}
-		return $frontendState || $backendState
+		return this.frontendStateRune.current || this.backendState
 	})
 
-	const playersCompletedMap = derived(players, ($players) => {
-		return $players
+	playersCompletedMap = $derived(
+		this.players
 			.filter((p) => p.map_position === 102)
 			.toSorted((a, b) => a.last_move!.created_at - b.last_move!.created_at)
-	})
-
-	const playersInOrder = derived(
-		[players, playersCompletedMap],
-		([$players, $playersCompletedMap]) => {
-			const playersNotCompletedMap = $players.filter((p) => p.map_position <= LastMapPosition)
-			playersNotCompletedMap.sort((a, b) => {
-				if (a.total_score === b.total_score) {
-					return b.map_position - a.map_position
-				}
-				return b.total_score - a.total_score
-			})
-			return [...$playersCompletedMap, ...playersNotCompletedMap]
-		}
 	)
 
-	const eventNotStarted = derived(eventDataStore.eventSettings, ($settings) => {
-		if ($settings?.event_start_time) {
-			return Number($settings?.event_start_time) * 1000 > Date.now()
+	playersInOrder = $derived.by(() => {
+		console.log('players', this.players)
+		const playersNotCompletedMap = this.players.filter((p) => p.map_position <= LastMapPosition)
+		playersNotCompletedMap.sort((a, b) => {
+			if (a.total_score === b.total_score) {
+				return b.map_position - a.map_position
+			}
+			return b.total_score - a.total_score
+		})
+		return [...this.playersCompletedMap, ...playersNotCompletedMap]
+	})
+
+	eventNotStarted = $derived.by(() => {
+		if (this.eventDataStore.eventSettings?.event_start_time) {
+			return Number(this.eventDataStore.eventSettings.event_start_time) * 1000 > Date.now()
 		}
 		return false
 	})
 
-	const eventFinished = derived(
-		[eventDataStore.eventSettings, playersCompletedMap, nowStore.nowSeconds],
-		([$settings, $playersCompletedMap, $nowSeconds]) => {
-			if ($playersCompletedMap.length > 0) {
-				return true
-			}
-			if ($settings?.event_end_time) {
-				return Number($settings?.event_end_time) <= $nowSeconds
-			}
-			return false
+	eventFinished = $derived.by(() => {
+		if (this.playersCompletedMap.length > 0) {
+			return true
 		}
-	)
-
-	const eventActive = derived([eventNotStarted, eventFinished], ([$notStarted, $finished]) => {
-		return !$notStarted && !$finished
+		if (this.eventDataStore.eventSettings?.event_end_time) {
+			return Number(this.eventDataStore.eventSettings.event_end_time) <= this.nowStore.nowSeconds
+		}
+		return false
 	})
 
-	const winners = derived(
-		[playersInOrder, playersCompletedMap, eventFinished],
-		([$players, $playersCompletedMap, $eventFinished]) => {
-			if ($eventFinished) {
-				return $players.length > 3 ? $players.slice(0, 3) : $players
-			}
-			return $playersCompletedMap
-		}
-	)
+	eventActive = $derived(!this.eventNotStarted && !this.eventFinished)
 
-	const isMobile = readable(false, (set) => {
+	winners = $derived.by(() => {
+		if (this.eventFinished) {
+			return this.players.length > 3 ? this.players.slice(0, 3) : this.players
+		}
+		return this.playersCompletedMap
+	})
+
+	isMobile = readable(false, (set) => {
 		const query = window.matchMedia('(max-width: 768px)')
 		set(query.matches)
 
@@ -183,41 +184,6 @@ export function createAppManager() {
 
 		return () => query.removeEventListener('change', listener)
 	})
-
-	const gameTimeStore = createGameTimeStore({ usersStore })
-	const navStore = new NavStore()
-
-
-	return {
-		usersStore,
-		gamesHistoryStore,
-		eventDataStore,
-		playersMovesStore,
-		soundManager,
-		notificationStore,
-		errorNotificationStore,
-		players,
-		playersBySlug,
-		myPlayer,
-		movementStore,
-		turnState,
-		frontendState,
-		statsStore,
-		winners,
-		eventFinished,
-		eventNotStarted,
-		eventActive,
-		playersInOrder,
-		playersCompletedMap,
-		canvasStore,
-		gamesMatchesStore,
-		isMobile,
-		shitStore,
-		gameTimeStore,
-		snowStore,
-		mapStore,
-		navStore
-	}
 }
 
-export type AppManager = ReturnType<typeof createAppManager>
+export const [getAppManager, setAppManager] = createContext<AppManager>()

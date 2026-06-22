@@ -5,9 +5,8 @@
 	import * as Tooltip from './ui/tooltip'
 
 	const { snowStore } = getAppManagerContext()
-	const { snowState, snowTooltip } = snowStore
 
-	const isActive = $derived($snowState !== 'off')
+	const isActive = $derived(snowStore.snowState.value !== 'off')
 </script>
 
 <Tooltip.Root>
@@ -24,6 +23,6 @@
 		</Button>
 	</Tooltip.Trigger>
 	<Tooltip.Content>
-		<p>{$snowTooltip}</p>
+		<p>{snowStore.snowTooltip}</p>
 	</Tooltip.Content>
 </Tooltip.Root>

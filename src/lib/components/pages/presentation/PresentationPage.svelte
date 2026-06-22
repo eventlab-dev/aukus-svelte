@@ -7,15 +7,16 @@
 	import { FINAL_VIDEO_POSTER } from '$lib/constants'
 
 	const { playersInOrder, eventDataStore } = getAppManagerContext()
-	const { eventSettings } = eventDataStore
 
 	const videoFinalUrl = $derived(
-		typeof $eventSettings?.video_final_url === 'string' ? $eventSettings.video_final_url : null
+		typeof eventDataStore.eventSettings?.video_final_url === 'string'
+			? eventDataStore.eventSettings.video_final_url
+			: null
 	)
 
 	let pageId = $state(0)
 
-	const pagesAmount = $derived($playersInOrder.length + 2)
+	const pagesAmount = $derived(playersInOrder.length + 2)
 
 	function nextPage() {
 		pageId = pageId + 1
@@ -28,7 +29,7 @@
 	const onFirstPage = $derived(pageId === 0)
 	const onLastPage = $derived(pageId + 1 === pagesAmount)
 
-	const currentPlayer = $derived($playersInOrder[$playersInOrder.length - pageId] ?? null)
+	const currentPlayer = $derived(playersInOrder[playersInOrder.length - pageId] ?? null)
 
 	const color = $derived(currentPlayer?.color ?? 'oklch(0.56 0.23 279.32)')
 
@@ -45,14 +46,14 @@
 		{#if onFirstPage}
 			<div class="w-[220px]"></div>
 		{:else}
-			<Button class="w-[220px]" variant="secondary" onclick={prevPage}>{'<-'} Назад</Button>
+			<Button class="w-[220px]" variant="secondary" onclick={prevPage}>&lt;- Назад</Button>
 		{/if}
 		<Button class="w-[220px]" variant="secondary" href="/">На главную</Button>
 		{#if onLastPage}
 			<div class="w-[220px]"></div>
 		{:else}
 			<Button class="w-[220px]" variant="secondary" onclick={nextPage}>
-				Дальше ({pageId + 1}/{pagesAmount}) {'->'}
+				Дальше ({pageId + 1}/{pagesAmount}) -&gt;
 			</Button>
 		{/if}
 	</div>
@@ -65,7 +66,7 @@
 		</div>
 	{:else if currentPlayer}
 		<div class="mt-[100px]">
-			<PlayerStats player={currentPlayer} position={$playersInOrder.length - pageId + 1} />
+			<PlayerStats player={currentPlayer} position={playersInOrder.length - pageId + 1} />
 		</div>
 	{:else if pageId === pagesAmount - 1}
 		<div class="mt-[100px] flex justify-center">

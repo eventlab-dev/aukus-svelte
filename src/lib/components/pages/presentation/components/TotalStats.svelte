@@ -7,27 +7,25 @@
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 
 	const { statsStore, eventDataStore, playersBySlug } = getAppManagerContext()
-	const { stats } = statsStore
-	const { achievementsWithScores, achievements } = eventDataStore
 
 	const showStats = $derived.by(() => {
-		const completed = $stats.reduce((acc, item) => acc + item.games_completed, 0)
-		const dropped = $stats.reduce((acc, item) => acc + item.games_dropped, 0)
-		const rerolls = $stats.reduce((acc, item) => acc + item.rerolls, 0)
-		const sheikhs = $stats.reduce((acc, item) => acc + item.sheikh_moments, 0)
-		const movies = $stats.reduce((acc, item) => acc + item.movies, 0)
+		const completed = statsStore.stats.reduce((acc, item) => acc + item.games_completed, 0)
+		const dropped = statsStore.stats.reduce((acc, item) => acc + item.games_dropped, 0)
+		const rerolls = statsStore.stats.reduce((acc, item) => acc + item.rerolls, 0)
+		const sheikhs = statsStore.stats.reduce((acc, item) => acc + item.sheikh_moments, 0)
+		const movies = statsStore.stats.reduce((acc, item) => acc + item.movies, 0)
 
-		const achievementsIds = $achievementsWithScores.map((a) => a.id)
+		const achievementsIds = eventDataStore.achievementsWithScores.map((a) => a.id)
 
-		const unlockedAchievements = $achievements.filter(
+		const unlockedAchievements = eventDataStore.achievements.filter(
 			(a) => a.visibility !== 'hidden' && achievementsIds.includes(a.id)
 		).length
-		const totalAchievements = $achievementsWithScores.length
+		const totalAchievements = eventDataStore.achievementsWithScores.length
 
-		const totalMoves = $stats.reduce((acc, item) => acc + item.total_moves, 0)
-		const avgRating = $stats.reduce((acc, item) => acc + item.average_rating, 0) / $stats.length
-		const shitsThrown = $stats.reduce((acc, item) => acc + item.shits_thrown, 0)
-		const shieldsUsed = $stats.reduce((acc, item) => acc + item.shields_used, 0)
+		const totalMoves = statsStore.stats.reduce((acc, item) => acc + item.total_moves, 0)
+		const avgRating = statsStore.stats.reduce((acc, item) => acc + item.average_rating, 0) / statsStore.stats.length
+		const shitsThrown = statsStore.stats.reduce((acc, item) => acc + item.shits_thrown, 0)
+		const shieldsUsed = statsStore.stats.reduce((acc, item) => acc + item.shields_used, 0)
 
 		return [
 			{ title: 'Игр пройдено за сезон', value: completed.toString() },
@@ -44,7 +42,7 @@
 	})
 
 	const bestGame = $derived.by(() => {
-		return $stats.reduce((acc: PlayerMoveItem | null, item) => {
+		return statsStore.stats.reduce((acc: PlayerMoveItem | null, item) => {
 			const game = item.best_game
 			if (!acc) {
 				return game
@@ -63,7 +61,7 @@
 	})
 
 	const worstGame = $derived.by(() => {
-		return $stats.reduce((acc: PlayerMoveItem | null, item) => {
+		return statsStore.stats.reduce((acc: PlayerMoveItem | null, item) => {
 			const game = item.worst_game
 			if (!acc) {
 				return game
@@ -82,10 +80,10 @@
 	})
 
 	const bestGamePlayerName = $derived(
-		bestGame ? $playersBySlug[bestGame.player_slug]?.username : null
+		bestGame ? playersBySlug.get(bestGame.player_slug)?.username : null
 	)
 	const worstGamePlayerName = $derived(
-		worstGame ? $playersBySlug[worstGame.player_slug]?.username : null
+		worstGame ? playersBySlug.get(worstGame.player_slug)?.username : null
 	)
 
 	let show = $state(false)

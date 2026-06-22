@@ -3,15 +3,14 @@
 	import { hasStream } from '$lib/utils/streamUtils'
 	import StreamPlayer from '$lib/components/streams/StreamPlayer.svelte'
 	import StreamChat from '$lib/components/streams/StreamChat.svelte'
-	import { derived } from 'svelte/store'
 	import { onMount } from 'svelte'
 	import { SvelteSet } from 'svelte/reactivity'
 
 	const { players } = getAppManagerContext()
 
-	const onlineStreamers = derived(players, ($players) => {
-		return $players.filter((player) => player.is_online && hasStream(player))
-	})
+	const onlineStreamers = $derived(
+		players.filter((player) => player.is_online && hasStream(player))
+	)
 
 	let expandedStreamId = $state<string | null>(null)
 	let showChat = $state(true)
@@ -24,7 +23,7 @@
 	let previousStreams = new Set<string>()
 
 	$effect(() => {
-		const currentOnlineIds = new Set($onlineStreamers.map((player) => player.slug))
+		const currentOnlineIds = new Set(onlineStreamers.map((player) => player.slug))
 		const newPlayers = Array.from(currentOnlineIds).filter((id) => !previousStreams.has(id))
 
 		if (previousStreams.size > 0 && newPlayers.length > 0) {
@@ -36,7 +35,7 @@
 
 	$effect(() => {
 		if (showAllPlayers) {
-			visiblePlayers = new Set($onlineStreamers.map((player) => player.slug))
+			visiblePlayers = new Set(onlineStreamers.map((player) => player.slug))
 		}
 	})
 
@@ -48,7 +47,7 @@
 	})
 
 	const filteredStreamers = $derived(
-		$onlineStreamers.filter((player) => showAllPlayers || visiblePlayers.has(player.slug))
+		onlineStreamers.filter((player) => showAllPlayers || visiblePlayers.has(player.slug))
 	)
 
 	const expandedStreamIndex = $derived(
@@ -130,7 +129,7 @@
 				return
 			}
 
-			const expandedElementIndex = $onlineStreamers.findIndex((p) => p.slug === expandedPlayer.slug)
+			const expandedElementIndex = onlineStreamers.findIndex((p) => p.slug === expandedPlayer.slug)
 			const expandedElement = streamRefs[expandedElementIndex]
 			const container = containerRef
 
@@ -147,7 +146,7 @@
 					.filter((i) => i !== expandedStreamIndex)
 					.map((i) => {
 						const player = filteredStreamers[i]
-						const refIndex = $onlineStreamers.findIndex((p) => p.slug === player.slug)
+						const refIndex = onlineStreamers.findIndex((p) => p.slug === player.slug)
 						const element = streamRefs[refIndex]
 						return element && visiblePlayers.has(player.slug) ? element : null
 					})
@@ -218,11 +217,11 @@
 	})
 
 	onMount(() => {
-		visiblePlayers = new Set($onlineStreamers.map((player) => player.slug))
+		visiblePlayers = new Set(onlineStreamers.map((player) => player.slug))
 	})
 </script>
 
-{#if $onlineStreamers.length === 0}
+{#if onlineStreamers.length === 0}
 	<div class="fixed inset-0 z-[99999] overflow-auto bg-[#282828]">
 		<div class="container mx-auto px-4 py-8">
 			<button
@@ -257,7 +256,7 @@
 					>
 						Все онлайн
 					</button>
-					{#each $onlineStreamers as player (player.slug)}
+					{#each onlineStreamers as player (player.slug)}
 						<button
 							onclick={() => handleTogglePlayer(player.slug)}
 							class="rounded px-3 py-1.5 text-sm text-white transition-colors {visiblePlayers.has(
@@ -288,7 +287,7 @@
 		<div bind:this={containerRef} class="relative w-full">
 			<div class="grid gap-2" style="grid-template-columns: repeat({columnsCount}, 1fr)">
 				{#each filteredStreamers as player, index (player.slug)}
-					{@const refIndex = $onlineStreamers.findIndex((p) => p.slug === player.slug)}
+					{@const refIndex = onlineStreamers.findIndex((p) => p.slug === player.slug)}
 					<div bind:this={streamRefs[refIndex]} class="aspect-video">
 						<StreamPlayer
 							{player}

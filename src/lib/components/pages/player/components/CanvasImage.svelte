@@ -19,7 +19,6 @@
 	const { file, editable, centerX }: Props = $props()
 
 	const { canvasStore } = getAppManagerContext()
-	const { selectedImage, selectImage } = canvasStore
 
 	let image = $state<HTMLImageElement | undefined>(undefined)
 
@@ -72,7 +71,7 @@
 	})
 
 	function handleClick() {
-		selectImage(file)
+		canvasStore.selectImage(file)
 	}
 
 	function handleDragEnd(event: KonvaDragTransformEvent) {
@@ -112,7 +111,7 @@
 	}
 
 	const borderColor = $derived.by(() => {
-		if ($selectedImage?.id === file.id) {
+		if (canvasStore.selectedImage?.id === file.id) {
 			return 'purple'
 		}
 		if (file.attach_move_id) {
@@ -136,7 +135,7 @@
 	draggable={editable}
 	onclick={handleClick}
 	ondragend={handleDragEnd}
-	ondragstart={() => selectImage(file)}
+	ondragstart={() => canvasStore.selectImage(file)}
 	ontransformend={handleTransformEnd}
 />
 
@@ -145,7 +144,7 @@
 		bind:this={transformer}
 		flipEnabled
 		borderStroke={borderColor}
-		borderStrokeWidth={$selectedImage?.id === file.id ? 6 : 3}
+		borderStrokeWidth={canvasStore.selectedImage?.id === file.id ? 6 : 3}
 		rotationSnaps={[0, 90, 180, 270, 45, -45, 135, 225]}
 		rotationSnapTolerance={5}
 		anchorCornerRadius={50}

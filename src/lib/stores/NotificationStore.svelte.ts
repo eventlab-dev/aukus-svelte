@@ -1,40 +1,37 @@
-import { derived, writable } from 'svelte/store'
-import type { EventDataStore } from './EventDataStore.svelte'
 import type { AchievementItem, UnlockedAchievementItem } from '$lib/heyapi/aukus/types.gen'
+import { SvelteMap } from 'svelte/reactivity'
 
 type PersonalAchievement = AchievementItem & { is_first: boolean }
 
-export function createNotificationStore({ eventDataStore }: { eventDataStore: EventDataStore }) {
-	const unlockedAchievements = writable<UnlockedAchievementItem[]>([])
+type Params = {
+	getAchievementsById: () => SvelteMap<number, AchievementItem>
+}
 
-	const { achievementsById } = eventDataStore
+export class NotificationStore {
+	constructor(params: Params) {
+		this.getAchievementsById = params.getAchievementsById
+	}
 
-	const achievements = derived(
-		[achievementsById, unlockedAchievements],
-		([$achievementsById, $unlockedAchievements]) => {
-			return $unlockedAchievements
-				.map((a) => {
-					const achievement = $achievementsById.get(a.id)
-					if (!achievement) {
-						return null
-					}
-					return { ...achievement, is_first: a.is_first }
-				})
-				.filter((a) => !!a) as PersonalAchievement[]
-		}
+	getAchievementsById: () => SvelteMap<number, AchievementItem>
+
+	unlockedAchievements = $state<UnlockedAchievementItem[]>([])
+	achievements = $derived(
+		this.unlockedAchievements
+			.map((a) => {
+				const achievement = this.getAchievementsById().get(a.id)
+				if (!achievement) {
+					return null
+				}
+				return { ...achievement, is_first: a.is_first }
+			})
+			.filter((a) => !!a) as PersonalAchievement[]
 	)
 
-	function notify(items: UnlockedAchievementItem[]) {
-		unlockedAchievements.set(items)
+	notify(items: UnlockedAchievementItem[]) {
+		this.unlockedAchievements = items
 	}
 
-	function hideNotification(id: number) {
-		unlockedAchievements.update((ids) => ids.filter((i) => i.id !== id))
-	}
-
-	return {
-		achievements,
-		notify,
-		hideNotification
+	hideNotification(id: number) {
+		this.unlockedAchievements = this.unlockedAchievements.filter((i) => i.id !== id)
 	}
 }

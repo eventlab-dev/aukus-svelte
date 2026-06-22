@@ -4,19 +4,17 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	const { shitStore, eventDataStore } = getAppManagerContext()
-	const { addShit } = shitStore
-	const { eventDataQuery } = eventDataStore
 
 	let open = $state(false)
 
 	async function onclick() {
-		await $addShit.mutateAsync({
+		await shitStore.addShitQuery.mutateAsync({
 			body: {
 				amount: 1
 			}
 		})
 		open = false
-		$eventDataQuery.refetch()
+		eventDataStore.eventDataQuery.refetch()
 	}
 </script>
 
@@ -27,7 +25,7 @@
 	<DialogContent>
 		<DialogHeader class="text-3xl">Получить стак подсёра за донатгол в 5000₽?</DialogHeader>
 		<div class="mt-10 flex justify-center">
-			<Button class="w-100" {onclick} loading={$addShit.isPending}>Да</Button>
+			<Button class="w-100" {onclick} loading={shitStore.addShitQuery.isPending}>Да</Button>
 		</div>
 	</DialogContent>
 </Dialog>

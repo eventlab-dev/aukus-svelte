@@ -5,8 +5,7 @@
 	import Footer from './Footer.svelte'
 	import Navigation from './Navigation.svelte'
 	import QuickMenu from './quickMenu/QuickMenu.svelte'
-	import { createAppManager } from '$lib/stores/AppManager.svelte'
-	import { setAppManagerContext } from '$lib/contexts/appManagerContext'
+	import { AppManager, setAppManager } from '$lib/stores/AppManager.svelte'
 	import { onMount } from 'svelte'
 	import PlayersList from './player/PlayersList.svelte'
 	import MobilePage from './mobile/MobilePage.svelte'
@@ -21,8 +20,8 @@
 
 	let { children } = $props()
 
-	const appManager = createAppManager()
-	setAppManagerContext(appManager)
+	const appManager = new AppManager()
+	setAppManager(appManager)
 
 	initializeClientInterceptors()
 

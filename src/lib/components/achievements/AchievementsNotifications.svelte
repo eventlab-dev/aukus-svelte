@@ -7,18 +7,18 @@
 	import { Dialog, DialogClose, DialogContent } from '../ui/dialog'
 
 	const { notificationStore, eventDataStore } = getAppManagerContext()
-	const { achievements, hideNotification } = notificationStore
-	const { skinsById } = eventDataStore
+	// const { achievements, hideNotification } = notificationStore
+	// const { skinsById } = eventDataStore
 
-	const achievement = $derived<(typeof $achievements)[0] | undefined>($achievements[0])
+	const achievement = $derived(notificationStore.achievements[0])
 
-	const skin = $derived(achievement ? $skinsById.get(achievement.reward_skin_id) : null)
+	const skin = $derived(achievement ? eventDataStore.skinsById.get(achievement.reward_skin_id) : null)
 
 	let buttonText = $state(getConfirmationText())
 
 	const handleOpenChange = (isOpen: boolean) => {
 		if (!isOpen && achievement) {
-			hideNotification(achievement.id)
+			notificationStore.hideNotification(achievement.id)
 			buttonText = getConfirmationText()
 		}
 	}

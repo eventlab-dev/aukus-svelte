@@ -42,9 +42,9 @@
 	const { usersStore, eventDataStore, myPlayer, frontendState, eventActive, gameTimeStore } =
 		getAppManagerContext()
 
-	const { saveMoveForm } = usersStore
-	const { eventDataQuery } = eventDataStore
-	const { hltbMatch, gameTitle: timeSearchTitle, categoryDuration, hltbLink } = gameTimeStore
+	// const { saveMoveForm } = usersStore
+	// const { eventDataQuery } = eventDataStore
+	// const { hltbMatch, gameTitle: timeSearchTitle, categoryDuration, hltbLink } = gameTimeStore
 
 	// $inspect('match', $hltbMatch)
 
@@ -65,9 +65,9 @@
 
 	$effect(() => {
 		if (selectedGame) {
-			timeSearchTitle.set(selectedGame.name)
+			gameTimeStore.gameTitle = selectedGame.name
 		} else if (form.title) {
-			timeSearchTitle.set(form.title)
+			gameTimeStore.gameTitle = form.title
 		}
 	})
 
@@ -105,7 +105,7 @@
 			}
 		}
 
-		if ($myPlayer?.map_position === LastMapPosition) {
+		if (myPlayer?.map_position === LastMapPosition) {
 			return {
 				isFormFilled: true,
 				buttonText: 'Победить в АУКУСЕ 4',
@@ -144,7 +144,7 @@
 			}
 		}
 
-		await $saveMoveForm.mutateAsync({
+		await usersStore.saveMoveForm.mutateAsync({
 			body: {
 				type: form.status!,
 				item_review: form.review,
@@ -161,7 +161,7 @@
 
 		isDialogOpen = false
 
-		$eventDataQuery.refetch()
+		eventDataStore.eventDataQuery.refetch()
 
 		setTimeout(() => {
 			form = {
@@ -191,13 +191,13 @@
 	})
 
 	$effect(() => {
-		form.title
-		form.status
-		form.finalTime
-		form.rating
-		form.review
-		form.difficulty
-		selectedGame
+		void form.title
+		void form.status
+		void form.finalTime
+		void form.rating
+		void form.review
+		void form.difficulty
+		void selectedGame
 		bypassClickCount = 0
 	})
 </script>
@@ -205,13 +205,13 @@
 <Dialog bind:open={isDialogOpen}>
 	<DialogTrigger>
 		{#snippet child({ props })}
-			<Button {...props} class="w-80" disabled={!$eventActive}>Сделать ход</Button>
+			<Button {...props} class="w-80" disabled={!eventActive}>Сделать ход</Button>
 		{/snippet}
 	</DialogTrigger>
 	<DialogContent class="gap-3 overflow-hidden p-3 sm:max-w-[800px]" showCloseButton={false}>
 		<DialogHeader>
 			<DialogTitle aria-describedby="move form">
-				Новый ход — {form.title || $myPlayer?.current_game}
+				Новый ход — {form.title || myPlayer?.current_game}
 			</DialogTitle>
 		</DialogHeader>
 
@@ -227,7 +227,7 @@
 				</div>
 
 				<div class="flex gap-3">
-					<GameStatusSelector gameDuration={$categoryDuration} bind:value={form.status} />
+					<GameStatusSelector gameDuration={gameTimeStore.categoryDuration} bind:value={form.status} />
 					<DifficultySelector bind:value={form.difficulty} />
 				</div>
 
@@ -235,8 +235,8 @@
 					<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
 						<div>Мое время</div>
 						<div>
-							{#if $categoryDuration}
-								{formatMs($categoryDuration * 1000, { noDays: true })}
+							{#if gameTimeStore.categoryDuration}
+								{formatMs(gameTimeStore.categoryDuration * 1000, { noDays: true })}
 							{:else}
 								не найдено
 							{/if}
@@ -248,13 +248,13 @@
 							class="h-fit p-0"
 							target="_blank"
 							rel="noopener noreferrer"
-							href={$hltbLink}
+							href={gameTimeStore.hltbLink}
 						>
 							Время по HLTB
 						</Button>
 						<div>
-							{#if $hltbMatch?.comp_main}
-								{formatMs($hltbMatch.comp_main * 1000, { noDays: true })}
+							{#if gameTimeStore.hltbMatch?.comp_main}
+								{formatMs(gameTimeStore.hltbMatch.comp_main * 1000, { noDays: true })}
 							{:else}
 								не найдено
 							{/if}
@@ -263,7 +263,7 @@
 					<div class="flex flex-1 flex-col gap-2">
 						<div>
 							Итоговое время
-							{#if $categoryDuration && $hltbMatch?.comp_main}
+							{#if gameTimeStore.categoryDuration && gameTimeStore.hltbMatch?.comp_main}
 								(само)
 							{:else}
 								(выбери)
@@ -272,8 +272,8 @@
 						<FinalTimeSelector
 							bind:value={form.finalTime}
 							bind:isInvalid={isFinalTimeInvalid}
-							gameDuration={$categoryDuration}
-							hltbTime={$hltbMatch?.comp_main}
+							gameDuration={gameTimeStore.categoryDuration}
+							hltbTime={gameTimeStore.hltbMatch?.comp_main}
 							disabled={form.status !== 'completed'}
 						/>
 					</div>
@@ -343,7 +343,7 @@
 							class="w-full"
 							disabled={!isFormFilled}
 							onclick={saveReview}
-							loading={$saveMoveForm.isPending}
+							loading={usersStore.saveMoveForm.isPending}
 						>
 							<BoxIcon />
 							{buttonText}

@@ -1,27 +1,19 @@
-import { derived, writable } from 'svelte/store'
-
-export function createNowStore() {
-	const nowMs = writable(Date.now())
-
-	let interval: ReturnType<typeof setInterval>
-
-	if (typeof window !== 'undefined') {
-		interval = setInterval(() => {
-			nowMs.set(Date.now())
-		}, 1000)
-	}
-
-	const cleanup = () => {
-		if (interval) {
-			clearInterval(interval)
-		}
-	}
-
-	const nowSeconds = derived(nowMs, ($nowMs) => Math.floor($nowMs / 1000))
-
-	return {
-		nowMs,
-		nowSeconds,
-		cleanup
-	}
+export class NowStore {
+   nowMs = $state(Date.now())
+   nowSeconds = $derived(Math.floor(this.nowMs / 1000))
+   interval: ReturnType<typeof setInterval> | null = null
+   
+   constructor() {
+      if (typeof window !== 'undefined') {
+         this.interval = setInterval(() => {
+            this.nowMs = Date.now()
+         }, 1000)
+      }
+   }
+   
+   destroy() {
+      if (this.interval) {
+         clearInterval(this.interval)
+      }
+   }
 }

@@ -39,7 +39,7 @@
 	})
 
 	function handleClick() {
-		movementStore.selectedPlayer.set(null)
+		movementStore.selectedPlayer = null
 	}
 
 	const options: FireworksOptions = {
@@ -224,13 +224,13 @@ init arrow 70 270 510 210
 			style="transform: scale({mapScale}); transform-origin: top left;"
 		>
 			<MovementMarkers />
-			{#each $players as player (player.slug)}
+			{#each players as player (player.slug)}
 				{#if player.map_position !== 102}
 					<PlayerCharacter {player} />
 				{/if}
 			{/each}
 
-			{#each $winners as player (player.slug)}
+			{#each winners as player (player.slug)}
 				<PlayerCharacter {player} asWinner />
 			{/each}
 		</div>

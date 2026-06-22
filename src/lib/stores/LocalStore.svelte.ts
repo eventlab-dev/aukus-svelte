@@ -1,45 +1,68 @@
-import { browser } from '$app/environment'
-import { writable } from 'svelte/store'
+import { untrack } from 'svelte'
 
-export function createLocalStore<T>(key: string, defaultValue: T) {
-	const storageValue = writable<T>(defaultValue)
-	const localValue = writable<T>(defaultValue)
+let StoreIdCounter = 0
 
-	const eventKey = `storage-save-${key}`
+function getStoreId() {
+  StoreIdCounter += 1
+  return StoreIdCounter
+}
 
-	if (browser) {
-		function updateLocalValue() {
-			const savedValue = localStorage.getItem(key)
-			console.log('updating from localStorage', key, savedValue)
-			if (savedValue) {
-				try {
-					localValue.set(JSON.parse(savedValue))
-				} catch {
-					localValue.set(defaultValue)
-				}
-			} else {
-				localValue.set(defaultValue)
-			}
-		}
+type CustomEventData<T> = {
+  value: T
+  emitterId: number
+}
 
-		window.addEventListener(eventKey, () => {
-			updateLocalValue()
-		})
+class _LocalStore<T> {
+  key: string
+  value = $state<T>() as T
+  _storeId: number
 
-		storageValue.subscribe((val) => {
-			console.log('saving to localStorage', key, val)
-			if (val === null) {
-				localStorage.removeItem(key)
-			} else {
-				localStorage.setItem(key, JSON.stringify(val))
-			}
-			window.dispatchEvent(new CustomEvent(eventKey))
-		})
-	}
+  constructor(key: string, defaultValue: T | null = null) {
+    this.key = key
+    this.value = this.loadValue(key, defaultValue)
+    this._storeId = getStoreId()
 
-	return {
-		subscribe: localValue.subscribe,
-		set: storageValue.set,
-		update: storageValue.update
-	}
+    window.addEventListener(`localStore:${key}`, (event: Event) => {
+      const customEvent = event as CustomEvent<CustomEventData<T>>
+      if (customEvent.detail.emitterId !== this._storeId) {
+        untrack(() => {
+          this.value = customEvent.detail.value
+        })
+      }
+    })
+
+    $effect(() => {
+      const value = this.value
+
+      localStorage.setItem(this.key, JSON.stringify(value))
+      window.dispatchEvent(
+        new CustomEvent<CustomEventData<T>>(`localStore:${this.key}`, {
+          detail: {
+            emitterId: this._storeId,
+            value,
+          },
+        }),
+      )
+    })
+  }
+
+  loadValue(key: string, defaultValue: T | null): T {
+    const storedValue = localStorage.getItem(key)
+    if (storedValue !== null) {
+      try {
+        return JSON.parse(storedValue)
+      } catch (e) {
+        console.error(`Failed to parse stored value for key ${key}`, e)
+        return defaultValue as T
+      }
+    }
+    return defaultValue as T
+  }
+}
+
+export type LocalStore<T> = _LocalStore<T>
+
+export const LocalStore = _LocalStore as unknown as {
+  new <T>(key: string, defaultValue: T): LocalStore<T>
+  new <T>(key: string): LocalStore<T | null>
 }

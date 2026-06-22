@@ -8,125 +8,102 @@ import type { CanvasFile } from '$lib/heyapi/aukus/types.gen'
 import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query'
 import { SvelteSet } from 'svelte/reactivity'
-import { derived, get, writable } from 'svelte/store'
 
-export function createCanvasStore() {
-	const editMode = writable(false)
-	const selectedImageId = writable<number | null>(null)
-	const updatedImages = writable<CanvasFile[]>([])
-	const deletedImages = writable<number[]>([])
+export class CanvasStore {
+	editMode = $state(false)
+	selectedImageId = $state<number | null>(null)
+	updatedImages = $state<CanvasFile[]>([])
+	deletedImages = $state<number[]>([])
 
-	const playerSlug = writable('')
-	const queryClient = useQueryClient()
+	playerSlug = $state('')
+	queryClient = useQueryClient()
 
-	const canvasQuery = createQuery(
-		derived(playerSlug, ($playerSlug) => {
-			return getCanvasFilesApiCanvasPlayerSlugGetOptions({
-				baseUrl: AukusBaseUrl,
-				auth: defaultAuth,
-				path: { player_slug: $playerSlug }
-			})
+	canvasQuery = createQuery(() =>
+		getCanvasFilesApiCanvasPlayerSlugGetOptions({
+			baseUrl: AukusBaseUrl,
+			auth: defaultAuth,
+			path: { player_slug: this.playerSlug }
 		})
 	)
 
-	const updateCanvasMutation = createMutation(
+	updateCanvasMutation = createMutation(() =>
 		updateCanvasApiCanvasPlayerSlugUpdatePutMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const uploadImageMutation = createMutation(
+	uploadImageMutation = createMutation(() =>
 		uploadCanvasImageApiCanvasPlayerSlugUploadPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const savedImages = derived(canvasQuery, ($canvasQuery) => $canvasQuery.data?.files || [])
+	savedImages = $derived(this.canvasQuery.data?.files || [])
 
-	const displayImages = derived(
-		[savedImages, updatedImages, deletedImages],
-		([$savedImages, $updatedImages, $deletedImages]) => {
-			const updatedIds = new SvelteSet($updatedImages.map((img) => img.id))
-			const deletedIds = new SvelteSet($deletedImages)
-			const filteredSaved = $savedImages.filter(
-				(img) => !updatedIds.has(img.id) && !deletedIds.has(img.id)
-			)
-			return [...filteredSaved, ...$updatedImages]
-		}
+	displayImages = $derived.by(() => {
+		const updatedIds = new SvelteSet(this.updatedImages.map((img) => img.id))
+		const deletedIds = new SvelteSet(this.deletedImages)
+		const filteredSaved = this.savedImages.filter(
+			(img) => !updatedIds.has(img.id) && !deletedIds.has(img.id)
+		)
+		return [...filteredSaved, ...this.updatedImages]
+	})
+
+	selectedImage = $derived(
+		this.displayImages.find((img) => img.id === this.selectedImageId) || null
 	)
 
-	const selectedImage = derived(
-		[displayImages, selectedImageId],
-		([$displayImages, $selectedImageId]) =>
-			$displayImages.find((img) => img.id === $selectedImageId) || null
-	)
-
-	function selectImage(image: CanvasFile | null) {
-		selectedImageId.set(image?.id ?? null)
+	selectImage(image: CanvasFile | null) {
+		this.selectedImageId = image?.id ?? null
 	}
 
-	function deleteImage(imageId: number) {
-		updatedImages.update((images) => images.filter((img) => img.id !== imageId))
-		deletedImages.update((ids) => {
-			const filtered = ids.filter((id) => id !== imageId)
-			return [...filtered, imageId]
-		})
-		const currentSelected = get(selectedImage)
-		if (currentSelected?.id === imageId) {
-			selectedImageId.set(null)
+	deleteImage(imageId: number) {
+		this.updatedImages = this.updatedImages.filter((img) => img.id !== imageId)
+		this.deletedImages = [...this.deletedImages, imageId]
+		if (this.selectedImageId === imageId) {
+			this.selectedImageId = null
 		}
 	}
 
-	async function saveCanvasChanges() {
-		const _playerSlug = get(playerSlug)
-		const _updatedImages = get(updatedImages)
-		const _deletedImages = get(deletedImages)
-		
-		await get(updateCanvasMutation).mutateAsync({
+	async saveCanvasChanges() {
+		await this.updateCanvasMutation.mutateAsync({
 			body: {
-				files: _updatedImages,
-				delete_ids: _deletedImages
+				files: this.updatedImages,
+				delete_ids: this.deletedImages
 			},
-			path: { player_slug: _playerSlug }
+			path: { player_slug: this.playerSlug }
 		})
-		
-		await queryClient.invalidateQueries({
+
+		await this.queryClient.invalidateQueries({
 			queryKey: getCanvasFilesApiCanvasPlayerSlugGetOptions({
 				baseUrl: AukusBaseUrl,
 				auth: defaultAuth,
-				path: { player_slug: _playerSlug }
+				path: { player_slug: this.playerSlug }
 			}).queryKey
 		})
-		
-		await get(canvasQuery).refetch()
-		
-		discardCanvasChanges()
+
+		await this.canvasQuery.refetch()
+
+		this.discardCanvasChanges()
 	}
 
-	function discardCanvasChanges() {
-		updatedImages.set([])
-		deletedImages.set([])
+	discardCanvasChanges() {
+		this.updatedImages = []
+		this.deletedImages = []
 	}
 
-	function updateImage(img: CanvasFile) {
-		updatedImages.update((images) => {
-			const index = images.findIndex((i) => i.id === img.id)
-			if (index !== -1) {
-				images[index] = img
-			} else {
-				images.push(img)
-			}
-			return images
-		})
+	updateImage(img: CanvasFile) {
+		this.updatedImages = this.updatedImages.filter((image) => image.id !== img.id)
+		this.updatedImages.push(img)
 	}
 
-	const canvasWidth = derived(displayImages, ($displayImages) => {
+	canvasWidth = $derived.by(() => {
 		return 2500
 		let maxLeftX = 0
 		let maxRightX = 0
-		for (const img of $displayImages) {
+		for (const img of this.displayImages) {
 			if (img.x < 0) {
 				if (-img.x > maxLeftX) {
 					maxLeftX = -img.x
@@ -140,21 +117,4 @@ export function createCanvasStore() {
 		}
 		return Math.max(maxLeftX, maxRightX) * 2
 	})
-
-	return {
-		playerSlug,
-		canvasQuery,
-		updatedImages,
-		updateImage,
-		uploadImageMutation,
-		editMode,
-		selectImage,
-		selectedImage,
-		displayImages,
-		deleteImage,
-		updateCanvasMutation,
-		saveCanvasChanges,
-		discardCanvasChanges,
-		canvasWidth
-	}
 }

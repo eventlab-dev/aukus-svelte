@@ -27,20 +27,18 @@
 		frontendState,
 		mapStore
 	} = getAppManagerContext()
-	const { playersBySlug } = eventDataStore
-	const { selectedPlayer, hoveredPlayer } = movementStore
 
 	let element: HTMLDivElement
 
 	const startWinAnimation = $derived(
-		player.slug === $myPlayer?.slug &&
+		player.slug === myPlayer?.slug &&
 			player.map_position === 102 &&
-			$turnState === 'player-win-animation'
+			turnState === 'player-win-animation'
 	)
 
 	$effect(() => {
 		if (startWinAnimation && element) {
-			const position = $playersCompletedMap.findIndex((p) => p.slug === player.slug) + 1
+			const position = playersCompletedMap.findIndex((p) => p.slug === player.slug) + 1
 			movementStore.moveToWinPosition({ playerSlug: player.slug, position }).then(() => {
 				frontendState.set('event-completed')
 			})
@@ -48,13 +46,13 @@
 	})
 
 	const playersOnCell = $derived(
-		$players
+		players
 			.filter((p) => p.map_position === player.map_position)
 			.sort((a, b) => a.slug.localeCompare(b.slug))
 	)
 
 	const doWinJumpAnimation = $derived(
-		(asWinner && $winners[0]?.slug === player.slug) || $playersCompletedMap[0]?.slug === player.slug
+		(asWinner && winners[0]?.slug === player.slug) || playersCompletedMap[0]?.slug === player.slug
 	)
 
 	const {
@@ -63,7 +61,7 @@
 		cellPosition,
 		onlyName
 	} = $derived.by(() => {
-		const winnerIndex = $winners.findIndex((p) => p.slug === player.slug)
+		const winnerIndex = winners.findIndex((p) => p.slug === player.slug)
 
 		if (winnerIndex !== -1) {
 			// if (asWinner) {
@@ -109,24 +107,24 @@
 	const finalLeft = $derived(cellPosition.centerX)
 
 	$effect(() => {
-		if (element && $turnState === 'selecting-dice' && player.slug === $myPlayer?.slug) {
+		if (element && turnState === 'selecting-dice' && player.slug === myPlayer?.slug) {
 			element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
 		}
 	})
 
 	$effect(() => {
-		if (element && $hoveredPlayer === player.slug) {
+		if (element && movementStore.hoveredPlayer === player.slug) {
 			element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
 		}
 	})
 
-	const isHighlighted = $derived($hoveredPlayer === player.slug)
+	const isHighlighted = $derived(movementStore.hoveredPlayer === player.slug)
 
 	const onCharacterClick = (e: MouseEvent) => {
-		if ($selectedPlayer?.slug === player.slug) {
-			selectedPlayer.set(null)
+		if (movementStore.selectedPlayer?.slug === player.slug) {
+			movementStore.selectedPlayer = null
 		} else {
-			selectedPlayer.set(player)
+			movementStore.selectedPlayer = player
 		}
 		e.stopPropagation()
 	}
@@ -135,7 +133,7 @@
 		movementStore.registerPlayer(player.slug, element)
 		// @ts-expect-error - for debugging purposes
 		window.movePlayer = async (slug: string, steps: number) => {
-			const player = $playersBySlug.get(slug)
+			const player = eventDataStore.playersBySlug.get(slug)
 			if (!player) {
 				console.warn('Player not found', slug)
 				return
@@ -174,7 +172,7 @@
 		onclick={onCharacterClick}
 		class="relative isolate cursor-pointer
         rounded-full transition data-[active=false]:hover:bg-yellow-200/80 data-[active=true]:bg-yellow-200/80 data-[highlighted=true]:bg-yellow-200/90 data-[highlighted=true]:ring-4 data-[highlighted=true]:ring-yellow-400"
-		data-active={$selectedPlayer?.slug === player.slug}
+		data-active={movementStore.selectedPlayer?.slug === player.slug}
 		data-highlighted={isHighlighted}
 	>
 		{#if onlyName}

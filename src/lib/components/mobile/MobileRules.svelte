@@ -9,15 +9,15 @@
 
 	let category = $state<RulesCategory>('general')
 
-	const rulesQuery = createQuery(
+	const rulesQuery = createQuery(() =>
 		getCurrentRulesVersionApiRulesCurrentGetOptions({ baseUrl: AukusBaseUrl })
 	)
 
 	const defaultRuleValue = JSON.stringify('<h3><u>Правила не найдены</u></h3>')
 
 	const { generalRules, donationsRules } = $derived.by(() => {
-		const general = $rulesQuery.data?.versions.find((v) => v.category === 'general')?.content
-		const donations = $rulesQuery.data?.versions.find((v) => v.category === 'donations')?.content
+		const general = rulesQuery.data?.versions.find((v) => v.category === 'general')?.content
+		const donations = rulesQuery.data?.versions.find((v) => v.category === 'donations')?.content
 		return {
 			generalRules: general || defaultRuleValue,
 			donationsRules: donations || defaultRuleValue
@@ -50,7 +50,7 @@
 	</Button>
 </div>
 
-{#if $rulesQuery.isLoading}
+{#if rulesQuery.isLoading}
 	<Loader class="inline size-10" />
 {:else}
 	<TiptapEditor

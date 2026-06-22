@@ -18,7 +18,7 @@
 
 	const { playersBySlug } = getAppManagerContext()
 
-	const player = $derived($playersBySlug[game.player_name.toLowerCase()])
+	const player = $derived(playersBySlug.get(game.player_name.toLowerCase()))
 	const categoryDuration = $derived(formatDuration(game.game_time))
 
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))

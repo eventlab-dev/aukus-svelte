@@ -9,11 +9,9 @@
 	import Gift from '@lucide/svelte/icons/gift'
 
 	const { usersStore, myPlayer, eventDataStore } = getAppManagerContext()
-	const { unlockableSkins, unlockableSkinsQuery, unlockSkinQuery } = usersStore
-	const { eventDataQuery } = eventDataStore
 
 	const rollOptions: WeightedOption<SkinItem>[] = $derived(
-		$unlockableSkins.map((s) => ({
+		usersStore.unlockableSkins.map((s) => ({
 			label: '',
 			weight: 1,
 			value: s.id.toString(),
@@ -31,13 +29,13 @@
 
 	function handleClose() {
 		isOpen = false
-		$eventDataQuery.refetch()
-		$unlockableSkinsQuery.refetch()
+		eventDataStore.eventDataQuery.refetch()
+		usersStore.unlockableSkinsQuery.refetch()
 		finishText = getConfirmationText()
 	}
 
 	async function handleRollFinish(winner: WeightedOption<SkinItem>) {
-		await $unlockSkinQuery.mutateAsync({
+		await usersStore.unlockSkinQuery.mutateAsync({
 			body: {
 				skin_id: Number(winner.value)
 			}
@@ -45,17 +43,17 @@
 	}
 </script>
 
-{#if $myPlayer}
+{#if myPlayer}
 	<Button
 		onclick={handleClick}
-		data-active={$myPlayer.skin_rolls > 0}
+		data-active={myPlayer.skin_rolls > 0}
 		class="data-[active=true]:bg-primary"
 	>
 		<Gift />
-		Ролл скинов ({$myPlayer.skin_rolls})
+		Ролл скинов ({myPlayer.skin_rolls})
 	</Button>
 
-	{#if $myPlayer.skin_rolls === 0}
+	{#if myPlayer.skin_rolls === 0}
 		<Dialog open={isOpen} onOpenChange={handleClose}>
 			<DialogContent>
 				<div class="p-2 text-3xl">Проходи игры чтобы получить роллы скинов!</div>

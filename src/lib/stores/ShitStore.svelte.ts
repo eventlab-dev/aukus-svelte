@@ -7,31 +7,26 @@ import {
 import { defaultAuth } from '$lib/utils'
 import { createMutation } from '@tanstack/svelte-query'
 
-export function createShitStore() {
-	const addShit = createMutation(
+export class ShitStore {
+	addShitQuery = createMutation(() =>
 		addShitApiPlayersAddShitPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const makeShield = createMutation(
+	makeShieldQuery = createMutation(() =>
 		makeShieldApiPlayersMakeShieldPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const kickPlayer = createMutation(
+	kickPlayerQuery = createMutation(() =>
 		kickPlayerApiPlayersKickPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
-
-	return {
-		addShit,
-		makeShield,
-		kickPlayer
-	}
 }
+

@@ -54,13 +54,13 @@
 		].sort((a, b) => a.name.localeCompare(b.name))
 	]
 
-	const sponsorsQuery = createQuery(
+	const sponsorsQuery = createQuery(() =>
 		getDonationsApiDonationsGetOptions({
 			baseUrl: AukusBaseUrl
 		})
 	)
 
-	const sponsors = $derived($sponsorsQuery.data?.donations ?? [])
+	const sponsors = $derived(sponsorsQuery.data?.donations ?? [])
 
 	function openLink(link: 'boosty' | 'tg' | 'eventlab') {
 		let url = ''
@@ -79,14 +79,15 @@
 	<div class="mt-[50px]">
 		<div class="text-5xl font-bold">Разработчиков можно поддержать на Boosty</div>
 		<div class="my-[40px] flex flex-col gap-4">
-			<Button class=" bg-[#FF881E]" onclick={() => openLink('boosty')}
-				>-> Поддержать на бусти</Button
-			>
-			<Button class="flex-1" variant="secondary" onclick={() => openLink('tg')}>Наш телеграм</Button
-			>
-			<Button class="flex-1" variant="secondary" onclick={() => openLink('eventlab')}
-				>Сайт EventLab</Button
-			>
+			<Button class=" bg-[#FF881E]" onclick={() => openLink('boosty')}>
+				Поддержать на бусти
+			</Button>
+			<Button class="flex-1" variant="secondary" onclick={() => openLink('tg')}>
+				Наш телеграм
+			</Button>
+			<Button class="flex-1" variant="secondary" onclick={() => openLink('eventlab')}>
+				Сайт EventLab
+			</Button>
 		</div>
 		<div>
 			<div class="text-4xl font-bold">Наши спонсоры</div>
@@ -119,21 +120,25 @@
 						class="p-0 text-foreground underline"
 						href="https://www.youtube.com/@quznecYoutube/videos"
 						target="_blank"
-						rel="noopener noreferrer"
-					>quznec</Button>, <Button
+						rel="noopener noreferrer">
+						Quznec
+					</Button>, <Button
 						variant="link"
 						class="p-0 text-foreground underline"
 						href="https://www.youtube.com/@strimuska"
 						target="_blank"
-						rel="noopener noreferrer"
-					>стримушка</Button>
+						rel="noopener noreferrer">
+						Стримушка
+					</Button>
 				</span>
 			</div>
 			<div class="mt-[40px] text-4xl font-bold">Команда разработчиков</div>
 			<div class="mt-[20px] flex flex-col gap-5">
 				{#each developers as developer (developer.name)}
 					<span>
-						<strong class={developer.isFounder ? 'text-[#FF881E]' : ''}>{developer.name}</strong> — {developer.description}
+						<strong class={developer.isFounder ? 'text-[#FF881E]' : ''}>
+							{developer.name}
+						</strong> — {developer.description}
 					</span>
 				{/each}
 			</div>

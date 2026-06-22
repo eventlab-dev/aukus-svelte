@@ -4,6 +4,8 @@
 
 	const { playersInOrder } = getAppManagerContext()
 
+	$inspect("players", playersInOrder)
+
 	function currentMskTime() {
 		const date = new Date()
 		return date.toLocaleTimeString('ru-RU', {
@@ -25,9 +27,9 @@
 	})
 </script>
 
-{#key $playersInOrder.length}
+{#key playersInOrder.length}
 	<div class="flex flex-col gap-[6px]">
-		{#each $playersInOrder as player (player.slug)}
+		{#each playersInOrder as player (player.slug)}
 			<PlayerCard {player} />
 		{/each}
 	</div>

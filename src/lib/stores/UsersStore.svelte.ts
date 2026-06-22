@@ -1,6 +1,5 @@
 import { goto } from '$app/navigation'
 import { AukusBaseUrl, EventlabBaseUrl } from '$lib/client'
-import { setTokenInvalidatedCallback } from '$lib/clientInterceptors'
 import {
 	createPlayerMoveApiPlayersMovePostMutation,
 	finishPlayerMoveApiPlayersMoveFinishPostMutation,
@@ -14,63 +13,46 @@ import {
 	loginApiLoginPostMutation,
 	makeDiceRollApiDiceRollsPostMutation
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
-import type { UserItem } from '$lib/heyapi/eventlab/types.gen'
 import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
-import { derived, get, writable } from 'svelte/store'
 
-export function createUsersStore() {
-	const accessToken = writable<string | null>(
+export class UsersStore {
+	accessToken = $state<string | null>(
 		typeof localStorage !== 'undefined' ? localStorage.getItem('auth_token') : null
 	)
 
-	setTokenInvalidatedCallback(() => {
-		accessToken.set(null)
-	})
+	myUserQuery = createQuery(() => ({
+		...fetchCurrentUserApiUsersCurrentGetOptions({
+			baseUrl: EventlabBaseUrl,
+			auth: defaultAuth
+		}),
+		retry: false,
+		enabled: Boolean(this.accessToken)
+	}))
 
-	const myUserQuery = createQuery(
-		derived(accessToken, ($token) => ({
-			...fetchCurrentUserApiUsersCurrentGetOptions({
-				baseUrl: EventlabBaseUrl,
-				auth: defaultAuth
-			}),
-			retry: false,
-			enabled: Boolean($token)
-		}))
-	)
+	loginMutation = createMutation(() => loginApiLoginPostMutation({ baseUrl: EventlabBaseUrl }))
 
-	const loginMutation = createMutation(loginApiLoginPostMutation({ baseUrl: EventlabBaseUrl }))
+	myUser = $derived(this.myUserQuery.data ?? null)
+	isAdmin = $derived(this.myUser?.roles.includes('admin') ?? false)
 
-	const myUser = derived([myUserQuery, accessToken], ([$query, $token]) => {
-		if ($query.isSuccess && $token) {
-			return $query.data
-		}
-		return null
-	})
+	loginError = $state<string | null>(null)
 
-	const isAdmin = derived(myUser, ($myUser) => $myUser?.roles.includes('admin'))
-
-	const loginError = writable<string | null>(null)
-
-	const login = (username: string, password: string) => {
-		loginError.set(null)
-		get(loginMutation)
+	login(username: string, password: string) {
+		this.loginError = null
+		this.loginMutation
 			.mutateAsync({ body: { username, password } })
 			.then((response) => {
 				if (response.token) {
 					localStorage.setItem('auth_token', response.token)
-					accessToken.set(response.token)
-					get(myUserQuery)
-						.refetch()
-						.then(() => {
-							goto('/')
-						})
+					this.accessToken = response.token
+					this.myUserQuery.refetch().then(() => {
+						goto('/')
+					})
 				}
 			})
 			.catch((error) => {
 				let statusCode = 0
-
 				if (error && typeof error === 'object') {
 					const errorObj = error as Record<string, unknown>
 					if ('response' in errorObj && errorObj.response instanceof Response) {
@@ -83,110 +65,68 @@ export function createUsersStore() {
 						? 'Неверный логин или пароль'
 						: `Неизвестная ошибка при входе (${statusCode})`
 
-				loginError.set(errorMessage)
+				this.loginError = errorMessage
 			})
 	}
 
-	const logout = () => {
+	logout() {
 		localStorage.removeItem('auth_token')
-		accessToken.set(null)
+		this.accessToken = null
+		this.myUserQuery.refetch()
 	}
 
-	const usersQuery = createQuery({
+	usersQuery = createQuery(() => ({
 		...getUsersApiUsersGetOptions({
 			baseUrl: EventlabBaseUrl,
 			query: { is_active: 1, events: ['aukus4'] }
 		}),
 		refetchInterval: 2 * 60 * 1000
-	})
+	}))
 
-	const cachedUsers = writable<UserItem[]>([])
+	users = $derived(this.usersQuery.data?.users ?? [])
+	usersBySlug = $derived(new SvelteMap(this.users.map((user) => [user.slug, user])))
 
-	usersQuery.subscribe(($query) => {
-		if ($query.isSuccess) {
-			cachedUsers.set($query.data.users)
-		}
-	})
-
-	const users = derived([usersQuery, cachedUsers], ([$query, $cachedUsers]) => {
-		if ($query.isSuccess) {
-			return $query.data.users
-		}
-		return $cachedUsers
-	})
-
-	const usersBySlug = derived(users, ($users) => {
-		const map = new SvelteMap<string, UserItem>()
-		$users.forEach((user) => {
-			map.set(user.slug, user)
-		})
-		return map
-	})
-
-	const saveMoveForm = createMutation(
+	saveMoveForm = createMutation(() => 
 		createPlayerMoveApiPlayersMovePostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const finishMove = createMutation(
+	finishMove = createMutation(() => 
 		finishPlayerMoveApiPlayersMoveFinishPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const rollDice = createMutation(
+	rollDice = createMutation(() => 
 		makeDiceRollApiDiceRollsPostMutation({
-			baseUrl: EventlabBaseUrl,
+			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const setSkins = createMutation(
+	setSkins = createMutation(() => 
 		setPlayerSkinsApiPlayersSkinsPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const unlockableSkinsQuery = createQuery(
+	unlockableSkinsQuery = createQuery(() => 	
 		getUnlockableSkinsApiPlayersUnlockableSkinsGetOptions({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
 
-	const unlockableSkins = derived(unlockableSkinsQuery, ($query) => $query.data?.skins ?? [])
+	unlockableSkins = $derived(this.unlockableSkinsQuery.data?.skins ?? [])
 
-	const unlockSkinQuery = createMutation(
+	unlockSkinQuery = createMutation(() =>
 		unlockSkinApiPlayersUnlockSkinPostMutation({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		})
 	)
-
-	return {
-		myUserQuery,
-		myUser,
-		isAdmin,
-		login,
-		loginMutation,
-		loginError,
-		logout,
-		users,
-		usersQuery,
-		usersBySlug,
-		saveMoveForm,
-		finishMove,
-		rollDice,
-		setSkins,
-		accessToken,
-		unlockableSkinsQuery,
-		unlockableSkins,
-		unlockSkinQuery
-	}
 }
-
-export type UsersStore = ReturnType<typeof createUsersStore>

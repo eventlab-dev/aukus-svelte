@@ -14,11 +14,10 @@
 	type MoveStatHeadersType = TableHeaderType<StatItem>[]
 
 	const { statsStore, playersInOrder } = getAppManagerContext()
-	const { statsBySlug } = statsStore
 
 	const statsWithPlayerInfo = $derived.by(() => {
-		return $playersInOrder.map((player, idx) => {
-			const playerStat = $statsBySlug[player.slug]
+		return playersInOrder.map((player, idx) => {
+			const playerStat = statsStore.statsBySlug.get(player.slug)!
 			return {
 				...player,
 				...playerStat,

@@ -19,13 +19,11 @@
 	import SkinRollerMenu from './options/SkinRollerMenu.svelte'
 	import Timelapse from './options/timelapse/Timelapse.svelte'
 	import WheelDialog from './options/WheelDialog.svelte'
-	import { createLocalStore } from '$lib/stores/LocalStore.svelte'
+	import { LocalStore } from '$lib/stores/LocalStore.svelte'
 
 	const { usersStore, myPlayer, eventFinished } = getAppManagerContext()
 
-	const { myUser } = usersStore
-
-	const collapsed = createLocalStore('quickMenuCollapsed', false)
+	const collapsed = new LocalStore('quickMenuCollapsed', false)
 
 	let isTimelapseShown = $state(false)
 
@@ -55,15 +53,15 @@
 	// }
 </script>
 
-{#key [$myUser?.slug, $eventFinished]}
-	<Collapsible class="w-[260px]" bind:collapsed={$collapsed}>
+{#key [usersStore.myUser?.slug, eventFinished]}
+	<Collapsible class="w-[260px]" bind:collapsed={collapsed.value}>
 		<CollapsibleTrigger class="w-full">
-			{#if $myUser}
+			{#if usersStore.myUser}
 				<Avatar class="size-[27px]">
-					<AvatarImage src={$myUser.avatar_link || FALLBACK_AVATAR_URL} />
-					<AvatarFallback class="uppercase">{$myUser.username.slice(0, 2)}</AvatarFallback>
+					<AvatarImage src={usersStore.myUser.avatar_link || FALLBACK_AVATAR_URL} />
+					<AvatarFallback class="uppercase">{usersStore.myUser.username.slice(0, 2)}</AvatarFallback>
 				</Avatar>
-				{$myUser.username}
+				{usersStore.myUser.username}
 			{:else}
 				Быстрый доступ
 			{/if}
@@ -71,7 +69,7 @@
 
 		<CollapsibleContent>
 			<CollapsibleGroup>
-				{#if $eventFinished}
+				{#if eventFinished}
 					<Button class="bg-primary!" href="/presentation">
 						<WinIcon /> Итоги
 					</Button>
@@ -83,7 +81,7 @@
 				</Button>
 			</CollapsibleGroup>
 
-			{#if $myPlayer}
+			{#if myPlayer}
 				<CollapsibleGroup>
 					<SkinEditorDialog />
 					<SkinRollerMenu />
@@ -99,7 +97,7 @@
 				</Button>
 			</CollapsibleGroup> -->
 
-			{#if $myUser}
+			{#if usersStore.myUser}
 				<CollapsibleGroup>
 					<Button onclick={() => usersStore.logout()}><ProfileIcon />Выйти</Button>
 				</CollapsibleGroup>

@@ -53,17 +53,17 @@
 	</PageContainer>
 {/if}
 
-{#if $turnState === 'filling-form' && !$selectedPlayer}
+{#if turnState === 'filling-form' && !selectedPlayer}
 	<div class="sticky bottom-10 left-1/2 z-49 mt-10 flex w-fit -translate-x-1/2 justify-center">
 		<MoveForm />
 	</div>
 {/if}
 
-{#if $turnState === 'dice-animation' || $turnState === 'dice-results'}
+{#if turnState === 'dice-animation' || turnState === 'dice-results'}
 	<DiceAnimationPanel />
 {/if}
 
-{#if $turnState === 'selecting-dice' || $selectedPlayer}
+{#if turnState === 'selecting-dice' || selectedPlayer}
 	<div class="pointer-events-none sticky bottom-10 z-49 mt-10 flex justify-center">
 		<div class="pointer-events-auto flex">
 			<DicePanel />
@@ -71,7 +71,7 @@
 	</div>
 {/if}
 
-{#if $myPlayer}
+{#if myPlayer}
 	<AchievementsNotifications />
 {/if}
 

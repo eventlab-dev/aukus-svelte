@@ -13,8 +13,6 @@
 	import SkinPreview from './SkinPreview.svelte'
 
 	const { eventDataStore, myPlayer, usersStore } = getAppManagerContext()
-	const { skinsById, eventDataQuery } = eventDataStore
-	const { setSkins } = usersStore
 
 	let selectedSkins = $state<{ [k in SkinSlot]: number | null }>({
 		head: null,
@@ -39,15 +37,15 @@
 
 	const selectedSkinItems = $derived.by(() => {
 		return Object.values(selectedSkins)
-			.map((id) => (id ? $skinsById.get(id) : undefined))
+			.map((id) => (id ? eventDataStore.skinsById.get(id) : undefined))
 			.filter((s) => s !== undefined)
 	})
 
 	const equippedSkins = $derived.by(() => {
-		if (!$myPlayer) {
+		if (!myPlayer) {
 			return []
 		}
-		return $myPlayer.equipped_skins.map((id) => $skinsById.get(id)).filter((s) => s !== undefined)
+		return myPlayer.equipped_skins.map((id) => eventDataStore.skinsById.get(id)).filter((s) => s !== undefined)
 	})
 
 	const selectedDiceSkin = $derived(selectedSkinItems.find((s) => s.slot === 'dice'))
@@ -63,11 +61,11 @@
 	}
 
 	const availableSkins = $derived.by(() => {
-		if (!$myPlayer) {
+		if (!myPlayer) {
 			return []
 		}
-		const available = $myPlayer.available_skins
-			.map((id) => $skinsById.get(id))
+		const available = myPlayer.available_skins
+			.map((id) => eventDataStore.skinsById.get(id))
 			.filter((s) => s !== undefined)
 			.sort((a, b) => a.id - b.id)
 
@@ -100,8 +98,8 @@
 			) {
 				return
 			}
-			await $setSkins.mutateAsync({ body: { skin_ids: selectedSkinIds } })
-			await $eventDataQuery.refetch()
+			await usersStore.setSkins.mutateAsync({ body: { skin_ids: selectedSkinIds } })
+			await eventDataStore.eventDataQuery.refetch()
 		}
 	}
 </script>
@@ -114,8 +112,8 @@
 		</DialogHeader>
 		<div class="relative flex w-full justify-center">
 			<div class="relative w-fit">
-				{#if $myPlayer}
-					<PlayerModel player={$myPlayer} selectedSkins={selectedSkinItems} variant="big" />
+				{#if myPlayer}
+					<PlayerModel player={myPlayer} selectedSkins={selectedSkinItems} variant="big" />
 				{/if}
 			</div>
 			<div class="absolute right-30 bottom-5">

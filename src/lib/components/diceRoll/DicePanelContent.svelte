@@ -38,10 +38,6 @@
 		notificationStore,
 		statsStore
 	} = getAppManagerContext()
-	const { finishMove, rollDice } = usersStore
-	const { eventDataQuery } = eventDataStore
-	const { myMovementState } = movementStore
-	const { statsQuery } = statsStore
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions: Option[] = [
@@ -75,14 +71,14 @@
 			dice = player.map_position >= 81 ? '2d6' : '1d6'
 		}
 
-		const rollResult = await $rollDice.mutateAsync({
+		const rollResult = await usersStore.rollDice.mutateAsync({
 			body: {
 				dice,
 				used: true,
 				test_values: 'diceRoll' in window ? ((window.diceRoll as number[]) ?? []) : []
 			}
 		})
-		const moveParams = await $finishMove.mutateAsync({
+		const moveParams = await usersStore.finishMove.mutateAsync({
 			body: {
 				dice_roll_id: rollResult.id
 			}
@@ -91,7 +87,7 @@
 		const steps = moveParams.move_to - player.map_position
 		await movementStore.doRollAnimation(rollResult.roll_values, steps)
 		await movementStore.moveToCell({
-			playerSlug: $myPlayer!.slug,
+			playerSlug: myPlayer!.slug,
 			steps: steps,
 			moveResponse: moveParams,
 			updatePlayerPosition: true
@@ -100,8 +96,8 @@
 			await new Promise((resolve) => setTimeout(resolve, 500))
 			notificationStore.notify(moveParams.unlocked_achievements)
 		}
-		await $eventDataQuery.refetch()
-		await $statsQuery.refetch()
+		await eventDataStore.eventDataQuery.refetch()
+		await statsStore.statsQuery.refetch()
 		frontendState.set(null)
 	}
 
@@ -225,12 +221,12 @@
 	})
 
 	$effect(() => {
-		myMovementState.set({
+		movementStore.myMovementState = {
 			rollValues: [],
 			startCell: player.map_position,
 			steps: normalizeSteps(player.map_position, maxRoll),
 			minSteps: minRoll
-		})
+		}
 		// movementState.set({
 		// 	direction: 'forward',
 		// 	rollValues: [3, 5],
@@ -247,7 +243,7 @@
 		return '1d6'
 	}
 
-	const canKick = $derived(player.slug !== $myPlayer?.slug)
+	const canKick = $derived(player.slug !== myPlayer?.slug)
 </script>
 
 {#if canRollDice}
@@ -276,7 +272,7 @@
 		<Button
 			class="w-full"
 			onclick={handleThrowDice}
-			loading={$rollDice.isPending || $finishMove.isPending}
+			loading={usersStore.rollDice.isPending || usersStore.finishMove.isPending}
 		>
 			Бросить кубики — {selectedDiceOption === 'drop' ? dropDiceText() : selectedDiceOption}
 		</Button>

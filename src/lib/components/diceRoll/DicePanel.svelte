@@ -6,8 +6,6 @@
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
 	const { eventDataStore, movementStore, myPlayer, turnState, eventActive } = getAppManagerContext()
-	const { diceOptions } = eventDataStore
-	const { selectedPlayer } = movementStore
 
 	function diceOptionsForPosition(mapPosition: number): DiceOptionOrDrop[] {
 		if (mapPosition >= 81) {
@@ -17,21 +15,21 @@
 	}
 
 	const panelParams = $derived.by(() => {
-		if ($selectedPlayer) {
+		if (movementStore.selectedPlayer) {
 			return {
-				playerToShow: $selectedPlayer,
+				playerToShow: movementStore.selectedPlayer,
 				canRollDice: false,
-				diceOptinos: diceOptionsForPosition($selectedPlayer.map_position)
+				diceOptinos: diceOptionsForPosition(movementStore.selectedPlayer.map_position)
 			}
 		}
-		if ($myPlayer && $turnState === 'selecting-dice') {
-			let options: DiceOptionOrDrop[] = $diceOptions
-			if ($myPlayer.last_move?.type === 'drop' || $myPlayer.last_move?.type === 'sheikh_moment') {
+		if (myPlayer && turnState === 'selecting-dice') {
+			let options: DiceOptionOrDrop[] = eventDataStore.diceOptions
+			if (myPlayer.last_move?.type === 'drop' || myPlayer.last_move?.type === 'sheikh_moment') {
 				options = ['drop']
 			}
 			return {
-				playerToShow: $myPlayer,
-				canRollDice: $eventActive,
+				playerToShow: myPlayer,
+				canRollDice: eventActive,
 				diceOptinos: options
 			}
 		}

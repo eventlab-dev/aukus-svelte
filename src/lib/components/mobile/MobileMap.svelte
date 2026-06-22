@@ -20,7 +20,7 @@
 
 	const playersByPosition = $derived.by(() => {
 		const map = new SvelteMap<number, PlayerData[]>()
-		for (const player of $players) {
+		for (const player of players) {
 			if (!map.has(player.map_position)) {
 				map.set(player.map_position, [])
 			}
@@ -99,20 +99,20 @@
 			</div>
 			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
 				<div>1</div>
-				{#if $winners[0]}
-					{@render playerIcon($winners[0])}
+				{#if winners[0]}
+					{@render playerIcon(winners[0])}
 				{/if}
 			</div>
 			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
 				<div>2</div>
-				{#if $winners[1]}
-					{@render playerIcon($winners[1])}
+				{#if winners[1]}
+					{@render playerIcon(winners[1])}
 				{/if}
 			</div>
 			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
 				<div>3</div>
-				{#if $winners[2]}
-					{@render playerIcon($winners[2])}
+				{#if winners[2]}
+					{@render playerIcon(winners[2])}
 				{/if}
 			</div>
 		</div>

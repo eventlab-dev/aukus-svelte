@@ -11,16 +11,15 @@
 	const { achievement }: Props = $props()
 
 	const { eventDataStore, players, playersBySlug } = getAppManagerContext()
-	const { skinsById } = eventDataStore
 
-	const skin = $derived($skinsById.get(achievement.reward_skin_id))
+	const skin = $derived(eventDataStore.skinsById.get(achievement.reward_skin_id))
 
 	const playersWithAchievement = $derived(
-		$players.filter((player) => player.unlocked_achievements.find((a) => a.id === achievement.id))
+		players.filter((player) => player.unlocked_achievements.find((a) => a.id === achievement.id))
 	)
 
 	const playersWithFirstAchievement = $derived(
-		$players.filter((player) =>
+		players.filter((player) =>
 			player.unlocked_achievements.find((a) => a.id === achievement.id && a.is_first)
 		)
 	)
@@ -59,7 +58,7 @@
 				</div>
 				<div>
 					<p class="text-right text-xs font-medium text-muted-foreground">
-						Получили {playersWithAchievement.length}/{$players.length}
+						Получили {playersWithAchievement.length}/{players.length}
 					</p>
 				</div>
 			</div>
@@ -67,16 +66,16 @@
 		<TooltipContent side="bottom" align="start" class="flex flex-col gap-1.5">
 			{#each playersWithAchievement as player (player.slug)}
 				{#if playersWithFirstAchievement.find((p) => p.slug === player.slug)}
-					<div class="text-[#FF881E]">{$playersBySlug[player.slug]?.username} - первый</div>
+					<div class="text-[#FF881E]">{playersBySlug.get(player.slug)?.username} - первый</div>
 				{:else}
-					<div>{$playersBySlug[player.slug]?.username}</div>
+					<div>{playersBySlug.get(player.slug)?.username}</div>
 				{/if}
 			{/each}
 
 			<div class="mt-3"></div>
-			{#each $players as player (player.slug)}
+			{#each players as player (player.slug)}
 				{#if !playersWithAchievement.find((p) => p.slug === player.slug)}
-					<div class="text-muted-foreground">{$playersBySlug[player.slug]?.username}</div>
+					<div class="text-muted-foreground">{playersBySlug.get(player.slug)?.username}</div>
 				{/if}
 			{/each}
 		</TooltipContent>

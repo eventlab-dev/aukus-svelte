@@ -11,24 +11,20 @@
 	const { playerSlug }: Props = $props()
 
 	const { usersStore, canvasStore, playersMovesStore } = getAppManagerContext()
-	const { myUser } = usersStore
-	const { editMode, updateCanvasMutation, selectedImage, canvasQuery, uploadImageMutation } =
-		canvasStore
-	const { playerMoves } = playersMovesStore
 
 	const canEdit = $derived(
 		Boolean(
-			$myUser &&
-				($myUser.slug === playerSlug ||
-					$myUser.moder_for.includes(playerSlug) ||
-					$myUser.roles.includes('admin'))
+			usersStore.myUser &&
+				(usersStore.myUser.slug === playerSlug ||
+					usersStore.myUser.moder_for.includes(playerSlug) ||
+					usersStore.myUser.roles.includes('admin'))
 		)
 	)
 
 	async function handleSave() {
 		try {
 			await canvasStore.saveCanvasChanges()
-			editMode.set(false)
+			canvasStore.editMode = false
 		} catch (error) {
 			console.error('Failed to save canvas:', error)
 			alert('Ошибка при сохранении изменений')
@@ -51,7 +47,7 @@
 		image.src = URL.createObjectURL(file)
 		image.onload = async () => {
 			try {
-				await $uploadImageMutation.mutateAsync({
+				await canvasStore.uploadImageMutation.mutateAsync({
 					body: {
 						file,
 						height: image.naturalHeight,
@@ -62,7 +58,7 @@
 					}
 				})
 				URL.revokeObjectURL(image.src)
-				await $canvasQuery.refetch()
+				await canvasStore.canvasQuery.refetch()
 				canvasStore.discardCanvasChanges()
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (err: any) {
@@ -73,33 +69,32 @@
 	}
 
 	function handleDelete() {
-		if (!$selectedImage) return
-
-		canvasStore.deleteImage($selectedImage.id)
+		if (!canvasStore.selectedImage) return
+		canvasStore.deleteImage(canvasStore.selectedImage.id)
 	}
 
 	function handleClose() {
 		canvasStore.discardCanvasChanges()
-		editMode.set(false)
+		canvasStore.editMode = false
 	}
 
 	function handleFlip() {
-		if (!$selectedImage) return
+		if (!canvasStore.selectedImage) return
 
 		const newImage: CanvasFile = {
-			...$selectedImage,
-			scale_x: $selectedImage.scale_x * -1
+			...canvasStore.selectedImage,
+			scale_x: canvasStore.selectedImage.scale_x * -1
 		}
 		canvasStore.updateImage(newImage)
 	}
 
-	const isAttached = $derived($selectedImage?.attach_move_id !== null)
-	const lastMove = $derived<PlayerMoveItem | undefined>($playerMoves[0])
+	const isAttached = $derived(canvasStore.selectedImage?.attach_move_id !== null)
+	const lastMove = $derived<PlayerMoveItem | undefined>(playersMovesStore.playerMoves[0])
 
 	function handleAttach() {
-		if (!$selectedImage) return
+		if (!canvasStore.selectedImage) return
 
-		if ($selectedImage.attach_move_id === null && lastMove) {
+		if (canvasStore.selectedImage.attach_move_id === null && lastMove) {
 			// attach
 
 			const moveElement = document.getElementById(`move-card-${lastMove.id}`)
@@ -109,37 +104,45 @@
 			const moveY = moveElement.getBoundingClientRect().top + scrollArea.scrollTop
 
 			const newImage: CanvasFile = {
-				...$selectedImage,
+				...canvasStore.selectedImage,
 				attach_move_id: lastMove.id,
-				y: $selectedImage.y - moveY
+				y: canvasStore.selectedImage.y - moveY
 			}
 			canvasStore.updateImage(newImage)
 			return
-		} else if ($selectedImage.attach_move_id !== null) {
+		} else if (canvasStore.selectedImage.attach_move_id !== null) {
 			// detach
 
-			const moveElement = document.getElementById(`move-card-${$selectedImage.attach_move_id}`)
+			const moveElement = document.getElementById(
+				`move-card-${canvasStore.selectedImage.attach_move_id}`
+			)
 			if (!moveElement) return
 			const scrollArea = document.getElementById('main-scroll-area')?.firstElementChild
 			if (!scrollArea) return
 
 			const moveY = moveElement.getBoundingClientRect().top + scrollArea.scrollTop
 			const newImage: CanvasFile = {
-				...$selectedImage,
+				...canvasStore.selectedImage,
 				attach_move_id: null,
-				y: $selectedImage.y + moveY
+				y: canvasStore.selectedImage.y + moveY
 			}
 			canvasStore.updateImage(newImage)
 			return
 		}
 	}
+
+	const noImageSelected = $derived(!canvasStore.selectedImage)
 </script>
 
 {#if canEdit}
-	<div class="top-15 z-200 sticky left-1/2 flex w-fit -translate-x-1/2 justify-center gap-3">
-		{#if $editMode}
+	<div class="sticky top-15 left-1/2 z-200 flex w-fit -translate-x-1/2 justify-center gap-3">
+		{#if canvasStore.editMode}
 			<Button onclick={handleClose} variant="destructive">Закрыть</Button>
-			<Button onclick={handleSave} variant="default" loading={$updateCanvasMutation.isPending}>
+			<Button
+				onclick={handleSave}
+				variant="default"
+				loading={canvasStore.updateCanvasMutation.isPending}
+			>
 				Сохранить
 			</Button>
 			<input
@@ -159,9 +162,7 @@
 			</Button>
 			<Tooltip>
 				<TooltipTrigger>
-					<Button variant="secondary" onclick={handleFlip} disabled={!$selectedImage}
-						>Отразить</Button
-					>
+					<Button variant="secondary" onclick={handleFlip} disabled={noImageSelected}>Отразить</Button>
 				</TooltipTrigger>
 				<TooltipContent side="bottom" class="z-200">
 					Отразить выбранное изображение по горизонтали
@@ -169,7 +170,7 @@
 			</Tooltip>
 			<Tooltip>
 				<TooltipTrigger>
-					<Button variant="secondary" onclick={handleAttach} disabled={!$selectedImage}>
+					<Button variant="secondary" onclick={handleAttach} disabled={noImageSelected}>
 						{!isAttached ? 'Закрепить' : 'Открепить'}
 					</Button>
 				</TooltipTrigger>
@@ -177,11 +178,11 @@
 					Изображение закрепится возле хода игрока
 				</TooltipContent>
 			</Tooltip>
-			<Button onclick={handleDelete} disabled={!$selectedImage} variant="secondary" class="ml-5">
+			<Button onclick={handleDelete} disabled={noImageSelected} variant="secondary" class="ml-5">
 				Удалить
 			</Button>
 		{:else}
-			<Button onclick={() => editMode.set(true)}>Редактировать</Button>
+			<Button onclick={() => canvasStore.editMode = true}>Редактировать</Button>
 		{/if}
 	</div>
 {/if}

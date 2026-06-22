@@ -20,13 +20,11 @@
 	let { player, position }: Props = $props()
 
 	const { statsStore, eventDataStore } = getAppManagerContext()
-	const { statsBySlug } = statsStore
-	const { achievementsWithScores, achievementsById, skinsById, achievementsRarity } = eventDataStore
-
+	
 	const playerStats = $derived.by(() => {
-		const stats = $statsBySlug[player.slug]
+		const stats = statsStore.statsBySlug.get(player.slug)
 		if (stats) {
-			const totalAchievements = $achievementsWithScores.length
+			const totalAchievements = eventDataStore.achievementsWithScores.length
 			const playerAchievements = stats.first_achievements + stats.regular_achievements
 
 			return [
@@ -56,14 +54,14 @@
 	})
 
 	const { bestGame, worstGame } = $derived.by(() => {
-		const stats = $statsBySlug[player.slug]
+		const stats = statsStore.statsBySlug.get(player.slug)
 		return { bestGame: stats?.best_game, worstGame: stats?.worst_game }
 	})
 
 	const achievementsPercent = $derived.by(() => {
-		const stats = $statsBySlug[player.slug]
+		const stats = statsStore.statsBySlug.get(player.slug)
 		if (stats) {
-			const totalAchievements = $achievementsWithScores.length
+			const totalAchievements = eventDataStore.achievementsWithScores.length
 			const playerAchievements = stats.first_achievements + stats.regular_achievements
 			// round
 			return (playerAchievements / totalAchievements) * 100
@@ -74,14 +72,14 @@
 	const rareAchievement = $derived.by(() => {
 		const rare = player.unlocked_achievements.reduce(
 			(acc: UnlockedAchievementItem | null, next: UnlockedAchievementItem) => {
-				const nextRarity = $achievementsRarity.get(next.id)
+				const nextRarity = eventDataStore.achievementsRarity.get(next.id)
 				if (!acc) {
 					if (nextRarity) {
 						return next
 					}
 					return acc
 				}
-				const accRarity = $achievementsRarity.get(acc.id)
+				const accRarity = eventDataStore.achievementsRarity.get(acc.id)
 
 				if (nextRarity && accRarity) {
 					if (nextRarity === accRarity) {
@@ -94,7 +92,7 @@
 			null
 		)
 		if (rare) {
-			return $achievementsById.get(rare.id)
+			return eventDataStore.achievementsById.get(rare.id)
 		}
 		return null
 	})
@@ -137,7 +135,7 @@
 					<div class="mt-5 text-7xl font-bold">{achievementsPercent.toFixed(0)}%</div>
 				</div>
 				{#if rareAchievement}
-					{@const skin = $skinsById.get(rareAchievement.reward_skin_id)}
+					{@const skin = eventDataStore.skinsById.get(rareAchievement.reward_skin_id)}
 					{#if skin}
 						<div class="w-[440px] rounded-xl bg-card p-3">
 							<div class="text-[#9F9F9F]">Самое редкое достижение</div>

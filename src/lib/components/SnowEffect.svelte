@@ -3,9 +3,8 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	const { snowStore } = getAppManagerContext()
-	const { flakesCount, snowState } = snowStore
 </script>
 
-{#if browser && $snowState !== 'off'}
-	<snow-effect color="white" flakes={$flakesCount} speed={1}></snow-effect>
+{#if browser && snowStore.snowState.value !== 'off'}
+	<snow-effect color="white" flakes={snowStore.flakesCount} speed={1}></snow-effect>
 {/if}

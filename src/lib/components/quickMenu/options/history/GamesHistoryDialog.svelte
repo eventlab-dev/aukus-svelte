@@ -22,30 +22,30 @@
 
 	const { gamesHistoryStore, players, playersBySlug, playersMovesStore, gamesMatchesStore } =
 		getAppManagerContext()
-	const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
-	const { gamesMatchParams, gamesMatched } = gamesMatchesStore
+	// const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
+	// const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
 	let dialogOpen = $state(false)
 
-	const aukus3Games = $derived($gamesHistoryByEvent['aukus3'] ?? [])
-	const aukus2Games = $derived($gamesHistoryByEvent['aukus2'] ?? [])
-	const aukus1Games = $derived($gamesHistoryByEvent['aukus1'] ?? [])
+	const aukus3Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus3') ?? [])
+	const aukus2Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus2') ?? [])
+	const aukus1Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus1') ?? [])
 
-	const { queryParams: aukus4QueryParams, playerMoves } = playersMovesStore
+	// const { queryParams: aukus4QueryParams, playerMoves } = playersMovesStore
 
-	const aukus4Games = $derived($playerMoves.map(playerMoveToCommonGame))
+	const aukus4Games = $derived(playersMovesStore.playerMoves.map(playerMoveToCommonGame))
 
 	$effect(() => {
 		if (dialogOpen) {
-			searchParams.set({
+			gamesHistoryStore.searchParams = {
 				events: [],
 				players: [],
 				title_search: null
-			})
-			aukus4QueryParams.set({
+			}
+			playersMovesStore.queryParams = {
 				players: [],
 				search_title: null
-			})
+			}
 		}
 	})
 
@@ -54,27 +54,27 @@
 		clearTimeout(timer)
 		if (v.length >= 3 || v.length === 0) {
 			timer = setTimeout(() => {
-				searchParams.update((p) => ({ ...p, title_search: v }))
-				aukus4QueryParams.update((p) => ({ ...p, search_title: v }))
+				gamesHistoryStore.searchParams.title_search = v
+				playersMovesStore.queryParams.search_title = v
 			}, 500)
 		}
 	}
 
-	const selectedPlayer = $derived($searchParams?.players?.[0] ?? null)
+	const selectedPlayer = $derived(gamesHistoryStore.searchParams?.players?.[0] ?? null)
 
 	function selectPlayer(_: boolean, slug: string) {
 		if (selectedPlayer === slug) {
-			searchParams.update((p) => ({ ...p, players: [] }))
-			aukus4QueryParams.update((p) => ({ ...p, players: [] }))
+			gamesHistoryStore.searchParams.players = []
+			playersMovesStore.queryParams.players = []
 		} else {
-			searchParams.update((p) => ({ ...p, players: [slug] }))
-			aukus4QueryParams.update((p) => ({ ...p, players: [slug] }))
+			gamesHistoryStore.searchParams.players = [slug]
+			playersMovesStore.queryParams.players = [slug]
 		}
 	}
 
 	const selectedEvent = $derived.by(() => {
-		if ($searchParams?.events?.length === 1) {
-			return $searchParams.events[0]
+		if (gamesHistoryStore.searchParams?.events?.length === 1) {
+			return gamesHistoryStore.searchParams.events[0]
 		}
 		return null
 	})
@@ -83,9 +83,9 @@
 
 	function selectEvent(_: boolean, event: EventName) {
 		if (selectedEvent === event) {
-			searchParams.update((p) => ({ ...p, events: ['aukus1', 'aukus2', 'aukus3'] }))
+			gamesHistoryStore.searchParams.events = ['aukus1', 'aukus2', 'aukus3']
 		} else {
-			searchParams.update((p) => ({ ...p, events: [event] }))
+			gamesHistoryStore.searchParams.events = [event]
 		}
 	}
 
@@ -110,15 +110,15 @@
 			.map((game) => game.id)
 			.slice(0, 50)
 		const gamesIdsMoves = aukus4Games.map((game) => game.id).slice(0, 50)
-		gamesMatchParams.set({
+		gamesMatchesStore.gamesMatchParams = {
 			titles: [...gamesTitles],
 			exclude_ids_moves: gamesIdsMoves,
 			exclude_ids_history: gamesIdsHistory,
 			exclude_player: undefined
-		})
+		}
 	})
 
-	const isLoading = $derived($historyQuery.isFetching)
+	const isLoading = $derived(gamesHistoryStore.historyQuery.isFetching)
 
 	// $inspect(isLoading, 'GamesHistoryDialog isLoading')
 	// $inspect($historyQuery.isFetching, ' historyQuery isFetching')
@@ -135,7 +135,13 @@
 
 	const gameMatchedMergedWithOthers = $derived.by(() => {
 		return uniqBy(
-			[...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games, ...$gamesMatched],
+			[
+				...aukus4Games,
+				...aukus3Games,
+				...aukus2Games,
+				...aukus1Games,
+				...gamesMatchesStore.gamesMatched
+			],
 			(g) => `${g.event_name}-${g.id}`
 		)
 	})
@@ -167,7 +173,7 @@
 		</DialogHeader>
 		<div class="mt-10 flex flex-col gap-5">
 			<div class="flex w-full flex-wrap gap-2">
-				{#each $players as player (player.slug)}
+				{#each players as player (player.slug)}
 					<Toggle
 						variant="default"
 						bind:pressed={() => player.slug === selectedPlayer, (v) => selectPlayer(v, player.slug)}
@@ -203,7 +209,7 @@
 				type="text"
 				placeholder="Поиск по названию (3+ символов)"
 				class="mb-4 w-full rounded-lg bg-muted"
-				value={$searchParams?.title_search ?? ''}
+				value={gamesHistoryStore.searchParams?.title_search ?? ''}
 				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 			/>
 		</div>
@@ -222,7 +228,7 @@
 						{#if aukus4GamesDisplay.length !== 0}
 							<div class="p-0 text-center text-3xl">Аукус 4</div>
 							{#each aukus4GamesDisplay as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
+								{#if playersBySlug.get(game.player_name) !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
@@ -238,7 +244,7 @@
 								</Button>
 							</div>
 							{#each aukus3Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
+								{#if playersBySlug.get(game.player_name)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
@@ -254,7 +260,7 @@
 								</Button>
 							</div>
 							{#each aukus2Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
+								{#if playersBySlug.get(game.player_name)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
@@ -270,7 +276,7 @@
 								</Button>
 							</div>
 							{#each aukus1Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
+								{#if playersBySlug.get(game.player_name)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
 									)}
@@ -279,9 +285,9 @@
 							{/each}
 						{/if}
 
-						{#if $hasMore}
+						{#if gamesHistoryStore.hasMore}
 							<div class="flex justify-center">
-								<Button onclick={loadMore}>Загрузить ещё</Button>
+								<Button onclick={gamesHistoryStore.loadMore}>Загрузить ещё</Button>
 							</div>
 						{/if}
 					</div>

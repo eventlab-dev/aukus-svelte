@@ -11,16 +11,15 @@
 
 	const { eventDataStore, players, myPlayer, playersBySlug } = getAppManagerContext()
 
-	const { achievements } = eventDataStore
 
 	let selectedPlayerSlug: string | null = $state(null)
 
 	const filteredAchievements = $derived.by(() => {
-		if (!selectedPlayerSlug) return $achievements
-		const player = $playersBySlug[selectedPlayerSlug]
-		if (!player) return $achievements
+		if (!selectedPlayerSlug) return eventDataStore.achievements
+		const player = playersBySlug.get(selectedPlayerSlug)
+		if (!player) return eventDataStore.achievements
 
-		return $achievements.filter((a) => player.unlocked_achievements.find((pa) => pa.id === a.id))
+		return eventDataStore.achievements.filter((a) => player.unlocked_achievements.find((pa) => pa.id === a.id))
 	})
 
 	function setPressed(_: boolean, slug: string) {
@@ -36,9 +35,9 @@
 	}
 
 	function handleOpenChange(open: boolean) {
-		if (open && $myPlayer) {
+		if (open && myPlayer) {
 			if (!selectedPlayerSlug) {
-				selectedPlayerSlug = $myPlayer.slug
+				selectedPlayerSlug = myPlayer.slug
 			}
 		}
 	}
@@ -57,7 +56,7 @@
 
 		<div class="space-y-5">
 			<div class="flex w-full flex-wrap gap-2">
-				{#each $players as player (player.slug)}
+				{#each players as player (player.slug)}
 					<Toggle
 						variant="default"
 						bind:pressed={() => getPressed(player.slug), (v) => setPressed(v, player.slug)}

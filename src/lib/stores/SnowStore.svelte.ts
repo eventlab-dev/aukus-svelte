@@ -1,26 +1,26 @@
-import { derived } from 'svelte/store'
-import { createLocalStore } from './LocalStore.svelte'
+import { LocalStore } from './LocalStore.svelte'
 
 export type SnowLevel = 'off' | 'small' | 'big'
 
-export function createSnowStore() {
-	const snowState = createLocalStore<SnowLevel>('snowLevel', 'small')
+export class SnowStore {
+	snowState = new LocalStore<SnowLevel>('snowLevel', 'small')
 
-	function cycleSnow() {
-		snowState.update((curr) => {
-			switch (curr) {
-				case 'off':
-					return 'small'
-				case 'small':
-					return 'big'
-				case 'big':
-					return 'off'
-			}
-		})
+	cycleSnow() {
+		switch (this.snowState.value) {
+			case 'off':
+				this.snowState.value = 'small'
+				break
+			case 'small':
+				this.snowState.value = 'big'
+				break
+			case 'big':
+				this.snowState.value = 'off'
+				break
+		}
 	}
 
-	const flakesCount = derived(snowState, ($snowState) => {
-		switch ($snowState) {
+	flakesCount = $derived.by(() => {
+		switch (this.snowState.value) {
 			case 'small':
 				return 50
 			case 'big':
@@ -30,8 +30,8 @@ export function createSnowStore() {
 		}
 	})
 
-	const snowTooltip = derived(snowState, ($snowState) => {
-		switch ($snowState) {
+	snowTooltip = $derived.by(() => {
+		switch (this.snowState.value) {
 			case 'off':
 				return 'Снег выключен'
 			case 'small':
@@ -40,11 +40,4 @@ export function createSnowStore() {
 				return 'Снег: много'
 		}
 	})
-
-	return {
-		snowState,
-		cycleSnow,
-		flakesCount,
-		snowTooltip
-	}
 }

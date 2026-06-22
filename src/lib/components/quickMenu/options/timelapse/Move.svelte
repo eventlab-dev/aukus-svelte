@@ -12,7 +12,7 @@
 
 	const { playersBySlug } = getAppManagerContext()
 
-	const player = $derived($playersBySlug[move.player_slug])
+	const player = $derived(playersBySlug.get(move.player_slug))
 	const moveTypeStyles = $derived.by(() => getMoveTypeStyles(move.type))
 </script>
 

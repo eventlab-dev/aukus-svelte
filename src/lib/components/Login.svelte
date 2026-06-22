@@ -6,7 +6,6 @@
 	import { Input } from './ui/input'
 
 	const { usersStore } = getAppManagerContext()
-	const { loginMutation, loginError } = usersStore
 
 	let name = $state('')
 	let password = $state('')
@@ -18,7 +17,7 @@
 	}
 
 	function clearError() {
-		loginError.set(null)
+		usersStore.loginError = null
 	}
 </script>
 
@@ -47,9 +46,9 @@
 			onkeypress={(e) => e.key === 'Enter' && isValid && login()}
 			oninput={clearError}
 		/>
-		{#if $loginError}
+		{#if usersStore.loginError}
 			<div class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
-				{$loginError}
+				{usersStore.loginError}
 			</div>
 		{/if}
 	</div>
@@ -58,12 +57,12 @@
 			class="w-full rounded-xl"
 			disabled={!isValid}
 			onclick={login}
-			loading={$loginMutation.isPending}>Войти</Button
+			loading={usersStore.loginMutation.isPending}>Войти</Button
 		>
 		<Button
 			class="hidden w-full rounded-t-[4px] bg-[#9146FF] hover:bg-[#9146FF]/80"
 			onclick={login}
-			loading={$loginMutation.isPending}
+			loading={usersStore.loginMutation.isPending}
 		>
 			<TwitchIcon />
 			Войти через Twitch

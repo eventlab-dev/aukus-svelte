@@ -5,11 +5,10 @@
 	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
 
 	const { usersStore } = getAppManagerContext()
-	const { loginError } = usersStore
 
 	function handleOpenChange(open: boolean) {
 		if (!open) {
-			loginError.set(null)
+			usersStore.loginError = null
 		}
 	}
 </script>
