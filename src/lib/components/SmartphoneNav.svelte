@@ -34,7 +34,7 @@
 		{ icon: RulesIcon, label: 'Правила', page: 'rules' },
 		{ icon: StatsIcon, label: 'Статистика', page: 'stats' },
 		{ icon: Trophy, label: 'Ачивки', page: 'achievements'},
-		{ icon: History, label: 'История' },
+		{ icon: History, label: 'История', page: 'history' },
 		{ icon: TV, label: 'Мультистрим', page: 'multistream' },
 		{ icon: ShieldX, label: 'Подсеры' },
 		{ icon: Shirt, label: 'Одежда' },

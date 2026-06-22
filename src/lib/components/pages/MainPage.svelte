@@ -17,6 +17,7 @@
 	import PunishmentCalculator from '../quickMenu/options/PunishmentCalculator.svelte'
 	import WheelDialog from '../quickMenu/options/WheelDialog.svelte'
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
+	import GamesHistoryDialog from '../quickMenu/options/history/GamesHistoryDialog.svelte'
 
 	const app = getAppManager()
 	const { movementStore, navStore } = app
@@ -63,6 +64,8 @@
 	<WheelDialog />
 {:else if navStore.appPage === 'achievements'}
 	<AchievementsDialog />
+{:else if navStore.appPage === 'history'}
+	<GamesHistoryDialog />
 {/if}
 
 {#if app.turnState === 'filling-form' && !movementStore.selectedPlayer}

@@ -26,7 +26,7 @@
 	// const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
 	// const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
-	let dialogOpen = $state(false)
+	let dialogOpen = $state(true)
 
 	const aukus3Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus3') ?? [])
 	const aukus2Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus2') ?? [])
@@ -160,9 +160,15 @@
 		}
 		window.open(url, '_blank noopener noreferrer')
 	}
+
+	function onOpenChange(open: boolean) {
+		if (!open) {
+			app.navStore.closePage()
+		}
+	}
 </script>
 
-<Dialog bind:open={dialogOpen}>
+<Dialog bind:open={dialogOpen} {onOpenChange}>
 	<DialogTrigger>
 		<SearchIcon /> История игр
 	</DialogTrigger>
