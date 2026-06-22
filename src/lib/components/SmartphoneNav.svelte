@@ -33,7 +33,7 @@
 	const apps: AppItem[] = [
 		{ icon: RulesIcon, label: 'Правила', page: 'rules' },
 		{ icon: StatsIcon, label: 'Статистика', page: 'stats' },
-		{ icon: Trophy, label: 'Ачивки'},
+		{ icon: Trophy, label: 'Ачивки', page: 'achievements'},
 		{ icon: History, label: 'История' },
 		{ icon: TV, label: 'Мультистрим', page: 'multistream' },
 		{ icon: ShieldX, label: 'Подсеры' },

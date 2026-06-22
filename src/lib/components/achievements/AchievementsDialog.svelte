@@ -41,10 +41,13 @@
 				selectedPlayerSlug = app.myPlayer.slug
 			}
 		}
+		if (!open) {
+			app.navStore.closePage()
+		}
 	}
 </script>
 
-<Dialog onOpenChange={handleOpenChange}>
+<Dialog onOpenChange={handleOpenChange} open>
 	<DialogTrigger>
 		<CrownIcon /> Достижения
 	</DialogTrigger>
