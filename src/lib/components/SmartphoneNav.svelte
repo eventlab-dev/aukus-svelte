@@ -39,12 +39,17 @@
 		{ id: 'history', icon: History, label: 'История', page: 'history' },
 		{ id: 'streams', icon: TV, label: 'Стримы', page: 'streams' },
 		{ id: 'shit', icon: ShieldX, label: 'Подсеры' },
-		{ id: 'skins', icon: Shirt, label: 'Одежда' },
+		{ id: 'skins', icon: Shirt, label: 'Скины' },
 		{ id: 'wheels', icon: ShipWheel, label: 'Колеса', page: 'wheels' },
 		{ id: 'calculator', icon: Calculator, label: 'Калькулятор', page: 'calculator' },
-		{ id: 'about', icon: DevelopersIcon, label: 'Создатели', page: 'about' },
-		{ id: 'login', icon: ProfileIcon, label: 'Логин', page: 'login' }
+		{ id: 'about', icon: DevelopersIcon, label: 'Создатели', page: 'about' }
 	]
+
+	const loginApp: AppItem = $derived(
+		app.myUser
+			? { id: 'logout', icon: ProfileIcon, label: 'Выйти' }
+			: { id: 'login', icon: ProfileIcon, label: 'Логин', page: 'login' }
+	)
 
 	function togglePhone() {
 		isOpen = !isOpen
@@ -101,6 +106,31 @@
 						</button>
 					{/if}
 				{/each}
+				{#if loginApp.id === 'login'}
+					<button
+						class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+						onclick={() => {
+							if (loginApp.page) {
+								navStore.changePage(loginApp.page)
+							}
+							isOpen = false
+						}}
+					>
+						<loginApp.icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
+						<span class="text-xs text-card-blue-foreground">{loginApp.label}</span>
+					</button>
+				{:else}
+					<button
+						class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+						onclick={() => {
+							app.usersStore.logout()
+							isOpen = false
+						}}
+					>
+						<loginApp.icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
+						<span class="text-xs text-card-blue-foreground">{loginApp.label}</span>
+					</button>
+				{/if}
 			</div>
 		</div>
 	{/if}
