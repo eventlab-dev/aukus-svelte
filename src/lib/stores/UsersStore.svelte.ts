@@ -28,12 +28,17 @@ export class UsersStore {
 			auth: defaultAuth
 		}),
 		retry: false,
-		enabled: Boolean(this.accessToken)
+		enabled: Boolean(this.accessToken),
 	}))
 
 	loginMutation = createMutation(() => loginApiLoginPostMutation({ baseUrl: EventlabBaseUrl }))
 
-	myUser = $derived(this.myUserQuery.data ?? null)
+	myUser = $derived.by(() => {
+		if (this.myUserQuery.isSuccess) {
+			return this.myUserQuery.data ?? null
+		}
+		return null
+	})
 	isAdmin = $derived(this.myUser?.roles.includes('admin') ?? false)
 
 	loginError = $state<string | null>(null)
@@ -72,6 +77,7 @@ export class UsersStore {
 	logout() {
 		localStorage.removeItem('auth_token')
 		this.accessToken = null
+
 		this.myUserQuery.refetch()
 	}
 
@@ -114,12 +120,13 @@ export class UsersStore {
 		})
 	)
 
-	unlockableSkinsQuery = createQuery(() =>
-		getUnlockableSkinsApiPlayersUnlockableSkinsGetOptions({
+	unlockableSkinsQuery = createQuery(() => ({
+		...getUnlockableSkinsApiPlayersUnlockableSkinsGetOptions({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
-		})
-	)
+		}),
+		enabled: () => !!this.myUser
+	}))
 
 	unlockableSkins = $derived(this.unlockableSkinsQuery.data?.skins ?? [])
 
