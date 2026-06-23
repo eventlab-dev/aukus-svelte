@@ -28,11 +28,11 @@
 	<title>Aukus 5</title>
 </svelte:head>
 
-<div class="mt-2 flex gap-2">
+<div class="mt-2 h-screen">
 	<div class="flex-1">
 		<MapComponent />
 	</div>
-	<div class="mr-2">
+	<div class="absolute right-2 top-2">
 		<PlayersList />
 	</div>
 </div>

@@ -18,7 +18,7 @@
 	let hideArrows = $state(false)
 
 	let mapImg = $state<HTMLImageElement | null>(null)
-	let viewport: HTMLDivElement | null = $state(null)
+	let viewport = $state<HTMLDivElement | null>(null)
 	let viewportHeight = $state(0)
 
 	function updateScale() {
@@ -68,6 +68,27 @@
 	let mouseX = $state(0)
 	let mouseY = $state(0)
 
+	function getBounds() {
+		const scaledWidth = mapImg!.naturalWidth * userZoom * mapScale
+		const scaledHeight = mapImg!.naturalHeight * userZoom * mapScale
+
+		const viewportWidth = viewport!.clientWidth
+		const viewportHeight = viewport!.clientHeight
+
+		const overscroll = 0.15
+
+		const overscrollX = viewportWidth * overscroll
+		const overscrollY = viewportHeight * overscroll
+
+		return {
+			minX: scaledWidth > viewportWidth ? viewportWidth - scaledWidth - overscrollX : -overscrollX,
+			maxX: overscrollX,
+			minY:
+				scaledHeight > viewportHeight ? viewportHeight - scaledHeight - overscrollY : -overscrollY,
+			maxY: overscrollY
+		}
+	}
+
 	function onMouseMove(e: MouseEvent) {
 		mouseX = e.clientX - viewport!.getBoundingClientRect().left
 		mouseY = e.clientY - viewport!.getBoundingClientRect().top
@@ -79,21 +100,7 @@
 		x += dx
 		y += dy
 
-		// Constrain to image boundaries
-		const scaledWidth = mapImg.naturalWidth * userZoom * mapScale
-		const scaledHeight = mapImg.naturalHeight * userZoom * mapScale
-		const viewportWidth = viewport.clientWidth
-		const viewportHeight = viewport.clientHeight
-
-		// Calculate min/max x and y based on zoom level
-		const minX = scaledWidth > viewportWidth ? viewportWidth - scaledWidth : 0
-		const maxX = 0
-
-		const minY = scaledHeight > viewportHeight ? viewportHeight - scaledHeight : 0
-		const maxY = 0
-
-		x = Math.max(minX, Math.min(x, maxX))
-		y = Math.max(minY, Math.min(y, maxY))
+		clampPosition()
 
 		lastX = e.clientX
 		lastY = e.clientY
@@ -118,7 +125,7 @@
 		const factor = e.deltaY < 0 ? 1.1 : 0.9
 
 		userZoom *= factor
-		userZoom = Math.max(1, Math.min(userZoom, 5))
+		userZoom = Math.max(0.8, Math.min(userZoom, 5))
 
 		const scaleRatio = userZoom / oldScale
 
@@ -131,17 +138,7 @@
 	function clampPosition() {
 		if (!viewport || !mapImg) return
 
-		const viewportWidth = viewport.clientWidth
-		const viewportHeight = viewport.clientHeight
-
-		const scaledWidth = viewportWidth * userZoom
-		const scaledHeight = viewportHeight * userZoom
-
-		const minX = Math.min(0, viewportWidth - scaledWidth)
-		const maxX = 0
-
-		const minY = Math.min(0, viewportHeight - scaledHeight)
-		const maxY = 0
+		const { minX, maxX, minY, maxY } = getBounds()
 
 		x = Math.max(minX, Math.min(maxX, x))
 		y = Math.max(minY, Math.min(maxY, y))
@@ -165,11 +162,7 @@
 init arrow 70 270 510 210
 </div> -->
 
-<div
-	class="viewport relative w-full overflow-hidden"
-	bind:this={viewport}
-	style="height: {viewportHeight}px;"
->
+<div class="viewport relative h-screen w-full overflow-hidden" bind:this={viewport}>
 	<div
 		id={MapContainerId}
 		class="map-transform absolute top-0 left-0 h-full w-full origin-top-left overflow-hidden"
