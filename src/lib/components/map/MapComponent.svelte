@@ -75,10 +75,10 @@
 		const viewportWidth = viewport!.clientWidth
 		const viewportHeight = viewport!.clientHeight
 
-		const overscroll = 0.15
+		// const overscroll = 0.15
 
-		const overscrollX = viewportWidth * overscroll
-		const overscrollY = viewportHeight * overscroll
+		const overscrollX = viewportWidth * 0.1
+		const overscrollY = viewportHeight * 0.2
 
 		return {
 			minX: scaledWidth > viewportWidth ? viewportWidth - scaledWidth - overscrollX : -overscrollX,
