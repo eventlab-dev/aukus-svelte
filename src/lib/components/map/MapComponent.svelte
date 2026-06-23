@@ -162,10 +162,10 @@
 init arrow 70 270 510 210
 </div> -->
 
-<div class="viewport relative h-screen w-full overflow-hidden" bind:this={viewport}>
+<div class="viewport relative w-full overflow-visible h-screen" bind:this={viewport}>
 	<div
 		id={MapContainerId}
-		class="map-transform absolute top-0 left-0 h-full w-full origin-top-left overflow-hidden"
+		class="map-transform absolute top-0 left-0 origin-top-left h-full w-full overflow-hidden"
 		onclick={handleClick}
 		onwheel={onWheel}
 		onmousedown={onMouseDown}
@@ -186,7 +186,7 @@ init arrow 70 270 510 210
 			bind:this={mapImg}
 			src={MAP_IMAGE}
 			alt="map"
-			class="h-auto w-full cursor-grab select-none active:cursor-grabbing"
+			class="h-full w-auto cursor-grab select-none active:cursor-grabbing"
 			draggable="false"
 		/>
 
