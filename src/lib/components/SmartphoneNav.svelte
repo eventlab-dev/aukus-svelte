@@ -23,6 +23,7 @@
 	import type { AppPage } from '$lib/stores/NavStore.svelte'
 	import ProfileIcon from './icons/ProfileIcon.svelte'
 	import SkinEditorDialog from './skinEditor/SkinEditorDialog.svelte'
+	import ShitDialog from './shitKick/ShitDialog.svelte'
 
 	type AppItem = {
 		id: string
@@ -37,7 +38,7 @@
 		{ id: 'achievements', icon: Trophy, label: 'Ачивки', page: 'achievements' },
 		{ id: 'history', icon: History, label: 'История', page: 'history' },
 		{ id: 'streams', icon: TV, label: 'Стримы', page: 'streams' },
-		{ id: 'subs', icon: ShieldX, label: 'Подсеры' },
+		{ id: 'shit', icon: ShieldX, label: 'Подсеры' },
 		{ id: 'skins', icon: Shirt, label: 'Одежда' },
 		{ id: 'wheels', icon: ShipWheel, label: 'Колеса', page: 'wheels' },
 		{ id: 'calculator', icon: Calculator, label: 'Калькулятор', page: 'calculator' },
@@ -66,11 +67,24 @@
 					{#if appItem.id === 'skins'}
 						{#if app.myUser}
 							<SkinEditorDialog>
-								<button class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20">
+								<button
+									class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+								>
 									<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
 									<span class="text-xs text-card-blue-foreground">{appItem.label}</span>
 								</button>
 							</SkinEditorDialog>
+						{/if}
+					{:else if appItem.id === 'shit'}
+						{#if app.myUser}
+							<ShitDialog>
+								<button
+									class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+								>
+									<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
+									<span class="text-xs text-card-blue-foreground">{appItem.label}</span>
+								</button>
+							</ShitDialog>
 						{/if}
 					{:else}
 						<button

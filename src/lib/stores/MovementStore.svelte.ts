@@ -41,6 +41,8 @@ export class MovementStore {
 				const currPlayer = currPlayers.find((p) => p.slug === newPlayer.slug)
 				if (currPlayer && currPlayer.map_position !== newPlayer.map_position) {
 					this.animateOtherPlayer(currPlayer, newPlayer)
+				} else {
+					this.updatePlayer(newPlayer.slug, newPlayer)
 				}
 			}
 		})
