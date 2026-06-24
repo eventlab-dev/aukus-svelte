@@ -16,15 +16,21 @@ export class PlayerMovesStore {
 	
 	constructor(params: Params) {
 		this.getPlayerSlug = params.getPlayerSlug
+
+		$effect(() => {
+			const slug = this.getPlayerSlug()
+			if (slug) {
+				this.queryParams.players = [slug]
+			} else {
+				this.queryParams.players = []
+			}
+		})
 	}
 
-	queryParams = $derived.by<QueryParams>(() => {
-		const slug = this.getPlayerSlug()
-		return {
-			players: slug ? [slug] : [],
-			start_ts: null,
-			search_title: null
-		}
+	queryParams = $state<QueryParams>({
+		players: [],
+		start_ts: null,
+		search_title: null
 	})
 
 	movesQuery = createQuery(() => getPlayerMovesApiPlayersMovesGetOptions({

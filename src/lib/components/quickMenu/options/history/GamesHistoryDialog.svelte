@@ -34,13 +34,14 @@
 
 	$effect(() => {
 		if (dialogOpen) {
+			const playersFilter = app.myPlayer ? [app.myPlayer.slug] : []
 			gamesHistoryStore.searchParams = {
 				events: [],
-				players: [],
+				players: playersFilter,
 				title_search: null
 			}
 			playersMovesStore.queryParams = {
-				players: [],
+				players: playersFilter,
 				search_title: null
 			}
 		}
