@@ -11,7 +11,7 @@ import TableOfContents, {
 	type TableOfContentData
 } from '@tiptap/extension-table-of-contents'
 import { createSectionPlugin } from './Sections'
-import { RULE_SCROLL_ID } from '$lib/constants'
+import { PAGE_SCROLL_ID } from '$lib/constants'
 
 export function initExtensions(
 	props: {
@@ -54,10 +54,8 @@ export function initExtensions(
 				getIndex: getHierarchicalIndexes,
 				onUpdate: props.onTOCupdate,
 				scrollParent: () => {
-					return (
-						(document.getElementById(RULE_SCROLL_ID)?.firstElementChild as HTMLElement) ??
-						window
-					)
+					const scroll = document.getElementById(PAGE_SCROLL_ID)?.firstElementChild as HTMLElement | null
+					return scroll ?? window
 				}
 			})
 		)

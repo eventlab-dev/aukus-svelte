@@ -114,7 +114,7 @@ export const LOGO_BG_URL = `${CDN_URL_BASE}/map/logo-bg.avif`
 export const FALLBACK_AVATAR_URL = 'https://github.com/shadcn.png'
 export const MOVIE_POSTER_URL = `${CDN_URL_BASE}/utils/movie_poster.png`
 
-export const RULE_SCROLL_ID = 'rules-scroll'
+export const PAGE_SCROLL_ID = 'page-scroll'
 
 
 // Z index list

@@ -12,9 +12,7 @@
 	import { defaultAuth } from '$lib/utils'
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-	import { ScrollArea } from '$lib/components/ui/scroll-area'
-	import { RULE_SCROLL_ID } from '$lib/constants'
-
+	
 	const app = getAppManager()
 	const { usersStore, navStore } = app
 
@@ -79,60 +77,58 @@
 	}
 </script>
 
-<ScrollArea id={RULE_SCROLL_ID} class="h-full w-full">
-	<div class="mt-[100px] flex w-full justify-center">
-		<div class="w-[700px]">
-			<div class="flex gap-3">
-				<Button
-					class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
-					onclick={() => setCategory('general')}
-					data-active={category === 'general'}
-				>
-					Для участников
-				</Button>
-				<Button
-					class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E]"
-					onclick={() => setCategory('donations')}
-					data-active={category === 'donations'}
-				>
-					Для донатеров
-				</Button>
-			</div>
-			<div class="mt-[20px] text-5xl font-bold">
-				Правила Аукуса для {category === 'general' ? 'участников' : 'донатеров'}
-			</div>
-			<div class="mt-10">
-				{#if canEdit}
-					{#if editorMode}
-						<div class="mb-10 flex gap-5">
-							<Button variant="default" onclick={() => (editorMode = false)}>Отмена</Button>
-							<Button variant="destructive" onclick={saveRules}>Сохранить</Button>
-						</div>
-					{:else}
-						<Button class="mb-10" onclick={() => (editorMode = true)}>Редактировать</Button>
-					{/if}
+<div class="mt-[100px] flex w-full justify-center">
+	<div class="w-[700px]">
+		<div class="flex gap-3">
+			<Button
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
+				onclick={() => setCategory('general')}
+				data-active={category === 'general'}
+			>
+				Для участников
+			</Button>
+			<Button
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E]"
+				onclick={() => setCategory('donations')}
+				data-active={category === 'donations'}
+			>
+				Для донатеров
+			</Button>
+		</div>
+		<div class="mt-[20px] text-5xl font-bold">
+			Правила Аукуса для {category === 'general' ? 'участников' : 'донатеров'}
+		</div>
+		<div class="mt-10">
+			{#if canEdit}
+				{#if editorMode}
+					<div class="mb-10 flex gap-5">
+						<Button variant="default" onclick={() => (editorMode = false)}>Отмена</Button>
+						<Button variant="destructive" onclick={saveRules}>Сохранить</Button>
+					</div>
+				{:else}
+					<Button class="mb-10" onclick={() => (editorMode = true)}>Редактировать</Button>
 				{/if}
-			</div>
-			{#if rulesQuery.isLoading}
-				<Loader class="inline size-20" />
-			{:else if editorMode}
-				<TiptapEditor
-					class="h-[80vh] w-[700px]"
-					content={rules}
-					bind:value={editedRules}
-					withMenu
-					extensions={{ withLinks: true, sectionsMode: 'parse-only' }}
-				/>
-			{:else}
-				<TiptapEditor
-					class="h-fit w-[700px] border-none"
-					content={rules}
-					editable={false}
-					extensions={{ sectionsMode: 'full', withTOC: true, withLinks: true }}
-				/>
 			{/if}
 		</div>
+		{#if rulesQuery.isLoading}
+			<Loader class="inline size-20" />
+		{:else if editorMode}
+			<TiptapEditor
+				class="h-[80vh] w-[700px]"
+				content={rules}
+				bind:value={editedRules}
+				withMenu
+				extensions={{ withLinks: true, sectionsMode: 'parse-only' }}
+			/>
+		{:else}
+			<TiptapEditor
+				class="h-fit w-[700px] border-none"
+				content={rules}
+				editable={false}
+				extensions={{ sectionsMode: 'full', withTOC: true, withLinks: true }}
+			/>
+		{/if}
 	</div>
+</div>
 
-	<Footer />
-</ScrollArea>
+<Footer />

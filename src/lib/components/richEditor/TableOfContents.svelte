@@ -4,6 +4,7 @@
 	import { TextSelection } from '@tiptap/pm/state'
 	import { Button } from '../ui/button'
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
+	import { PAGE_SCROLL_ID } from '$lib/constants'
 
 	type Props = {
 		items: TableOfContentDataItem[]
@@ -40,7 +41,7 @@
 
 			const sectionPadding = 12
 
-			const mainScroll = document.getElementById('main-scroll-area')?.firstElementChild
+			const mainScroll = document.getElementById(PAGE_SCROLL_ID)?.firstElementChild
 			mainScroll?.scrollTo({
 				top: element.getBoundingClientRect().top + mainScroll.scrollTop - pos.top - sectionPadding,
 				behavior: 'smooth'
