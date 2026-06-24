@@ -78,15 +78,20 @@
 
 		// const overscroll = 0.15
 
-		const overscrollX = viewportWidth * 0.1
-		const overscrollY = viewportHeight * 0.2
+		const extensionLeft = 100
+		const extensionRight = viewportWidth * 0.2
+		const extensionTop = 80
+		const extensionBottom = viewportHeight * 0.2
+
+		// const overscrollX = viewportWidth * 0.1
+		// const overscrollY = viewportHeight * 0.2
 
 		return {
-			minX: scaledWidth > viewportWidth ? viewportWidth - scaledWidth - overscrollX : -overscrollX,
-			maxX: overscrollX,
+			minX: scaledWidth > viewportWidth ? viewportWidth - scaledWidth - extensionRight : -extensionRight,
+			maxX: extensionLeft,
 			minY:
-				scaledHeight > viewportHeight ? viewportHeight - scaledHeight - overscrollY : -overscrollY,
-			maxY: overscrollY
+				scaledHeight > viewportHeight ? viewportHeight - scaledHeight - extensionBottom : -extensionBottom,
+			maxY: extensionTop
 		}
 	}
 
