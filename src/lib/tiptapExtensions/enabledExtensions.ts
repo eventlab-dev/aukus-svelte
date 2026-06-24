@@ -11,6 +11,7 @@ import TableOfContents, {
 	type TableOfContentData
 } from '@tiptap/extension-table-of-contents'
 import { createSectionPlugin } from './Sections'
+import { RULE_SCROLL_ID } from '$lib/constants'
 
 export function initExtensions(
 	props: {
@@ -54,7 +55,7 @@ export function initExtensions(
 				onUpdate: props.onTOCupdate,
 				scrollParent: () => {
 					return (
-						(document.getElementById('main-scroll-area')?.firstElementChild as HTMLElement) ??
+						(document.getElementById(RULE_SCROLL_ID)?.firstElementChild as HTMLElement) ??
 						window
 					)
 				}

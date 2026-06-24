@@ -113,3 +113,15 @@ export const LOGO_BG_URL = `${CDN_URL_BASE}/map/logo-bg.avif`
 
 export const FALLBACK_AVATAR_URL = 'https://github.com/shadcn.png'
 export const MOVIE_POSTER_URL = `${CDN_URL_BASE}/utils/movie_poster.png`
+
+export const RULE_SCROLL_ID = 'rules-scroll'
+
+
+// Z index list
+// page-container z-20
+// dialogs z-50
+// popovers z-50
+// errors notifications z-50
+// smartphone nav z-50
+// dice animation z-50
+// fireworks z-9
