@@ -7,6 +7,7 @@ import type {
 import { createQuery } from '@tanstack/svelte-query'
 import type { PlayerData } from '$lib/types'
 import { SvelteMap } from 'svelte/reactivity'
+import { untrack } from 'svelte'
 
 type QueryParams = NonNullable<GetGamesApiGamesHistoryGetData['query']>
 
@@ -29,10 +30,11 @@ export class GameHistoryStore {
 					this.allLoadedGames = games
 					this.resetLoadedGames = false
 				} else {
+					const loadedGames = untrack(() => this.allLoadedGames)
 					const newGames = games.filter(
-						(newGame) => !this.allLoadedGames.some((existingGame) => existingGame.id === newGame.id)
+						(newGame) => !loadedGames.some((existingGame) => existingGame.id === newGame.id)
 					)
-					this.allLoadedGames = [...this.allLoadedGames, ...newGames]
+					this.allLoadedGames = [...loadedGames, ...newGames]
 				}
 			}
 		})

@@ -23,16 +23,12 @@
 	const app = getAppManager()
 
 	const { gamesHistoryStore, playersMovesStore, gamesMatchesStore } = app
-	// const { gamesHistoryByEvent, searchParams, historyQuery, hasMore, loadMore } = gamesHistoryStore
-	// const { gamesMatchParams, gamesMatched } = gamesMatchesStore
 
 	let dialogOpen = $state(true)
 
 	const aukus3Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus3') ?? [])
 	const aukus2Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus2') ?? [])
 	const aukus1Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus1') ?? [])
-
-	// const { queryParams: aukus4QueryParams, playerMoves } = playersMovesStore
 
 	const aukus4Games = $derived(playersMovesStore.playerMoves.map(playerMoveToCommonGame))
 
