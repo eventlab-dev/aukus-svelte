@@ -165,7 +165,7 @@ init arrow 70 270 510 210
 <div class="viewport relative w-full overflow-visible h-screen" bind:this={viewport}>
 	<div
 		id={MapContainerId}
-		class="map-transform absolute top-0 left-0 origin-top-left h-full w-full overflow-hidden"
+		class="map-transform absolute top-0 left-0 origin-top-left overflow-hidden"
 		onclick={handleClick}
 		onwheel={onWheel}
 		onmousedown={onMouseDown}
