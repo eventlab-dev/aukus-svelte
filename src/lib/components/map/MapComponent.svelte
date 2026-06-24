@@ -5,7 +5,7 @@
 	import CellNumber from './CellNumber.svelte'
 	import MapArrow from './MapArrow.svelte'
 	import MapArrowMarkers from './MapArrowMarkers.svelte'
-	import MapCountdowwn from './MapCountdowwn.svelte'
+	import MapCountdown from './MapCountdown.svelte'
 	import MovementMarkers from './MovementMarkers.svelte'
 	import PlayerCharacter from './PlayerCharacter.svelte'
 	import NewCell from './NewCell.svelte'
@@ -19,7 +19,8 @@
 
 	let mapImg = $state<HTMLImageElement | null>(null)
 	let viewport = $state<HTMLDivElement | null>(null)
-	let viewportHeight = $state(0)
+
+	let imageLoaded = $state(false)
 
 	function updateScale() {
 		if (mapImg) {
@@ -28,13 +29,13 @@
 	}
 
 	$effect(() => {
-		if (!viewport) return
+		if (!mapImg) return
 
 		const observer = new ResizeObserver(() => {
 			updateScale()
 		})
 
-		observer.observe(viewport)
+		observer.observe(mapImg)
 
 		return () => observer.disconnect()
 	})
@@ -162,7 +163,7 @@
 init arrow 70 270 510 210
 </div> -->
 
-<div class="viewport relative w-full overflow-visible h-screen" bind:this={viewport}>
+<div class="viewport relative h-screen w-full overflow-visible" bind:this={viewport}>
 	<div
 		id={MapContainerId}
 		class="map-transform absolute top-0 left-0 origin-top-left overflow-hidden"
@@ -176,58 +177,59 @@ init arrow 70 270 510 210
 		tabindex={0}
 		role="button"
 		style={`
-      transform:
-        translate(${x}px, ${y}px)
-        scale(${userZoom});
-    `}
+      	transform: translate(${x}px, ${y}px) scale(${userZoom});
+		`}
 	>
 		<img
-			bind:clientHeight={viewportHeight}
 			bind:this={mapImg}
 			src={MAP_IMAGE}
+			onload={() => {
+				imageLoaded = true
+			}}
 			alt="map"
 			class="h-full w-auto cursor-grab select-none active:cursor-grabbing"
 			draggable="false"
 		/>
 
-		<div class="absolute right-2 bottom-2 z-20 text-black">
-			{Math.round(mouseX / mapScale)}:{Math.round(mouseY / mapScale)}
-		</div>
-
-		{#each Object.keys(mapStore.cellPositionById) as cellId (cellId)}
-			<NewCell cellId={parseInt(cellId)} scale={mapScale} />
-		{/each}
-
-		<MapArrowMarkers />
-		<svg
-			id="arrows-container"
-			class="pointer-events-none absolute top-0 left-0 h-full w-full {hideArrows ? 'hidden' : ''}"
-		>
-			{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
-				<MapArrow {from} {to} scale={mapScale} />
-			{/each}
-			{#each snakes as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
-				<MapArrow {from} {to} scale={mapScale} />
-			{/each}
-		</svg>
-
-		<!-- <MapCharacters /> -->
-		<div
-			class="absolute top-0 left-0"
-			style="transform: scale({mapScale}); transform-origin: top left;"
-		>
-			<MovementMarkers />
-			{#each app.players as player (player.slug)}
-				{#if player.map_position !== 102}
-					<PlayerCharacter {player} />
-				{/if}
+		{#if imageLoaded}
+			<div class="absolute right-2 bottom-2 z-20 text-black">
+				{Math.round(mouseX / mapScale)}:{Math.round(mouseY / mapScale)}
+			</div>
+			{#each Object.keys(mapStore.cellPositionById) as cellId (cellId)}
+				<NewCell cellId={parseInt(cellId)} scale={mapScale} />
 			{/each}
 
-			{#each app.winners as player (player.slug)}
-				<PlayerCharacter {player} asWinner />
-			{/each}
-		</div>
+			<MapArrowMarkers />
+			<svg
+				id="arrows-container"
+				class="pointer-events-none absolute top-0 left-0 h-full w-full {hideArrows ? 'hidden' : ''}"
+			>
+				{#each ladders as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
+					<MapArrow {from} {to} scale={mapScale} />
+				{/each}
+				{#each snakes as { cellFrom: from, cellTo: to } (`${from}-${to}`)}
+					<MapArrow {from} {to} scale={mapScale} />
+				{/each}
+			</svg>
 
-		<MapCountdowwn />
+			<!-- <MapCharacters /> -->
+			<div
+				class="absolute top-0 left-0"
+				style="transform: scale({mapScale}); transform-origin: top left;"
+			>
+				<MovementMarkers />
+				{#each app.players as player (player.slug)}
+					{#if player.map_position !== 102}
+						<PlayerCharacter {player} />
+					{/if}
+				{/each}
+
+				{#each app.winners as player (player.slug)}
+					<PlayerCharacter {player} asWinner />
+				{/each}
+			</div>
+
+			<MapCountdown />
+		{/if}
 	</div>
 </div>
