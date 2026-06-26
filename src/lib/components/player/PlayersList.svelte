@@ -26,7 +26,7 @@
 </script>
 
 {#key app.playersInOrder.length}
-	<div class="flex flex-col gap-[6px] bg-[#a6b8eb]">
+	<div class="flex flex-col gap-[6px]">
 		{#each app.playersInOrder as player (player.slug)}
 			<PlayerCard {player} />
 		{/each}
