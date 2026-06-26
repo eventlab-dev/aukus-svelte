@@ -17,7 +17,7 @@
 	let mapScale = $state(1)
 	let hideArrows = $state(false)
 
-	const offsetRight = 260;
+	const offsetRight = 240;
 
 	let mapImg = $state<HTMLImageElement | null>(null)
 	let viewport = $state<HTMLDivElement | null>(null)
