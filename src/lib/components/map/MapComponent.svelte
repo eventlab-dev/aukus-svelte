@@ -17,14 +17,21 @@
 	let mapScale = $state(1)
 	let hideArrows = $state(false)
 
+	const offsetRight = 260;
+
 	let mapImg = $state<HTMLImageElement | null>(null)
 	let viewport = $state<HTMLDivElement | null>(null)
 
 	let imageLoaded = $state(false)
+	let userZoom = $state(1)
 
 	function updateScale() {
 		if (mapImg) {
 			mapScale = mapImg.clientWidth / mapImg.naturalWidth
+			if (viewport) {
+				const minZoom = (viewport.clientWidth - offsetRight) / viewport.clientWidth;
+				userZoom = minZoom
+			}
 		}
 	}
 
@@ -53,7 +60,6 @@
 
 	let x = $state(0)
 	let y = $state(0)
-	let userZoom = $state(1)
 
 	let dragging = $state(false)
 	let lastX = $state(0)
