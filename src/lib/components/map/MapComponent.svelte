@@ -88,7 +88,7 @@
 		// const overscroll = 0.15
 
 		const extensionLeft = 100
-		const extensionRight = 100
+		const extensionRight = userZoom === 1.0 ? 100 : 100 + 260
 		const extensionTop = 80
 		const extensionBottom = 80
 
