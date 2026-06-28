@@ -88,9 +88,9 @@
 		// const overscroll = 0.15
 
 		const extensionLeft = 100
-		const extensionRight = viewportWidth * 0.2
+		const extensionRight = 100
 		const extensionTop = 80
-		const extensionBottom = viewportHeight * 0.2
+		const extensionBottom = 80
 
 		// const overscrollX = viewportWidth * 0.1
 		// const overscrollY = viewportHeight * 0.2
@@ -130,6 +130,9 @@
 		dragging = false
 	}
 
+	const zoomMin = 1
+	const zoomMax = 5
+
 	function onWheel(e: WheelEvent) {
 		e.preventDefault()
 
@@ -145,7 +148,7 @@
 		const factor = e.deltaY < 0 ? 1.1 : 0.9
 
 		userZoom *= factor
-		userZoom = Math.max(0.8, Math.min(userZoom, 5))
+		userZoom = Math.max(zoomMin, Math.min(userZoom, zoomMax))
 
 		const scaleRatio = userZoom / oldScale
 
