@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { LastMapPosition, LOGO_BG_URL, LOGO_URL, MAP_IMAGE } from '$lib/constants'
+	import { LastMapPosition, LOGO_BG_URL, LOGO_URL, MAP_IMAGE, MAP_SIDE_IMAGE } from '$lib/constants'
 	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
 	import { Fireworks, type FireworksOptions } from '@fireworks-js/svelte'
 	import CellNumber from './CellNumber.svelte'
@@ -17,7 +17,7 @@
 	let mapScale = $state(1)
 	let hideArrows = $state(false)
 
-	const offsetRight = 240;
+	const offsetRight = 0
 
 	let mapImg = $state<HTMLImageElement | null>(null)
 	let viewport = $state<HTMLDivElement | null>(null)
@@ -25,11 +25,14 @@
 	let imageLoaded = $state(false)
 	let userZoom = $state(1)
 
+	let mapImgHeight = $state(0)
+
 	function updateScale() {
 		if (mapImg) {
 			mapScale = mapImg.clientWidth / mapImg.naturalWidth
+			mapImgHeight = mapImg.clientHeight
 			if (viewport) {
-				const minZoom = (viewport.clientWidth - offsetRight) / viewport.clientWidth;
+				const minZoom = (viewport.clientWidth - offsetRight) / viewport.clientWidth
 				userZoom = minZoom
 			}
 		}
@@ -93,10 +96,15 @@
 		// const overscrollY = viewportHeight * 0.2
 
 		return {
-			minX: scaledWidth > viewportWidth ? viewportWidth - scaledWidth - extensionRight : -extensionRight,
+			minX:
+				scaledWidth > viewportWidth
+					? viewportWidth - scaledWidth - extensionRight
+					: -extensionRight,
 			maxX: extensionLeft,
 			minY:
-				scaledHeight > viewportHeight ? viewportHeight - scaledHeight - extensionBottom : -extensionBottom,
+				scaledHeight > viewportHeight
+					? viewportHeight - scaledHeight - extensionBottom
+					: -extensionBottom,
 			maxY: extensionTop
 		}
 	}
@@ -191,16 +199,30 @@ init arrow 70 270 510 210
       	transform: translate(${x}px, ${y}px) scale(${userZoom});
 		`}
 	>
-		<img
-			bind:this={mapImg}
-			src={MAP_IMAGE}
-			onload={() => {
-				imageLoaded = true
-			}}
-			alt="map"
-			class="h-full w-auto cursor-grab select-none active:cursor-grabbing"
-			draggable="false"
-		/>
+		<div class="flex w-full">
+			<img
+				bind:this={mapImg}
+				src={MAP_IMAGE}
+				onload={() => {
+					imageLoaded = true
+				}}
+				alt="map"
+				class="h-full w-full min-w-0 cursor-grab select-none active:cursor-grabbing"
+				draggable="false"
+			/>
+				<div class="w-[260px] shrink-0">
+					<img
+						src={MAP_SIDE_IMAGE}
+						alt="map-side"
+						class="cursor-grab select-none active:cursor-grabbing"
+						draggable="false"
+						style={`
+						height: ${mapImgHeight}px;
+						width: 260px;
+					`}
+					/>
+				</div>
+		</div>
 
 		{#if imageLoaded}
 			<div class="absolute right-2 bottom-2 z-20 text-black">

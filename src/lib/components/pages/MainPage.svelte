@@ -28,7 +28,7 @@
 	<title>Aukus 5</title>
 </svelte:head>
 
-<div class="mt-2 h-screen bg-[#ff6065]">
+<div class="mt-2 h-screen">
 	<div class="flex-1">
 		<MapComponent />
 	</div>
