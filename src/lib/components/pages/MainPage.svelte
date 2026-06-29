@@ -19,12 +19,9 @@
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
 	import GamesHistoryDialog from '../quickMenu/options/history/GamesHistoryDialog.svelte'
 	import StreamsPage from './streams/StreamsPage.svelte'
-	import { CDN_URL_BASE5 } from '$lib/constants'
 
 	const app = getAppManager()
 	const { movementStore, navStore } = app
-
-	const topBannerUrl = `${CDN_URL_BASE5}/ui/top-banner.png`
 </script>
 
 <svelte:head>
@@ -37,9 +34,6 @@
 	</div>
 	<div class="absolute right-2 top-2">
 		<PlayersList />
-	</div>
-	<div class="absolute top-0 left-1/2 -translate-x-1/2">
-		<img src={topBannerUrl} alt="Top banner" class="w-[116px] h-auto" />
 	</div>
 </div>
 

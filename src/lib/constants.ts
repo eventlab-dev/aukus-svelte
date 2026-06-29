@@ -63,6 +63,7 @@ export const PlayerBaseModelUrl = `${CDN_URL_BASE}/map/player_model.png`
 
 export const MAP_IMAGE = `${CDN_URL_BASE5}/map/map.jpg`
 export const MAP_SIDE_IMAGE = `${CDN_URL_BASE5}/map/map-side.jpg`
+export const TOP_BANNER = `${CDN_URL_BASE5}/ui/top-banner.png`
 
 export const DICE_ROLL_ANIMATION_TIME = 2000
 export const DICE_ROLL_IDLE_TIME = 2000
