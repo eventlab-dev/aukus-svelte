@@ -8,6 +8,7 @@
 	import StarIcon from '../icons/new/StarIcon.svelte'
 	import { getDirectStreamUrl } from '$lib/utils/streamUtils'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import { CDN_URL_BASE, CDN_URL_BASE5 } from '$lib/constants'
 
 	type Props = {
 		player: PlayerData
@@ -53,17 +54,20 @@
 	function openPlayer() {
 		navStore.changeDynamicPage(player.slug)
 	}
+
+	const cardImgUrl = `${CDN_URL_BASE5}/ui/player-card-bg.png`
 </script>
 
 <Button
 	onclick={openPlayer}
-	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline bg-card-blue! text-card-blue-foreground"
+	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline bg-card-blue! text-card-blue-foreground scale-100 hover:scale-110 transition-transform duration-300 active:scale-90"
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
 	onauxclick={handleAuxClick}
 >
 	<div
 		class="relative flex h-full w-full flex-col gap-[5px] rounded-[18px]! p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 hover:after:opacity-100"
+		style="background-image: url('{cardImgUrl}'); background-size: cover;"
 	>
 		<div class="flex w-full justify-between gap-[5px]">
 			<div class="flex items-center gap-2">
