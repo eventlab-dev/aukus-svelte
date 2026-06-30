@@ -76,7 +76,7 @@
 									class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
 								>
 									<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
-									<span class="text-xs text-card-blue-foreground">{appItem.label}</span>
+									<span class="text-xs">{appItem.label}</span>
 								</button>
 							</SkinEditorDialog>
 						{/if}
@@ -87,7 +87,7 @@
 									class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
 								>
 									<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
-									<span class="text-xs text-card-blue-foreground">{appItem.label}</span>
+									<span class="text-xs">{appItem.label}</span>
 								</button>
 							</ShitDialog>
 						{/if}
@@ -102,7 +102,7 @@
 							}}
 						>
 							<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
-							<span class="text-xs text-card-blue-foreground">{appItem.label}</span>
+							<span class="text-xs">{appItem.label}</span>
 						</button>
 					{/if}
 				{/each}
@@ -117,7 +117,7 @@
 						}}
 					>
 						<loginApp.icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
-						<span class="text-xs text-card-blue-foreground">{loginApp.label}</span>
+						<span class="text-xs">{loginApp.label}</span>
 					</button>
 				{:else}
 					<button
@@ -128,7 +128,7 @@
 						}}
 					>
 						<loginApp.icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
-						<span class="text-xs text-card-blue-foreground">{loginApp.label}</span>
+						<span class="text-xs">{loginApp.label}</span>
 					</button>
 				{/if}
 			</div>

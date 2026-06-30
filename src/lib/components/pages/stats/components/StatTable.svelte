@@ -111,7 +111,7 @@
 			<TableRow>
 				{#each headers as { key } (key)}
 					{#if key === 'avatarLink'}
-						<TableCell class="p-0 bg-card-blue">
+						<TableCell class="p-0">
 							<Button
 								variant="link"
 								href={app.isMobile ? '' : `/players/${player.player_slug}`}
@@ -132,7 +132,7 @@
 							</Button>
 						</TableCell>
 					{:else if key === 'total_score'}
-						<TableCell class="bg-card-blue text-card-blue-foreground" data-active={sortByKey === key}>
+						<TableCell class="text-primary-foreground" data-active={sortByKey === key}>
 							<Tooltip>
 								<TooltipTrigger class="w-full text-left">
 									{player[key]}
@@ -146,7 +146,7 @@
 							</Tooltip>
 						</TableCell>
 					{:else if key === 'clean_score'}
-						<TableCell class="bg-card-blue text-card-blue-foreground" data-active={sortByKey === key}>
+						<TableCell class="text-primary-foreground" data-active={sortByKey === key}>
 							<Tooltip>
 								<TooltipTrigger class="w-full text-left">
 									{player[key]}
@@ -160,7 +160,7 @@
 							</Tooltip>
 						</TableCell>
 					{:else if key === 'games_time'}
-						<TableCell class="bg-card-blue text-card-blue-foreground" data-active={sortByKey === key}>
+						<TableCell class="text-primary-foreground" data-active={sortByKey === key}>
 							<Tooltip>
 								<TooltipTrigger class="w-full text-left">
 									{formatMs(player[key] as number)}
@@ -170,7 +170,7 @@
 						</TableCell>
 					{:else if key === 'username'}
 						<TableCell
-							class="py-0 bg-card-blue text-card-blue-foreground"
+							class="py-0 text-primary-foreground"
 							data-active={sortByKey === key}
 						>
 							<Button
@@ -190,7 +190,7 @@
 						</TableCell>
 					{:else if key === 'currentGame'}
 						<TableCell
-							class="py-0 bg-card-blue text-card-blue-foreground"
+							class="py-0 text-primary-foreground"
 							data-active={sortByKey === key}
 						>
 							<div class="flex flex-col gap-0.5">
@@ -204,7 +204,7 @@
 						</TableCell>
 					{:else}
 						<TableCell
-							class="py-0 bg-card-blue text-card-blue-foreground"
+							class="py-0 text-primary-foreground"
 							data-active={sortByKey === key}
 						>
 							{player[key]}

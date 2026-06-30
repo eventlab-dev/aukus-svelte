@@ -4,17 +4,30 @@
 
 @custom-variant dark (&: is(.dark *));
 
+/* @theme {
+	--color-card-blue: #7F97E7;
+	--color-card-blue-foreground: #f3fafe;
+} */
+
 :root {
 	--radius: 0.625rem;
 	--background: oklch(0.19 0 0);
 	--foreground: oklch(0.96 0 0);
 	--hover: oklch(0.34 0 0);
-	--card: oklch(0.25 0 0);
-	--card-foreground: oklch(0.96 0 0);
+
+	/* --card: oklch(0.25 0 0);
+	--card-foreground: oklch(0.96 0 0); */
+	--card: #7F97E7;
+	--card-foreground: #f3fafe;
+	
 	--popover: oklch(0.25 0 0);
 	--popover-foreground: oklch(0.96 0 0);
-	--primary: oklch(0.56 0.23 279.32);
-	--primary-foreground: oklch(0.96 0 0);
+
+	/* --primary: oklch(0.56 0.23 279.32);
+	--primary-foreground: oklch(0.96 0 0); */
+	--primary: #7F97E7;
+	--primary-foreground: #f3fafe;
+
 	--primary-hover: oklch(0.48 0.18 278.04);
 	--secondary: oklch(0.38 0 0);
 	--secondary-foreground: oklch(0.96 0 0);

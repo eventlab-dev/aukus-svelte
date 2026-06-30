@@ -28,7 +28,7 @@
 		{/if}
 	</ScrollArea>
 	<div class="absolute top-2 left-2">
-		<Button class="h-[34px] w-[178px] rounded-[18px] bg-card-blue text-card-foreground" onclick={closePage}>{'<-'} ЗАКРЫТЬ</Button>
+		<Button class="h-[34px] w-[178px] rounded-[18px]" onclick={closePage}>{'<-'} ЗАКРЫТЬ</Button>
 	</div>
 </div>
 

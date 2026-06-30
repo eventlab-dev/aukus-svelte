@@ -60,7 +60,7 @@
 
 <Button
 	onclick={openPlayer}
-	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline bg-card-blue! text-card-blue-foreground scale-100 hover:scale-110 transition-transform duration-300 active:scale-90"
+	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline scale-100 hover:scale-110 transition-transform duration-300 active:scale-90"
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
 	onauxclick={handleAuxClick}
@@ -79,19 +79,19 @@
 				<div class="font-bold">{player.username}</div>
 			</div>
 			<div class="flex gap-[8px]">
-				<div class="flex h-fit items-center gap-[2px] font-semibold text-card-blue-foreground">
+				<div class="flex h-fit items-center gap-[2px] font-semibold">
 					{player.shit_stacks}<FireIcon />
 				</div>
-				<div class="flex h-fit items-center gap-[2px] font-semibold text-card-blue-foreground">
+				<div class="flex h-fit items-center gap-[2px] font-semibold">
 					{player.shield_stacks}<ShieldIcon />
 				</div>
-				<div class="flex h-fit items-center gap-[2px] text-sm font-semibold text-card-blue-foreground">
+				<div class="flex h-fit items-center gap-[2px] text-sm font-semibold ">
 					{Math.round(player.total_score)}
 					<StarIcon />
 				</div>
 			</div>
 		</div>
-		<div class="grid w-full font-medium text-card-blue-foreground/80">
+		<div class="grid w-full font-medium text-foreground/80">
 			{#if isHovered}
 				<span class="col-start-1 row-start-1" transition:fly={{ x: -50 }}>Открыть</span>
 			{:else}

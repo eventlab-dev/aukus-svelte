@@ -173,6 +173,7 @@
 	:global(.tiptap-section) {
 		padding: 12px;
 		background-color: var(--color-card);
+		color: var(--color-card-foreground);
 		border-radius: var(--radius-2xl);
 		margin-bottom: 12px;
 	}
