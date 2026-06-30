@@ -12,8 +12,13 @@
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { StatItem, TableHeaderType } from '$lib/types'
-	import { getPlayerScoreDescription, getPlayerCleanScoreDescription, formatMs, formatDuration } from '$lib/utils'
-	
+	import {
+		getPlayerScoreDescription,
+		getPlayerCleanScoreDescription,
+		formatMs,
+		formatDuration
+	} from '$lib/utils'
+
 	type Props = {
 		data: T[]
 		headers: TableHeaderType<T>[]
@@ -59,7 +64,7 @@
 		<TableRow>
 			{#each headers as { key, name, width } (key)}
 				<TableHead
-					class="relative select-none data-[active=true]:text-foreground data-[avatar=true]:pointer-events-none"
+					class="relative text-card-foreground select-none data-[active=true]:underline data-[avatar=true]:pointer-events-none"
 					data-active={sortByKey === key}
 					data-avatar={key === 'avatarLink'}
 					style="width: {width}px"
@@ -79,7 +84,9 @@
 									</span>
 								{/if}
 							</TooltipTrigger>
-							<TooltipContent>Чистые очки: очки без учета умножения на ряд и без ачивок</TooltipContent>
+							<TooltipContent
+								>Чистые очки: очки без учета умножения на ряд и без ачивок</TooltipContent
+							>
 						</Tooltip>
 					{:else}
 						<span class="relative">
@@ -104,7 +111,7 @@
 			<TableRow>
 				{#each headers as { key } (key)}
 					{#if key === 'avatarLink'}
-						<TableCell class="p-0">
+						<TableCell class="p-0 bg-card-blue">
 							<Button
 								variant="link"
 								href={app.isMobile ? '' : `/players/${player.player_slug}`}
@@ -125,7 +132,7 @@
 							</Button>
 						</TableCell>
 					{:else if key === 'total_score'}
-						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
+						<TableCell class="bg-card-blue text-card-blue-foreground" data-active={sortByKey === key}>
 							<Tooltip>
 								<TooltipTrigger class="w-full text-left">
 									{player[key]}
@@ -139,7 +146,7 @@
 							</Tooltip>
 						</TableCell>
 					{:else if key === 'clean_score'}
-						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
+						<TableCell class="bg-card-blue text-card-blue-foreground" data-active={sortByKey === key}>
 							<Tooltip>
 								<TooltipTrigger class="w-full text-left">
 									{player[key]}
@@ -153,7 +160,7 @@
 							</Tooltip>
 						</TableCell>
 					{:else if key === 'games_time'}
-						<TableCell class="data-[active=true]:text-foreground" data-active={sortByKey === key}>
+						<TableCell class="bg-card-blue text-card-blue-foreground" data-active={sortByKey === key}>
 							<Tooltip>
 								<TooltipTrigger class="w-full text-left">
 									{formatMs(player[key] as number)}
@@ -163,13 +170,13 @@
 						</TableCell>
 					{:else if key === 'username'}
 						<TableCell
-							class="py-0 text-foreground data-[active=true]:text-foreground"
+							class="py-0 bg-card-blue text-card-blue-foreground"
 							data-active={sortByKey === key}
 						>
 							<Button
 								variant="link"
 								href={app.isMobile ? '' : `/players/${player.player_slug}`}
-								class="p-0 text-foreground no-underline hover:text-[var(--player-color)]"
+								class="p-0 text-foreground no-underline hover:text-[var(--player-color)] uppercase"
 								style="--player-color: {player.color}"
 								onclick={(e) => {
 									if (app.isMobile && navigateToPlayer) {
@@ -183,7 +190,7 @@
 						</TableCell>
 					{:else if key === 'currentGame'}
 						<TableCell
-							class="py-0 data-[active=true]:text-foreground"
+							class="py-0 bg-card-blue text-card-blue-foreground"
 							data-active={sortByKey === key}
 						>
 							<div class="flex flex-col gap-0.5">
@@ -197,7 +204,7 @@
 						</TableCell>
 					{:else}
 						<TableCell
-							class="py-0 data-[active=true]:text-foreground"
+							class="py-0 bg-card-blue text-card-blue-foreground"
 							data-active={sortByKey === key}
 						>
 							{player[key]}
