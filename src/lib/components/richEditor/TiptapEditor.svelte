@@ -165,7 +165,7 @@
 	}
 
 	:global(.tiptap a) {
-		color: var(--color-primary);
+		color: var(--color-primary-foreground);
 		text-decoration: underline;
 	}
 
