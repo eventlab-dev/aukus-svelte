@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { LastMapPosition, LOGO_BG_URL, LOGO_URL, MAP_IMAGE, MAP_SIDE_IMAGE, TOP_BANNER } from '$lib/constants'
+	import { LastMapPosition, MAP_IMAGE, MAP_SIDE_IMAGE } from '$lib/constants'
 	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
 	import { Fireworks, type FireworksOptions } from '@fireworks-js/svelte'
 	import CellNumber from './CellNumber.svelte'
@@ -225,10 +225,6 @@ init arrow 70 270 510 210
 					`}
 				/>
 			</div>
-		</div>
-
-		<div class="absolute top-0 left-1/2 -translate-x-1/2">
-			<img src={TOP_BANNER} alt="Top banner" class="h-auto w-[116px]" />
 		</div>
 
 		{#if imageLoaded}

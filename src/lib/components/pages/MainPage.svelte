@@ -19,6 +19,7 @@
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
 	import GamesHistoryDialog from '../quickMenu/options/history/GamesHistoryDialog.svelte'
 	import StreamsPage from './streams/StreamsPage.svelte'
+	import { TOP_BANNER } from '$lib/constants'
 
 	const app = getAppManager()
 	const { movementStore, navStore } = app
@@ -28,11 +29,15 @@
 	<title>Aukus 5</title>
 </svelte:head>
 
+<div class="absolute top-0 left-1/2 -translate-x-1/2 z-30">
+	<img src={TOP_BANNER} alt="Top banner" class="h-auto w-[116px]" />
+</div>
+
 <div class="m-0 h-screen">
 	<div class="flex-1">
 		<MapComponent />
 	</div>
-	<div class="absolute right-2 top-2">
+	<div class="absolute top-2 right-2">
 		<PlayersList />
 	</div>
 </div>
