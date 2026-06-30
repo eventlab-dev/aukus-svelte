@@ -17,7 +17,7 @@
 
 	/* --card: oklch(0.25 0 0);
 	--card-foreground: oklch(0.96 0 0); */
-	--card: #7F97E7;
+	--card: #7f97e7;
 	--card-foreground: #f3fafe;
 
 	--popover: oklch(0.25 0 0);
@@ -25,17 +25,17 @@
 
 	/* --primary: oklch(0.56 0.23 279.32);
 	--primary-foreground: oklch(0.96 0 0); */
-	--primary: #7F97E7;
+	--primary: #7f97e7;
 	--primary-foreground: #f3fafe;
 
 	--primary-hover: oklch(0.48 0.18 278.04);
 
 	/* --secondary: oklch(0.38 0 0); */
-	--secondary: #263C86;
+	--secondary: #263c86;
 
 	/* --secondary-foreground: oklch(0.96 0 0); */
-	--secondary-foreground: #4D66B9;
-	
+	--secondary-foreground: #4d66b9;
+
 	--muted: oklch(0.38 0 0);
 	--muted-foreground: oklch(0.7 0 0);
 	--accent: oklch(0.38 0 0);
@@ -240,11 +240,11 @@
 	}
 
 	&::before {
-		content: "> ";
+		content: '> ';
 	}
 
 	&::after {
-		content: " <";
+		content: ' <';
 	}
 }
 
@@ -257,6 +257,15 @@
 } */
 
 @utility border-dashed {
-  outline: 4px dashed #bac7f2;
-  outline-offset: -2px;
+	outline: 4px dashed #bac7f2;
+	outline-offset: -2px;
+}
+
+@layer utilities {
+	.no-prose-markers :where(ol > li)::marker {
+		color: inherit;
+	}
+	.no-prose-markers :where(ul > li)::marker {
+		color: inherit;
+	}
 }
