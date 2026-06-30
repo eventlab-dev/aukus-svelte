@@ -59,19 +59,19 @@
 	const elementWidth = $derived(element?.offsetWidth || 0)
 
 	function scrollToTop() {
-		const mainScroll = document.getElementById('main-scroll-area')?.firstElementChild
+		const mainScroll = document.getElementById(PAGE_SCROLL_ID)?.firstElementChild
 		mainScroll?.scrollTo({ top: 0, behavior: 'smooth' })
 	}
 </script>
 
 <div
 	bind:this={element}
-	class="fixed h-fit w-fit rounded-2xl bg-card p-5"
-	style="top: {pos.top}px; left: {pos.left - elementWidth - 30}px"
+	class="fixed h-fit w-fit rounded-2xl bg-card p-5 border-dashed"
+	style="top: {pos.top}px; left: {pos.left}px"
 >
 	<ScrollArea class="h-auto max-h-[70vh] overflow-y-auto" type="auto">
 		<div class="mb-5 flex justify-between">
-			<div>Быстрые ссылки</div>
+			<!-- <div>Быстрые ссылки</div> -->
 			<Button variant="link" class="m-0 mr-3 h-fit w-fit p-0" onclick={scrollToTop}>
 				Наверх
 			</Button>

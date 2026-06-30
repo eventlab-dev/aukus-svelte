@@ -14,7 +14,7 @@
 				outline: 'bg-background hover:bg-hover border',
 				secondary: 'bg-muted hover:bg-hover',
 				ghost: 'hover:bg-hover',
-				link: 'text-primary underline-offset-4 hover:text-primary underline decoration-2 decoration-primary justify-start',
+				link: 'text-primary-foreground underline-offset-4 hover:text-primary-foreground underline decoration-2 decoration-primary justify-start',
 				social: ''
 			},
 			size: {

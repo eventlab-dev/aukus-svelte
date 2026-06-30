@@ -100,12 +100,11 @@
 		width = window.innerWidth
 	}
 
-	const editorTopLeft = $derived.by(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		width
+	const tocPosition = $derived.by(() => {
+		void width
 		if (!editorElement) return { top: 0, left: 0 }
 		const rect = editorElement.getBoundingClientRect()
-		return { top: window.scrollY + 150, left: rect.left + window.scrollX }
+		return { top: window.scrollY + 150, left: rect.right + 30 }
 	})
 </script>
 
@@ -120,7 +119,7 @@
 	<div bind:this={editorElement}></div>
 
 	{#if editor && extensionsParams?.withTOC}
-		<TableOfContents items={tocData} {editor} pos={editorTopLeft} />
+		<TableOfContents items={tocData} {editor} pos={tocPosition} />
 	{/if}
 </div>
 

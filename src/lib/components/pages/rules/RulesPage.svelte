@@ -12,7 +12,7 @@
 	import { defaultAuth } from '$lib/utils'
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-	
+
 	const app = getAppManager()
 	const { usersStore, navStore } = app
 
@@ -81,14 +81,14 @@
 	<div class="w-[700px]">
 		<div class="flex gap-3">
 			<Button
-				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary data-[active=true]:selected-text"
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:selected-text data-[active=true]:bg-primary data-[active=true]:border-dashed"
 				onclick={() => setCategory('general')}
 				data-active={category === 'general'}
 			>
 				Для участников
 			</Button>
 			<Button
-				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E] data-[active=true]:selected-text"
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:selected-text data-[active=true]:bg-primary data-[active=true]:border-dashed"
 				onclick={() => setCategory('donations')}
 				data-active={category === 'donations'}
 			>
@@ -102,8 +102,12 @@
 			{#if canEdit}
 				{#if editorMode}
 					<div class="mb-10 flex gap-5">
-						<Button variant="default" onclick={() => (editorMode = false)}>Отмена</Button>
-						<Button variant="destructive" onclick={saveRules}>Сохранить</Button>
+						<Button variant="default" onclick={() => (editorMode = false)}>
+							Отмена
+						</Button>
+						<Button variant="destructive" onclick={saveRules}>
+							Сохранить
+						</Button>
 					</div>
 				{:else}
 					<Button class="mb-10" onclick={() => (editorMode = true)}>Редактировать</Button>
