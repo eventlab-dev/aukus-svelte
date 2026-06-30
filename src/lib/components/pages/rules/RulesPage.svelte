@@ -81,14 +81,14 @@
 	<div class="w-[700px]">
 		<div class="flex gap-3">
 			<Button
-				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-primary data-[active=true]:selected-text"
 				onclick={() => setCategory('general')}
 				data-active={category === 'general'}
 			>
 				Для участников
 			</Button>
 			<Button
-				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E]"
+				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E] data-[active=true]:selected-text"
 				onclick={() => setCategory('donations')}
 				data-active={category === 'donations'}
 			>

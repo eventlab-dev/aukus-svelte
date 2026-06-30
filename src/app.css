@@ -19,7 +19,7 @@
 	--card-foreground: oklch(0.96 0 0); */
 	--card: #7F97E7;
 	--card-foreground: #f3fafe;
-	
+
 	--popover: oklch(0.25 0 0);
 	--popover-foreground: oklch(0.96 0 0);
 
@@ -29,8 +29,13 @@
 	--primary-foreground: #f3fafe;
 
 	--primary-hover: oklch(0.48 0.18 278.04);
-	--secondary: oklch(0.38 0 0);
-	--secondary-foreground: oklch(0.96 0 0);
+
+	/* --secondary: oklch(0.38 0 0); */
+	--secondary: #263C86;
+
+	/* --secondary-foreground: oklch(0.96 0 0); */
+	--secondary-foreground: #4D66B9;
+	
 	--muted: oklch(0.38 0 0);
 	--muted-foreground: oklch(0.7 0 0);
 	--accent: oklch(0.38 0 0);
@@ -228,7 +233,17 @@
 	}
 }
 
-@theme {
-	--color-card-blue: #7F97E7;
-	--color-card-blue-foreground: #f3fafe;
+@utility selected-text {
+	&::before,
+	&::after {
+		display: inline;
+	}
+
+	&::before {
+		content: "> ";
+	}
+
+	&::after {
+		content: " <";
+	}
 }

@@ -8,7 +8,7 @@
 	import StarIcon from '../icons/new/StarIcon.svelte'
 	import { getDirectStreamUrl } from '$lib/utils/streamUtils'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-	import { CDN_URL_BASE, CDN_URL_BASE5 } from '$lib/constants'
+	import { CDN_URL_BASE5 } from '$lib/constants'
 
 	type Props = {
 		player: PlayerData

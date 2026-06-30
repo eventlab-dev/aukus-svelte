@@ -72,13 +72,15 @@
 	<ScrollArea class="h-auto max-h-[70vh] overflow-y-auto" type="auto">
 		<div class="mb-5 flex justify-between">
 			<div>Быстрые ссылки</div>
-			<Button variant="link" class="m-0 mr-3 h-fit w-fit p-0" onclick={scrollToTop}>Наверх</Button>
+			<Button variant="link" class="m-0 mr-3 h-fit w-fit p-0" onclick={scrollToTop}>
+				Наверх
+			</Button>
 		</div>
 		{#if items.length > 0}
 			<div class="table-of-contents">
 				{#each items as item (item.id)}
 					<div
-						class="data-[active=true]:text-normal data-[active=false]:text-muted-foreground"
+						class="data-[active=true]:text-secondary-foreground data-[active=false]:text-foreground uppercase data-[active=true]:selected-text"
 						style="--level: {item.level}"
 						data-active={item.isActive}
 					>
@@ -134,7 +136,7 @@
 
 		a {
 			color: var(--black);
-			display: flex;
+			/* display: flex; */
 			gap: 0.25rem;
 			text-decoration: none;
 
