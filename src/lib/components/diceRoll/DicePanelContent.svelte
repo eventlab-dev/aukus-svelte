@@ -278,8 +278,8 @@
 		</Button>
 	</div>
 {:else}
-	<div class="flex rounded-3xl bg-card">
-		<div class="flex w-[450px] flex-col gap-3 p-4">
+	<div class="flex">
+		<div class="bg-card flex w-[450px] flex-col gap-3 p-4 border-dashed rounded-[32px]">
 			<div class="flex justify-between">
 				<div class="flex items-center gap-2">
 					<Avatar class="size-[27px]">
@@ -306,12 +306,10 @@
 				<div class="font-bold">{player.current_game || 'Выбирает игру...'}</div>
 			</div>
 		</div>
-		<Separator orientation="vertical" />
-		<div class="flex items-center">
+		<div class="bg-card flex items-center border-dashed rounded-[32px]">
 			<PlayerModel {player} variant="big" />
 		</div>
-		<Separator orientation="vertical" />
-		<div class="flex w-[520px] flex-col gap-3 p-4 font-bold">
+		<div class="bg-card flex w-[520px] flex-col gap-3 p-4 font-bold border-dashed rounded-[32px]">
 			<div class="font-semibold text-muted-foreground">Варианты хода</div>
 			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
 			<div class="flex w-full gap-2">

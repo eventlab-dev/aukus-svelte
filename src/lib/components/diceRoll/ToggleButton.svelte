@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte'
-	import { Button } from '../ui/button'
+	import { Button, type ButtonProps } from '../ui/button'
 
 	type Props = {
 		selected: boolean
 		children: Snippet
-	}
+	} & ButtonProps
 
-	let { children, selected = $bindable(false) }: Props = $props()
+	let { children, selected = $bindable(false), class: className, ...rest }: Props = $props()
 
 	function handleClick() {
 		selected = !selected
@@ -16,8 +16,9 @@
 
 <Button
 	onclick={handleClick}
-	class="data-[selected=false]:bg-secondary data-[selected=true]:bg-primary"
+	class="data-[selected=false]:bg-secondary data-[selected=true]:bg-primary {className}"
 	data-selected={selected}
+	{...rest}
 >
 	{@render children()}
 </Button>

@@ -29,10 +29,13 @@
 
 <div class="flex gap-2">
 	{#each options as option (option.value)}
+		{@const selected = isSelected(option.value)}
 		<Tooltip>
 			<TooltipTrigger>
 				<ToggleButton
-					bind:selected={() => isSelected(option.value), () => setSelected(option.value)}
+					bind:selected={() => selected, () => setSelected(option.value)}
+					class="data-[selected=true]:border-dashed"
+					data-selected={selected}
 				>
 					{option.label}
 				</ToggleButton>

@@ -37,7 +37,10 @@
 	--secondary-foreground: #4d66b9;
 
 	--muted: oklch(0.38 0 0);
-	--muted-foreground: oklch(0.7 0 0);
+	/* --muted-foreground: oklch(0.7 0 0); */
+	--muted-foreground: var(--color-primary)
+
+	
 	--accent: oklch(0.38 0 0);
 	--accent-foreground: oklch(0.96 0 0);
 	--destructive: oklch(0.704 0.191 22.216);
@@ -261,6 +264,7 @@
 	outline-offset: -2px;
 }
 
+/* fix for rich editor rules lists */
 @layer utilities {
 	.no-prose-markers :where(ol > li)::marker {
 		color: inherit;
