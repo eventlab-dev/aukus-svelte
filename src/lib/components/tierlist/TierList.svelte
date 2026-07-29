@@ -35,14 +35,22 @@
         
         return result
     })
+
+    const TierText: Record<Tier, string> = {
+        'S': '9+',
+        'A': '7-9',
+        'B': '5-7',
+        'C': '2-5',
+        'D': '0-2'
+    }
 </script>
 
 <div>
    {#each Object.entries(gamesPerTier) as [tier, games] (tier)}
         {@const isFirst = tier === 'S'}
         <div class="flex border-1 border-black {isFirst ? '' : 'border-t-0'}">
-            <div class="h-[80px] w-[101px] border-r-1 border-black flex items-center justify-center bg-[{TIER_COLORS[tier as Tier]}]">
-                {tier}
+            <div class="h-[80px] w-[101px] border-r-1 border-black flex items-center justify-center text-background" style="background-color: {TIER_COLORS[tier as Tier]}">
+                {TierText[tier as Tier]}
             </div>
             <div class=" bg-[#1A1A17] w-[700px]">
                 {#each games as game (game.id)}
