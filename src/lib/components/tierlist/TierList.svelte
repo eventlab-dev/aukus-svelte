@@ -49,13 +49,13 @@
    {#each Object.entries(gamesPerTier) as [tier, games] (tier)}
         {@const isFirst = tier === 'S'}
         <div class="flex border-1 border-black {isFirst ? '' : 'border-t-0'}">
-            <div class="h-[80px] w-[101px] border-r-1 border-black flex items-center justify-center text-background" style="background-color: {TIER_COLORS[tier as Tier]}">
+            <div class="h-auto min-h-[80px] w-[101px] border-r-1 border-black flex items-center justify-center text-background" style="background-color: {TIER_COLORS[tier as Tier]}">
                 {TierText[tier as Tier]}
             </div>
-            <div class="bg-[#1A1A17] w-[700px] flex">
+            <div class="bg-[#1A1A17] flex flex-wrap w-[700px] gap-[1px]">
                 {#each games as game (game.id)}
-                    <div class="flex-1">
-                        <img class="h-[80px] w-auto border-r-1 border-black" src={game.cover_image_url} alt={game.item_title} />
+                    <div class="">
+                        <img class="h-[80px] w-auto" src={game.cover_image_url} alt={game.item_title} />
                     </div>
                 {/each}
             </div>
