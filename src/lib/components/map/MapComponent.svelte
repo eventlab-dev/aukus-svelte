@@ -68,11 +68,16 @@
 	let lastX = $state(0)
 	let lastY = $state(0)
 
+	let transition = $state('transform 0.25s ease-out')
+	let positionInitialized = $state(false)
+
 	function onMouseDown(e: MouseEvent) {
 		dragging = true
 
 		lastX = e.clientX
 		lastY = e.clientY
+
+		transition = 'none'
 	}
 
 	let mouseX = $state(0)
@@ -87,6 +92,8 @@
 
 		mapX = 0
 		mapY = viewportHeight / 2 - scaledHeight / 2
+
+		positionInitialized = true
 	}
 
 	let viewportHeight = $state(0)
@@ -155,6 +162,7 @@
 
 	function onMouseUp() {
 		dragging = false
+		transition = 'transform 0.25s ease-out'
 	}
 
 	const zoomMin = 1
@@ -181,6 +189,8 @@
 
 		mapX = mouseX - (mouseX - mapX) * scaleRatio
 		mapY = mouseY - (mouseY - mapY) * scaleRatio
+
+		transition = 'transform 0.15s ease-out'
 
 		clampPosition()
 	}
@@ -226,7 +236,9 @@ init arrow 70 270 510 210
 		tabindex={0}
 		role="button"
 		style={`
-      	transform: translate(${mapX}px, ${mapY}px) scale(${userZoom});
+     	transform: translate(${mapX}px, ${mapY}px) scale(${userZoom});
+     	transition: ${transition};
+     	opacity: ${positionInitialized ? 1 : 0};
 		`}
 	>
 		<div class="flex w-full">
