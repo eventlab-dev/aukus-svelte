@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { TIER_COLORS } from '$lib/constants'
+	import { scoreToTier } from '$lib/utils'
 	import { quadOut } from 'svelte/easing'
 	import { Tween } from 'svelte/motion'
 
@@ -31,10 +33,8 @@
 	let timeoutId: ReturnType<typeof setTimeout>
 
 	function getColor() {
-		if (itemIndex === null || itemIndex <= 3) return 'bg-red-500'
-		if (itemIndex <= 6) return 'bg-amber-500'
-		if (itemIndex <= 9) return 'bg-green-500'
-		return 'bg-purple-500'
+		const tier = scoreToTier(itemIndex ?? 0)
+		return TIER_COLORS[tier]
 	}
 
 	function calculateWidth(index: number | null) {

@@ -119,6 +119,16 @@ export const MOVIE_POSTER_URL = `${CDN_URL_BASE}/utils/movie_poster.png`
 
 export const PAGE_SCROLL_ID = 'page-scroll'
 
+export type Tier = 'S' | 'A' | 'B' | 'C' | 'D'
+
+export const TIER_COLORS: Record<Tier, string> = {
+	'S': '#7FFF7F',
+	'A': '#BFFF7F',
+	'B': '#FFFF7F',
+	'C': '#FFBF7F',
+	'D': '#FF7F7F',
+}
+
 
 // Z index list
 // page-container z-20

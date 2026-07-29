@@ -12,6 +12,7 @@
 	import Footer from '$lib/components/Footer.svelte'
 	import Loader from '$lib/components/Loader.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import TierList from '$lib/components/tierlist/TierList.svelte'
 
 	type Props = {
 		playerSlug: string
@@ -203,6 +204,8 @@
 							playerSlug={player.slug}
 						/>
 					</div>
+
+					<TierList games={playerMoves} />
 
 					<div class="mt-5 space-y-[200px]">
 						<div class="space-y-5">
