@@ -10,6 +10,7 @@
 	import PlayerCharacter from './PlayerCharacter.svelte'
 	import NewCell from './NewCell.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import { untrack } from 'svelte'
 
 	const app = getAppManager()
 	const { movementStore, mapStore } = app
@@ -28,7 +29,7 @@
 	let mapImgHeight = $state(0)
 
 	function updateScale() {
-		if (mapImg) {
+		if (mapImg && mapImg.naturalWidth !== 0) {
 			mapScale = mapImg.clientWidth / mapImg.naturalWidth
 			mapImgHeight = mapImg.clientHeight
 			if (viewport) {
@@ -46,7 +47,6 @@
 		})
 
 		observer.observe(mapImg)
-
 		return () => observer.disconnect()
 	})
 
@@ -61,8 +61,8 @@
 		particles: 105
 	}
 
-	let x = $state(0)
-	let y = $state(0)
+	let mapX = $state(0)
+	let mapY = $state(0)
 
 	let dragging = $state(false)
 	let lastX = $state(0)
@@ -77,6 +77,25 @@
 
 	let mouseX = $state(0)
 	let mouseY = $state(0)
+
+	function setInitialPos() {
+		if (!mapImg || !viewportHeight === 0) {
+			return
+		}
+
+		const scaledHeight = mapImg.naturalHeight * userZoom * mapScale
+
+		mapX = 0
+		mapY = viewportHeight / 2 - scaledHeight / 2
+	}
+
+	let viewportHeight = $state(0)
+
+	$effect(() => {
+		if (imageLoaded && viewportHeight > 0) {
+			untrack(() => setInitialPos())
+		}
+	})
 
 	function getBounds() {
 		const scaledWidth = mapImg!.naturalWidth * userZoom * mapScale
@@ -95,17 +114,25 @@
 		// const overscrollX = viewportWidth * 0.1
 		// const overscrollY = viewportHeight * 0.2
 
+		let minX = -extensionRight
+		let maxX = extensionLeft
+		if (scaledWidth > viewportWidth) {
+			minX = viewportWidth - scaledWidth - extensionRight
+			maxX = extensionLeft
+		}	
+
+		let minY = -extensionBottom
+		let maxY = viewportHeight - scaledHeight + extensionBottom
+		if (scaledHeight > viewportHeight) {
+			minY = viewportHeight - scaledHeight - extensionBottom
+			maxY = extensionTop
+		}
+
 		return {
-			minX:
-				scaledWidth > viewportWidth
-					? viewportWidth - scaledWidth - extensionRight
-					: -extensionRight,
-			maxX: extensionLeft,
-			minY:
-				scaledHeight > viewportHeight
-					? viewportHeight - scaledHeight - extensionBottom
-					: -extensionBottom,
-			maxY: extensionTop
+			minX,
+			maxX,
+			minY,
+			maxY
 		}
 	}
 
@@ -117,8 +144,8 @@
 		const dx = e.clientX - lastX
 		const dy = e.clientY - lastY
 
-		x += dx
-		y += dy
+		mapX += dx
+		mapY += dy
 
 		clampPosition()
 
@@ -152,8 +179,8 @@
 
 		const scaleRatio = userZoom / oldScale
 
-		x = mouseX - (mouseX - x) * scaleRatio
-		y = mouseY - (mouseY - y) * scaleRatio
+		mapX = mouseX - (mouseX - mapX) * scaleRatio
+		mapY = mouseY - (mouseY - mapY) * scaleRatio
 
 		clampPosition()
 	}
@@ -163,8 +190,8 @@
 
 		const { minX, maxX, minY, maxY } = getBounds()
 
-		x = Math.max(minX, Math.min(maxX, x))
-		y = Math.max(minY, Math.min(maxY, y))
+		mapX = Math.max(minX, Math.min(maxX, mapX))
+		mapY = Math.max(minY, Math.min(maxY, mapY))
 	}
 </script>
 
@@ -185,7 +212,7 @@
 init arrow 70 270 510 210
 </div> -->
 
-<div class="viewport relative h-screen w-full overflow-visible" bind:this={viewport}>
+<div class="viewport relative h-screen w-full overflow-visible" bind:this={viewport} bind:clientHeight={viewportHeight}>
 	<div
 		id={MapContainerId}
 		class="map-transform absolute top-0 left-0 origin-top-left overflow-hidden"
@@ -199,7 +226,7 @@ init arrow 70 270 510 210
 		tabindex={0}
 		role="button"
 		style={`
-      	transform: translate(${x}px, ${y}px) scale(${userZoom});
+      	transform: translate(${mapX}px, ${mapY}px) scale(${userZoom});
 		`}
 	>
 		<div class="flex w-full">
