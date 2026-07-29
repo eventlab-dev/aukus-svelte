@@ -27,6 +27,7 @@
 	let userZoom = $state(1)
 
 	let mapImgHeight = $state(0)
+	let viewportHeight = $state(0)
 
 	function updateScale() {
 		if (mapImg && mapImg.naturalWidth !== 0) {
@@ -84,7 +85,7 @@
 	let mouseY = $state(0)
 
 	function setInitialPos() {
-		if (!mapImg || !viewportHeight === 0) {
+		if (!mapImg || viewportHeight > 0) {
 			return
 		}
 
@@ -96,7 +97,6 @@
 		positionInitialized = true
 	}
 
-	let viewportHeight = $state(0)
 
 	$effect(() => {
 		if (imageLoaded && viewportHeight > 0) {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { TIER_COLORS } from '$lib/constants'
 	import { scoreToTier } from '$lib/utils'
 	import { quadOut } from 'svelte/easing'
 	import { Tween } from 'svelte/motion'
@@ -34,7 +33,7 @@
 
 	function getColor() {
 		const tier = scoreToTier(itemIndex ?? 0)
-		return TIER_COLORS[tier]
+		return tier.color
 	}
 
 	function calculateWidth(index: number | null) {

@@ -119,15 +119,20 @@ export const MOVIE_POSTER_URL = `${CDN_URL_BASE}/utils/movie_poster.png`
 
 export const PAGE_SCROLL_ID = 'page-scroll'
 
-export type Tier = 'S' | 'A' | 'B' | 'C' | 'D'
-
-export const TIER_COLORS: Record<Tier, string> = {
-	'S': '#7FFF7F',
-	'A': '#BFFF7F',
-	'B': '#FFFF7F',
-	'C': '#FFBF7F',
-	'D': '#FF7F7F',
+export type Tier = {
+	rank: 1 | 2 | 3 | 4 | 5
+	label: string
+	color: string
+	maxRating: number
 }
+
+export const TIERS: Tier[] = [
+	{ rank: 1, label: '0-3', color: '#FF7F7F', maxRating: 3 },
+	{ rank: 2, label: '3-5', color: '#FFBF7F', maxRating: 5 },
+	{ rank: 3, label: '5-7', color: '#FFFF7F', maxRating: 7 },
+	{ rank: 4, label: '7-9', color: '#BFFF7F', maxRating: 9 },
+	{ rank: 5, label: '9+', color: '#7FFF7F', maxRating: 100 },
+].toSorted((a, b) => a.rank - b.rank) as Tier[]
 
 
 // Z index list

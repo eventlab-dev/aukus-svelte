@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { DifficultyTitle, LastMapPosition, type Tier } from './constants'
+import { DifficultyTitle, LastMapPosition, TIERS, type Tier } from './constants'
 import type { BadgeVariant } from './components/ui/badge'
 import { renderToHTMLString } from '@tiptap/static-renderer'
 import { initExtensions } from './tiptapExtensions/enabledExtensions'
@@ -410,17 +410,6 @@ export function calculateDiceProbability(diceAmount: number, diceType: number): 
 }
 
 export function scoreToTier(score: number): Tier {
-	if (score <= 2) {
-		return 'D'
-	}
-	if (score < 5) {
-		return 'C'
-	}
-	if (score < 7) {
-		return 'B'
-	}
-	if (score < 9) {
-		return 'A'
-	}
-	return 'S'
+	const tier = TIERS.find((t) => score <= t.maxRating)
+	return tier || TIERS[0]
 }
