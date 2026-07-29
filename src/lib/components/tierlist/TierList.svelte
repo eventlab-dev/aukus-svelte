@@ -36,8 +36,8 @@
 </script>
 
 <div>
-   {#each tiersList as tier (tier)}
-        {@const isFirst = tier === 1}
+   {#each tiersList as tier, idx (tier)}
+        {@const isFirst = idx === 0}
         {@const tierObj = TIERS.find(t => t.rank === tier)}
         {@const games = gamesPerTier[tier] ?? []}
         <div class="flex border-1 border-black {isFirst ? '' : 'border-t-0'}">
@@ -47,7 +47,13 @@
             <div class="bg-[#1A1A17] flex flex-wrap w-[700px] gap-[1px]">
                 {#each games as game (game.id)}
                     <div class="">
+                    {#if game.cover_image_url}
                         <img class="h-[80px] w-auto" src={game.cover_image_url} alt={game.item_title} />
+                    {:else}
+                        <div class="h-[80px] w-auto max-w-[80px] bg-gray-800 flex items-center justify-center text-center">
+                            <span class="text-white text-xs break-words">{game.item_title}</span>
+                        </div>
+                    {/if}
                     </div>
                 {/each}
             </div>
