@@ -11,7 +11,7 @@
     const parsedReview = $derived(renderToHTML(game.item_review))
 
 	const statusText = $derived.by(() => {
-        const time = formatMs(game.item_duration)
+        const time = formatMs(game.item_duration * 1000)
         let diffText = ''
         switch (game.difficulty_level) {
             case -1:
@@ -38,7 +38,7 @@
 			case 'drop':
 				return `Дроп через ${time}${diffText}`
 			case 'movie':
-				return `Просмотр ${time}`
+				return `Просмотровый`
 			case 'reroll':
 				return `Реролл`
 			case 'sheikh_moment':
