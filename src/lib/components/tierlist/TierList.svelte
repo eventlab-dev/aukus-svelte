@@ -13,6 +13,8 @@
 
 	let { games }: Props = $props()
 
+	const imageErrors = $state<Record<string, boolean>>({})
+
 	const tiersList = TIERS.map((tier) => tier.rank).toReversed()
 
 	const gamesWithTier: GameWithTier[] = $derived(
@@ -53,16 +55,15 @@
 			</div>
 			<div class="flex w-[700px] flex-wrap gap-[1px] bg-[#1A1A17]">
 				{#each games as game (game.id)}
-					{@const imageError = $state(false)}
 					<Tooltip>
 						<TooltipTrigger>
 							<div class="">
-								{#if game.cover_image_url && !imageError}
+								{#if game.cover_image_url && !imageErrors[game.id]}
 									<img
 										class="h-[80px] w-auto"
 										src={game.cover_image_url}
 										alt={game.item_title}
-										onerror={() => (imageError = true)}
+										onerror={() => (imageErrors[game.id] = true)}
 									/>
 								{:else}
 									<div
