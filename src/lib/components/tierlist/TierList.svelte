@@ -58,7 +58,7 @@
 					<Tooltip>
 						<TooltipTrigger>
 							<div class="">
-								{#if game.cover_image_url && !imageErrors[game.id]}
+								{#if game.cover_image_url && !imageErrors[game.id] && !game.cover_image_url.toLowerCase().includes('gamefallbackposter')}
 									<img
 										class="h-[80px] w-auto"
 										src={game.cover_image_url}
