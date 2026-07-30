@@ -2,8 +2,6 @@
 	import { TIERS, type Tier } from '$lib/constants'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { scoreToTier } from '$lib/utils'
-	import { Popover, PopoverTrigger } from '../ui/popover'
-	import PopoverContent from '../ui/popover/popover-content.svelte'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 	import GamePopup from './GamePopup.svelte'
 
@@ -55,11 +53,17 @@
 			</div>
 			<div class="flex w-[700px] flex-wrap gap-[1px] bg-[#1A1A17]">
 				{#each games as game (game.id)}
+					{@const imageError = $state(false)}
 					<Tooltip>
 						<TooltipTrigger>
 							<div class="">
-								{#if game.cover_image_url}
-									<img class="h-[80px] w-auto" src={game.cover_image_url} alt={game.item_title} />
+								{#if game.cover_image_url && !imageError}
+									<img
+										class="h-[80px] w-auto"
+										src={game.cover_image_url}
+										alt={game.item_title}
+										onerror={() => (imageError = true)}
+									/>
 								{:else}
 									<div
 										class="flex h-[80px] w-auto max-w-[80px] items-center justify-center bg-gray-800 text-center"
