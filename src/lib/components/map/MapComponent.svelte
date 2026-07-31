@@ -85,7 +85,7 @@
 	let mouseY = $state(0)
 
 	function setInitialPos() {
-		if (!mapImg || viewportHeight > 0) {
+		if (!mapImg || viewportHeight === 0) {
 			return
 		}
 
