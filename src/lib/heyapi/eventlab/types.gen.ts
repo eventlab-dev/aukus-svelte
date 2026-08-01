@@ -57,7 +57,7 @@ export type DiceRollResponse = {
 /**
  * DiceType
  */
-export type DiceType = '1d2' | '1d4' | '2d4' | '3d4' | '1d6' | '2d6' | '3d6' | '4d6' | '2d8';
+export type DiceType = '1d2' | '1d4' | '2d4' | '3d4' | '1d6' | '2d6' | '3d6' | '4d6' | '1d8' | '2d8';
 
 /**
  * EmoteItem
@@ -164,11 +164,6 @@ export type EventItem = {
 };
 
 /**
- * EventName
- */
-export type EventName = 'aukus1' | 'aukus2' | 'aukus3' | 'aukus4' | 'igropolius' | 'MGE';
-
-/**
  * EventParticipantItem
  */
 export type EventParticipantItem = {
@@ -224,10 +219,13 @@ export type GameHistoryItem = {
      */
     id: number;
     /**
-     * Player Name
+     * Player Nickname
      */
-    player_name: string;
-    event_name: EventName;
+    player_nickname: string;
+    /**
+     * Event Name
+     */
+    event_name: string;
     /**
      * Game Title
      */
@@ -240,11 +238,15 @@ export type GameHistoryItem = {
      * Game Link
      */
     game_link: string;
+    /**
+     * Game Year
+     */
+    game_year: number | null;
     completion_status: GameCompletionStatus;
     /**
-     * Timestamp
+     * Date
      */
-    timestamp: number | null;
+    date: string;
     /**
      * Review
      */
@@ -258,13 +260,17 @@ export type GameHistoryItem = {
      */
     game_time: number;
     /**
-     * Difficulty
+     * Hltb Id
      */
-    difficulty: string;
+    hltb_id: number | null;
     /**
-     * Game Id
+     * Igdb Id
      */
-    game_id: number | null;
+    igdb_id: number | null;
+    /**
+     * Steam Id
+     */
+    steam_id: number | null;
 };
 
 /**
@@ -512,6 +518,62 @@ export type LoginResponse = {
 };
 
 /**
+ * NassalStreamerItem
+ */
+export type NassalStreamerItem = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Slug
+     */
+    slug: string;
+    /**
+     * Username
+     */
+    username: string;
+    /**
+     * Is Online
+     */
+    is_online: number;
+    /**
+     * Online Count
+     */
+    online_count: number;
+    /**
+     * Main Platform
+     */
+    main_platform: string;
+    /**
+     * Twitch Stream Link
+     */
+    twitch_stream_link?: string | null;
+    /**
+     * Vk Stream Link
+     */
+    vk_stream_link?: string | null;
+    /**
+     * Kick Stream Link
+     */
+    kick_stream_link?: string | null;
+};
+
+/**
+ * NassalStreamsResponse
+ */
+export type NassalStreamsResponse = {
+    /**
+     * Streamers
+     */
+    streamers: Array<NassalStreamerItem>;
+    /**
+     * Checked At
+     */
+    checked_at: number;
+};
+
+/**
  * PlayerMoveNotificationRequest
  */
 export type PlayerMoveNotificationRequest = {
@@ -538,7 +600,7 @@ export type PlayerMoveNotificationRequest = {
     /**
      * Item Rating
      */
-    item_rating: number;
+    item_rating: number | null;
     /**
      * Cell From
      */
@@ -736,6 +798,20 @@ export type ValidationError = {
     type: string;
 };
 
+export type TestExceptionApiTestExceptionGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/test/exception';
+};
+
+export type TestExceptionApiTestExceptionGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
 export type LoginApiLoginPostData = {
     body: LoginRequest;
     path?: never;
@@ -850,7 +926,7 @@ export type GetUsersApiUsersGetData = {
         /**
          * Events
          */
-        events?: Array<EventName>;
+        events?: Array<string>;
     };
     url: '/api/users';
 };
@@ -880,11 +956,15 @@ export type GetGamesApiGamesHistoryGetData = {
         /**
          * Events
          */
-        events?: Array<EventName>;
+        events?: Array<string>;
         /**
          * Players
          */
         players?: Array<string>;
+        /**
+         * Igdb Ids
+         */
+        igdb_ids?: Array<number>;
         /**
          * Titles
          */
@@ -930,6 +1010,20 @@ export type GetGamesApiGamesHistoryGetResponses = {
 };
 
 export type GetGamesApiGamesHistoryGetResponse = GetGamesApiGamesHistoryGetResponses[keyof GetGamesApiGamesHistoryGetResponses];
+
+export type StartGamesHistoryImportApiGamesHistoryImportStartGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/games-history/import/start';
+};
+
+export type StartGamesHistoryImportApiGamesHistoryImportStartGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type MakeDiceRollApiDiceRollsPostData = {
     body: DiceRollRequest;
@@ -1007,14 +1101,6 @@ export type SearchIgdbGamesGetApiIgdbGamesSearchGetData = {
          * Limit
          */
         limit?: number;
-        /**
-         * For Update
-         */
-        for_update?: boolean;
-        /**
-         * Allow Acting
-         */
-        allow_acting?: boolean;
     };
     url: '/api/igdb/games/search';
 };
@@ -1111,6 +1197,14 @@ export type StartHltbUpdateApiHltbUpdateStartGetData = {
          * Force
          */
         force?: boolean;
+        /**
+         * Only New
+         */
+        only_new?: boolean;
+        /**
+         * Only Missing
+         */
+        only_missing?: boolean;
     };
     url: '/api/hltb/update/start';
 };
@@ -1244,6 +1338,22 @@ export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses = {
 };
 
 export type CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponse = CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses[keyof CloseGameCategoriesApiStreamsCloseGameCategoriesPostResponses];
+
+export type GetNassalStreamsApiNassalStreamsGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/nassal/streams';
+};
+
+export type GetNassalStreamsApiNassalStreamsGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: NassalStreamsResponse;
+};
+
+export type GetNassalStreamsApiNassalStreamsGetResponse = GetNassalStreamsApiNassalStreamsGetResponses[keyof GetNassalStreamsApiNassalStreamsGetResponses];
 
 export type GetEventsApiEventsGetData = {
     body?: never;
@@ -1383,5 +1493,5 @@ export type NotifyPlayerOnlineApiNotificationsPlayerOnlinePostResponses = {
 };
 
 export type ClientOptions = {
-    baseUrl: 'http://localhost:8300' | (string & {});
+    baseUrl: 'http://localhost:8094' | (string & {});
 };

@@ -308,18 +308,21 @@ export function formatDuration(
 export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {
 	return {
 		id: move.id,
-		player_name: move.player_slug,
+		player_nickname: move.player_slug,
 		event_name: 'aukus4',
 		game_title: move.item_title,
 		completion_status: move.type,
-		timestamp: move.created_at,
-		difficulty: DifficultyTitle[move.difficulty_level],
+		date: formatMs(move.created_at*1000),
+		// difficulty: DifficultyTitle[move.difficulty_level],
 		review: move.item_review,
 		rating: `${move.item_rating}/10`,
-		game_id: move.game_id,
+		igdb_id: move.game_id,
 		game_time: move.item_duration,
 		game_cover: move.cover_image_url ?? '',
-		game_link: ''
+		game_link: '',
+		game_year: null,
+		hltb_id: null,
+		steam_id: null,
 	}
 }
 

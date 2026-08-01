@@ -65,7 +65,7 @@
 			players: [playerSlug],
 			start_ts: null,
 			search_title: null,
-			titles: undefined,
+			igdb_ids: [],
 			exclude_ids: undefined
 		}
 		canvasStore.playerSlug = playerSlug
@@ -76,7 +76,7 @@
 
 		if (!currentPlayer || movesQuery.isLoading || movesQuery.isFetching) {
 		    gamesMatchesStoreForPlayer.gamesMatchParams = {
-				titles: [],
+				igdb_ids: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
 				exclude_player: playerSlug
@@ -88,7 +88,7 @@
 
 		if (movesForCurrentPlayer.length > 0) {
 			gamesMatchesStoreForPlayer.gamesMatchParams = {
-				titles: movesForCurrentPlayer.map((move) => move.item_title),
+				igdb_ids: movesForCurrentPlayer.map((move) => move.game_id).filter(Boolean) as number[],
 				exclude_ids_moves: movesForCurrentPlayer
 					.map((move) => move.game_id)
 					.filter(Boolean) as number[],
@@ -97,7 +97,7 @@
 			}
 		} else {
 			gamesMatchesStoreForPlayer.gamesMatchParams = {
-				titles: [],
+				igdb_ids: [],
 				exclude_ids_moves: [],
 				exclude_ids_history: [],
 				exclude_player: playerSlug

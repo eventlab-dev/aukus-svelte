@@ -12,7 +12,6 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import { Toggle } from '$lib/components/ui/toggle'
 	import X from '@lucide/svelte/icons/x'
-	import { type EventName } from '$lib/heyapi/eventlab/types.gen'
 	import { EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
 	import type { CommonGameItem } from '$lib/types'
@@ -77,9 +76,9 @@
 		return null
 	})
 
-	const eventsList: EventName[] = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
+	const eventsList = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
 
-	function selectEvent(_: boolean, event: EventName) {
+	function selectEvent(_: boolean, event: string) {
 		if (selectedEvent === event) {
 			gamesHistoryStore.searchParams.events = ['aukus1', 'aukus2', 'aukus3']
 		} else {
@@ -99,17 +98,23 @@
 			return
 		}
 
-		const gamesTitles = new Set(
-			[...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
-				.map((game) => game.game_title)
-				.slice(0, 50)
-		)
+		const historyIds = [...aukus3Games, ...aukus2Games, ...aukus1Games]
+			.map((game) => game.igdb_id)
+			.filter((id): id is number => id !== null)
+
+		const eventIds = aukus4Games
+			.map((game) => game.igdb_id)
+			.filter((id): id is number => id !== null)
+
+		const allIds = new Set([...historyIds, ...eventIds])
+
 		const gamesIdsHistory = [...aukus3Games, ...aukus2Games, ...aukus1Games]
 			.map((game) => game.id)
+			.filter((id): id is number => id !== null)
 			.slice(0, 50)
 		const gamesIdsMoves = aukus4Games.map((game) => game.id).slice(0, 50)
 		gamesMatchesStore.gamesMatchParams = {
-			titles: [...gamesTitles],
+			igdb_ids: [...allIds],
 			exclude_ids_moves: gamesIdsMoves,
 			exclude_ids_history: gamesIdsHistory,
 			exclude_player: undefined
@@ -232,9 +237,9 @@
 						{#if aukus4GamesDisplay.length !== 0}
 							<div class="p-0 text-center text-3xl">Аукус 4</div>
 							{#each aukus4GamesDisplay as game (game.id)}
-								{#if app.playersBySlug.get(game.player_name) !== undefined}
+								{#if app.playersBySlug.get(game.player_nickname) !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+										(g) => g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -248,9 +253,9 @@
 								</Button>
 							</div>
 							{#each aukus3Games as game (game.id)}
-								{#if app.playersBySlug.get(game.player_name)}
+								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+										(g) => g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -264,9 +269,9 @@
 								</Button>
 							</div>
 							{#each aukus2Games as game (game.id)}
-								{#if app.playersBySlug.get(game.player_name)}
+								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+										(g) => g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -280,9 +285,9 @@
 								</Button>
 							</div>
 							{#each aukus1Games as game (game.id)}
-								{#if app.playersBySlug.get(game.player_name)}
+								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+										(g) => g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}

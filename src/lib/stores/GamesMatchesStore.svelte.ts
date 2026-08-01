@@ -8,11 +8,9 @@ import { playerMoveToCommonGame } from '$lib/utils'
 type MatchParams = {
 	exclude_ids_history: number[]
 	exclude_ids_moves: number[]
-	titles: string[]
+	igdb_ids: number[]
 	exclude_player?: string
 }
-
-const EXCLUDE_TITLES = new Set(['Just Chatting'])
 
 type Props = {
 	getPlayerSlug: () => string | undefined
@@ -32,17 +30,16 @@ export class GamesMatchesStore {
 	gamesMatchParams = $state<MatchParams>({
 		exclude_ids_history: [],
 		exclude_ids_moves: [],
-		titles: [],
+		igdb_ids: [],
 		exclude_player: undefined
 	})
 
 	historyMatchQuery = createQuery(() => {
-		const titles = this.gamesMatchParams.titles.filter((t) => !EXCLUDE_TITLES.has(t))
 		const slugsList = this.getPlayersSlugs()
 		const params = getGamesApiGamesHistoryGetOptions({
 			baseUrl: EventlabBaseUrl,
 			query: {
-				titles,
+				igdb_ids: this.gamesMatchParams.igdb_ids,
 				exclude_ids: this.gamesMatchParams.exclude_ids_history,
 				start_id: null,
 				players: slugsList.filter((p) => p !== this.gamesMatchParams.exclude_player)
@@ -51,7 +48,7 @@ export class GamesMatchesStore {
 			// tags: ['abc']
 		})
 		// console.log('query params', params)
-		params.enabled = titles.length > 0
+		params.enabled = this.gamesMatchParams.igdb_ids.length > 0
 		params.refetchOnWindowFocus = false
 		// params.queryKey.push({ _id: 'tag', tags: [playerSlug ?? 'all-players'] })
 		return params
@@ -62,18 +59,16 @@ export class GamesMatchesStore {
 			? this.getPlayersSlugs().filter((p) => p !== this.gamesMatchParams.exclude_player)
 			: this.getPlayersSlugs()
 
-		const titles = this.gamesMatchParams.titles.filter((t) => !EXCLUDE_TITLES.has(t))
-
 		const params = getPlayerMovesApiPlayersMovesGetOptions({
 			baseUrl: AukusBaseUrl,
 			query: {
-				titles,
+				igdb_ids: this.gamesMatchParams.igdb_ids,
 				exclude_ids: this.gamesMatchParams.exclude_ids_moves,
 				start_ts: null,
 				players: playersFilter
 			}
 		})
-		params.enabled = titles.length > 0 && playersFilter.length > 0
+		params.enabled = this.gamesMatchParams.igdb_ids.length > 0 && playersFilter.length > 0
 		params.refetchOnWindowFocus = false
 		return params
 	})

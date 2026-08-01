@@ -6,7 +6,7 @@
 	import { EventTitles } from '$lib/constants'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { CommonGameItem } from '$lib/types'
-	import { formatDateTime, formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
+	import { formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade } from 'svelte/transition'
 
 	type Props = {
@@ -18,7 +18,7 @@
 
 	const app = getAppManager()
 
-	const player = $derived(app.playersBySlug.get(game.player_name.toLowerCase()))
+	const player = $derived(app.playersBySlug.get(game.player_nickname.toLowerCase()))
 	const categoryDuration = $derived(formatDuration(game.game_time))
 
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
@@ -36,7 +36,7 @@
 					{EventTitles[game.event_name] ?? game.event_name}
 				</Badge>
 				<Badge variant="secondary" style="background-color: {player?.color ?? 'gray'}">
-					{player?.username ?? game.player_name}
+					{player?.username ?? game.player_nickname}
 				</Badge>
 				<Badge variant={moveTypeStyles.variant}>
 					{moveTypeStyles.text}
@@ -51,11 +51,11 @@
 				</Tooltip>
 			</div>
 		</div>
-		{#if game.timestamp}
+		{#if game.date}
 			<div
 				class="absolute top-3 right-3 text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground"
 			>
-				{formatDateTime(game.timestamp)}
+				{game.date}
 			</div>
 		{/if}
 	</div>

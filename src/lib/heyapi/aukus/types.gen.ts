@@ -754,6 +754,20 @@ export type ValidationError = {
     type: string;
 };
 
+export type TestExceptionApiTestExceptionGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/test/exception';
+};
+
+export type TestExceptionApiTestExceptionGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
 export type GetCanvasFilesApiCanvasPlayerSlugGetData = {
     body?: never;
     path: {
@@ -991,9 +1005,9 @@ export type GetPlayerMovesApiPlayersMovesGetData = {
          */
         search_title?: string | null;
         /**
-         * Titles
+         * Igdb Ids
          */
-        titles?: Array<string>;
+        igdb_ids?: Array<number>;
         /**
          * Exclude Ids
          */
@@ -1300,5 +1314,5 @@ export type CreateNewRulesVersionApiRulesPostResponses = {
 };
 
 export type ClientOptions = {
-    baseUrl: 'http://localhost:8301' | (string & {});
+    baseUrl: 'http://localhost:8093' | (string & {});
 };
