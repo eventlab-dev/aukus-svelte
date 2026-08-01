@@ -41,19 +41,18 @@
 	})
 </script>
 
-<div>
-	{#each tiersList as tier, idx (tier)}
-		{@const isFirst = idx === 0}
+<div class="rounded-xl bg-blue-400 overflow-hidden flex flex-col gap-[1px]">
+	{#each tiersList as tier (tier)}
 		{@const tierObj = TIERS.find((t) => t.rank === tier)}
 		{@const games = gamesPerTier[tier] ?? []}
-		<div class="flex border-1 border-black {isFirst ? '' : 'border-t-0'}">
+		<div class="flex gap-[1px]">
 			<div
-				class="flex h-auto min-h-[80px] w-[101px] items-center justify-center border-r-1 border-black text-background"
+				class="flex h-auto min-h-[80px] w-[50px] items-center justify-center text-background"
 				style="background-color: {tierObj?.color}"
 			>
 				{tierObj?.label}
 			</div>
-			<div class="flex w-[700px] flex-wrap gap-[1px] bg-[#1A1A17]">
+			<div class="flex w-[750px] flex-wrap gap-[1px]">
 				{#each games as game (game.id)}
 					<Tooltip>
 						<TooltipTrigger>
