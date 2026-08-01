@@ -5,9 +5,10 @@ import type {
 	GetGamesApiGamesHistoryGetData
 } from '$lib/heyapi/eventlab/types.gen'
 import { createQuery } from '@tanstack/svelte-query'
-import type { PlayerData } from '$lib/types'
+import type { CommonGameItem, PlayerData } from '$lib/types'
 import { SvelteMap } from 'svelte/reactivity'
 import { untrack } from 'svelte'
+import { historyGameToCommonGame } from '$lib/utils'
 
 type QueryParams = NonNullable<GetGamesApiGamesHistoryGetData['query']>
 
@@ -16,7 +17,7 @@ type Props = {
 }
 
 export class GameHistoryStore {
-	allLoadedGames = $state<GameHistoryItem[]>([])
+	allLoadedGames = $state<CommonGameItem[]>([])
 
 	getPlayers: Props['getPlayers'] = () => []
 
@@ -27,13 +28,13 @@ export class GameHistoryStore {
 			const games = this.historyQuery.data?.games
 			if (games) {
 				if (this.resetLoadedGames) {
-					this.allLoadedGames = games
+					this.allLoadedGames = games.map(historyGameToCommonGame)
 					this.resetLoadedGames = false
 				} else {
 					const loadedGames = untrack(() => this.allLoadedGames)
 					const newGames = games.filter(
 						(newGame) => !loadedGames.some((existingGame) => existingGame.id === newGame.id)
-					)
+					).map(historyGameToCommonGame)
 					this.allLoadedGames = [...loadedGames, ...newGames]
 				}
 			}
@@ -93,7 +94,7 @@ export class GameHistoryStore {
 			}
 			acc.get(game.event_name)!.push(game)
 			return acc
-		}, new SvelteMap<string, GameHistoryItem[]>())
+		}, new SvelteMap<string, CommonGameItem[]>())
 	)
 
 	hasMore = $derived(Boolean(this.historyQuery.data?.next_id))

@@ -1,4 +1,5 @@
 import type { GameDifficulty, GameLength } from './heyapi/aukus/types.gen'
+import type { Difficulty } from './types'
 
 export const EMOTES_SEARCH_API_URL = 'https://api4.rhhhhhhh.live/search_emotes'
 export const SEVENTV_EMOTE_BASE_URL = 'https://starege.rhhhhhhh.live/https://cdn.7tv.app/emote'
@@ -102,6 +103,13 @@ export const EventTitles: { [k: string]: string } = {
 	aukus4: 'Аукус 4',
 	MGE: 'МГЕ',
 	igropolius: 'Игрополиус'
+}
+
+export const DifficultyMap: Record<GameDifficulty, Difficulty> = {
+	'-1': 'easy',
+	0: 'normal',
+	1: 'hard',
+	2: 'very-hard'
 }
 
 export const DifficultyTitle: { [k in GameDifficulty]: string } = {

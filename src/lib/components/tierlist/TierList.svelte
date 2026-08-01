@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { TIERS, type Tier } from '$lib/constants'
-	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import type { CommonGameItem } from '$lib/types'
 	import { scoreToTier } from '$lib/utils'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 	import GamePopup from './GamePopup.svelte'
 
 	type Props = {
-		games: PlayerMoveItem[]
+		games: CommonGameItem[]
 	}
 
-	type GameWithTier = PlayerMoveItem & { tier: Tier }
+	type GameWithTier = CommonGameItem & { tier: Tier, rating_num: number }
 
 	let { games }: Props = $props()
 
@@ -20,7 +20,7 @@
 	const gamesWithTier: GameWithTier[] = $derived(
 		games.map((game) => ({
 			...game,
-			tier: scoreToTier(game.item_rating)
+			tier: scoreToTier(game.rating_num),
 		}))
 	)
 
@@ -34,7 +34,7 @@
 		}
 
 		for (const tier of tiersList) {
-			result[tier].sort((a, b) => b.item_rating - a.item_rating)
+			result[tier].sort((a, b) => b.rating_num - a.rating_num)
 		}
 
 		return result
@@ -57,18 +57,18 @@
 					<Tooltip>
 						<TooltipTrigger>
 							<div class="">
-								{#if game.cover_image_url && !imageErrors[game.id] && !game.cover_image_url.toLowerCase().includes('gamefallbackposter')}
+								{#if game.game_cover && !imageErrors[game.id] && !game.game_cover.toLowerCase().includes('gamefallbackposter')}
 									<img
 										class="h-[80px] w-auto"
-										src={game.cover_image_url}
-										alt={game.item_title}
+										src={game.game_cover}
+										alt={game.game_title}
 										onerror={() => (imageErrors[game.id] = true)}
 									/>
 								{:else}
 									<div
 										class="flex h-[80px] w-auto max-w-[80px] items-center justify-center bg-gray-800 text-center"
 									>
-										<span class="text-xs break-words text-white">{game.item_title}</span>
+										<span class="text-xs break-words text-white">{game.	game_title}</span>
 									</div>
 								{/if}
 							</div>

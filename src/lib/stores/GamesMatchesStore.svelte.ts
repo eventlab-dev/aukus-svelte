@@ -2,7 +2,7 @@ import { AukusBaseUrl, EventlabBaseUrl } from '$lib/client'
 import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
-import { playerMoveToCommonGame } from '$lib/utils'
+import { historyGameToCommonGame, playerMoveToCommonGame } from '$lib/utils'
 
 
 type MatchParams = {
@@ -82,7 +82,7 @@ export class GamesMatchesStore {
 		) {
 			return []
 		}
-		const historyGames = this.historyMatchQuery.data?.games || []
+		const historyGames = (this.historyMatchQuery.data?.games || []).map(historyGameToCommonGame)
 		const movesGames = (this.movesMatchQuery.data?.moves || []).map(playerMoveToCommonGame)
 		return [...historyGames, ...movesGames]
 	})

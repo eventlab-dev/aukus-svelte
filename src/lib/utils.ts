@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { DifficultyTitle, LastMapPosition, TIERS, type Tier } from './constants'
+import { DifficultyMap, DifficultyTitle, LastMapPosition, TIERS, type Tier } from './constants'
 import type { BadgeVariant } from './components/ui/badge'
 import { renderToHTMLString } from '@tiptap/static-renderer'
 import { initExtensions } from './tiptapExtensions/enabledExtensions'
@@ -8,6 +8,7 @@ import dompurify from 'dompurify'
 import type { PlayerMoveItem, PlayerMoveType, PlayerStatsItem } from './heyapi/aukus/types.gen'
 import type { JSONContent } from '@tiptap/core'
 import type { CommonGameItem } from './types'
+import type { GameHistoryItem } from './heyapi/eventlab/types.gen'
 
 const enabledExtensions = initExtensions()
 
@@ -309,13 +310,14 @@ export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {
 	return {
 		id: move.id,
 		player_nickname: move.player_slug,
-		event_name: 'aukus4',
+		event_name: 'aukus5',
 		game_title: move.item_title,
 		completion_status: move.type,
 		date: formatMs(move.created_at*1000),
-		// difficulty: DifficultyTitle[move.difficulty_level],
+		difficulty: DifficultyMap[move.difficulty_level],
 		review: move.item_review,
 		rating: `${move.item_rating}/10`,
+		rating_num: move.item_rating,
 		igdb_id: move.game_id,
 		game_time: move.item_duration,
 		game_cover: move.cover_image_url ?? '',
@@ -323,6 +325,13 @@ export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {
 		game_year: null,
 		hltb_id: null,
 		steam_id: null,
+	}
+}
+
+export function historyGameToCommonGame(game: GameHistoryItem): CommonGameItem {
+	return {
+		...game,
+		rating_num: parseScore(game.rating)
 	}
 }
 
@@ -415,4 +424,16 @@ export function calculateDiceProbability(diceAmount: number, diceType: number): 
 export function scoreToTier(score: number): Tier {
 	const tier = TIERS.find((t) => score <= t.maxRating)
 	return tier || TIERS[0]
+}
+
+export function parseScore(scoreText: string): number {
+	const parts = scoreText.split('/')
+	if (parts.length === 2) {
+		return parseFloat(parts[0])
+	}
+	try {
+		return parseFloat(scoreText)
+	} catch {
+		return 0
+	}
 }

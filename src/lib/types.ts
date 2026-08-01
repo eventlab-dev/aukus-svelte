@@ -59,6 +59,8 @@ export type PlayerMovementState = {
 
 export type CommonGameItem = Omit<GameHistoryItem, 'completion_status'> & {
 	completion_status: PlayerMoveType
+	difficulty?: Difficulty
+	rating_num: number
 }
 
 export type StatItem = PlayerStatsItem & {

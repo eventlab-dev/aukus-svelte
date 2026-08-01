@@ -13,6 +13,7 @@
 	import Loader from '$lib/components/Loader.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import TierList from '$lib/components/tierlist/TierList.svelte'
+	import { playerMoveToCommonGame } from '$lib/utils'
 
 	type Props = {
 		playerSlug: string
@@ -43,6 +44,8 @@
 		playersMovesStoreForPlayer.playerMoves,
 		playersMovesStoreForPlayer.movesQuery
 	])
+
+	const commonGames = $derived(playerMoves.map(playerMoveToCommonGame))
 
 	const gamesMatched = $derived(
 		gamesMatchesStoreForPlayer.gamesMatched
@@ -205,7 +208,7 @@
 						/>
 					</div>
 
-					<TierList games={playerMoves} />
+					<TierList games={commonGames} />
 
 					<div class="mt-5 space-y-[200px]">
 						<div class="space-y-5">
