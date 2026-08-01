@@ -101,8 +101,11 @@ export const EventTitles: { [k: string]: string } = {
 	aukus2: 'Аукус 2',
 	aukus3: 'Аукус 3',
 	aukus4: 'Аукус 4',
+	aukus5: 'Аукус 5',
 	MGE: 'МГЕ',
-	igropolius: 'Игрополиус'
+	'igropolius-2025': 'Игрополиус 2025',
+	'nasral-2025': 'Насрал 2025',
+	'nassal-2025': 'Нассал 2025'
 }
 
 export const DifficultyMap: Record<GameDifficulty, Difficulty> = {
