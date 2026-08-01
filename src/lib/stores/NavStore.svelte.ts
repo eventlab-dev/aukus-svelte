@@ -47,12 +47,14 @@ export class NavStore {
 		this.changePage(MAIN_PAGE)
 	}
 
-	changePage(page: AppPage) {
+	changePage(page: AppPage, params: { changeUrl?: boolean } = { changeUrl: true }) {
 		const url = pageToUrl(page)
 		this.appPage = page
-		this.appUrl = url
+		if (params.changeUrl) {
+			this.appUrl = url
+			history.pushState({ page, url }, '', url)
+		}
 		this.dynamicPage = null
-		history.pushState({ page, url }, '', url)
 	}
 
 	changeUrl(url: AppUrl) {
@@ -75,7 +77,7 @@ export class NavStore {
 	sync() {
 		const appPage = getAppPageFromUrl()
 		if (appPage) {
-			this.changePage(appPage)
+			this.changePage(appPage, {changeUrl: false})
 		} else {
 			this.changeDynamicPage(window.location.pathname.substring(1))
 		}

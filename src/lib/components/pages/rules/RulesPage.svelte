@@ -12,6 +12,7 @@
 	import { defaultAuth } from '$lib/utils'
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 
 	const app = getAppManager()
 	const { usersStore, navStore } = app
@@ -79,22 +80,22 @@
 
 <div class="mt-[100px] flex w-full justify-center">
 	<div class="w-[700px]">
-		<div class="flex gap-3">
-			<Button
-				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:selected-text data-[active=true]:bg-primary data-[active=true]:border-dashed"
-				onclick={() => setCategory('general')}
-				data-active={category === 'general'}
-			>
-				Для участников
-			</Button>
-			<Button
-				class="w-60 rounded-2xl data-[active=false]:bg-secondary data-[active=true]:selected-text data-[active=true]:bg-primary data-[active=true]:border-dashed"
-				onclick={() => setCategory('donations')}
-				data-active={category === 'donations'}
-			>
-				Для донатеров
-			</Button>
-		</div>
+		<Tabs
+			value={category}
+			class="m-0 bg-none!"
+			onValueChange={(value) => {
+				setCategory(value as RulesCategory)
+			}}
+		>
+			<TabsList class="gap-3 bg-transparent">
+				<TabsTrigger value="general" class="h-10 w-60 rounded-2xl px-4 text-base font-semibold">
+					Для участников
+				</TabsTrigger>
+				<TabsTrigger value="donations" class="h-10 w-60 rounded-2xl px-4 text-base font-semibold">
+					Для донатеров
+				</TabsTrigger>
+			</TabsList>
+		</Tabs>
 		<div class="mt-[20px] text-5xl font-bold">
 			Правила Аукуса для {category === 'general' ? 'участников' : 'донатеров'}
 		</div>
@@ -102,12 +103,8 @@
 			{#if canEdit}
 				{#if editorMode}
 					<div class="mb-10 flex gap-5">
-						<Button variant="default" onclick={() => (editorMode = false)}>
-							Отмена
-						</Button>
-						<Button variant="destructive" onclick={saveRules}>
-							Сохранить
-						</Button>
+						<Button variant="default" onclick={() => (editorMode = false)}>Отмена</Button>
+						<Button variant="destructive" onclick={saveRules}>Сохранить</Button>
 					</div>
 				{:else}
 					<Button class="mb-10" onclick={() => (editorMode = true)}>Редактировать</Button>
