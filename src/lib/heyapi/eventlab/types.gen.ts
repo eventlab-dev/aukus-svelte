@@ -193,6 +193,11 @@ export type EventsResponse = {
 export type GameCompletionStatus = 'completed' | 'reroll' | 'drop';
 
 /**
+ * GameDifficulty
+ */
+export type GameDifficulty = 'easy' | 'normal' | 'hard' | 'very-hard';
+
+/**
  * GameDurationResponse
  */
 export type GameDurationResponse = {
@@ -243,6 +248,7 @@ export type GameHistoryItem = {
      */
     game_year: number | null;
     completion_status: GameCompletionStatus;
+    difficulty: GameDifficulty | null;
     /**
      * Date
      */

@@ -26,7 +26,7 @@
             case 'very-hard':
                 diffText = ' на очень сложном'
                 break
-			case undefined:
+			case null:
 				diffText = ''
 				break
             default: {

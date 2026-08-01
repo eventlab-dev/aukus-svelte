@@ -314,7 +314,7 @@ export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {
 		game_title: move.item_title,
 		completion_status: move.type,
 		date: formatMs(move.created_at*1000),
-		difficulty: DifficultyMap[move.difficulty_level],
+		difficulty: DifficultyMap[move.difficulty_level] ?? null,
 		review: move.item_review,
 		rating: `${move.item_rating}/10`,
 		rating_num: move.item_rating,
