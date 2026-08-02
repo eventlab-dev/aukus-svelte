@@ -41,7 +41,7 @@
 	})
 </script>
 
-<div class="rounded-xl bg-blue-400 overflow-hidden flex flex-col gap-[1px]">
+<div class="rounded-xl bg-primary overflow-hidden flex flex-col gap-[1px]">
 	{#each tiersList as tier (tier)}
 		{@const tierObj = TIERS.find((t) => t.rank === tier)}
 		{@const games = gamesPerTier[tier] ?? []}
@@ -53,16 +53,16 @@
 				{tierObj?.label}
 			</div>
 			<div class="flex w-[750px] flex-wrap gap-[1px]">
-				{#each games as game (game.id)}
+				{#each games as game (game.key)}
 					<Tooltip>
 						<TooltipTrigger>
 							<div class="">
-								{#if game.game_cover && !imageErrors[game.id] && !game.game_cover.toLowerCase().includes('gamefallbackposter')}
+								{#if game.game_cover && !imageErrors[game.key] && !game.game_cover.toLowerCase().includes('gamefallbackposter')}
 									<img
 										class="h-[80px] w-auto"
 										src={game.game_cover}
 										alt={game.game_title}
-										onerror={() => (imageErrors[game.id] = true)}
+										onerror={() => (imageErrors[game.key] = true)}
 									/>
 								{:else}
 									<div

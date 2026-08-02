@@ -27,7 +27,7 @@
 
 <div
 	class="group relative flex w-full flex-col rounded-xl bg-[#2c2c2c] p-3 data-[current=true]:bg-primary data-[current=true]:selection:bg-foreground data-[current=true]:selection:text-primary"
-	id={`game-card-${game.id}`}
+	id={`game-card-${game.key}`}
 >
 	<div class="flex justify-between">
 		<div class="flex">
@@ -80,7 +80,7 @@
 		<div class="mt-3 flex items-center justify-end gap-3">
 			Также играли:
 			<div>
-				{#each matchedGames as game (`${game.event_name}-${game.id}`)}
+				{#each matchedGames as game (game.key)}
 					<PopoverGameCard {game} />
 				{/each}
 			</div>

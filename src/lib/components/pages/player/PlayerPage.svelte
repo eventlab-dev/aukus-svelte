@@ -3,17 +3,15 @@
 	import Socials from '$lib/components/Socials.svelte'
 	import { fade } from 'svelte/transition'
 	import Summary from './components/Summary.svelte'
-	import MoveCard from '$lib/components/moveCard/MoveCard.svelte'
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
-	import { GamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
 	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 	import Footer from '$lib/components/Footer.svelte'
 	import Loader from '$lib/components/Loader.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-	import TierList from '$lib/components/tierlist/TierList.svelte'
-	import { playerMoveToCommonGame } from '$lib/utils'
+	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
+	import GamesList from './components/GamesList.svelte'
 
 	type Props = {
 		playerSlug: string
@@ -22,90 +20,21 @@
 	let { playerSlug }: Props = $props()
 
 	const app = getAppManager()
-	const { canvasStore, eventDataStore } = app
+	const { canvasStore } = app
 
-	const playerSlugs = $derived(eventDataStore.players.map((p) => p.slug))
+	const movesStore = new PlayerMovesStore({
+		getPlayerSlug: () => playerSlug
+	})
 
-	const playerSlugReactive = $derived(playerSlug)
+	const playerMoves = $derived(movesStore.playerMoves)
 
-	let gamesMatchesStoreForPlayer = $state(
-		new GamesMatchesStore({
-			getPlayerSlug: () => playerSlugReactive,
-			getPlayersSlugs: () => playerSlugs
-		})
-	)
-	let playersMovesStoreForPlayer = $state(
-		new PlayerMovesStore({
-			getPlayerSlug: () => playerSlugReactive
-		})
-	)
-
-	const [playerMoves, movesQuery] = $derived([
-		playersMovesStoreForPlayer.playerMoves,
-		playersMovesStoreForPlayer.movesQuery
-	])
-
-	const commonGames = $derived(playerMoves.map(playerMoveToCommonGame))
-
-	const gamesMatched = $derived(
-		gamesMatchesStoreForPlayer.gamesMatched
-	)
+	let activeTab = $state("aukus5")
 
 	$effect(() => {
 		if (!playerSlug) {
 			return
 		}
-		// console.log('creating store for', page.params.player)
-		// gamesMatchesStoreForPlayer = new GamesMatchesStore({
-		// 	getPlayerSlug: () => playerSlugReactive,
-		// 	getPlayersSlugs: () => playerSlugs
-		// })
-		// playersMovesStoreForPlayer = new PlayerMovesStore({
-		// 	getPlayerSlug: () => playerSlugReactive
-		// })
-
-		playersMovesStoreForPlayer.queryParams = {
-			players: [playerSlug],
-			start_ts: null,
-			search_title: null,
-			igdb_ids: [],
-			exclude_ids: undefined
-		}
 		canvasStore.playerSlug = playerSlug
-	})
-
-	$effect(() => {
-		const currentPlayer = playerSlug
-
-		if (!currentPlayer || movesQuery.isLoading || movesQuery.isFetching) {
-		    gamesMatchesStoreForPlayer.gamesMatchParams = {
-				igdb_ids: [],
-				exclude_ids_moves: [],
-				exclude_ids_history: [],
-				exclude_player: playerSlug
-			}
-			return
-		}
-
-		const movesForCurrentPlayer = playerMoves.filter((move) => move.player_slug === currentPlayer)
-
-		if (movesForCurrentPlayer.length > 0) {
-			gamesMatchesStoreForPlayer.gamesMatchParams = {
-				igdb_ids: movesForCurrentPlayer.map((move) => move.game_id).filter(Boolean) as number[],
-				exclude_ids_moves: movesForCurrentPlayer
-					.map((move) => move.game_id)
-					.filter(Boolean) as number[],
-				exclude_ids_history: [],
-				exclude_player: currentPlayer
-			}
-		} else {
-			gamesMatchesStoreForPlayer.gamesMatchParams = {
-				igdb_ids: [],
-				exclude_ids_moves: [],
-				exclude_ids_history: [],
-				exclude_player: playerSlug
-			}
-		}
 	})
 
 	const player = $derived.by(() => {
@@ -153,7 +82,7 @@
 
 	const widthStyle = $derived(`width: ${canvasStore.canvasWidth}px`)
 
-	const isLoading = $derived(movesQuery.isLoading || movesQuery.isFetching)
+	const isLoading = $derived(movesStore.movesQuery.isFetching)
 </script>
 
 <svelte:head>
@@ -208,19 +137,38 @@
 						/>
 					</div>
 
-					<TierList games={commonGames} />
-
-					<div class="mt-5 space-y-[200px]">
-						<div class="space-y-5">
-							<!-- <CurrentGameCard playerSlug={player.slug} /> -->
-							{#each playerMoves as move (move.id)}
-								{@const matchedGames = gamesMatched.filter(
-									(game) => game.game_title === move.item_title
-								)}
-								<MoveCard {move} {matchedGames} />
-							{/each}
-						</div>
-					</div>
+					<Tabs bind:value={activeTab} class="bg-none! w-[800px]">
+						<TabsList class="bg-transparent gap-2 mb-3">
+							<TabsTrigger value="aukus5">Аукус 5</TabsTrigger>
+							<TabsTrigger value="aukus4">Аукус 4</TabsTrigger>
+							<TabsTrigger value="aukus3">Аукус 3</TabsTrigger>
+							<TabsTrigger value="aukus2">Аукус 2</TabsTrigger>
+							<TabsTrigger value="aukus1">Аукус 1</TabsTrigger>
+						</TabsList>
+						<TabsContent value="aukus5">
+							<GamesList {playerSlug} event="aukus5" {playerMoves} />
+						</TabsContent>
+						<TabsContent value="aukus4">
+							{#if activeTab === 'aukus4'}
+								<GamesList {playerSlug} event="aukus4" />
+							{/if}
+						</TabsContent>
+						<TabsContent value="aukus3">
+							{#if activeTab === 'aukus3'}
+								<GamesList {playerSlug} event="aukus3" />
+							{/if}
+						</TabsContent>
+						<TabsContent value="aukus2">
+							{#if activeTab === 'aukus2'}
+								<GamesList {playerSlug} event="aukus2" />
+							{/if}
+						</TabsContent>
+						<TabsContent value="aukus1">
+							{#if activeTab === 'aukus1'}
+								<GamesList {playerSlug} event="aukus1" />
+							{/if}
+						</TabsContent>
+					</Tabs>
 				{/if}
 			</div>
 		</div>

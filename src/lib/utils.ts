@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { DifficultyMap, DifficultyTitle, LastMapPosition, TIERS, type Tier } from './constants'
+import { DifficultyMap, LastMapPosition, TIERS, type Tier } from './constants'
 import type { BadgeVariant } from './components/ui/badge'
 import { renderToHTMLString } from '@tiptap/static-renderer'
 import { initExtensions } from './tiptapExtensions/enabledExtensions'
@@ -55,6 +55,39 @@ export function formatMs(diffMs: number, params: { noDays?: boolean } = {}) {
 
 export function formatDateTime(timestamp: number, options: { onlyHourMinute?: boolean } = {}) {
 	const date = new Date(timestamp * 1000)
+	const today = new Date()
+	const isToday = date.toDateString() === today.toDateString()
+
+	const hourMinute = date.toLocaleString('ru-RU', {
+		hour: '2-digit',
+		hour12: false,
+		minute: '2-digit'
+	})
+
+	if (options.onlyHourMinute) {
+		return hourMinute
+	}
+
+	if (isToday) {
+		return `Сегодня ${hourMinute}`
+	}
+
+	const day = date.toLocaleString('ru-RU', { day: 'numeric' })
+	const month = date.toLocaleString('ru-RU', { month: 'long' })
+	const monthFixed = month.slice(0, -1) + 'я'
+
+	const year = date.getFullYear()
+	const currentYear = today.getFullYear()
+
+	if (year !== currentYear) {
+		return `${day} ${monthFixed} ${year}`
+	}
+
+	return `${day} ${monthFixed} ${hourMinute}`
+}
+
+export function formatDateTimeISO(isoString: string, options: { onlyHourMinute?: boolean } = {}) {
+	const date = new Date(isoString)
 	const today = new Date()
 	const isToday = date.toDateString() === today.toDateString()
 
@@ -309,6 +342,7 @@ export function formatDuration(
 export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {
 	return {
 		id: move.id,
+		key: `aukus5-${move.id}`,
 		player_nickname: move.player_slug,
 		event_name: 'aukus5',
 		game_title: move.item_title,
@@ -331,7 +365,8 @@ export function playerMoveToCommonGame(move: PlayerMoveItem): CommonGameItem {
 export function historyGameToCommonGame(game: GameHistoryItem): CommonGameItem {
 	return {
 		...game,
-		rating_num: parseScore(game.rating)
+		rating_num: parseScore(game.rating),
+		key: `${game.event_name}-${game.id}`
 	}
 }
 

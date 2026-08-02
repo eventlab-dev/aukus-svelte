@@ -25,11 +25,12 @@
 
 	let dialogOpen = $state(true)
 
+	const aukus4Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus4') ?? [])
 	const aukus3Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus3') ?? [])
 	const aukus2Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus2') ?? [])
 	const aukus1Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus1') ?? [])
 
-	const aukus4Games = $derived(playersMovesStore.playerMoves.map(playerMoveToCommonGame))
+	const aukus5Games = $derived(playersMovesStore.playerMoves.map(playerMoveToCommonGame))
 
 	$effect(() => {
 		if (dialogOpen) {
@@ -76,21 +77,21 @@
 		return null
 	})
 
-	const eventsList = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
+	const eventsList = ['aukus1', 'aukus2', 'aukus3', 'aukus4', 'aukus5']
 
 	function selectEvent(_: boolean, event: string) {
 		if (selectedEvent === event) {
-			gamesHistoryStore.searchParams.events = ['aukus1', 'aukus2', 'aukus3']
+			gamesHistoryStore.searchParams.events = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
 		} else {
 			gamesHistoryStore.searchParams.events = [event]
 		}
 	}
 
-	const aukus4GamesDisplay = $derived.by<CommonGameItem[]>(() => {
-		if (selectedEvent !== 'aukus4' && selectedEvent !== null) {
+	const currentGamesDisplay = $derived.by<CommonGameItem[]>(() => {
+		if (selectedEvent !== 'aukus5' && selectedEvent !== null) {
 			return []
 		}
-		return aukus4Games
+		return aukus5Games
 	})
 
 	$effect(() => {
@@ -98,23 +99,25 @@
 			return
 		}
 
-		const historyIds = [...aukus3Games, ...aukus2Games, ...aukus1Games]
+		const historyIds = [...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
 			.map((game) => game.igdb_id)
 			.filter((id): id is number => id !== null)
 
-		const eventIds = aukus4Games
+		const currentEventIds = aukus5Games
 			.map((game) => game.igdb_id)
 			.filter((id): id is number => id !== null)
 
-		const allIds = new Set([...historyIds, ...eventIds])
+		const igdbIds = new Set([...historyIds, ...currentEventIds])
 
-		const gamesIdsHistory = [...aukus3Games, ...aukus2Games, ...aukus1Games]
+		const gamesIdsHistory = [...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
 			.map((game) => game.id)
-			.filter((id): id is number => id !== null)
 			.slice(0, 50)
-		const gamesIdsMoves = aukus4Games.map((game) => game.id).slice(0, 50)
+		const gamesIdsMoves = aukus5Games
+			.map((game) => game.id)
+			.slice(0, 50)
+
 		gamesMatchesStore.gamesMatchParams = {
-			igdb_ids: [...allIds],
+			igdb_ids: [...igdbIds],
 			exclude_ids_moves: gamesIdsMoves,
 			exclude_ids_history: gamesIdsHistory,
 			exclude_player: undefined
@@ -132,13 +135,15 @@
 			aukus1Games.length === 0 &&
 			aukus2Games.length === 0 &&
 			aukus3Games.length === 0 &&
-			aukus4GamesDisplay.length === 0
+			aukus4Games.length === 0 &&
+			currentGamesDisplay.length === 0
 		)
 	})
 
 	const gameMatchedMergedWithOthers = $derived.by(() => {
 		return uniqBy(
 			[
+				...aukus5Games,
 				...aukus4Games,
 				...aukus3Games,
 				...aukus2Games,
@@ -159,6 +164,8 @@
 				'https://docs.google.com/spreadsheets/d/16JxvqzWmZgigHVBhsxHQsP4ElpXZ2sl3XbslmkW-m88/edit?gid=1235582040#gid=1235582040'
 		} else if (event === 'aukus3') {
 			url = 'https://aukus3.eventlab.dev'
+		} else if (event === 'aukus4') {
+			url = 'https://aukus4.eventlab.dev'
 		}
 		window.open(url, '_blank noopener noreferrer')
 	}
@@ -234,12 +241,30 @@
 							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
 						{/if}
 
-						{#if aukus4GamesDisplay.length !== 0}
-							<div class="p-0 text-center text-3xl">Аукус 4</div>
-							{#each aukus4GamesDisplay as game (game.id)}
+						{#if currentGamesDisplay.length !== 0}
+							<div class="p-0 text-center text-3xl">Аукус 5</div>
+							{#each currentGamesDisplay as game (game.id)}
 								{#if app.playersBySlug.get(game.player_nickname) !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+									)}
+									<GameCard {game} matchedGames={matches} />
+								{/if}
+							{/each}
+						{/if}
+
+						{#if aukus4Games.length !== 0}
+							<div class="flex justify-center">
+								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
+									Аукус 4
+								</Button>
+							</div>
+							{#each aukus4Games as game (game.id)}
+								{#if app.playersBySlug.get(game.player_nickname)}
+									{@const matches = gameMatchedMergedWithOthers.filter(
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -255,7 +280,8 @@
 							{#each aukus3Games as game (game.id)}
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -271,7 +297,8 @@
 							{#each aukus2Games as game (game.id)}
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -287,7 +314,8 @@
 							{#each aukus1Games as game (game.id)}
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}

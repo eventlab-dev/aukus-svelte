@@ -3,7 +3,7 @@
 	import Socials from '../Socials.svelte'
 	import ImageLoader from '../ImageLoader.svelte'
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
-	import { formatMs, getPlayerCleanScore } from '$lib/utils'
+	import { formatMs, getPlayerCleanScore, playerMoveToCommonGame } from '$lib/utils'
 	import MoveCard from '../moveCard/MoveCard.svelte'
 	import { GamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
 	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
@@ -23,7 +23,6 @@
 
 	let gamesMatchesStoreForPlayer = $state(
 		new GamesMatchesStore({
-			getPlayerSlug: () => playerSlugReactive,
 			getPlayersSlugs: () => playerSlugs
 		})
 	)
@@ -62,8 +61,6 @@
 		if (!playerSlug || movesQuery.isLoading || movesQuery.isFetching) {
 			gamesMatchesStoreForPlayer.gamesMatchParams = {
 				igdb_ids: [],
-				exclude_ids_moves: [],
-				exclude_ids_history: [],
 				exclude_player: undefined
 			}
 			return
@@ -76,17 +73,11 @@
 				igdb_ids: movesForCurrentPlayer
 					.map((move) => move.game_id)
 					.filter((id): id is number => id !== null),
-				exclude_ids_moves: movesForCurrentPlayer
-					.map((move) => move.game_id)
-					.filter((id): id is number => id !== null),
-				exclude_ids_history: [],
 				exclude_player: playerSlug
 			}
 		} else {
 			gamesMatchesStoreForPlayer.gamesMatchParams = {
 				igdb_ids: [],
-				exclude_ids_moves: [],
-				exclude_ids_history: [],
 				exclude_player: undefined
 			}
 		}
@@ -173,7 +164,7 @@
 		<div class="mt-4 w-full space-y-4">
 			{#each playerMoves as move (move.id)}
 				{@const matchedGames = gamesMatched.filter((game) => game.game_title === move.item_title)}
-				<MoveCard {move} {matchedGames} />
+				<MoveCard {move} {matchedGames} game={playerMoveToCommonGame(move)}/>
 			{/each}
 		</div>
 	</div>

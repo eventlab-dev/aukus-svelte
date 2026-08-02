@@ -4,45 +4,40 @@ import { createQuery } from '@tanstack/svelte-query'
 import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import { historyGameToCommonGame, playerMoveToCommonGame } from '$lib/utils'
 
-
 type MatchParams = {
-	exclude_ids_history: number[]
-	exclude_ids_moves: number[]
+	exclude_ids_history?: number[]
+	exclude_ids_moves?: number[]
 	igdb_ids: number[]
 	exclude_player?: string
 }
 
 type Props = {
-	getPlayerSlug: () => string | undefined
 	getPlayersSlugs: () => string[]
 }
 
 export class GamesMatchesStore {
-
-	getPlayerSlug: Props['getPlayerSlug'] = () => undefined
 	getPlayersSlugs: Props['getPlayersSlugs'] = () => []
 
 	constructor(params: Props) {
-		this.getPlayerSlug = params.getPlayerSlug
 		this.getPlayersSlugs = params.getPlayersSlugs
 	}
 
 	gamesMatchParams = $state<MatchParams>({
-		exclude_ids_history: [],
-		exclude_ids_moves: [],
 		igdb_ids: [],
 		exclude_player: undefined
 	})
 
 	historyMatchQuery = createQuery(() => {
-		const slugsList = this.getPlayersSlugs()
+		const playersFilter = this.gamesMatchParams.exclude_player
+			? this.getPlayersSlugs().filter((p) => p !== this.gamesMatchParams.exclude_player)
+			: this.getPlayersSlugs()
 		const params = getGamesApiGamesHistoryGetOptions({
 			baseUrl: EventlabBaseUrl,
 			query: {
 				igdb_ids: this.gamesMatchParams.igdb_ids,
-				exclude_ids: this.gamesMatchParams.exclude_ids_history,
+				exclude_ids: this.gamesMatchParams.exclude_ids_history || [],
 				start_id: null,
-				players: slugsList.filter((p) => p !== this.gamesMatchParams.exclude_player)
+				players: playersFilter
 				// events: ['aukus1', 'aukus2', 'aukus3']
 			}
 			// tags: ['abc']
@@ -63,7 +58,7 @@ export class GamesMatchesStore {
 			baseUrl: AukusBaseUrl,
 			query: {
 				igdb_ids: this.gamesMatchParams.igdb_ids,
-				exclude_ids: this.gamesMatchParams.exclude_ids_moves,
+				exclude_ids: this.gamesMatchParams.exclude_ids_moves || [],
 				start_ts: null,
 				players: playersFilter
 			}

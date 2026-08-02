@@ -1,9 +1,6 @@
 import { EventlabBaseUrl } from '$lib/client'
 import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
-import type {
-	GameHistoryItem,
-	GetGamesApiGamesHistoryGetData
-} from '$lib/heyapi/eventlab/types.gen'
+import type { GetGamesApiGamesHistoryGetData } from '$lib/heyapi/eventlab/types.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import type { CommonGameItem, PlayerData } from '$lib/types'
 import { SvelteMap } from 'svelte/reactivity'
@@ -32,9 +29,10 @@ export class GameHistoryStore {
 					this.resetLoadedGames = false
 				} else {
 					const loadedGames = untrack(() => this.allLoadedGames)
-					const newGames = games.filter(
+					const commonGames = games.map(historyGameToCommonGame)
+					const newGames = commonGames.filter(
 						(newGame) => !loadedGames.some((existingGame) => existingGame.id === newGame.id)
-					).map(historyGameToCommonGame)
+					)
 					this.allLoadedGames = [...loadedGames, ...newGames]
 				}
 			}
@@ -44,8 +42,10 @@ export class GameHistoryStore {
 		$effect(() => {
 			if (previousSearchParams && this.searchParams) {
 				const hasChanged =
-					JSON.stringify(previousSearchParams.events) !== JSON.stringify(this.searchParams.events) ||
-					JSON.stringify(previousSearchParams.players) !== JSON.stringify(this.searchParams.players) ||
+					JSON.stringify(previousSearchParams.events) !==
+						JSON.stringify(this.searchParams.events) ||
+					JSON.stringify(previousSearchParams.players) !==
+						JSON.stringify(this.searchParams.players) ||
 					previousSearchParams.title_search !== this.searchParams.title_search
 
 				if (hasChanged) {
@@ -73,6 +73,7 @@ export class GameHistoryStore {
 	resetLoadedGames = $state(false)
 
 	historyQuery = createQuery(() => {
+		console.log('history query update', this.searchParams)
 		let playersFilter = this.fullPlayersList
 		if (this.searchParams?.players && this.searchParams.players.length > 0) {
 			playersFilter = this.searchParams.players
@@ -84,18 +85,20 @@ export class GameHistoryStore {
 		// params.placeholderData = (data) => data
 		params.enabled = playersFilter.length > 0
 		params.refetchOnWindowFocus = false
+		console.log("query params", params)
 		return params
 	})
 
-	gamesHistoryByEvent = $derived(
-		this.allLoadedGames.reduce((acc, game) => {
+	gamesHistoryByEvent = $derived.by(() => {
+		console.log('history items fetched')
+		return this.allLoadedGames.reduce((acc, game) => {
 			if (!acc.has(game.event_name)) {
 				acc.set(game.event_name, [])
 			}
 			acc.get(game.event_name)!.push(game)
 			return acc
 		}, new SvelteMap<string, CommonGameItem[]>())
-	)
+	})
 
 	hasMore = $derived(Boolean(this.historyQuery.data?.next_id))
 	loadMore() {

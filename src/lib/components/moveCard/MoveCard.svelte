@@ -12,7 +12,7 @@
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
-	import { formatDateTime, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
+	import { formatDateTime, formatDateTimeISO, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
 	import PopoverGameCard from './PopoverGameCard.svelte'
 	import DiceRollInfo from './DiceRollInfo.svelte'
@@ -25,16 +25,20 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
-		move: PlayerMoveItem
+		game: CommonGameItem
+		move?: PlayerMoveItem
 		matchedGames: CommonGameItem[]
 	}
 
-	const { move, matchedGames }: Props = $props()
+	const { move, matchedGames, game }: Props = $props()
 
 	const app = getAppManager()
 	const { usersStore, playersMovesStore } = app
 
 	const canEdit = $derived.by(() => {
+		if (!move) {
+			return false
+		}
 		if (move.player_slug === app.myPlayer?.slug) {
 			return true
 		}
@@ -47,14 +51,21 @@
 		return false
 	})
 
-	const categoryDuration = $derived(formatMs(move.item_duration * 1000))
+	const durationText = $derived.by(() => {
+		const duration = move?.item_duration ?? game.game_time
+		if (!duration) {
+			return ''
+		}
+		const formatted = formatMs(duration * 1000)
+		return `Играл ${formatted}`
+	})
 
-	const moveTypeStyles = $derived(getMoveTypeStyles(move.type))
-	const parsedReview = $derived(renderToHTML(move.item_review || ''))
+	const moveTypeStyles = $derived(getMoveTypeStyles(move?.type ?? game.completion_status))
+	const parsedReview = $derived(renderToHTML(move?.item_review ?? game.review ?? ''))
 
-	let vodLinks = $state(move.vod_links || '')
-	let review = $state(move.item_review || '')
-	let rating = $state(move.item_rating)
+	let vodLinks = $state(move?.vod_links || '')
+	let review = $state(move?.item_review ?? game.review ?? '')
+	let rating = $state(move?.item_rating ?? game.rating_num)
 	let isEditMode = $state(false)
 	let isVodsShown = $state(false)
 	let isSaving = $state(false)
@@ -69,7 +80,7 @@
 	}
 
 	async function setEditMode(pressed: boolean) {
-		if (!pressed && isEditMode) {
+		if (!pressed && isEditMode && move) {
 			isSaving = true
 			try {
 				await playersMovesStore.updatePlayerMove.mutateAsync({
@@ -101,23 +112,46 @@
 		return isEditMode
 	}
 
-	const difficultyText: { [key: number]: string } = {
-		'-1': 'На легком',
-		1: 'На сложном',
-		2: 'На очень сложном'
-	}
+	const difficultyText = $derived.by(() => {
+		if (move) {
+			switch (move.difficulty_level) {
+				case -1:
+					return 'На легком'
+				case 1:
+					return 'На сложном'
+				case 2:
+					return 'На очень сложном'
+				default:
+					return ''
+			}
+		}
+		if (game) {
+			switch (game.difficulty) {
+				case 'normal':
+					return 'На сложном'
+				case 'hard':
+					return 'На очень сложном'
+				default:
+					return ''
+			}
+		}
+		return ''
+	})
 
 	const posterUrl = $derived.by(() => {
-		if (move.type === 'movie') {
+		if (move?.type === 'movie') {
 			return MOVIE_POSTER_URL
 		}
-		return move.cover_image_url || FALLBACK_GAME_POSTER
+		return move?.cover_image_url ?? game.game_cover ?? FALLBACK_GAME_POSTER
 	})
+
+	const title = $derived(move?.item_title ?? game.game_title)
+	const showRating = $derived(move || game.rating)
 </script>
 
 <div
 	class="group relative flex w-full flex-col rounded-xl bg-card p-3 md:w-[800px]"
-	id={`move-card-${move.id}`}
+	id={`game-card-${game.key}`}
 >
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
 		<div class="flex">
@@ -125,47 +159,51 @@
 				<Badge variant={moveTypeStyles.variant}>
 					{moveTypeStyles.text}
 				</Badge>
-				{#if move.dice_roll_id}
-					<Popover>
-						<PopoverTrigger>
-							<Badge
-								variant="secondary"
-								class="flex cursor-pointer items-center gap-1 hover:bg-secondary/80"
-							>
-								Кубик: {move.dice_roll}
-								<InfoIcon class="h-3 w-3" />
-							</Badge>
-						</PopoverTrigger>
-						<PopoverContent>
-							<DiceRollInfo diceRollId={move.dice_roll_id} />
-						</PopoverContent>
-					</Popover>
-				{:else}
+				{#if move}
+					{#if move.dice_roll_id}
+						<Popover>
+							<PopoverTrigger>
+								<Badge
+									variant="secondary"
+									class="flex cursor-pointer items-center gap-1 hover:bg-secondary/80"
+								>
+									Кубик: {move.dice_roll}
+									<InfoIcon class="h-3 w-3" />
+								</Badge>
+							</PopoverTrigger>
+							<PopoverContent>
+								<DiceRollInfo diceRollId={move.dice_roll_id} />
+							</PopoverContent>
+						</Popover>
+					{:else}
+						<Badge variant="secondary">
+							Кубик: {move.dice_roll}
+						</Badge>
+					{/if}
 					<Badge variant="secondary">
-						Кубик: {move.dice_roll}
+						Ход {move.cell_from}
+						->
+						{move.cell_to}
 					</Badge>
 				{/if}
-				<Badge variant="secondary">
-					Ход {move.cell_from}
-					->
-					{move.cell_to}
-				</Badge>
-				<Tooltip>
-					<TooltipTrigger>
-						<Badge variant="secondary" class="h-full">
-							Играл {categoryDuration}
-						</Badge>
-					</TooltipTrigger>
-					<TooltipContent>Примерное время по категории стрима</TooltipContent>
-				</Tooltip>
-				{#if move.item_length}
+				{#if durationText}
+					<Tooltip>
+						<TooltipTrigger>
+							<Badge variant="secondary" class="h-full">
+								{durationText}
+							</Badge>
+						</TooltipTrigger>
+						<TooltipContent>Примерное время по категории стрима</TooltipContent>
+					</Tooltip>
+				{/if}
+				{#if move?.item_length}
 					<Badge variant="secondary">
 						{gameLengthRanges[move.item_length]} HLTB
 					</Badge>
 				{/if}
-				{#if move.difficulty_level !== 0}
+				{#if difficultyText}
 					<Badge variant="secondary">
-						{difficultyText[move.difficulty_level]}
+						{difficultyText}
 					</Badge>
 				{/if}
 			</div>
@@ -173,19 +211,23 @@
 		<div
 			class="text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground md:absolute md:top-3 md:right-3"
 		>
-			{formatDateTime(move.created_at)}
+			{#if move}
+				{formatDateTime(move.created_at)}
+			{:else if game.game_time}
+				{formatDateTimeISO(game.date)}
+			{/if}
 		</div>
 	</div>
 
 	<div class="mt-3 flex flex-col gap-3 md:flex-row">
 		<ImageLoader
 			src={posterUrl}
-			alt={move.item_title || ''}
+			alt={title}
 			class="h-[100px] w-[75px] flex-shrink-0 md:h-[140px] md:w-[105px]"
 		/>
 		<div class="w-full min-w-0 space-y-3">
 			<div class="text-lg leading-tight font-bold md:text-2xl md:leading-[29px]">
-				{move.item_title}
+				{title}
 			</div>
 
 			{#if isEditMode}
@@ -238,7 +280,9 @@
 				</div>
 			{:else}
 				<div class="font-medium text-muted-foreground [&>*]:inline" in:fade>
-					<span>{move.item_rating}/10 — </span>
+					{#if showRating}
+						<span>{rating}/10 — </span>
+					{/if}
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html parsedReview}
 				</div>
@@ -284,7 +328,7 @@
 			<div class="mt-3 flex w-full flex-wrap items-center justify-end gap-3" transition:slide>
 				<span class="text-sm">Также играли:</span>
 				<div class="flex flex-wrap gap-2">
-					{#each matchedGames as game (game.id)}
+					{#each matchedGames as game (game.key)}
 						<PopoverGameCard {game} />
 					{/each}
 				</div>

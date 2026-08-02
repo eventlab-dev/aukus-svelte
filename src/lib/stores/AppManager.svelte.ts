@@ -47,7 +47,6 @@ export class AppManager {
 		getPlayers: () => this.players
 	})
 	gamesMatchesStore = new GamesMatchesStore({
-		getPlayerSlug: () => this.myUser?.slug,
 		getPlayersSlugs: () => this.playersSlugs
 	})
 	movementStore = new MovementStore({
@@ -92,7 +91,7 @@ export class AppManager {
 			const slug = player.slug
 			const user = this.usersStore.usersBySlug.get(slug)
 			const stats = this.statsStore.statsBySlug.get(slug)
-			console.log({ slug, user, stats })
+			// console.log({ slug, user, stats })
 			if (!user || !stats) {
 				console.warn('Missing data for player:', slug, user, stats)
 				continue
