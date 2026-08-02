@@ -154,3 +154,7 @@ export const TIERS: Tier[] = [
 // smartphone nav z-50
 // dice animation z-50
 // fireworks z-9
+
+
+// 2 mins
+export const DEFAULT_REFETCH = 2 * 60 * 1000

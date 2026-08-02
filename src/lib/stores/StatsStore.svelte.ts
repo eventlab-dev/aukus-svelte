@@ -1,4 +1,5 @@
 import { AukusBaseUrl } from '$lib/client'
+import { DEFAULT_REFETCH } from '$lib/constants'
 import { playerStatsApiPlayersStatsGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
@@ -8,7 +9,8 @@ export class StatsStore {
 		...playerStatsApiPlayersStatsGetOptions({
 			baseUrl: AukusBaseUrl
 		}),
-		refetchInterval: 2 * 60 * 1000
+		refetchInterval: DEFAULT_REFETCH,
+		refetchOnWindowFocus: false,
 	}))
 
 	stats = $derived(this.statsQuery.data?.players || [])

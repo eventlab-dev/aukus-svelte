@@ -4,6 +4,7 @@ import { SvelteMap } from 'svelte/reactivity'
 import { AukusBaseUrl } from '$lib/client'
 import { defaultAuth } from '$lib/utils'
 import type { PlayerItem } from '$lib/heyapi/aukus/types.gen'
+import { DEFAULT_REFETCH } from '$lib/constants'
 
 export class EventDataStore {
 	eventDataQuery = createQuery(() => ({
@@ -11,7 +12,8 @@ export class EventDataStore {
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		}),
-		refetchInterval: 2 * 60 * 1000
+		refetchInterval: DEFAULT_REFETCH,
+		refetchOnWindowFocus: false,
 	}))
 
 	eventData = $derived(this.eventDataQuery.data)

@@ -18,13 +18,15 @@ export class CanvasStore {
 	playerSlug = $state('')
 	queryClient = useQueryClient()
 
-	canvasQuery = createQuery(() =>
-		getCanvasFilesApiCanvasPlayerSlugGetOptions({
+	canvasQuery = createQuery(() => ({
+		...getCanvasFilesApiCanvasPlayerSlugGetOptions({
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth,
 			path: { player_slug: this.playerSlug }
-		})
-	)
+		}),
+		refetchOnWindowFocus: false,
+		refetchInterval: 60 * 5 * 1000
+	}))
 
 	updateCanvasMutation = createMutation(() =>
 		updateCanvasApiCanvasPlayerSlugUpdatePutMutation({

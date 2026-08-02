@@ -1,4 +1,5 @@
 import { AukusBaseUrl } from '$lib/client'
+import { DEFAULT_REFETCH } from '$lib/constants'
 import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import type { GetPlayerMovesApiPlayersMovesGetData } from '$lib/heyapi/aukus/types.gen'
 import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query'
@@ -33,9 +34,13 @@ export class PlayerMovesStore {
 		search_title: null
 	})
 
-	movesQuery = createQuery(() => getPlayerMovesApiPlayersMovesGetOptions({
-		baseUrl: AukusBaseUrl,
-		query: this.queryParams
+	movesQuery = createQuery(() => ({
+		...getPlayerMovesApiPlayersMovesGetOptions({
+			baseUrl: AukusBaseUrl,
+			query: this.queryParams
+		}),
+		refetchInterval: DEFAULT_REFETCH,
+		refetchOnWindowFocus: false,
 	}))
 
 	playerMoves = $derived(this.movesQuery.data?.moves ?? [])

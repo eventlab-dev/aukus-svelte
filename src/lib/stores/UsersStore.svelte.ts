@@ -1,5 +1,5 @@
-import { goto } from '$app/navigation'
 import { AukusBaseUrl, EventlabBaseUrl } from '$lib/client'
+import { DEFAULT_REFETCH } from '$lib/constants'
 import {
 	createPlayerMoveApiPlayersMovePostMutation,
 	finishPlayerMoveApiPlayersMoveFinishPostMutation,
@@ -86,7 +86,8 @@ export class UsersStore {
 			baseUrl: EventlabBaseUrl,
 			query: { is_active: 1, events: ['aukus4'] }
 		}),
-		refetchInterval: 2 * 60 * 1000
+		refetchInterval: DEFAULT_REFETCH,
+		refetchOnWindowFocus: false,
 	}))
 
 	users = $derived(this.usersQuery.data?.users ?? [])
