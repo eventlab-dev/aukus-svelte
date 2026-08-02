@@ -44,7 +44,7 @@ export class AppManager {
 		getPlayerSlug: () => this.myUser?.slug
 	})
 	gamesHistoryStore = new GameHistoryStore({
-		getPlayers: () => this.players
+		getPlayersSlugs: () => this.playersSlugs
 	})
 	gamesMatchesStore = new GamesMatchesStore({
 		getPlayersSlugs: () => this.playersSlugs

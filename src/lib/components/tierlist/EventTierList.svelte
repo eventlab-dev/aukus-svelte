@@ -11,7 +11,7 @@
 	let { playerSlug, event }: Props = $props()
 
 	const historyStore = new GameHistoryStore({
-		getPlayers: () => []
+		getPlayersSlugs: () => []
 	})
 
 	historyStore.searchParams = {

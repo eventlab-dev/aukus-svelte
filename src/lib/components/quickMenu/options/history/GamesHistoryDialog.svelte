@@ -112,9 +112,7 @@
 		const gamesIdsHistory = [...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
 			.map((game) => game.id)
 			.slice(0, 50)
-		const gamesIdsMoves = aukus5Games
-			.map((game) => game.id)
-			.slice(0, 50)
+		const gamesIdsMoves = aukus5Games.map((game) => game.id).slice(0, 50)
 
 		gamesMatchesStore.gamesMatchParams = {
 			igdb_ids: [...igdbIds],
@@ -124,7 +122,10 @@
 		}
 	})
 
-	const isLoading = $derived(gamesHistoryStore.historyQuery.isFetching)
+	const isLoading = $derived(
+		!gamesHistoryStore.searchIdFrom &&
+		 gamesHistoryStore.historyQuery.isFetching
+	)
 
 	// $inspect(isLoading, 'GamesHistoryDialog isLoading')
 	// $inspect($historyQuery.isFetching, ' historyQuery isFetching')
@@ -254,7 +255,7 @@
 							{/each}
 						{/if}
 
-						{#if aukus4Games.length !== 0}
+						{#if aukus4Games.length > 0}
 							<div class="flex justify-center">
 								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
 									Аукус 4
@@ -271,7 +272,7 @@
 							{/each}
 						{/if}
 
-						{#if aukus3Games.length !== 0}
+						{#if aukus3Games.length > 0}
 							<div class="flex justify-center">
 								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
 									Аукус 3
@@ -288,7 +289,7 @@
 							{/each}
 						{/if}
 
-						{#if aukus2Games.length !== 0}
+						{#if aukus2Games.length > 0}
 							<div class="flex justify-center">
 								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
 									Аукус 2
@@ -305,7 +306,7 @@
 							{/each}
 						{/if}
 
-						{#if aukus1Games.length !== 0}
+						{#if aukus1Games.length > 0}
 							<div class="flex justify-center">
 								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
 									Аукус 1
@@ -324,7 +325,7 @@
 
 						{#if gamesHistoryStore.hasMore}
 							<div class="flex justify-center">
-								<Button onclick={gamesHistoryStore.loadMore}>Загрузить ещё</Button>
+								<Button onclick={() => gamesHistoryStore.loadMore()}>Загрузить ещё</Button>
 							</div>
 						{/if}
 					</div>

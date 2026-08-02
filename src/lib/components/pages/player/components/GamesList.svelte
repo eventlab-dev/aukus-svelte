@@ -20,7 +20,7 @@
 	const { eventDataStore } = app
 
 	const historyStore = new GameHistoryStore({
-		getPlayers: () => []
+		getPlayersSlugs: () => []
 	})
 
 	historyStore.searchParams = {
