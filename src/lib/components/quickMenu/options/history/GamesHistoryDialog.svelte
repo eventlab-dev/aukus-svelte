@@ -8,16 +8,16 @@
 		DialogTrigger
 	} from '$lib/components/ui/dialog'
 	import { Input } from '$lib/components/ui/input'
-	import GameCard from './GameCard.svelte'
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import { Toggle } from '$lib/components/ui/toggle'
 	import X from '@lucide/svelte/icons/x'
 	import { EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
-	import type { CommonGameItem } from '$lib/types'
 	import { playerMoveToCommonGame, uniqBy } from '$lib/utils'
 	import Loader from '$lib/components/Loader.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
+	import GameCard from '$lib/components/gameCard/GameCard.svelte'
 
 	const app = getAppManager()
 
@@ -30,7 +30,7 @@
 	const aukus2Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus2') ?? [])
 	const aukus1Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus1') ?? [])
 
-	const aukus5Games = $derived(playersMovesStore.playerMoves.map(playerMoveToCommonGame))
+	const aukus5Games = $derived(playersMovesStore.playerMoves)
 
 	$effect(() => {
 		if (dialogOpen) {
@@ -87,7 +87,7 @@
 		}
 	}
 
-	const currentGamesDisplay = $derived.by<CommonGameItem[]>(() => {
+	const currentGamesDisplay = $derived.by<PlayerMoveItem[]>(() => {
 		if (selectedEvent !== 'aukus5' && selectedEvent !== null) {
 			return []
 		}
@@ -104,7 +104,7 @@
 			.filter((id): id is number => id !== null)
 
 		const currentEventIds = aukus5Games
-			.map((game) => game.igdb_id)
+			.map((game) => game.game_id)
 			.filter((id): id is number => id !== null)
 
 		const igdbIds = new Set([...historyIds, ...currentEventIds])
@@ -123,8 +123,7 @@
 	})
 
 	const isLoading = $derived(
-		!gamesHistoryStore.searchIdFrom &&
-		 gamesHistoryStore.historyQuery.isFetching
+		!gamesHistoryStore.searchIdFrom && gamesHistoryStore.historyQuery.isFetching
 	)
 
 	// $inspect(isLoading, 'GamesHistoryDialog isLoading')
@@ -142,9 +141,10 @@
 	})
 
 	const gameMatchedMergedWithOthers = $derived.by(() => {
+		const commonCurrentGames = aukus5Games.map(playerMoveToCommonGame)
 		return uniqBy(
 			[
-				...aukus5Games,
+				...commonCurrentGames,
 				...aukus4Games,
 				...aukus3Games,
 				...aukus2Games,
@@ -244,13 +244,17 @@
 
 						{#if currentGamesDisplay.length !== 0}
 							<div class="p-0 text-center text-3xl">Аукус 5</div>
-							{#each currentGamesDisplay as game (game.id)}
-								{#if app.playersBySlug.get(game.player_nickname) !== undefined}
+							{#each currentGamesDisplay as move (move.id)}
+								{#if app.playersBySlug.get(move.player_slug) !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) =>
-											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+											g.igdb_id === move.game_id && g.player_nickname !== move.player_slug
 									)}
-									<GameCard {game} matchedGames={matches} />
+									<GameCard
+										move={move}
+										game={playerMoveToCommonGame(move)}
+										matchedGames={matches}
+									/>
 								{/if}
 							{/each}
 						{/if}
@@ -265,7 +269,7 @@
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) =>
-											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+											g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -282,7 +286,7 @@
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) =>
-											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+											g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -299,7 +303,7 @@
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
 										(g) =>
-											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+											g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}

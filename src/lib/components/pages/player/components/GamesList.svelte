@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Loader from '$lib/components/Loader.svelte'
-	import MoveCard from '$lib/components/moveCard/MoveCard.svelte'
+	import GameCard from '$lib/components/gameCard/GameCard.svelte'
 	import TierList from '$lib/components/tierlist/TierList.svelte'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
@@ -67,7 +67,7 @@
 		<div class="space-y-5">
 			<!-- <CurrentGameCard playerSlug={player.slug} /> -->
 			{#each playerMoves as move (move.id)}
-				<MoveCard {move} game={playerMoveToCommonGame(move)} {matchedGames} />
+				<GameCard {move} game={playerMoveToCommonGame(move)} {matchedGames} />
 			{/each}
 		</div>
 	</div>
@@ -80,7 +80,7 @@
 	<div class="mt-5 space-y-[200px]">
 		<div class="space-y-5">
 			{#each historyGames as game (game.id)}
-				<MoveCard {game} {matchedGames} />
+				<GameCard {game} {matchedGames} />
 			{/each}
 		</div>
 	</div>

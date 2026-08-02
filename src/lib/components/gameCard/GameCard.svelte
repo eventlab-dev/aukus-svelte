@@ -150,7 +150,7 @@
 </script>
 
 <div
-	class="group relative flex w-full flex-col rounded-xl bg-card p-3 md:w-[800px]"
+	class="group relative flex w-full flex-col rounded-xl bg-card p-3"
 	id={`game-card-${game.key}`}
 >
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">

@@ -46,7 +46,7 @@
 		{playerName}
 	</PopoverTrigger>
 	<PopoverContent
-		class="w-[375px] space-y-3"
+		class="max-w-[500px] w-fit space-y-5"
 		onmouseenter={handleMouseEnter}
 		onmouseleave={handleMouseLeave}
 	>
@@ -55,7 +55,7 @@
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			{@html parsedReview}
 		</div>
-		<div class="flex gap-1.5">
+		<div class="flex gap-1.5 mt-2">
 			<Badge variant="blue">{EventTitles[game.event_name]}</Badge>
 			<Badge variant={moveTypeStyles.variant}>
 				{moveTypeStyles.text}
@@ -66,7 +66,7 @@
 				</Badge>
 			{/if}
 			{#if game.game_time > 0}
-				<Badge variant="secondary" class="w-full shrink py-0">
+				<Badge variant="secondary">
 					Играл
 					{formatDuration(game.game_time)}
 				</Badge>

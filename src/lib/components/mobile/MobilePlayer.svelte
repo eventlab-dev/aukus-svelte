@@ -4,7 +4,7 @@
 	import ImageLoader from '../ImageLoader.svelte'
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 	import { formatMs, getPlayerCleanScore, playerMoveToCommonGame } from '$lib/utils'
-	import MoveCard from '../moveCard/MoveCard.svelte'
+	import GameCard from '../gameCard/GameCard.svelte'
 	import { GamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
 	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
@@ -164,7 +164,7 @@
 		<div class="mt-4 w-full space-y-4">
 			{#each playerMoves as move (move.id)}
 				{@const matchedGames = gamesMatched.filter((game) => game.game_title === move.item_title)}
-				<MoveCard {move} {matchedGames} game={playerMoveToCommonGame(move)}/>
+				<GameCard {move} {matchedGames} game={playerMoveToCommonGame(move)}/>
 			{/each}
 		</div>
 	</div>
