@@ -45,7 +45,7 @@
 	})
 
 	$effect(() => {
-		if (!playerMoves && historyStore.historyQuery.isPending) {
+		if (playerMoves.length === 0 && historyStore.historyQuery.isPending) {
 			matchStore.gamesMatchParams = {
 				igdb_ids: [],
 				exclude_player: playerSlug
@@ -58,20 +58,21 @@
 		}
 	})
 
-	const matchedGames = $derived(matchStore.gamesMatched)
+	const allMatchedGames = $derived(matchStore.gamesMatched)
 </script>
 
-{#if currentEventGames}
+{#if currentEventGames.length > 0}
 	<TierList games={currentEventGames} />
 	<div class="mt-5 space-y-[200px]">
 		<div class="space-y-5">
 			<!-- <CurrentGameCard playerSlug={player.slug} /> -->
 			{#each playerMoves as move (move.id)}
+				{@const matchedGames = allMatchedGames.filter((m) => m.igdb_id === move.game_id)}
 				<GameCard {move} game={playerMoveToCommonGame(move)} {matchedGames} />
 			{/each}
 		</div>
 	</div>
-{:else if historyStore.historyQuery.isPending}
+{:else if historyStore.historyQuery.isFetching}
 	<div class="my-10 flex justify-center">
 		<Loader class="inline size-20" />
 	</div>
@@ -80,6 +81,7 @@
 	<div class="mt-5 space-y-[200px]">
 		<div class="space-y-5">
 			{#each historyGames as game (game.id)}
+				{@const matchedGames =	allMatchedGames.filter((m) => m.igdb_id === game.igdb_id)}
 				<GameCard {game} {matchedGames} />
 			{/each}
 		</div>
