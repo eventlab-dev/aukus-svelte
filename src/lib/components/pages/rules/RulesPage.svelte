@@ -80,6 +80,7 @@
 
 <div class="mt-[100px] flex w-full justify-center">
 	<div class="w-[700px]">
+		<div class="flex justify-center">
 		<Tabs
 			value={category}
 			class="m-0 bg-none!"
@@ -96,6 +97,7 @@
 				</TabsTrigger>
 			</TabsList>
 		</Tabs>
+	</div>
 		<div class="mt-[20px] text-5xl font-bold">
 			Правила Аукуса для {category === 'general' ? 'участников' : 'донатеров'}
 		</div>
