@@ -10,7 +10,7 @@
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
-	import { FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
+	import { EventTitles, FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatDateTimeISO, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
@@ -28,12 +28,14 @@
 		game: CommonGameItem
 		move?: PlayerMoveItem
 		matchedGames: CommonGameItem[]
+		showPlayer?: boolean
+		showEvent?: boolean
 	}
 
-	const { move, matchedGames, game }: Props = $props()
+	let { move, matchedGames, game, showPlayer = false, showEvent = false }: Props = $props()
 
 	const app = getAppManager()
-	const { usersStore, playersMovesStore } = app
+	const { usersStore, playersMovesStore, playersBySlug } = app
 
 	const canEdit = $derived.by(() => {
 		if (!move) {
@@ -147,6 +149,8 @@
 
 	const title = $derived(move?.item_title ?? game.game_title)
 	const showRating = $derived(move || game.rating)
+
+	const player = $derived(playersBySlug.get(game.player_nickname))
 </script>
 
 <div
@@ -156,6 +160,14 @@
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
 		<div class="flex">
 			<div class="flex flex-wrap gap-1.5">
+			    {#if showEvent}
+					<Badge variant="secondary">{EventTitles[game.event_name]}</Badge>
+				{/if}
+
+				{#if showPlayer && player}
+					<Badge style="background-color: {player.color};">{player.username}</Badge>
+				{/if}
+
 				<Badge variant={moveTypeStyles.variant}>
 					{moveTypeStyles.text}
 				</Badge>

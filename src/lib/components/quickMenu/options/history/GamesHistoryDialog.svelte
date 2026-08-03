@@ -1,14 +1,6 @@
 <script lang="ts">
-	import SearchIcon from '$lib/components/icons/SearchIcon.svelte'
-	import {
-		Dialog,
-		DialogContent,
-		DialogHeader,
-		DialogTitle,
-		DialogTrigger
-	} from '$lib/components/ui/dialog'
+	import PageContainer from '$lib/components/PageContainer.svelte'
 	import { Input } from '$lib/components/ui/input'
-	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import { EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
 	import { playerMoveToCommonGame, uniqBy } from '$lib/utils'
@@ -23,8 +15,6 @@
 
 	const { gamesHistoryStore, playersMovesStore, gamesMatchesStore } = app
 
-	let dialogOpen = $state(true)
-
 	const aukus4Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus4') ?? [])
 	const aukus3Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus3') ?? [])
 	const aukus2Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus2') ?? [])
@@ -32,18 +22,17 @@
 
 	const aukus5Games = $derived(playersMovesStore.playerMoves)
 
+	// Initialize search params on component mount
 	$effect(() => {
-		if (dialogOpen) {
-			const playersFilter = app.myPlayer ? [app.myPlayer.slug] : []
-			gamesHistoryStore.searchParams = {
-				events: [],
-				players: playersFilter,
-				title_search: null
-			}
-			playersMovesStore.queryParams = {
-				players: playersFilter,
-				search_title: null
-			}
+		const playersFilter = app.myPlayer ? [app.myPlayer.slug] : []
+		gamesHistoryStore.searchParams = {
+			events: [],
+			players: playersFilter,
+			title_search: null
+		}
+		playersMovesStore.queryParams = {
+			players: playersFilter,
+			search_title: null
 		}
 	})
 
@@ -95,10 +84,6 @@
 	})
 
 	$effect(() => {
-		if (!dialogOpen) {
-			return
-		}
-
 		const historyIds = [...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
 			.map((game) => game.igdb_id)
 			.filter((id): id is number => id !== null)
@@ -170,26 +155,12 @@
 		}
 		window.open(url, '_blank noopener noreferrer')
 	}
-
-	function onOpenChange(open: boolean) {
-		if (!open) {
-			app.navStore.closePage()
-		}
-	}
 </script>
 
-<Dialog bind:open={dialogOpen} {onOpenChange}>
-	<DialogTrigger>
-		<SearchIcon /> История игр
-	</DialogTrigger>
-	<DialogContent
-		class="flex h-[80vh] w-[750px] flex-col overflow-hidden bg-[#222222] text-primary-foreground selection:bg-foreground selection:text-background"
-	>
-		<DialogHeader class="gap-3">
-			<DialogTitle class="text-2xl font-bold">История игр</DialogTitle>
-		</DialogHeader>
-		<div class="mt-10 flex flex-col gap-5">
-			<div class="w-full gap-2">
+<PageContainer bottomSpace={false}>
+	<div class="flex flex-col gap-5 pt-16 items-center">
+		<div class="w-full max-w-[800px] flex flex-col gap-5">
+			<div class="flex justify-center">
 				<Tabs value={playerFilter} onValueChange={(v) => setPlayerFilter(v)}>
 					<TabsList class="flex flex-wrap gap-2">
 						<TabsTrigger value="all">Все</TabsTrigger>
@@ -207,7 +178,7 @@
 					</TabsList>
 				</Tabs>
 			</div>
-			<div class="flex w-full flex-wrap gap-2">
+			<div class="flex justify-center">
 				<Tabs value={eventFilter} onValueChange={(v) => setEventFilter(v)}>
 					<TabsList class="flex flex-wrap gap-2">
 						<TabsTrigger value="all">Все</TabsTrigger>
@@ -227,103 +198,101 @@
 				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 			/>
 		</div>
-		<ScrollArea class="h-full w-full flex-1" type="always">
-			<div class="mt-10 mb-80">
-				{#if isLoading}
-					<div class="mt-40 flex justify-center">
-						<Loader class="inline size-20" />
+		<div class="mt-10 mb-80 w-full max-w-[800px]">
+		{#if isLoading}
+			<div class="mt-40 flex justify-center">
+				<Loader class="inline size-20" />
+			</div>
+		{:else}
+			<div class="flex flex-col gap-5">
+				{#if noGames}
+					<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+				{/if}
+
+				{#if currentGamesDisplay.length !== 0}
+					<div class="p-0 text-center text-3xl">Аукус 5</div>
+					{#each currentGamesDisplay as move (move.id)}
+						{#if app.playersBySlug.get(move.player_slug) !== undefined}
+							{@const matches = gameMatchedMergedWithOthers.filter(
+								(g) => g.igdb_id === move.game_id && g.player_nickname !== move.player_slug
+							)}
+							<GameCard {move} game={playerMoveToCommonGame(move)} matchedGames={matches} showEvent showPlayer />
+						{/if}
+					{/each}
+				{/if}
+
+				{#if aukus4Games.length > 0}
+					<div class="flex justify-center">
+						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
+							Аукус 4
+						</Button>
 					</div>
-				{:else}
-					<div class="flex flex-col gap-5">
-						{#if noGames}
-							<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+					{#each aukus4Games as game (game.id)}
+						{#if app.playersBySlug.get(game.player_nickname)}
+							{@const matches = gameMatchedMergedWithOthers.filter(
+								(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
+							)}
+							<GameCard {game} matchedGames={matches} showEvent showPlayer />
 						{/if}
+					{/each}
+				{/if}
 
-						{#if currentGamesDisplay.length !== 0}
-							<div class="p-0 text-center text-3xl">Аукус 5</div>
-							{#each currentGamesDisplay as move (move.id)}
-								{#if app.playersBySlug.get(move.player_slug) !== undefined}
-									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.igdb_id === move.game_id && g.player_nickname !== move.player_slug
-									)}
-									<GameCard {move} game={playerMoveToCommonGame(move)} matchedGames={matches} />
-								{/if}
-							{/each}
+				{#if aukus3Games.length > 0}
+					<div class="flex justify-center">
+						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
+							Аукус 3
+						</Button>
+					</div>
+					{#each aukus3Games as game (game.id)}
+						{#if app.playersBySlug.get(game.player_nickname)}
+							{@const matches = gameMatchedMergedWithOthers.filter(
+								(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
+							)}
+							<GameCard {game} matchedGames={matches} showEvent showPlayer />
 						{/if}
+					{/each}
+				{/if}
 
-						{#if aukus4Games.length > 0}
-							<div class="flex justify-center">
-								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
-									Аукус 4
-								</Button>
-							</div>
-							{#each aukus4Games as game (game.id)}
-								{#if app.playersBySlug.get(game.player_nickname)}
-									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
-									)}
-									<GameCard {game} matchedGames={matches} />
-								{/if}
-							{/each}
+				{#if aukus2Games.length > 0}
+					<div class="flex justify-center">
+						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
+							Аукус 2
+						</Button>
+					</div>
+					{#each aukus2Games as game (game.id)}
+						{#if app.playersBySlug.get(game.player_nickname)}
+							{@const matches = gameMatchedMergedWithOthers.filter(
+								(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
+							)}
+							<GameCard {game} matchedGames={matches} showEvent showPlayer />
 						{/if}
+					{/each}
+				{/if}
 
-						{#if aukus3Games.length > 0}
-							<div class="flex justify-center">
-								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
-									Аукус 3
-								</Button>
-							</div>
-							{#each aukus3Games as game (game.id)}
-								{#if app.playersBySlug.get(game.player_nickname)}
-									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
-									)}
-									<GameCard {game} matchedGames={matches} />
-								{/if}
-							{/each}
+				{#if aukus1Games.length > 0}
+					<div class="flex justify-center">
+						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
+							Аукус 1
+						</Button>
+					</div>
+					{#each aukus1Games as game (game.id)}
+						{#if app.playersBySlug.get(game.player_nickname)}
+							{@const matches = gameMatchedMergedWithOthers.filter(
+								(g) =>
+									g.game_title === game.game_title && g.player_nickname !== game.player_nickname
+							)}
+							<GameCard {game} matchedGames={matches} showEvent showPlayer />
 						{/if}
+					{/each}
+				{/if}
 
-						{#if aukus2Games.length > 0}
-							<div class="flex justify-center">
-								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
-									Аукус 2
-								</Button>
-							</div>
-							{#each aukus2Games as game (game.id)}
-								{#if app.playersBySlug.get(game.player_nickname)}
-									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
-									)}
-									<GameCard {game} matchedGames={matches} />
-								{/if}
-							{/each}
-						{/if}
-
-						{#if aukus1Games.length > 0}
-							<div class="flex justify-center">
-								<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
-									Аукус 1
-								</Button>
-							</div>
-							{#each aukus1Games as game (game.id)}
-								{#if app.playersBySlug.get(game.player_nickname)}
-									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) =>
-											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
-									)}
-									<GameCard {game} matchedGames={matches} />
-								{/if}
-							{/each}
-						{/if}
-
-						{#if gamesHistoryStore.hasMore}
-							<div class="flex justify-center">
-								<Button onclick={() => gamesHistoryStore.loadMore()}>Загрузить ещё</Button>
-							</div>
-						{/if}
+				{#if gamesHistoryStore.hasMore}
+					<div class="flex justify-center">
+						<Button onclick={() => gamesHistoryStore.loadMore()}>Загрузить ещё</Button>
 					</div>
 				{/if}
 			</div>
-		</ScrollArea>
-	</DialogContent>
-</Dialog>
+		{/if}
+	</div>
+	</div>
+</PageContainer>

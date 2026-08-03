@@ -11,7 +11,7 @@
 	import SkinEditorDialog from '../skinEditor/SkinEditorDialog.svelte'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import { Button } from '../ui/button'
-	import GamesHistoryDialog from './options/history/GamesHistoryDialog.svelte'
+	import SearchIcon from '../icons/SearchIcon.svelte'
 	import LoginDialog from './options/LoginDialog.svelte'
 	import PunishmentCalculator from './options/PunishmentCalculator.svelte'
 	import ShitMenu from './options/shitMenu/ShitMenu.svelte'
@@ -75,7 +75,9 @@
 					</Button>
 				{/if}
 				<AchievementsDialog />
-				<GamesHistoryDialog />
+				<Button onclick={() => app.navStore.changePage('history')}>
+					<SearchIcon /> История игр
+				</Button>
 				<Button onclick={() => window.open('/streams', '_blank')}>
 					<TwitchIcon /> Мультитрансляция
 				</Button>
