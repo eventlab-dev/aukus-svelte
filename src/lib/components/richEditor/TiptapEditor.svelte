@@ -104,7 +104,7 @@
 		void width
 		if (!editorElement) return { top: 0, left: 0 }
 		const rect = editorElement.getBoundingClientRect()
-		return { top: window.scrollY + 150, left: rect.right + 30 }
+		return { top: window.scrollY + 150, left: rect.right + 80 }
 	})
 </script>
 
@@ -170,7 +170,7 @@
 	}
 
 	:global(.tiptap-section) {
-		padding: 12px;
+		padding: 0px;
 		background-color: var(--color-card);
 		color: var(--color-card-foreground);
 		border-radius: var(--radius-2xl);
@@ -195,8 +195,8 @@
 	}
 
 	:global(.tiptap p) {
-		margin-top: 20px;
-		margin-bottom: 20px;
+		margin-top: 0px;
+		margin-bottom: 0px;
 	}
 
 	:global(.tiptap p:first-child) {

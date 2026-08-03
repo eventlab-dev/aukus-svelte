@@ -13,6 +13,7 @@
 	import { createMutation, createQuery } from '@tanstack/svelte-query'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
+	import { Card, CardContent } from '$lib/components/ui/card'
 
 	const app = getAppManager()
 	const { usersStore, navStore } = app
@@ -78,59 +79,67 @@
 	}
 </script>
 
-<div class="mt-[100px] flex w-full justify-center">
+<div class="mt-[90px] flex w-full justify-center">
 	<div class="w-[700px]">
 		<div class="flex justify-center">
-		<Tabs
-			value={category}
-			class="m-0 bg-none!"
-			onValueChange={(value) => {
-				setCategory(value as RulesCategory)
-			}}
-		>
-			<TabsList class="gap-3 bg-transparent">
-				<TabsTrigger value="general" class="h-10 w-60 rounded-2xl px-4 text-base font-semibold">
-					Для участников
-				</TabsTrigger>
-				<TabsTrigger value="donations" class="h-10 w-60 rounded-2xl px-4 text-base font-semibold">
-					Для донатеров
-				</TabsTrigger>
-			</TabsList>
-		</Tabs>
-	</div>
-		<div class="mt-[20px] text-5xl font-bold">
-			Правила Аукуса для {category === 'general' ? 'участников' : 'донатеров'}
+			<Tabs
+				value={category}
+				class="m-0 bg-none!"
+				onValueChange={(value) => {
+					setCategory(value as RulesCategory)
+				}}
+			>
+				<TabsList class="gap-3 bg-transparent">
+					<TabsTrigger value="general" class="h-10 w-60 rounded-2xl px-4 text-base font-semibold">
+						Для участников
+					</TabsTrigger>
+					<TabsTrigger value="donations" class="h-10 w-60 rounded-2xl px-4 text-base font-semibold">
+						Для донатеров
+					</TabsTrigger>
+				</TabsList>
+			</Tabs>
 		</div>
-		<div class="mt-10">
-			{#if canEdit}
-				{#if editorMode}
-					<div class="mb-10 flex gap-5">
-						<Button variant="default" onclick={() => (editorMode = false)}>Отмена</Button>
-						<Button variant="destructive" onclick={saveRules}>Сохранить</Button>
-					</div>
+		<Card class="mt-[18px] w-[700px] rounded-[50px] border-dashed p-[42px]">
+			<div class="text-5xl font-bold">
+				{#if category === 'general'}
+					Правила Аукуса
 				{:else}
-					<Button class="mb-10" onclick={() => (editorMode = true)}>Редактировать</Button>
+					Правила для донатеров
 				{/if}
-			{/if}
-		</div>
-		{#if rulesQuery.isLoading}
-			<Loader class="inline size-20" />
-		{:else if editorMode}
-			<TiptapEditor
-				class="h-[80vh] w-[700px]"
-				content={rules}
-				bind:value={editedRules}
-				withMenu
-				extensions={{ withLinks: true, sectionsMode: 'parse-only' }}
-			/>
-		{:else}
-			<TiptapEditor
-				class="h-fit w-[700px] border-none"
-				content={rules}
-				editable={false}
-				extensions={{ sectionsMode: 'full', withTOC: true, withLinks: true }}
-			/>
-		{/if}
+			</div>
+			<div>
+				{#if canEdit}
+					{#if editorMode}
+						<div class="mb-10 flex gap-5">
+							<Button variant="default" onclick={() => (editorMode = false)}>Отмена</Button>
+							<Button variant="destructive" onclick={saveRules}>Сохранить</Button>
+						</div>
+					{:else}
+						<Button class="mb-10" variant="secondary" onclick={() => (editorMode = true)}>Редактировать</Button>
+					{/if}
+				{/if}
+			</div>
+			<CardContent class="!p-0">
+				{#if rulesQuery.isLoading}
+					<Loader class="inline size-20" />
+				{:else if editorMode}
+					<TiptapEditor
+						class="h-[80vh] w-[700px]"
+						content={rules}
+						bind:value={editedRules}
+						withMenu
+						extensions={{ withLinks: true, sectionsMode: 'parse-only' }}
+					/>
+				{:else}
+					<TiptapEditor
+						class="h-fit w-[700px] border-none"
+						content={rules}
+						editable={false}
+						extensions={{ sectionsMode: 'full', withTOC: true, withLinks: true }}
+					/>
+				{/if}
+			</CardContent>
+		</Card>
 	</div>
 </div>
 

@@ -66,7 +66,7 @@
 
 <div
 	bind:this={element}
-	class="fixed h-fit w-fit rounded-2xl bg-card p-5 border-dashed"
+	class="fixed h-fit w-fit rounded-4xl bg-card p-5 border-dashed"
 	style="top: {pos.top}px; left: {pos.left}px"
 >
 	<ScrollArea class="h-auto max-h-[70vh] overflow-y-auto" type="auto">

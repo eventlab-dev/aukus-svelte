@@ -6,6 +6,7 @@
 	import { Button } from '../ui/button'
 	import TiptapEditor from '../richEditor/TiptapEditor.svelte'
 	import Loader from '../Loader.svelte'
+	import { Card, CardContent } from '../ui/card'
 
 	let category = $state<RulesCategory>('general')
 
@@ -31,32 +32,36 @@
 	}
 </script>
 
-<div class="mt-[52px] mb-4 text-center text-4xl font-bold">Правила</div>
+<Card class="mx-4 mt-[18px] rounded-3xl p-[42px]">
+	<div class="mb-4 text-center text-4xl font-bold">Правила</div>
 
-<div class="mb-8 flex gap-2">
-	<Button
-		class="flex-1 rounded-xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
-		onclick={() => setCategory('general')}
-		data-active={category === 'general'}
-	>
-		Для участников
-	</Button>
-	<Button
-		class="flex-1 rounded-xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E]"
-		onclick={() => setCategory('donations')}
-		data-active={category === 'donations'}
-	>
-		Для донатеров
-	</Button>
-</div>
+	<div class="mb-8 flex gap-2">
+		<Button
+			class="flex-1 rounded-xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
+			onclick={() => setCategory('general')}
+			data-active={category === 'general'}
+		>
+			Для участников
+		</Button>
+		<Button
+			class="flex-1 rounded-xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E]"
+			onclick={() => setCategory('donations')}
+			data-active={category === 'donations'}
+		>
+			Для донатеров
+		</Button>
+	</div>
 
-{#if rulesQuery.isLoading}
-	<Loader class="inline size-10" />
-{:else}
-	<TiptapEditor
-		class="h-fit w-[700px] border-none"
-		content={rules}
-		editable={false}
-		extensions={{ sectionsMode: 'full', withTOC: true, withLinks: true }}
-	/>
-{/if}
+	<CardContent class="!p-0">
+		{#if rulesQuery.isLoading}
+			<Loader class="inline size-10" />
+		{:else}
+			<TiptapEditor
+				class="h-fit w-[700px] border-none"
+				content={rules}
+				editable={false}
+				extensions={{ sectionsMode: 'full', withTOC: true, withLinks: true }}
+			/>
+		{/if}
+	</CardContent>
+</Card>
