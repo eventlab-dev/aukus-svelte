@@ -192,9 +192,9 @@
 			<div class="w-full gap-2">
 				<Tabs value={playerFilter} onValueChange={(v) => setPlayerFilter(v)}>
 					<TabsList class="flex flex-wrap gap-2">
-						<TabsTrigger class="w-fit" value="all">Все</TabsTrigger>
+						<TabsTrigger value="all">Все</TabsTrigger>
 						{#each app.players as player (player.slug)}
-							<TabsTrigger class="w-fit" value={player.slug}>
+							<TabsTrigger value={player.slug}>
 								<PlayerAvatar
 									src={player.avatar_link ?? ''}
 									name={player.username}
@@ -210,9 +210,9 @@
 			<div class="flex w-full flex-wrap gap-2">
 				<Tabs value={eventFilter} onValueChange={(v) => setEventFilter(v)}>
 					<TabsList class="flex flex-wrap gap-2">
-						<TabsTrigger class="w-fit" value="all">Все</TabsTrigger>
+						<TabsTrigger value="all">Все</TabsTrigger>
 						{#each eventsList as eventName (eventName)}
-							<TabsTrigger class="w-fit" value={eventName}>
+							<TabsTrigger value={eventName}>
 								{EventTitles[eventName]}
 							</TabsTrigger>
 						{/each}
