@@ -31,6 +31,10 @@ const STATIC_PAGES = new Set(Object.keys(URL_PAGE_MAP)) as Set<AppUrl>
 
 type AppUrl = keyof typeof URL_PAGE_MAP
 
+type PageParams = {
+	playerSlug?: string
+}
+
 function pageToUrl(page: AppPage): AppUrl {
 	const pair = Object.entries(URL_PAGE_MAP).find(([, p]) => p === page)
 	return pair ? (pair[0] as AppUrl) : '/'
@@ -42,14 +46,16 @@ export class NavStore {
 	appPage: AppPage = $state(getAppPageFromUrl() ?? MAIN_PAGE)
 	appUrl: AppUrl = $state(getAppUrlFromUrl() ?? pageToUrl(MAIN_PAGE))
 	dynamicPage: string | null = $state(null)
+	pageParams: PageParams = $state({})
 
 	closePage() {
 		this.changePage(MAIN_PAGE)
 	}
 
-	changePage(page: AppPage, params: { changeUrl?: boolean } = { changeUrl: true }) {
+	changePage(page: AppPage, params: { changeUrl?: boolean; pageParams?: PageParams } = { changeUrl: true }) {
 		const url = pageToUrl(page)
 		this.appPage = page
+		this.pageParams = params.pageParams ?? {}
 		if (params.changeUrl) {
 			this.appUrl = url
 			history.pushState({ page, url }, '', url)

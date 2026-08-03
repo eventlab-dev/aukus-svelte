@@ -24,7 +24,11 @@
 
 	// Initialize search params on component mount
 	$effect(() => {
-		const playersFilter = app.myPlayer ? [app.myPlayer.slug] : []
+		const playersFilter = app.navStore.pageParams.playerSlug
+			? [app.navStore.pageParams.playerSlug]
+			: app.myPlayer
+				? [app.myPlayer.slug]
+				: []
 		gamesHistoryStore.searchParams = {
 			events: [],
 			players: playersFilter,

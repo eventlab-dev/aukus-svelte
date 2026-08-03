@@ -151,7 +151,7 @@
 									<TabsTrigger value={event}>{EventTitles[event]}</TabsTrigger>
 								{/each}
 							</div>
-							<Button onclick={() => navStore.changePage('history')}>Поиск игр</Button>
+							<Button onclick={() => navStore.changePage('history', { pageParams: { playerSlug } })}>Поиск игр</Button>
 						</TabsList>
 						<TabsContent value="aukus5">
 							<GamesList {playerSlug} event="aukus5" {playerMoves} />
