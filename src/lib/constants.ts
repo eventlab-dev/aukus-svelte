@@ -131,13 +131,14 @@ export const MOVIE_POSTER_URL = `${CDN_URL_BASE}/utils/movie_poster.png`
 export const PAGE_SCROLL_ID = 'page-scroll'
 
 export type Tier = {
-	rank: 1 | 2 | 3 | 4 | 5
+	rank: 0 | 1 | 2 | 3 | 4 | 5
 	label: string
 	color: string
 	maxRating: number
 }
 
 export const TIERS: Tier[] = [
+	{ rank: 0, label: '---', color: '#BBBBBB', maxRating: -1 },
 	{ rank: 1, label: '0-3', color: '#FF7F7F', maxRating: 3 },
 	{ rank: 2, label: '3-5', color: '#FFBF7F', maxRating: 5 },
 	{ rank: 3, label: '5-7', color: '#FFFF7F', maxRating: 7 },

@@ -9,7 +9,7 @@
 		games: CommonGameItem[]
 	}
 
-	type GameWithTier = CommonGameItem & { tier: Tier, rating_num: number }
+	type GameWithTier = CommonGameItem & { tier: Tier }
 
 	let { games }: Props = $props()
 
@@ -20,7 +20,7 @@
 	const gamesWithTier: GameWithTier[] = $derived(
 		games.map((game) => ({
 			...game,
-			tier: scoreToTier(game.rating_num),
+			tier: scoreToTier(game.rating_num)
 		}))
 	)
 
@@ -34,51 +34,56 @@
 		}
 
 		for (const tier of tiersList) {
-			result[tier].sort((a, b) => b.rating_num - a.rating_num)
+			result[tier].sort((a, b) => (b.rating_num ?? 0) - (a.rating_num ?? 0))
 		}
 
 		return result
 	})
 </script>
 
-<div class="rounded-xl bg-primary overflow-hidden flex flex-col gap-[1px]">
+<div class="flex flex-col gap-[1px] overflow-hidden rounded-xl bg-primary">
 	{#each tiersList as tier (tier)}
 		{@const tierObj = TIERS.find((t) => t.rank === tier)}
 		{@const games = gamesPerTier[tier] ?? []}
-		<div class="flex gap-[1px]">
-			<div
-				class="flex h-auto min-h-[80px] w-[50px] items-center justify-center text-background"
-				style="background-color: {tierObj?.color}"
-			>
-				{tierObj?.label}
+		{@const hideTier = tierObj.rank === 0 && games.length === 0}
+		{#if !hideTier}
+			<div class="flex gap-[1px]">
+				<div
+					class="flex h-auto min-h-[80px] w-[50px] items-center justify-center text-background"
+					style="background-color: {tierObj?.color}"
+				>
+					{tierObj?.label}
+				</div>
+				<div class="flex w-[750px] flex-wrap gap-[1px]">
+					{#each games as game (game.key)}
+						<Tooltip>
+							<TooltipTrigger>
+								<div class="">
+									{#if game.game_cover && !imageErrors[game.key] && !game.game_cover
+											.toLowerCase()
+											.includes('gamefallbackposter')}
+										<img
+											class="h-[80px] w-auto"
+											src={game.game_cover}
+											alt={game.game_title}
+											onerror={() => (imageErrors[game.key] = true)}
+										/>
+									{:else}
+										<div
+											class="flex h-[80px] w-auto max-w-[80px] items-center justify-center bg-gray-800 text-center"
+										>
+											<span class="text-xs break-words text-white">{game.game_title}</span>
+										</div>
+									{/if}
+								</div>
+							</TooltipTrigger>
+							<TooltipContent>
+								<GamePopup {game} />
+							</TooltipContent>
+						</Tooltip>
+					{/each}
+				</div>
 			</div>
-			<div class="flex w-[750px] flex-wrap gap-[1px]">
-				{#each games as game (game.key)}
-					<Tooltip>
-						<TooltipTrigger>
-							<div class="">
-								{#if game.game_cover && !imageErrors[game.key] && !game.game_cover.toLowerCase().includes('gamefallbackposter')}
-									<img
-										class="h-[80px] w-auto"
-										src={game.game_cover}
-										alt={game.game_title}
-										onerror={() => (imageErrors[game.key] = true)}
-									/>
-								{:else}
-									<div
-										class="flex h-[80px] w-auto max-w-[80px] items-center justify-center bg-gray-800 text-center"
-									>
-										<span class="text-xs break-words text-white">{game.	game_title}</span>
-									</div>
-								{/if}
-							</div>
-						</TooltipTrigger>
-						<TooltipContent>
-							<GamePopup {game} />
-						</TooltipContent>
-					</Tooltip>
-				{/each}
-			</div>
-		</div>
+		{/if}
 	{/each}
 </div>

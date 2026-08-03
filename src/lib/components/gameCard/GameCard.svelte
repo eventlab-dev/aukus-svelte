@@ -87,7 +87,7 @@
 					moveId: move.id,
 					data: {
 						item_review: review,
-						item_rating: rating,
+						item_rating: rating ?? 0,
 						vod_links: vodLinks || null
 					}
 				})

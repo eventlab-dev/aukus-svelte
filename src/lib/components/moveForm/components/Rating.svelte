@@ -32,8 +32,8 @@
 	let timeoutId: ReturnType<typeof setTimeout>
 
 	function getColor() {
-		const tier = scoreToTier(itemIndex ?? 0)
-		return tier.color
+		const tier = scoreToTier(itemIndex)
+		return tier?.color ?? scoreToTier(0)!.color
 	}
 
 	function calculateWidth(index: number | null) {

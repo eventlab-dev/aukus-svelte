@@ -456,19 +456,23 @@ export function calculateDiceProbability(diceAmount: number, diceType: number): 
 	return probabilityDistribution
 }
 
-export function scoreToTier(score: number): Tier {
+export function scoreToTier(score: number | null): Tier {
+	if (score === null) {
+		return TIERS[0]
+	}
 	const tier = TIERS.find((t) => score <= t.maxRating)
 	return tier || TIERS[0]
 }
 
-export function parseScore(scoreText: string): number {
+export function parseScore(scoreText: string): number | null {
 	const parts = scoreText.split('/')
+	let toParse = scoreText
 	if (parts.length === 2) {
-		return parseFloat(parts[0])
+		toParse = parts[0]
 	}
 	try {
-		return parseFloat(scoreText)
+		return parseFloat(toParse)
 	} catch {
-		return 0
+		return null
 	}
 }
