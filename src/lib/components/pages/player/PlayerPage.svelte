@@ -12,8 +12,8 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 	import GamesList from './components/GamesList.svelte'
-	import GamesHistoryDialog from '$lib/components/quickMenu/options/history/GamesHistoryDialog.svelte'
 	import { Button } from '$lib/components/ui/button'
+	import { EventTitles } from '$lib/constants'
 
 	type Props = {
 		playerSlug: string
@@ -22,7 +22,7 @@
 	let { playerSlug }: Props = $props()
 
 	const app = getAppManager()
-	const { canvasStore, navStore } = app
+	const { canvasStore, navStore, gamesHistoryStore } = app
 
 	const movesStore = new PlayerMovesStore({
 		getPlayerSlug: () => playerSlug
@@ -30,7 +30,7 @@
 
 	const playerMoves = $derived(movesStore.playerMoves)
 
-	let activeTab = $state("aukus5")
+	let activeTab = $state('aukus5')
 
 	$effect(() => {
 		if (!playerSlug) {
@@ -80,6 +80,10 @@
 			handleResize()
 			return () => observer.disconnect()
 		}
+	})
+
+	const eventList = $derived.by(() => {
+		return (gamesHistoryStore.eventsByPlayer.get(playerSlug) ?? []).toSorted().toReversed()
 	})
 
 	const widthStyle = $derived(`width: ${canvasStore.canvasWidth}px`)
@@ -140,39 +144,25 @@
 					</div>
 
 					<Tabs bind:value={activeTab} class="w-[800px]">
-						<TabsList class="bg-transparent gap-2 mb-3 flex justify-between w-full">
-						<div class="flex gap-2 h-full">
-							<TabsTrigger value="aukus5">Аукус 5</TabsTrigger>
-							<TabsTrigger value="aukus4">Аукус 4</TabsTrigger>
-							<TabsTrigger value="aukus3">Аукус 3</TabsTrigger>
-							<TabsTrigger value="aukus2">Аукус 2</TabsTrigger>
-							<TabsTrigger value="aukus1">Аукус 1</TabsTrigger>
-						</div>
+						<TabsList class="mb-3 flex w-full justify-between gap-2 bg-transparent">
+							<div class="flex h-full gap-2">
+								<TabsTrigger value="aukus5">Аукус 5</TabsTrigger>
+								{#each eventList as event (event)}
+									<TabsTrigger value={event}>{EventTitles[event]}</TabsTrigger>
+								{/each}
+							</div>
 							<Button onclick={() => navStore.changePage('history')}>Поиск игр</Button>
 						</TabsList>
 						<TabsContent value="aukus5">
 							<GamesList {playerSlug} event="aukus5" {playerMoves} />
 						</TabsContent>
-						<TabsContent value="aukus4">
-							{#if activeTab === 'aukus4'}
-								<GamesList {playerSlug} event="aukus4" />
+						{#each eventList as event (event)}
+							{#if activeTab === event}
+								<TabsContent value={event}>
+									<GamesList {playerSlug} event={event} />
+								</TabsContent>
 							{/if}
-						</TabsContent>
-						<TabsContent value="aukus3">
-							{#if activeTab === 'aukus3'}
-								<GamesList {playerSlug} event="aukus3" />
-							{/if}
-						</TabsContent>
-						<TabsContent value="aukus2">
-							{#if activeTab === 'aukus2'}
-								<GamesList {playerSlug} event="aukus2" />
-							{/if}
-						</TabsContent>
-						<TabsContent value="aukus1">
-							{#if activeTab === 'aukus1'}
-								<GamesList {playerSlug} event="aukus1" />
-							{/if}
-						</TabsContent>
+						{/each}
 					</Tabs>
 				{/if}
 			</div>

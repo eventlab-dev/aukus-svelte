@@ -248,7 +248,7 @@ export type GameHistoryItem = {
      */
     game_year: number | null;
     completion_status: GameCompletionStatus;
-    difficulty: GameDifficulty | null;
+    difficulty?: GameDifficulty | null;
     /**
      * Date
      */
@@ -291,6 +291,16 @@ export type GamesHistoryResponse = {
      * Next Id
      */
     next_id: number | null;
+};
+
+/**
+ * GamesHistoryStatsResponse
+ */
+export type GamesHistoryStatsResponse = {
+    /**
+     * Players
+     */
+    players: Array<PlayerStatsItem>;
 };
 
 /**
@@ -668,6 +678,22 @@ export type PlayerOnlineNotificationRequest = {
 };
 
 /**
+ * PlayerStatsItem
+ */
+export type PlayerStatsItem = {
+    /**
+     * Player Nickname
+     */
+    player_nickname: string;
+    /**
+     * Events
+     */
+    events: {
+        [key: string]: number;
+    };
+};
+
+/**
  * SendNotificationRequest
  */
 export type SendNotificationRequest = {
@@ -1030,6 +1056,22 @@ export type StartGamesHistoryImportApiGamesHistoryImportStartGetResponses = {
      */
     200: unknown;
 };
+
+export type GetGamesStatsEndpointApiGamesHistoryStatsGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/games-history/stats';
+};
+
+export type GetGamesStatsEndpointApiGamesHistoryStatsGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: GamesHistoryStatsResponse;
+};
+
+export type GetGamesStatsEndpointApiGamesHistoryStatsGetResponse = GetGamesStatsEndpointApiGamesHistoryStatsGetResponses[keyof GetGamesStatsEndpointApiGamesHistoryStatsGetResponses];
 
 export type MakeDiceRollApiDiceRollsPostData = {
     body: DiceRollRequest;

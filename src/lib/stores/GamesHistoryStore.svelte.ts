@@ -1,11 +1,12 @@
 import { EventlabBaseUrl } from '$lib/client'
-import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
-import type { GetGamesApiGamesHistoryGetData } from '$lib/heyapi/eventlab/types.gen'
+import { getGamesApiGamesHistoryGetOptions, getGamesStatsEndpointApiGamesHistoryStatsGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
+import type { GetGamesApiGamesHistoryGetData, PlayerStatsItem } from '$lib/heyapi/eventlab/types.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import type { CommonGameItem } from '$lib/types'
 import { SvelteMap } from 'svelte/reactivity'
 import { untrack } from 'svelte'
 import { historyGameToCommonGame } from '$lib/utils'
+import { getGamesStatsEndpointApiGamesHistoryStatsGet } from '$lib/heyapi/eventlab/sdk.gen'
 
 type QueryParams = NonNullable<GetGamesApiGamesHistoryGetData['query']>
 
@@ -107,4 +108,23 @@ export class GameHistoryStore {
 			this.searchIdFrom = nextId
 		}
 	}
+
+	historyStatsQuery = createQuery(() => {
+		const params = getGamesStatsEndpointApiGamesHistoryStatsGetOptions({
+			baseUrl: EventlabBaseUrl
+		})
+		params.refetchOnWindowFocus = false
+		return params
+	})
+
+	eventsByPlayer = $derived.by(() => {
+		const events = ['aukus4', 'aukus3', 'aukus2', 'aukus1']
+		if (!this.historyStatsQuery.data) {
+			return new SvelteMap<string, string[]>()
+		}
+		return this.historyStatsQuery.data.players.reduce((acc, stats) => {
+			acc.set(stats.player_nickname, events.filter((event) => Boolean(stats.events[event])))
+			return acc
+		}, new SvelteMap<string, string[]>())
+	})
 }
