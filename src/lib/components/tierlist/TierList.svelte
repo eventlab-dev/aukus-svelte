@@ -2,9 +2,9 @@
 	import { TIERS, type Tier } from '$lib/constants'
 	import type { CommonGameItem } from '$lib/types'
 	import { scoreToTier } from '$lib/utils'
+	import GamePopupContent from '../gameCard/GamePopupContent.svelte'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
-	import GamePopup from './GamePopup.svelte'
-
+	
 	type Props = {
 		games: CommonGameItem[]
 	}
@@ -45,7 +45,7 @@
 	{#each tiersList as tier (tier)}
 		{@const tierObj = TIERS.find((t) => t.rank === tier)}
 		{@const games = gamesPerTier[tier] ?? []}
-		{@const hideTier = tierObj.rank === 0 && games.length === 0}
+		{@const hideTier = tierObj?.rank === 0 && games.length === 0}
 		{#if !hideTier}
 			<div class="flex gap-[1px]">
 				<div
@@ -78,7 +78,7 @@
 								</div>
 							</TooltipTrigger>
 							<TooltipContent>
-								<GamePopup {game} />
+								<GamePopupContent {game} />
 							</TooltipContent>
 						</Tooltip>
 					{/each}

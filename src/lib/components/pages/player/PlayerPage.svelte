@@ -12,6 +12,8 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 	import GamesList from './components/GamesList.svelte'
+	import GamesHistoryDialog from '$lib/components/quickMenu/options/history/GamesHistoryDialog.svelte'
+	import { Button } from '$lib/components/ui/button'
 
 	type Props = {
 		playerSlug: string
@@ -20,7 +22,7 @@
 	let { playerSlug }: Props = $props()
 
 	const app = getAppManager()
-	const { canvasStore } = app
+	const { canvasStore, navStore } = app
 
 	const movesStore = new PlayerMovesStore({
 		getPlayerSlug: () => playerSlug
@@ -138,12 +140,15 @@
 					</div>
 
 					<Tabs bind:value={activeTab} class="bg-none! w-[800px]">
-						<TabsList class="bg-transparent gap-2 mb-3">
+						<TabsList class="bg-transparent gap-2 mb-3 flex justify-between w-full">
+						<div class="flex gap-2 h-full">
 							<TabsTrigger value="aukus5">Аукус 5</TabsTrigger>
 							<TabsTrigger value="aukus4">Аукус 4</TabsTrigger>
 							<TabsTrigger value="aukus3">Аукус 3</TabsTrigger>
 							<TabsTrigger value="aukus2">Аукус 2</TabsTrigger>
 							<TabsTrigger value="aukus1">Аукус 1</TabsTrigger>
+						</div>
+							<Button onclick={() => navStore.changePage('history')}>Поиск игр</Button>
 						</TabsList>
 						<TabsContent value="aukus5">
 							<GamesList {playerSlug} event="aukus5" {playerMoves} />
