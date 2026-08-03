@@ -102,6 +102,7 @@ export class AppManager {
 				total_score: getPlayerScore(stats)
 			})
 		}
+		list.sort((a, b) => a.username.localeCompare(b.username))
 		return list
 	})
 
