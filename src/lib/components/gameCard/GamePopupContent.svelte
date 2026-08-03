@@ -14,8 +14,8 @@
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
 </script>
 
-<div class="w-fit max-w-[500px] space-y-5">
-	<div class="font-bold text-xl">{game.game_title}</div>
+<div class="max-w-[500px] flex-col flex gap-4">
+	<div class="text-xl font-bold">{game.game_title}</div>
 	<div class="text-sm leading-[18px] font-medium text-muted-foreground">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html parsedReview}
@@ -38,3 +38,10 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	:global(.review) :global(p) {
+		display: inline;
+		margin: 0;
+	}
+</style>
