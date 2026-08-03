@@ -9,8 +9,6 @@
 	} from '$lib/components/ui/dialog'
 	import { Input } from '$lib/components/ui/input'
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
-	import { Toggle } from '$lib/components/ui/toggle'
-	import X from '@lucide/svelte/icons/x'
 	import { EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
 	import { playerMoveToCommonGame, uniqBy } from '$lib/utils'
@@ -18,6 +16,8 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import GameCard from '$lib/components/gameCard/GameCard.svelte'
+	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
+	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
 
 	const app = getAppManager()
 
@@ -58,10 +58,10 @@
 		}
 	}
 
-	const selectedPlayer = $derived(gamesHistoryStore.searchParams?.players?.[0] ?? null)
+	const playerFilter = $derived(gamesHistoryStore.searchParams?.players?.[0] ?? 'all')
 
-	function selectPlayer(_: boolean, slug: string) {
-		if (selectedPlayer === slug) {
+	function setPlayerFilter(slug: string) {
+		if (slug === 'all') {
 			gamesHistoryStore.searchParams.players = []
 			playersMovesStore.queryParams.players = []
 		} else {
@@ -70,17 +70,17 @@
 		}
 	}
 
-	const selectedEvent = $derived.by(() => {
+	const eventFilter = $derived.by(() => {
 		if (gamesHistoryStore.searchParams?.events?.length === 1) {
 			return gamesHistoryStore.searchParams.events[0]
 		}
-		return null
+		return 'all'
 	})
 
 	const eventsList = ['aukus1', 'aukus2', 'aukus3', 'aukus4', 'aukus5']
 
-	function selectEvent(_: boolean, event: string) {
-		if (selectedEvent === event) {
+	function setEventFilter(event: string) {
+		if (event === 'all') {
 			gamesHistoryStore.searchParams.events = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
 		} else {
 			gamesHistoryStore.searchParams.events = [event]
@@ -88,7 +88,7 @@
 	}
 
 	const currentGamesDisplay = $derived.by<PlayerMoveItem[]>(() => {
-		if (selectedEvent !== 'aukus5' && selectedEvent !== null) {
+		if (eventFilter !== 'aukus5' && eventFilter !== 'all') {
 			return []
 		}
 		return aukus5Games
@@ -189,43 +189,40 @@
 			<DialogTitle class="text-2xl font-bold">История игр</DialogTitle>
 		</DialogHeader>
 		<div class="mt-10 flex flex-col gap-5">
-			<div class="flex w-full flex-wrap gap-2">
-				{#each app.players as player (player.slug)}
-					<Toggle
-						variant="default"
-						bind:pressed={() => player.slug === selectedPlayer, (v) => selectPlayer(v, player.slug)}
-						class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-[var(--dynamic-color)]"
-						style={`--dynamic-color: ${player.color}`}
-					>
-						{player.username}
-						{#if selectedPlayer === player.slug}
-							<span class="rounded bg-white/20 p-0.5">
-								<X class="stroke-4" />
-							</span>
-						{/if}
-					</Toggle>
-				{/each}
+			<div class="w-full gap-2">
+				<Tabs value={playerFilter} onValueChange={(v) => setPlayerFilter(v)}>
+					<TabsList class="flex flex-wrap gap-2">
+						<TabsTrigger class="w-fit" value="all">Все</TabsTrigger>
+						{#each app.players as player (player.slug)}
+							<TabsTrigger class="w-fit" value={player.slug}>
+								<PlayerAvatar
+									src={player.avatar_link ?? ''}
+									name={player.username}
+									isOnline={Boolean(player.is_online)}
+									size="small"
+								/>
+								{player.username}
+							</TabsTrigger>
+						{/each}
+					</TabsList>
+				</Tabs>
 			</div>
 			<div class="flex w-full flex-wrap gap-2">
-				{#each eventsList as eventName (eventName)}
-					<Toggle
-						variant="default"
-						bind:pressed={() => eventName === selectedEvent, (v) => selectEvent(v, eventName)}
-						class="cursor-pointer data-[state=off]:bg-secondary data-[state=on]:bg-primary"
-					>
-						{EventTitles[eventName]}
-						{#if selectedEvent === eventName}
-							<span class="rounded bg-white/20 p-0.5">
-								<X class="stroke-4" />
-							</span>
-						{/if}
-					</Toggle>
-				{/each}
+				<Tabs value={eventFilter} onValueChange={(v) => setEventFilter(v)}>
+					<TabsList class="flex flex-wrap gap-2">
+						<TabsTrigger class="w-fit" value="all">Все</TabsTrigger>
+						{#each eventsList as eventName (eventName)}
+							<TabsTrigger class="w-fit" value={eventName}>
+								{EventTitles[eventName]}
+							</TabsTrigger>
+						{/each}
+					</TabsList>
+				</Tabs>
 			</div>
 			<Input
 				type="text"
 				placeholder="Поиск по названию (3+ символов)"
-				class="mb-4 w-full rounded-lg bg-muted"
+				class="mb-4 w-full rounded-xl bg-muted"
 				value={gamesHistoryStore.searchParams?.title_search ?? ''}
 				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 			/>
@@ -247,14 +244,9 @@
 							{#each currentGamesDisplay as move (move.id)}
 								{#if app.playersBySlug.get(move.player_slug) !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) =>
-											g.igdb_id === move.game_id && g.player_nickname !== move.player_slug
+										(g) => g.igdb_id === move.game_id && g.player_nickname !== move.player_slug
 									)}
-									<GameCard
-										move={move}
-										game={playerMoveToCommonGame(move)}
-										matchedGames={matches}
-									/>
+									<GameCard {move} game={playerMoveToCommonGame(move)} matchedGames={matches} />
 								{/if}
 							{/each}
 						{/if}
@@ -268,8 +260,7 @@
 							{#each aukus4Games as game (game.id)}
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) =>
-											g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
+										(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -285,8 +276,7 @@
 							{#each aukus3Games as game (game.id)}
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) =>
-											g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
+										(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -302,8 +292,7 @@
 							{#each aukus2Games as game (game.id)}
 								{#if app.playersBySlug.get(game.player_nickname)}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) =>
-											g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
+										(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}

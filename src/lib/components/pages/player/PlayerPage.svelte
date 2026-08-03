@@ -139,7 +139,7 @@
 						/>
 					</div>
 
-					<Tabs bind:value={activeTab} class="bg-none! w-[800px]">
+					<Tabs bind:value={activeTab} class="w-[800px]">
 						<TabsList class="bg-transparent gap-2 mb-3 flex justify-between w-full">
 						<div class="flex gap-2 h-full">
 							<TabsTrigger value="aukus5">Аукус 5</TabsTrigger>
