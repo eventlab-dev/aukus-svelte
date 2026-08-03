@@ -70,7 +70,7 @@
 		return 'all'
 	})
 
-	const eventsList = ['aukus1', 'aukus2', 'aukus3', 'aukus4', 'aukus5']
+	const eventsList = ['aukus5', 'aukus4', 'aukus3', 'aukus2', 'aukus1']
 
 	function setEventFilter(event: string) {
 		if (event === 'all') {
