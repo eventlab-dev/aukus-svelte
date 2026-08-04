@@ -197,12 +197,12 @@
 			<Input
 				type="text"
 				placeholder="Поиск по названию (3+ символов)"
-				class="mb-4 w-full rounded-xl bg-muted"
+				class="mb-4 w-full rounded-xl bg-primary"
 				value={gamesHistoryStore.searchParams?.title_search ?? ''}
 				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 			/>
 		</div>
-		<div class="mt-10 mb-80 w-full max-w-[800px]">
+		<div class="mt-5 mb-80 w-full max-w-[800px]">
 		{#if isLoading}
 			<div class="mt-40 flex justify-center">
 				<Loader class="inline size-20" />
