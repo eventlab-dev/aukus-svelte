@@ -15,11 +15,6 @@
 
 	const { gamesHistoryStore, playersMovesStore, gamesMatchesStore } = app
 
-	const aukus4Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus4') ?? [])
-	const aukus3Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus3') ?? [])
-	const aukus2Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus2') ?? [])
-	const aukus1Games = $derived(gamesHistoryStore.gamesHistoryByEvent.get('aukus1') ?? [])
-
 	const aukus5Games = $derived(playersMovesStore.playerMoves)
 
 	// Initialize search params on component mount
@@ -70,11 +65,12 @@
 		return 'all'
 	})
 
-	const eventsList = ['aukus5', 'aukus4', 'aukus3', 'aukus2', 'aukus1']
+	const historyEventsList = ['aukus4', 'aukus3', 'aukus2', 'aukus1']
+	const eventsList = ['aukus5', ...historyEventsList]
 
 	function setEventFilter(event: string) {
 		if (event === 'all') {
-			gamesHistoryStore.searchParams.events = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
+			gamesHistoryStore.searchParams.events = historyEventsList
 		} else {
 			gamesHistoryStore.searchParams.events = [event]
 		}
@@ -87,20 +83,22 @@
 		return aukus5Games
 	})
 
+	const historyGames = $derived(
+		historyEventsList.flatMap((e) => gamesHistoryStore.gamesHistoryByEvent.get(e) ?? [])
+	)
+
 	$effect(() => {
-		const historyIds = [...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
+		const historyIgdbIds = historyGames
 			.map((game) => game.igdb_id)
 			.filter((id): id is number => id !== null)
 
-		const currentEventIds = aukus5Games
+		const currentEventIgdbIds = aukus5Games
 			.map((game) => game.game_id)
 			.filter((id): id is number => id !== null)
 
-		const igdbIds = new Set([...historyIds, ...currentEventIds])
+		const igdbIds = new Set([...historyIgdbIds, ...currentEventIgdbIds])
 
-		const gamesIdsHistory = [...aukus4Games, ...aukus3Games, ...aukus2Games, ...aukus1Games]
-			.map((game) => game.id)
-			.slice(0, 50)
+		const gamesIdsHistory = historyGames.map((game) => game.id).slice(0, 50)
 		const gamesIdsMoves = aukus5Games.map((game) => game.id).slice(0, 50)
 
 		gamesMatchesStore.gamesMatchParams = {
@@ -119,51 +117,43 @@
 	// $inspect($historyQuery.isFetching, ' historyQuery isFetching')
 	// $inspect($movesQuery.isFetching, ' movesQuery isFetching')
 
-	const noGames = $derived.by(() => {
-		return (
-			aukus1Games.length === 0 &&
-			aukus2Games.length === 0 &&
-			aukus3Games.length === 0 &&
-			aukus4Games.length === 0 &&
-			currentGamesDisplay.length === 0
-		)
-	})
+	const noGames = $derived(historyGames.length === 0 && currentGamesDisplay.length === 0)
 
 	const gameMatchedMergedWithOthers = $derived.by(() => {
 		const commonCurrentGames = aukus5Games.map(playerMoveToCommonGame)
 		return uniqBy(
-			[
-				...commonCurrentGames,
-				...aukus4Games,
-				...aukus3Games,
-				...aukus2Games,
-				...aukus1Games,
-				...gamesMatchesStore.gamesMatched
-			],
+			[...commonCurrentGames, ...historyGames, ...gamesMatchesStore.gamesMatched],
 			(g) => `${g.event_name}-${g.id}`
 		)
 	})
 
-	function openLink(event: 'aukus1' | 'aukus2' | 'aukus3') {
+	function openLink(event: string) {
 		let url = ''
-		if (event === 'aukus1') {
-			url =
-				'https://docs.google.com/spreadsheets/d/1iGjS41dpxbgjtMTGODZ-j3OG9eMDaZh5kBRiWH-FPk0/edit?gid=1235582040#gid=1235582040'
-		} else if (event === 'aukus2') {
-			url =
-				'https://docs.google.com/spreadsheets/d/16JxvqzWmZgigHVBhsxHQsP4ElpXZ2sl3XbslmkW-m88/edit?gid=1235582040#gid=1235582040'
-		} else if (event === 'aukus3') {
-			url = 'https://aukus3.eventlab.dev'
-		} else if (event === 'aukus4') {
-			url = 'https://aukus4.eventlab.dev'
+		switch (event) {
+			case 'aukus1':
+				url =
+					'https://docs.google.com/spreadsheets/d/1iGjS41dpxbgjtMTGODZ-j3OG9eMDaZh5kBRiWH-FPk0/edit?gid=1235582040#gid=1235582040'
+				break
+			case 'aukus2':
+				url =
+					'https://docs.google.com/spreadsheets/d/16JxvqzWmZgigHVBhsxHQsP4ElpXZ2sl3XbslmkW-m88/edit?gid=1235582040#gid=1235582040'
+				break
+			case 'aukus3':
+				url = 'https://aukus3.eventlab.dev'
+				break
+			case 'aukus4':
+				url = 'https://aukus4.eventlab.dev'
+				break
 		}
-		window.open(url, '_blank noopener noreferrer')
+		if (url) {
+			window.open(url, '_blank noopener noreferrer')
+		}
 	}
 </script>
 
 <PageContainer bottomSpace={false}>
-	<div class="flex flex-col gap-5 pt-16 items-center">
-		<div class="w-full max-w-[800px] flex flex-col gap-5">
+	<div class="flex flex-col items-center gap-5 pt-16">
+		<div class="flex w-full max-w-[800px] flex-col gap-5">
 			<div class="flex justify-center">
 				<Tabs value={playerFilter} onValueChange={(v) => setPlayerFilter(v)}>
 					<TabsList class="flex flex-wrap gap-2">
@@ -203,100 +193,60 @@
 			/>
 		</div>
 		<div class="mt-5 mb-80 w-full max-w-[800px]">
-		{#if isLoading}
-			<div class="mt-40 flex justify-center">
-				<Loader class="inline size-20" />
-			</div>
-		{:else}
-			<div class="flex flex-col gap-5">
-				{#if noGames}
-					<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
-				{/if}
+			{#if isLoading}
+				<div class="mt-40 flex justify-center">
+					<Loader class="inline size-20" />
+				</div>
+			{:else}
+				<div class="flex flex-col gap-5">
+					{#if noGames}
+						<div class="text-center text-sm text-muted-foreground">Игр не найдено</div>
+					{/if}
 
-				{#if currentGamesDisplay.length !== 0}
-					<div class="p-0 text-center text-3xl">Аукус 5</div>
-					{#each currentGamesDisplay as move (move.id)}
-						{#if app.playersBySlug.get(move.player_slug) !== undefined}
-							{@const matches = gameMatchedMergedWithOthers.filter(
-								(g) => g.igdb_id === move.game_id && g.player_nickname !== move.player_slug
-							)}
-							<GameCard {move} game={playerMoveToCommonGame(move)} matchedGames={matches} showEvent showPlayer />
+					{#if currentGamesDisplay.length !== 0}
+						<div class="p-0 text-center text-3xl font-extrabold">Аукус 5</div>
+						{#each currentGamesDisplay as move (move.id)}
+							{#if app.playersBySlug.get(move.player_slug) !== undefined}
+								{@const matches = gameMatchedMergedWithOthers.filter(
+									(g) => g.igdb_id === move.game_id && g.player_nickname !== move.player_slug
+								)}
+								<GameCard
+									{move}
+									game={playerMoveToCommonGame(move)}
+									matchedGames={matches}
+									showEvent
+									showPlayer
+								/>
+							{/if}
+						{/each}
+					{/if}
+
+					{#each historyGames as game, idx (game.id)}
+						{@const eventChanged = game.event_name !== historyGames[idx - 1]?.event_name}
+						{#if eventChanged}
+							<div class="flex justify-center mt-5">
+								<Button
+									variant="link"
+									class="p-0 text-3xl font-extrabold uppercase"
+									onclick={() => openLink(game.event_name)}
+								>
+									{game.event_name}
+								</Button>
+							</div>
 						{/if}
+						{@const matches = gameMatchedMergedWithOthers.filter(
+							(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
+						)}
+						<GameCard {game} matchedGames={matches} showEvent showPlayer />
 					{/each}
-				{/if}
 
-				{#if aukus4Games.length > 0}
-					<div class="flex justify-center">
-						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
-							Аукус 4
-						</Button>
-					</div>
-					{#each aukus4Games as game (game.id)}
-						{#if app.playersBySlug.get(game.player_nickname)}
-							{@const matches = gameMatchedMergedWithOthers.filter(
-								(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
-							)}
-							<GameCard {game} matchedGames={matches} showEvent showPlayer />
-						{/if}
-					{/each}
-				{/if}
-
-				{#if aukus3Games.length > 0}
-					<div class="flex justify-center">
-						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus3')}>
-							Аукус 3
-						</Button>
-					</div>
-					{#each aukus3Games as game (game.id)}
-						{#if app.playersBySlug.get(game.player_nickname)}
-							{@const matches = gameMatchedMergedWithOthers.filter(
-								(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
-							)}
-							<GameCard {game} matchedGames={matches} showEvent showPlayer />
-						{/if}
-					{/each}
-				{/if}
-
-				{#if aukus2Games.length > 0}
-					<div class="flex justify-center">
-						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus2')}>
-							Аукус 2
-						</Button>
-					</div>
-					{#each aukus2Games as game (game.id)}
-						{#if app.playersBySlug.get(game.player_nickname)}
-							{@const matches = gameMatchedMergedWithOthers.filter(
-								(g) => g.igdb_id === game.igdb_id && g.player_nickname !== game.player_nickname
-							)}
-							<GameCard {game} matchedGames={matches} showEvent showPlayer />
-						{/if}
-					{/each}
-				{/if}
-
-				{#if aukus1Games.length > 0}
-					<div class="flex justify-center">
-						<Button variant="link" class="p-0 text-3xl" onclick={() => openLink('aukus1')}>
-							Аукус 1
-						</Button>
-					</div>
-					{#each aukus1Games as game (game.id)}
-						{#if app.playersBySlug.get(game.player_nickname)}
-							{@const matches = gameMatchedMergedWithOthers.filter(
-								(g) =>
-									g.game_title === game.game_title && g.player_nickname !== game.player_nickname
-							)}
-							<GameCard {game} matchedGames={matches} showEvent showPlayer />
-						{/if}
-					{/each}
-				{/if}
-
-				{#if gamesHistoryStore.hasMore}
-					<div class="flex justify-center">
-						<Button onclick={() => gamesHistoryStore.loadMore()}>Загрузить ещё</Button>
-					</div>
-				{/if}
-			</div>
-		{/if}
-	</div>
+					{#if gamesHistoryStore.hasMore}
+						<div class="flex justify-center">
+							<Button onclick={() => gamesHistoryStore.loadMore()}>Загрузить ещё</Button>
+						</div>
+					{/if}
+				</div>
+			{/if}
+		</div>
 	</div>
 </PageContainer>
