@@ -4,7 +4,6 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { Snippet } from 'svelte'
 	import { PAGE_BG, PAGE_SCROLL_ID } from '$lib/constants'
-	import ArrowRightIcon from './icons/ArrowRightIcon.svelte'
 	import Arrow from './icons/new/Arrow.svelte'
 
 	type Props = {

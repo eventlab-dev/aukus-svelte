@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { buttonVariants } from '$lib/components/ui/button'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { CommonGameItem } from '$lib/types'

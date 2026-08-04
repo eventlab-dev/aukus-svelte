@@ -15,8 +15,8 @@
 </script>
 
 <div class="max-w-[500px] flex-col flex gap-4">
-	<div class="text-xl font-bold">{game.game_title}</div>
-	<div class="text-sm leading-[18px] font-medium text-muted-foreground">
+	<div class="text-xl font-extrabold">{game.game_title}</div>
+	<div class="text-sm leading-[18px] font-bold text-muted-foreground">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html parsedReview}
 	</div>
