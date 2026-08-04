@@ -4,6 +4,8 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { Snippet } from 'svelte'
 	import { PAGE_BG, PAGE_SCROLL_ID } from '$lib/constants'
+	import ArrowRightIcon from './icons/ArrowRightIcon.svelte'
+	import Arrow from './icons/new/Arrow.svelte'
 
 	type Props = {
 		bottomSpace?: boolean
@@ -28,7 +30,9 @@
 		{/if}
 	</ScrollArea>
 	<div class="absolute top-2 left-2">
-		<Button class="h-[34px] w-[178px] rounded-[18px]" onclick={closePage}>{'<-'} ЗАКРЫТЬ</Button>
+		<Button class="h-[34px] w-[178px] rounded-[18px]" onclick={closePage}>
+			<Arrow /> ЗАКРЫТЬ
+		</Button>
 	</div>
 </div>
 

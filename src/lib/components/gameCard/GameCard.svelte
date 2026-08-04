@@ -221,7 +221,7 @@
 			</div>
 		</div>
 		<div
-			class="text-sm leading-[17px] font-semibold text-muted-foreground group-data-[current=true]:text-foreground md:absolute md:top-3 md:right-3"
+			class="text-sm leading-[17px] font-extrabold uppercase text-muted-foreground group-data-[current=true]:text-foreground md:absolute md:top-3 md:right-3"
 		>
 			{#if move}
 				{formatDateTime(move.created_at)}
