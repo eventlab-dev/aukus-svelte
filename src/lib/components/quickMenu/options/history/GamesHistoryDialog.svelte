@@ -167,7 +167,7 @@
 			<div class="flex justify-center">
 				<Tabs value={playerFilter} onValueChange={(v) => setPlayerFilter(v)}>
 					<TabsList class="flex flex-wrap gap-2">
-						<TabsTrigger value="all">Все</TabsTrigger>
+						<TabsTrigger value="all" class="font-extrabold uppercase">Все</TabsTrigger>
 						{#each app.players as player (player.slug)}
 							<TabsTrigger value={player.slug}>
 								<PlayerAvatar
@@ -176,7 +176,7 @@
 									isOnline={Boolean(player.is_online)}
 									size="small"
 								/>
-								{player.username}
+								<p class="font-extrabold uppercase">{player.username}</p>
 							</TabsTrigger>
 						{/each}
 					</TabsList>
@@ -185,9 +185,9 @@
 			<div class="flex justify-center">
 				<Tabs value={eventFilter} onValueChange={(v) => setEventFilter(v)}>
 					<TabsList class="flex flex-wrap gap-2">
-						<TabsTrigger value="all">Все</TabsTrigger>
+						<TabsTrigger value="all" class="font-extrabold uppercase">Все</TabsTrigger>
 						{#each eventsList as eventName (eventName)}
-							<TabsTrigger value={eventName}>
+							<TabsTrigger value={eventName} class="font-extrabold uppercase">
 								{EventTitles[eventName]}
 							</TabsTrigger>
 						{/each}

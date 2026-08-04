@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 @import 'tw-animate-css';
@@ -107,7 +109,7 @@
 
 @layer base {
 	* {
-		@apply border-border font-['Golos_Text'] outline-ring/50;
+		@apply border-border font-['Shantell_Sans'] outline-ring/50;
 	}
 
 	html {

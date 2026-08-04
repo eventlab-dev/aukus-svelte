@@ -3,6 +3,7 @@
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { CommonGameItem } from '$lib/types'
+	import PlayerAvatar from '../player/PlayerAvatar.svelte'
 	import GamePopupContent from './GamePopupContent.svelte'
 
 	type Props = {
@@ -15,6 +16,8 @@
 	const { usersStore } = app
 
 	const playerName = $derived(usersStore.usersBySlug.get(game.player_nickname)?.username ?? game.player_nickname)
+
+	const playerIcon = $derived(usersStore.usersBySlug.get(game.player_nickname)?.avatar_link ?? '')
 	
 	let open = $state(false)
 
@@ -37,9 +40,14 @@
 	<PopoverTrigger
 		onmouseenter={handleMouseEnter}
 		onmouseleave={handleMouseLeave}
-		class={[buttonVariants({ variant: 'secondary', size: 'sm' }), 'data-[state=open]:bg-primary']}
 	>
-		{playerName}
+		{#if playerIcon}
+			<PlayerAvatar src={playerIcon} name={playerName} size="small" />
+		{:else}
+			<div class="bg-secondary px-2 py-1 rounded-lg">
+				{playerName}
+			</div>
+		{/if}
 	</PopoverTrigger>
 	<PopoverContent
 		class="max-w-[500px] w-fit space-y-5"

@@ -238,7 +238,7 @@
 			class="h-[100px] w-[75px] flex-shrink-0 md:h-[140px] md:w-[105px]"
 		/>
 		<div class="w-full min-w-0 space-y-3">
-			<div class="text-lg leading-tight font-bold md:text-2xl md:leading-[29px]">
+			<div class="text-lg leading-tight font-extrabold md:text-2xl md:leading-[29px]">
 				{title}
 			</div>
 
@@ -291,7 +291,7 @@
 					<Textarea id="vod-links" class="w-full resize-none" readonly={true} value={vodLinks} />
 				</div>
 			{:else}
-				<div class="font-medium text-muted-foreground [&>*]:inline" in:fade>
+				<div class="font-bold text-muted-foreground [&>*]:inline" in:fade>
 					{#if showRating}
 						<span>{rating}/10 — </span>
 					{/if}
@@ -338,7 +338,7 @@
 		{/if}
 		{#if matchedGames.length > 0}
 			<div class="mt-3 flex w-full flex-wrap items-center justify-end gap-3" transition:slide>
-				<span class="text-sm">Также играли:</span>
+				<span class="text-sm font-bold">Также играли:</span>
 				<div class="flex flex-wrap gap-2">
 					{#each matchedGames as game (game.key)}
 						<PopoverGameCard {game} />
