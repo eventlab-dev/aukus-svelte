@@ -49,11 +49,11 @@
 	--border: oklch(1 0 0 / 10%);
 	--input: oklch(1 0 0 / 15%);
 	--ring: oklch(0.552 0.016 285.938);
-	--green: oklch(0.73 0.19 147.44);
-	--red: oklch(0.65 0.23 25.74);
-	--blue: oklch(0.6 0.22 257.43);
+	--green: #52AD94;
+	--red: #BF4B4D;
+	--blue: #4D66B9;
 	--orange: oklch(0.74 0.18 54.54);
-	--violet: oklch(0.56 0.23 279.32);
+	--violet: #5E60B4;
 	--purple: oklch(0.61 0.21 312.42);
 }
 

@@ -6,14 +6,15 @@
 		variants: {
 			variant: {
 				default: 'bg-primary text-primary-foreground',
-				secondary: 'bg-muted',
+				secondary: 'bg-secondary',
 				destructive: 'bg-destructive text-white',
 				outline: 'text-foreground border',
 				green: 'bg-custom-green',
 				red: 'bg-custom-red',
 				blue: 'bg-custom-blue',
 				orange: 'bg-custom-orange',
-				white: 'bg-foreground text-primary'
+				white: 'bg-foreground text-primary',
+				violet: 'bg-custom-violet'
 			}
 		},
 		defaultVariants: {

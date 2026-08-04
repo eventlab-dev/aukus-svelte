@@ -154,21 +154,21 @@
 </script>
 
 <div
-	class="group relative flex w-full flex-col rounded-xl bg-card p-3"
+	class="group relative flex w-full flex-col rounded-2xl bg-card p-3"
 	id={`game-card-${game.key}`}
 >
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
 		<div class="flex">
 			<div class="flex flex-wrap gap-1.5">
 			    {#if showEvent}
-					<Badge variant="secondary">{EventTitles[game.event_name]}</Badge>
+					<Badge variant="blue">{EventTitles[game.event_name]}</Badge>
 				{/if}
 
 				{#if showPlayer && player}
 					<Badge style="background-color: {player.color};">{player.username}</Badge>
 				{/if}
 
-				<Badge variant={moveTypeStyles.variant}>
+				<Badge variant={moveTypeStyles.variant} class="uppercase">
 					{moveTypeStyles.text}
 				</Badge>
 				{#if move}
@@ -176,7 +176,7 @@
 						<Popover>
 							<PopoverTrigger>
 								<Badge
-									variant="secondary"
+									variant="blue"
 									class="flex cursor-pointer items-center gap-1 hover:bg-secondary/80"
 								>
 									Кубик: {move.dice_roll}
@@ -188,11 +188,11 @@
 							</PopoverContent>
 						</Popover>
 					{:else}
-						<Badge variant="secondary">
+						<Badge variant="blue">
 							Кубик: {move.dice_roll}
 						</Badge>
 					{/if}
-					<Badge variant="secondary">
+					<Badge variant="blue">
 						Ход {move.cell_from}
 						->
 						{move.cell_to}
@@ -201,7 +201,7 @@
 				{#if durationText}
 					<Tooltip>
 						<TooltipTrigger>
-							<Badge variant="secondary" class="h-full">
+							<Badge variant="blue" class="h-full">
 								{durationText}
 							</Badge>
 						</TooltipTrigger>
@@ -209,12 +209,12 @@
 					</Tooltip>
 				{/if}
 				{#if move?.item_length}
-					<Badge variant="secondary">
+					<Badge variant="blue">
 						{gameLengthRanges[move.item_length]} HLTB
 					</Badge>
 				{/if}
 				{#if difficultyText}
-					<Badge variant="secondary">
+					<Badge variant="blue">
 						{difficultyText}
 					</Badge>
 				{/if}

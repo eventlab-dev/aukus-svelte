@@ -139,7 +139,7 @@ export function getMoveTypeStyles(type?: PlayerMoveType): MoveTypeStyles {
 			return { text: 'Реролл', variant: 'blue' }
 		}
 		case 'movie': {
-			return { text: 'Кино', variant: 'default' }
+			return { text: 'Кино', variant: 'violet' }
 		}
 		default: {
 			return { text: 'Ошибка', variant: 'default' }

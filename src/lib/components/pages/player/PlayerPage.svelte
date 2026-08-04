@@ -148,7 +148,7 @@
 							<div class="flex h-full gap-2">
 								<TabsTrigger value="aukus5">Аукус 5</TabsTrigger>
 								{#each eventList as event (event)}
-									<TabsTrigger value={event}>{EventTitles[event]}</TabsTrigger>
+									<TabsTrigger class="uppercase" value={event}>{EventTitles[event]}</TabsTrigger>
 								{/each}
 							</div>
 							<Button onclick={() => navStore.changePage('history', { pageParams: { playerSlug } })}>Поиск игр</Button>
