@@ -32,9 +32,9 @@ export class MapStore {
 	// }
 
 	winnerPositions: Record<number, CellPositionNew> = {
-		1: { centerX: 635, centerY: 90 },
-		2: { centerX: 755, centerY: 105 },
-		3: { centerX: 515, centerY: 115 }
+		1: { centerX: 1900, centerY: 230, scale: 2.5 },
+		2: { centerX: 2200, centerY: 280, scale: 2 },
+		3: { centerX: 1630, centerY: 330, scale: 2 }
 	}
 }
 

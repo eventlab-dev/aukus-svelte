@@ -131,6 +131,7 @@ export type CellPosition = {
 export type CellPositionNew = {
 	centerX: number
 	centerY: number
+	scale?: number
 }
 
 export function getWinnerPosition(place: number) {

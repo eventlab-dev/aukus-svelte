@@ -11,10 +11,10 @@
 	type Props = {
 		player: PlayerData
 		asWinner?: boolean
-		scale?: number
+		// scale?: number
 	}
 
-	const { player, asWinner, scale = 1 }: Props = $props()
+	const { player, asWinner }: Props = $props()
 
 	const app = getAppManager()
 	const {
@@ -98,8 +98,8 @@
 		}
 	})
 
-	const finalTop = $derived(cellPosition.centerY)
-	const finalLeft = $derived(cellPosition.centerX)
+	const finalTop = $derived(cellPosition.centerY + cellOffsetY)
+	const finalLeft = $derived(cellPosition.centerX + cellOffsetX)
 
 	$effect(() => {
 		if (element && app.turnState === 'selecting-dice' && player.slug === app.myPlayer?.slug) {
@@ -160,7 +160,7 @@
 	class="absolute -translate-x-1/2 -translate-y-1/2 scale-120
     transition-opacity duration-300 data-[active=true]:z-10 data-[active=true]:scale-110 data-[highlighted=true]:z-20
     data-[highlighted=true]:scale-110 data-[win-jump=true]:animate-bounce"
-	style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}"
+	style="top: {finalTop}px; left: {finalLeft}px; z-index: {isHighlighted ? '50' : 'auto'}; scale: {cellPosition.scale || 1}"
 	data-win-jump={doWinJumpAnimation}
 >
 	<button
