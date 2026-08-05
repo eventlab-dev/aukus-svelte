@@ -73,23 +73,27 @@
 
 <div class="flex flex-col gap-3">
 	<div class="flex gap-3">
-		<ToggleGroup variant="outline" type="single" value={headerType}>
+		<ToggleGroup class="bg-secondary" type="single" value={headerType}>
 			<ToggleGroupItem
 				value="p"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().setParagraph().run()}>P</ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="h3"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleHeading({ level: 3 }).run()}
 				>H3</ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="h2"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleHeading({ level: 2 }).run()}
 				>H2</ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="h1"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleHeading({ level: 1 }).run()}
 				>H1</ToggleGroupItem
 			>
@@ -98,25 +102,25 @@
 		<ToggleGroup variant="outline" type="single">
 			<ToggleGroupItem
 				value="left"
-				class="w-auto flex-none"
+				class="w-auto flex-none data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().setTextAlign('left').run()}
 				>Left</ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="center"
-				class="w-auto flex-none"
+				class="w-auto flex-none data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().setTextAlign('center').run()}
 				>Center</ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="right"
-				class="w-auto flex-none"
+				class="w-auto flex-none data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().setTextAlign('right').run()}
 				>Right</ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="justify"
-				class="w-auto flex-none"
+				class="w-auto flex-none data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().setTextAlign('justify').run()}
 				>Justify</ToggleGroupItem
 			>
@@ -126,28 +130,33 @@
 		<ToggleGroup variant="outline" type="multiple" value={textFormats} size="lg">
 			<ToggleGroupItem
 				value="bold"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleBold().run()}
 			>
 				<BoldIcon />
 			</ToggleGroupItem>
 			<ToggleGroupItem
 				value="italic"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleItalic().run()}
 			>
 				<ItalicIcon />
 			</ToggleGroupItem>
 			<ToggleGroupItem
 				value="underline"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleUnderline().run()}
 				><UnderlineIcon /></ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="strike"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleStrike().run()}
 				><StrikethroughIcon /></ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="highlight"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleHighlight().run()}
 				><HighlightIcon /></ToggleGroupItem
 			>
@@ -162,11 +171,13 @@
 		<ToggleGroup variant="outline" type="multiple" value={listTypes} size="lg">
 			<ToggleGroupItem
 				value="bullet"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleBulletList().run()}
 				><ListIcon /></ToggleGroupItem
 			>
 			<ToggleGroupItem
 				value="ordered"
+				class="data-[state=on]:bg-fuchsia-700"
 				onclick={() => editorState.editor?.chain().focus().toggleOrderedList().run()}
 				><OrderedListIcon /></ToggleGroupItem
 			>

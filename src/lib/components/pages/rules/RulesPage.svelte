@@ -90,17 +90,17 @@
 				}}
 			>
 				<TabsList class="gap-3 bg-transparent">
-					<TabsTrigger value="general" class="h-10 w-60 rounded-2xl px-4 text-base font-semibold">
+					<TabsTrigger value="general" class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold">
 						Для участников
 					</TabsTrigger>
-					<TabsTrigger value="donations" class="h-10 w-60 rounded-2xl px-4 text-base font-semibold">
+					<TabsTrigger value="donations" class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold">
 						Для донатеров
 					</TabsTrigger>
 				</TabsList>
 			</Tabs>
 		</div>
 		<Card class="mt-[18px] w-[700px] rounded-[50px] border-dashed p-[42px]">
-			<div class="text-5xl font-bold">
+			<div class="text-5xl font-extrabold">
 				{#if category === 'general'}
 					Правила Аукуса
 				{:else}
@@ -111,7 +111,7 @@
 				{#if canEdit}
 					{#if editorMode}
 						<div class="mb-10 flex gap-5">
-							<Button variant="default" onclick={() => (editorMode = false)}>Отмена</Button>
+							<Button variant="secondary" onclick={() => (editorMode = false)}>Отмена</Button>
 							<Button variant="destructive" onclick={saveRules}>Сохранить</Button>
 						</div>
 					{:else}
@@ -132,7 +132,7 @@
 					/>
 				{:else}
 					<TiptapEditor
-						class="h-fit w-[700px] border-none"
+						class="h-fit w-[700px] border-none font-extrabold"
 						content={rules}
 						editable={false}
 						extensions={{ sectionsMode: 'full', withTOC: true, withLinks: true }}

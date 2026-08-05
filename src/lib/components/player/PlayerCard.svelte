@@ -76,7 +76,7 @@
 					name={player.username}
 					isOnline={Boolean(player.is_online)}
 				/>
-				<div class="font-bold">{player.username}</div>
+				<div class="font-extrabold">{player.username}</div>
 			</div>
 			<div class="flex gap-[8px]">
 				<div class="flex h-fit items-center gap-[2px] font-semibold">
@@ -91,7 +91,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="grid w-full font-medium text-foreground/80">
+		<div class="grid w-full font-extrabold text-foreground/80">
 			{#if isHovered}
 				<span class="col-start-1 row-start-1" transition:fly={{ x: -50 }}>Открыть</span>
 			{:else}
