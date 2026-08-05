@@ -77,7 +77,7 @@
 			</Button>
 		</div>
 		{#if items.length > 0}
-			<div class="table-of-contents">
+			<div class="table-of-contents h-fit overflow-y-hidden">
 				{#each items as item (item.id)}
 					<div
 						class="data-[active=true]:text-secondary-foreground data-[active=false]:text-foreground uppercase data-[active=true]:selected-text"
@@ -108,8 +108,9 @@
 		flex-direction: column;
 		/*font-size: 0.875rem;*/
 		gap: 0.25rem;
-		overflow: auto;
+		/* overflow: auto; */
 		text-decoration: none;
+		/* overflow-y: hidden; */
 
 		> div {
 			border-radius: 0.25rem;
