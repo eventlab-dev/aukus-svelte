@@ -133,6 +133,10 @@
 		transition: all 0.3s ease;
 	}
 
+	:global(.tiptap) {
+		overflow: visible;
+	}
+
 	:global(.tiptap p.is-editor-empty:first-child::before) {
 		color: var(--color-muted-foreground);
 		font-weight: 500;
