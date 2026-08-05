@@ -309,7 +309,7 @@
 		<div class="bg-card flex items-center border-dashed rounded-[32px]">
 			<PlayerModel {player} variant="big" />
 		</div>
-		<div class="bg-card flex w-[520px] flex-col gap-3 p-4 font-bold border-dashed rounded-[32px]">
+		<div class="bg-card flex flex-col gap-3 p-4 font-bold border-dashed rounded-[32px]">
 			<div class="font-semibold text-muted-foreground">Варианты хода</div>
 			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
 			<div class="flex w-full gap-2">
