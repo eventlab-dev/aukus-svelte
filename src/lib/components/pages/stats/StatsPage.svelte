@@ -62,7 +62,7 @@
 </script>
 
 {#if statsWithPlayerInfo}
-	<div in:fade>
+	<div in:fade class="font-extrabold">
 		<div class="mt-[100px] flex flex-col items-center space-y-[50px]">
 			<div class="text-[40px] leading-12 font-bold">Таблица лидеров</div>
 			<StatTable data={statsWithPlayerInfo} headers={leaderboardHeaders} />

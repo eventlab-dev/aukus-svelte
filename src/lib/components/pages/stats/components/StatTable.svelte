@@ -64,7 +64,7 @@
 		<TableRow>
 			{#each headers as { key, name, width } (key)}
 				<TableHead
-					class="relative text-card-foreground select-none data-[active=true]:underline data-[avatar=true]:pointer-events-none"
+					class="relative text-card-foreground select-none data-[active=true]:underline data-[avatar=true]:pointer-events-none font-bold"
 					data-active={sortByKey === key}
 					data-avatar={key === 'avatarLink'}
 					style="width: {width}px"
@@ -176,7 +176,7 @@
 							<Button
 								variant="link"
 								href={app.isMobile ? '' : `/players/${player.player_slug}`}
-								class="p-0 text-foreground no-underline hover:text-[var(--player-color)] uppercase"
+								class="p-0 text-foreground no-underline hover:text-[var(--player-color)] uppercase font-extrabold"
 								style="--player-color: {player.color}"
 								onclick={(e) => {
 									if (app.isMobile && navigateToPlayer) {
