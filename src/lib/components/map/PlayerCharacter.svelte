@@ -87,14 +87,14 @@
 
 		if (playersOnCell.length === 2) {
 			if (index === 0) {
-				return { x: 50, y: 0, onlyName: false, cellPosition }
+				return { x: 40, y: -10, onlyName: false, cellPosition }
 			}
-			return { x: -5, y: 35, onlyName: false, cellPosition }
+			return { x: -40, y: 25, onlyName: false, cellPosition }
 		}
 
 		return {
-			x: 20,
-			y: 20 + index * 30,
+			x: 0,
+			y: -40 + index * 30,
 			onlyName: true,
 			cellPosition
 		}
