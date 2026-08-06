@@ -19,7 +19,7 @@ import { SnowStore } from './SnowStore.svelte'
 import { MapStore } from './MapStore.svelte'
 import { NavStore } from './NavStore.svelte'
 import { NowStore } from './NowStore.svelte'
-import { SvelteMap } from 'svelte/reactivity'
+import { SvelteMap, SvelteSet } from 'svelte/reactivity'
 
 export class AppManager {
 	usersStore = new UsersStore()
@@ -137,13 +137,13 @@ export class AppManager {
 
 	playersCompletedMap = $derived(
 		this.players
-			.filter((p) => p.map_position === 102)
+			.filter((p) => p.map_position === 102 && p.last_move)
 			.toSorted((a, b) => a.last_move!.created_at - b.last_move!.created_at)
 	)
 
 	playersInOrder = $derived.by(() => {
-		console.log('players', this.players)
-		const playersNotCompletedMap = this.players.filter((p) => p.map_position <= LastMapPosition)
+		const completedSlugs = new SvelteSet(this.playersCompletedMap.map(p => p.slug))
+		const playersNotCompletedMap = this.players.filter(p => !completedSlugs.has(p.slug))
 		playersNotCompletedMap.sort((a, b) => {
 			if (a.total_score === b.total_score) {
 				return b.map_position - a.map_position
@@ -174,7 +174,7 @@ export class AppManager {
 
 	winners = $derived.by(() => {
 		if (this.eventFinished) {
-			return this.players.length > 3 ? this.players.slice(0, 3) : this.players
+			return this.playersInOrder.length > 3 ? this.playersInOrder.slice(0, 3) : this.playersInOrder
 		}
 		return this.playersCompletedMap
 	})
