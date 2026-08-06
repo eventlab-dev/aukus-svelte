@@ -6,7 +6,6 @@
 	import type { PlayerData } from '$lib/types'
 	import { normalizeSteps, calculateDiceProbability, type DiceProbability } from '$lib/utils'
 	import PlayerModel from '../map/PlayerModel.svelte'
-	import { Separator } from '../ui/separator'
 	import ImageLoader from '../ImageLoader.svelte'
 	import { FALLBACK_GAME_POSTER, FALLBACK_AVATAR_URL } from '$lib/constants'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
@@ -75,7 +74,7 @@
 			body: {
 				dice,
 				used: true,
-				test_values: 'diceRoll' in window ? ((window.diceRoll as number[]) ?? []) : []
+				test_values: 'diceRoll' in window ? (window.diceRoll as number[]) : []
 			}
 		})
 		const moveParams = await usersStore.finishMove.mutateAsync({

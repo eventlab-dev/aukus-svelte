@@ -109,7 +109,7 @@ export class UsersStore {
 
 	rollDice = createMutation(() =>
 		makeDiceRollApiDiceRollsPostMutation({
-			baseUrl: AukusBaseUrl,
+			baseUrl: EventlabBaseUrl,
 			auth: defaultAuth
 		})
 	)

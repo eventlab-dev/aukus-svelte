@@ -37,9 +37,12 @@ export class MovementStore {
 				return
 			}
 
+			const myPlayerSlug = this.getPlayerSlug()
+
 			for (const newPlayer of newPlayers) {
 				const currPlayer = currPlayers.find((p) => p.slug === newPlayer.slug)
-				if (currPlayer && currPlayer.map_position !== newPlayer.map_position) {
+				// Skip animating the current player - they are already animated by moveToCell
+				if (currPlayer && currPlayer.map_position !== newPlayer.map_position && newPlayer.slug !== myPlayerSlug) {
 					this.animateOtherPlayer(currPlayer, newPlayer)
 				} else {
 					this.updatePlayer(newPlayer.slug, newPlayer)
@@ -68,8 +71,8 @@ export class MovementStore {
 		this.playerElements.set(playerId, element)
 	}
 
-	offsetInsideCellX = 25
-	offsetInsideCellY = 15
+	offsetInsideCellX = 0
+	offsetInsideCellY = 0
 
 	async moveToCell(params: {
 		playerSlug: string
@@ -96,11 +99,8 @@ export class MovementStore {
 
 		if (isMyPlayer) {
 			this.updateFrontendTurnState('player-map-animation')
-			this.myMovementState = {
-				...this.myMovementState,
-				steps: params.steps,
-				startCell
-			}
+			this.myMovementState.steps = params.steps
+			this.myMovementState.startCell = startCell
 		}
 
 		const mapStore = this.getMapStore()
