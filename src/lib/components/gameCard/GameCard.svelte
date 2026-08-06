@@ -159,7 +159,7 @@
 >
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
 		<div class="flex">
-			<div class="flex flex-wrap gap-1.5">
+			<div class="flex flex-wrap gap-1.5 max-w-[620px]">
 			    {#if showEvent}
 					<Badge variant="blue">{EventTitles[game.event_name]}</Badge>
 				{/if}
