@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { LastMapPosition, MAP_IMAGE, MAP_SIDE_IMAGE } from '$lib/constants'
+	import { LastMapPosition, MAP_IMAGE, MAP_SIDE_IMAGE, WinPosition } from '$lib/constants'
 	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
 	import { Fireworks, type FireworksOptions } from '@fireworks-js/svelte'
 	import CellNumber from './CellNumber.svelte'
@@ -294,7 +294,7 @@ init arrow 70 270 510 210
 			>
 				<MovementMarkers />
 				{#each app.players as player (player.slug)}
-					{#if player.map_position !== 102}
+					{#if player.map_position !== WinPosition}
 						<PlayerCharacter {player} />
 					{/if}
 				{/each}

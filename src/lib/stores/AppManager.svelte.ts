@@ -1,4 +1,4 @@
-import { LastMapPosition, SOUNDS } from '$lib/constants'
+import { SOUNDS, WinPosition } from '$lib/constants'
 import { createContext, untrack } from 'svelte'
 import { EventDataStore } from './EventDataStore.svelte'
 import { GameHistoryStore } from './GamesHistoryStore.svelte'
@@ -113,7 +113,7 @@ export class AppManager {
 	backendState = $derived.by(() => {
 		if (this.myPlayer) {
 			if (this.myPlayer.last_move) {
-				if (this.myPlayer.last_move.type === 'completed' && this.myPlayer.map_position === 102) {
+				if (this.myPlayer.last_move.type === 'completed' && this.myPlayer.map_position === WinPosition) {
 					return 'event-completed'
 				}
 				if (!this.myPlayer.last_move.dice_roll_id && this.myPlayer.last_move.type !== 'reroll') {
@@ -137,7 +137,7 @@ export class AppManager {
 
 	playersCompletedMap = $derived(
 		this.players
-			.filter((p) => p.map_position === 102 && p.last_move)
+			.filter((p) => p.map_position === WinPosition && p.last_move)
 			.toSorted((a, b) => a.last_move!.created_at - b.last_move!.created_at)
 	)
 

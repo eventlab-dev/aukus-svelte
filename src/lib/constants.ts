@@ -95,6 +95,7 @@ export const SOUNDS = [
 ]
 
 export const LastMapPosition = 101
+export const WinPosition = 102
 
 export const EventTitles: { [k: string]: string } = {
 	aukus1: 'Аукус 1',

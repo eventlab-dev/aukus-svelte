@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { DifficultyMap, LastMapPosition, TIERS, type Tier } from './constants'
+import { DifficultyMap, LastMapPosition, TIERS, WinPosition, type Tier } from './constants'
 import type { BadgeVariant } from './components/ui/badge'
 import { renderToHTMLString } from '@tiptap/static-renderer'
 import { initExtensions } from './tiptapExtensions/enabledExtensions'
@@ -239,7 +239,7 @@ export function normalizeSteps(mapPosition: number, steps: number) {
 		return LastMapPosition - mapPosition // Can't go above 101
 	}
 	if (targetPosition > LastMapPosition && mapPosition >= LastMapPosition) {
-		return 102
+		return WinPosition
 	}
 	return steps // Valid move
 }

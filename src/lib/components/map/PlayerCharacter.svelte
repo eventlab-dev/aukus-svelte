@@ -2,11 +2,13 @@
 	import {
 		laddersByCell,
 		snakesByCell,
+		type CellPositionNew,
 	} from '$lib/mapUtils'
 	import type { PlayerData } from '$lib/types'
 	import { onMount } from 'svelte'
 	import PlayerModel from './PlayerModel.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import { WinPosition } from '$lib/constants'
 
 	type Props = {
 		player: PlayerData
@@ -27,7 +29,7 @@
 
 	const startWinAnimation = $derived(
 		player.slug === app.myPlayer?.slug &&
-			player.map_position === 102 &&
+			player.map_position === WinPosition &&
 			app.turnState === 'player-win-animation'
 	)
 
@@ -59,16 +61,16 @@
 		const winnerIndex = app.winners.findIndex((p) => p.slug === player.slug)
 
 		if (winnerIndex !== -1) {
-			// if (asWinner) {
-			const coord = mapStore.winnerPositions[winnerIndex + 1]
-			return { x: 0, y: 0, onlyName: false, cellPosition: coord }
-			// }
+			if (asWinner) {
+				const coord = mapStore.winnerPositions[winnerIndex + 1]
+				return { x: 0, y: 0, onlyName: false, cellPosition: coord }
+			}
 
-			// const completedIndex = $playersCompletedMap.findIndex((p) => p.slug === player.slug)
-			// if (completedIndex !== -1 && !startWinAnimation) {
-			// 	const cellPosition: CellPositionNew = mapStore.winnerPositions[player.map_position]
-			// 	return { x: 0, y: 0, onlyName: false, cellPosition }
-			// }
+			const completedIndex = app.playersCompletedMap.findIndex((p) => p.slug === player.slug)
+			if (completedIndex !== -1 && !startWinAnimation) {
+				const cellPosition: CellPositionNew = mapStore.winnerPositions[player.map_position]
+				return { x: 0, y: 0, onlyName: false, cellPosition }
+			}
 		}
 
 		const index = playersOnCell.findIndex((p) => p.slug === player.slug)
