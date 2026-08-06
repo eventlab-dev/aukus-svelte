@@ -143,7 +143,6 @@ export class MovementStore {
 			})
 		})
 
-		let finalCell = endCell
 		// const ladder = laddersByCell[endCell]
 		if (params.moveResponse.ladder_to) {
 			const pos = mapStore.cellPositionById[params.moveResponse.ladder_to]
@@ -158,7 +157,6 @@ export class MovementStore {
 					{ translateY: 0, scale: 1, duration: 750, easing: 'easeInQuad' }
 				]
 			})
-			finalCell = params.moveResponse.ladder_to
 		}
 		// const snake = snakesByCell[endCell]
 		if (params.moveResponse.snake_to) {
@@ -175,7 +173,6 @@ export class MovementStore {
 					{ translateY: 0, scale: 1, rotate: 0, duration: 200, easing: 'easeOutBounce' }
 				]
 			})
-			finalCell = params.moveResponse.snake_to
 		}
 
 		await new Promise((resolve) => {
@@ -183,6 +180,14 @@ export class MovementStore {
 				resolve(true)
 			}
 		})
+
+		let finalCell = endCell
+		if (params.moveResponse.ladder_to) {
+			finalCell = params.moveResponse.ladder_to
+		}
+		if (params.moveResponse.snake_to) {
+			finalCell = params.moveResponse.snake_to
+		}
 
 		if (params.updatePlayerPosition) {
 			this.updatePlayer(params.playerSlug, {
