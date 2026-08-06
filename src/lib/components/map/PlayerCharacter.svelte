@@ -78,7 +78,9 @@
 		const cellPosition = mapStore.cellPositionById[player.map_position]
 
 		if (player.map_position === 0) {
-			return { x: 160 + 100 * index, y: 20, onlyName: false, cellPosition }
+			const row = Math.floor(index / 2)
+			const rowIdx = index % 2
+			return { x: 100 * rowIdx, y: 20 + 120 * row, onlyName: false, cellPosition }
 		}
 
 		if (playersOnCell.length === 1) {
