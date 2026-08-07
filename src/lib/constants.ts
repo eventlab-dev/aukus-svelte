@@ -6,24 +6,6 @@ export const SEVENTV_EMOTE_BASE_URL = 'https://starege.rhhhhhhh.live/https://cdn
 export const FALLBACK_GAME_POSTER =
 	'https://www.igdb.com/assets/no_cover_show-ef1e36c00e101c2fb23d15bb80edd9667bbf604a12fc0267a66033afea320c65.png'
 
-export const routes = [
-	{
-		title: 'Карта',
-		url: '/'
-	},
-	{
-		title: 'Таблица',
-		url: '/leaderboard'
-	},
-	{
-		title: 'Правила',
-		url: '/rules'
-	},
-	{
-		title: 'Создатели',
-		url: '/developers'
-	}
-]
 
 export const playerColors = {
 	blue: '#007AFF',

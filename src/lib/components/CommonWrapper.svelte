@@ -1,7 +1,4 @@
 <script lang="ts">
-	import Footer from './Footer.svelte'
-	import Navigation from './Navigation.svelte'
-	import QuickMenu from './quickMenu/QuickMenu.svelte'
 	import { AppManager, setAppManager } from '$lib/stores/AppManager.svelte'
 	import MobilePage from './mobile/MobilePage.svelte'
 	import ErrorNotifications from './ErrorNotifications.svelte'
