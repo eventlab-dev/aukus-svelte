@@ -51,6 +51,19 @@
 		return () => observer.disconnect()
 	})
 
+	$effect(() => {
+		if (!viewport) return
+
+		const observer = new ResizeObserver(() => {
+			if (imageLoaded && !positionInitialized) {
+				setInitialPos()
+			}
+		})
+
+		observer.observe(viewport)
+		return () => observer.disconnect()
+	})
+
 	function handleClick() {
 		movementStore.selectedPlayer = null
 	}
@@ -85,14 +98,18 @@
 	let mouseY = $state(0)
 
 	function setInitialPos() {
-		if (!mapImg || viewportHeight === 0) {
+		if (!mapImg) return
+
+		// Use viewport.clientHeight directly if viewportHeight state hasn't updated yet
+		const actualViewportHeight = viewport?.clientHeight || viewportHeight
+		if (actualViewportHeight === 0) {
 			return
 		}
 
 		const scaledHeight = mapImg.naturalHeight * userZoom * mapScale
 
 		mapX = 0
-		mapY = viewportHeight / 2 - scaledHeight / 2
+		mapY = actualViewportHeight / 2 - scaledHeight / 2
 
 		positionInitialized = true
 	}
