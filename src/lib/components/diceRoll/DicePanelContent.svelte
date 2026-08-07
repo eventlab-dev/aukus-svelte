@@ -15,6 +15,8 @@
 	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
 	import StarIcon from '../icons/new/StarIcon.svelte'
 	import PlayerAvatar from '../player/PlayerAvatar.svelte'
+	import { Tabs, TabsList, TabsTrigger } from '../ui/tabs'
+	import ArrowRightIcon from '../icons/ArrowRightIcon.svelte'
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
@@ -52,7 +54,7 @@
 
 	const defaultOption = $derived(activeDiceOptions[activeDiceOptions.length - 1].value)
 
-	let selectedDiceOption = $state<DiceOption | 'drop' | null>(null)
+	let selectedDiceOption = $state<DiceOption | 'drop'>(defaultOption)
 
 	$effect(() => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -243,6 +245,19 @@
 	}
 
 	const canKick = $derived(player.slug !== app.myPlayer?.slug)
+
+	const {streamLink, streamText} = $derived.by(() => {
+		switch (player.main_platform) {
+			case 'twitch':
+				return { streamLink: player.twitch_stream_link, streamText: 'Стримит на Twitch' }
+			case 'vkvideo':
+				return { streamLink: player.vk_stream_link, streamText: 'Стримит на VK' }
+			case 'kick':
+				return { streamLink: player.kick_stream_link, streamText: 'Стримит на Kick' }
+			default:
+				return ''
+		}
+	})
 </script>
 
 {#if canRollDice}
@@ -278,7 +293,7 @@
 	</div>
 {:else}
 	<div class="flex">
-		<div class="flex w-[450px] flex-col gap-3 rounded-[32px] border-dashed bg-card p-3">
+		<div class="flex w-[360px] flex-col gap-3 rounded-[32px] border-dashed bg-card p-3">
 			<div class="flex justify-between">
 				<div class="flex items-center gap-2">
 					<PlayerAvatar
@@ -292,43 +307,74 @@
 					</Button>
 				</div>
 				<div class="flex items-center gap-2 font-extrabold">
-					<div class="flex gap-[2px] items-center">{player.shield_stacks} <ShieldIcon class="size-4" /></div>
-					<div class="flex gap-[2px] items-center">{player.shit_stacks} <FireIcon class="size-4" /></div>
-					<div class="flex gap-[2px] items-center">{player.total_score} <StarIcon class="size-4" /></div>
+					<div class="flex items-center gap-[2px]">
+						{player.shield_stacks}
+						<ShieldIcon class="size-4" />
+					</div>
+					<div class="flex items-center gap-[2px]">
+						{player.shit_stacks}
+						<FireIcon class="size-4" />
+					</div>
+					<div class="flex items-center gap-[2px]">
+						{player.total_score}
+						<StarIcon class="size-4" />
+					</div>
 				</div>
 			</div>
-			<div class="text-sm font-semibold text-muted-foreground">Игра на стриме</div>
+			<div class="text-sm font-extrabold text-muted-foreground flex justify-between items-center">
+				{#if player.is_online}
+					<div>{streamText}</div>
+				{:else}
+					<div>Оффлайн</div>
+				{/if}
+				{#if player.is_online && streamLink}
+					<a
+						href={streamLink}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="flex items-center gap-1"
+					>
+						Смотреть
+						<ArrowRightIcon />
+					</a>
+				{/if}
+			</div>
 			<div class="flex gap-2">
 				{#if player.current_game}
 					<ImageLoader
 						class="h-[90px]"
 						alt="poster"
-						src={player.current_game_cover || FALLBACK_GAME_POSTER}
+						src={player.current_game_cover ?? FALLBACK_GAME_POSTER}
 					/>
 				{/if}
-				<div class="font-bold">{player.current_game || 'Выбирает игру...'}</div>
+				<div class="text-xl font-extrabold">{player.current_game ?? 'Выбирает игру...'}</div>
 			</div>
 		</div>
 		<div class="flex items-center rounded-[32px] border-dashed bg-card">
 			<PlayerModel {player} variant="big" />
 		</div>
-		<div class="flex flex-col gap-3 rounded-[32px] border-dashed bg-card p-4 font-bold">
-			<div class="font-semibold text-muted-foreground">Варианты хода</div>
-			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
-			<div class="flex w-full gap-2">
-				<div class="flex-1 rounded-2xl bg-secondary p-3">
-					<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
-					<p class="text-left text-2xl font-bold">
+		<div class="flex flex-col gap-3 justify-center p-3 w-[360px] rounded-[32px] border-dashed bg-card font-bold">
+			<div class="flex justify-center gap-2">
+				<div class="flex-1 w-fit text-center">
+					<p class="mb-1.5 text-sm font-extrabold">Шанс лестницы</p>
+					<p class="text-2xl font-bold">
 						{ladderChance.toFixed(1)}%
 					</p>
 				</div>
-				<div class="flex-1 rounded-2xl bg-secondary p-3">
-					<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
-					<p class="text-left text-2xl font-bold">
+				<div class="flex-1 w-fit text-center">
+					<p class="mb-1.5 text-sm font-extrabold">Шанс змейки</p>
+					<p class="text-2xl font-bold">
 						{snakeChance.toFixed(1)}%
 					</p>
 				</div>
 			</div>
+			<Tabs bind:value={selectedDiceOption}>
+				<TabsList class="flex-wrap gap-2">
+					{#each activeDiceOptions as option (option.value)}
+						<TabsTrigger value={option.value}>{option.label}</TabsTrigger>
+					{/each}
+				</TabsList>
+			</Tabs>
 		</div>
 	</div>
 {/if}

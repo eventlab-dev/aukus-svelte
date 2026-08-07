@@ -2,7 +2,7 @@
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 	type Props = {
-		src?: string
+		src?: string | null
 		name: string
 		isOnline?: boolean | number
 		class?: string
