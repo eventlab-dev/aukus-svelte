@@ -368,7 +368,7 @@
 					</p>
 				</div>
 			</div>
-			<Tabs bind:value={selectedDiceOption}>
+			<Tabs bind:value={selectedDiceOption} class="w-fit">
 				<TabsList class="flex-wrap gap-2">
 					{#each activeDiceOptions as option (option.value)}
 						<TabsTrigger value={option.value}>{option.label}</TabsTrigger>
