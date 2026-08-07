@@ -141,7 +141,7 @@
 			const ladderTo = laddersByCell[moveTo]?.cellTo
 			const snakeTo = snakesByCell[moveTo]?.cellTo
 			const endCell = await movementStore.moveToCell({
-				playerSlug: slug,
+				player,
 				steps,
 				moveResponse: {
 					move_to: moveTo,

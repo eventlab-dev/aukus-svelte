@@ -30,7 +30,7 @@ export class EventDataStore {
 	achievementsById = $derived(
 		new SvelteMap(this.achievements.map((achievement) => [achievement.id, achievement]))
 	)
-	playersBySlug = $derived(new SvelteMap(this.playersRaw.map((player) => [player.slug, player])))
+	playersBySlug = $derived(new SvelteMap(this.players.map((player) => [player.slug, player])))
 	achievementsWithScores = $derived(
 		this.achievements.filter((achievement) => achievement.points > 0)
 	)

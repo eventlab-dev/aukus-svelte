@@ -70,6 +70,8 @@
 			dice = player.map_position >= 81 ? '2d6' : '1d6'
 		}
 
+		const myPlayerBeforeRoll = app.myPlayer!
+
 		const rollResult = await usersStore.rollDice.mutateAsync({
 			body: {
 				dice,
@@ -86,7 +88,7 @@
 		const steps = moveParams.move_to - player.map_position
 		await movementStore.doRollAnimation(rollResult.roll_values, steps)
 		await movementStore.moveToCell({
-			playerSlug: app.myPlayer!.slug,
+			player: myPlayerBeforeRoll,
 			steps: steps,
 			moveResponse: moveParams,
 			updatePlayerPosition: true

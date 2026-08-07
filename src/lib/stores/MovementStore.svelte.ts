@@ -42,7 +42,11 @@ export class MovementStore {
 			for (const newPlayer of newPlayers) {
 				const currPlayer = currPlayers.find((p) => p.slug === newPlayer.slug)
 				// Skip animating the current player - they are already animated by moveToCell
-				if (currPlayer && currPlayer.map_position !== newPlayer.map_position && newPlayer.slug !== myPlayerSlug) {
+				if (
+					currPlayer &&
+					currPlayer.map_position !== newPlayer.map_position &&
+					newPlayer.slug !== myPlayerSlug
+				) {
 					this.animateOtherPlayer(currPlayer, newPlayer)
 				} else {
 					this.updatePlayer(newPlayer.slug, newPlayer)
@@ -75,18 +79,15 @@ export class MovementStore {
 	offsetInsideCellY = 0
 
 	async moveToCell(params: {
-		playerSlug: string
+		player: PlayerItem
 		steps: number
 		moveResponse: FinishPlayerMoveResponse
 		updatePlayerPosition?: boolean
 	}) {
-		const element = this.playerElements.get(params.playerSlug)
+		const element = this.playerElements.get(params.player.slug)
 		if (!element) return
 
-		const eventDataStore = this.getEventDataStore()
-
-		const player = eventDataStore.playersBySlug.get(params.playerSlug)
-		if (!player) return
+		const player = params.player
 
 		const isMyPlayer = this.getPlayerSlug() === player.slug
 
@@ -175,12 +176,6 @@ export class MovementStore {
 			})
 		}
 
-		await new Promise((resolve) => {
-			timeline.play().onComplete = () => {
-				resolve(true)
-			}
-		})
-
 		let finalCell = endCell
 		if (params.moveResponse.ladder_to) {
 			finalCell = params.moveResponse.ladder_to
@@ -189,12 +184,17 @@ export class MovementStore {
 			finalCell = params.moveResponse.snake_to
 		}
 
-		if (params.updatePlayerPosition) {
-			this.updatePlayer(params.playerSlug, {
-				map_position: finalCell
-			})
-		}
+		await new Promise((resolve) => {
+			timeline.play().onComplete = () => {
+				resolve(true)
+			}
 
+			if (params.updatePlayerPosition) {
+				this.updatePlayer(params.player.slug, {
+					map_position: finalCell
+				})
+			}
+		})
 		return finalCell
 	}
 
@@ -298,7 +298,7 @@ export class MovementStore {
 		const steps = finalCell - currPlayer.map_position
 
 		this.moveToCell({
-			playerSlug: newPlayer.slug,
+			player: currPlayer,
 			moveResponse: {
 				unlocked_achievements: [],
 				move_to: finalCell,
