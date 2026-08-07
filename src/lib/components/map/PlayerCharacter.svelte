@@ -9,6 +9,7 @@
 	import PlayerModel from './PlayerModel.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { WinPosition } from '$lib/constants'
+	import PlayerAvatar from '../player/PlayerAvatar.svelte'
 
 	type Props = {
 		player: PlayerData
@@ -176,7 +177,8 @@
 	>
 		{#if onlyName}
 			<div class="flex w-full items-center justify-center p-1">
-				<div class="relative left-1/2 -translate-x-1/2 rounded-md bg-card p-1">
+				<div class="relative left-1/2 -translate-x-1/2 rounded-md bg-card p-1 flex gap-2 items-center">
+					<PlayerAvatar src={player.avatar_link || ''} name={player.username} size="small" />
 					{player.username}
 				</div>
 			</div>
