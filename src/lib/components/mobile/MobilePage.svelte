@@ -25,7 +25,7 @@
 	function navigateToPlayer(slug: string) {
 		selectedPlayerSlug = slug
 		pageState = 'player'
-		goto(`/players/${slug}`, { noScroll: true, replaceState: false })
+		goto(`/${slug}`, { noScroll: true, replaceState: false })
 	}
 
 	function handleBackToMenu() {
@@ -37,9 +37,9 @@
 	// React to route changes
 	$effect(() => {
 		const pathname = page.url.pathname
-		const playerMatch = pathname.match(/^\/players\/([^/]+)$/)
+		const playerMatch = pathname.match(/^\/([^/]+)$/)
 		
-		if (playerMatch) {
+		if (playerMatch && pathname !== '/') {
 			const slug = playerMatch[1]
 			if (app.playersBySlug.get(slug)) {
 				selectedPlayerSlug = slug

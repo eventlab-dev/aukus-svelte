@@ -114,7 +114,7 @@
 						<TableCell class="p-0">
 							<Button
 								variant="link"
-								href={app.isMobile ? '' : `/players/${player.player_slug}`}
+								href={app.isMobile ? '' : `/${player.player_slug}`}
 								class="p-0 text-foreground no-underline hover:text-[var(--player-color)]"
 								style="--player-color: {player.color}"
 								onclick={(e) => {
@@ -175,7 +175,7 @@
 						>
 							<Button
 								variant="link"
-								href={app.isMobile ? '' : `/players/${player.player_slug}`}
+								href={app.isMobile ? '' : `/${player.player_slug}`}
 								class="p-0 text-foreground no-underline hover:text-[var(--player-color)] uppercase font-extrabold"
 								style="--player-color: {player.color}"
 								onclick={(e) => {

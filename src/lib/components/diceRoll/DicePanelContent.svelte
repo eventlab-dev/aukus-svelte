@@ -302,7 +302,7 @@
 						size="small"
 						isOnline={player.is_online}
 					/>
-					<Button variant="link" class="h-4 p-0" href={`/players/${player.slug}`}>
+					<Button variant="link" class="h-4 p-0" href={`/${player.slug}`}>
 						<div class="text-xl font-extrabold text-foreground">{player.username}</div>
 					</Button>
 				</div>
