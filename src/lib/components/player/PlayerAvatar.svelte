@@ -2,14 +2,14 @@
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 	type Props = {
-		src: string
+		src?: string
 		name: string
-		isOnline?: boolean
+		isOnline?: boolean | number
 		class?: string
 		size?: 'default' | 'lg' | 'small' | 'tiny'
 	}
 
-	const { class: className, src, name, isOnline, size = 'default' }: Props = $props()
+	const { class: className, src = '', name, isOnline, size = 'default' }: Props = $props()
 </script>
 
 <div class={['group relative w-fit', className]} data-size={size}>

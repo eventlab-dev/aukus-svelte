@@ -11,6 +11,10 @@
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import KickPlayerDialog from '../quickMenu/options/shitMenu/KickPlayerDialog.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import FireIcon from '../icons/new/FireIcon.svelte'
+	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
+	import StarIcon from '../icons/new/StarIcon.svelte'
+	import PlayerAvatar from '../player/PlayerAvatar.svelte'
 
 	type DiceOptionOrDrop = DiceOption | 'drop'
 
@@ -30,13 +34,7 @@
 
 	const app = getAppManager()
 
-	const {
-		usersStore,
-		eventDataStore,
-		movementStore,
-		notificationStore,
-		statsStore
-	} = app
+	const { usersStore, eventDataStore, movementStore, notificationStore, statsStore } = app
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions: Option[] = [
@@ -280,20 +278,24 @@
 	</div>
 {:else}
 	<div class="flex">
-		<div class="bg-card flex w-[450px] flex-col gap-3 p-4 border-dashed rounded-[32px]">
+		<div class="flex w-[450px] flex-col gap-3 rounded-[32px] border-dashed bg-card p-3">
 			<div class="flex justify-between">
 				<div class="flex items-center gap-2">
-					<Avatar class="size-[27px]">
-						<AvatarImage src={player.avatar_link || FALLBACK_AVATAR_URL} />
-						<AvatarFallback class="uppercase">{player.username.slice(0, 2)}</AvatarFallback>
-					</Avatar>
-					<Button variant="link" class="p-0" href={`/players/${player.slug}`}>
-						<div class="text-xl font-bold text-foreground">{player.username}</div>
+					<PlayerAvatar
+						name={player.username}
+						src={player.avatar_link}
+						size="small"
+						isOnline={player.is_online}
+					/>
+					<Button variant="link" class="h-4 p-0" href={`/players/${player.slug}`}>
+						<div class="text-xl font-extrabold text-foreground">{player.username}</div>
 					</Button>
 				</div>
-				{#if canKick}
-					<KickPlayerDialog {player} />
-				{/if}
+				<div class="flex items-center gap-2 font-extrabold">
+					<div class="flex gap-[2px] items-center">{player.shield_stacks} <ShieldIcon class="size-4" /></div>
+					<div class="flex gap-[2px] items-center">{player.shit_stacks} <FireIcon class="size-4" /></div>
+					<div class="flex gap-[2px] items-center">{player.total_score} <StarIcon class="size-4" /></div>
+				</div>
 			</div>
 			<div class="text-sm font-semibold text-muted-foreground">Игра на стриме</div>
 			<div class="flex gap-2">
@@ -307,10 +309,10 @@
 				<div class="font-bold">{player.current_game || 'Выбирает игру...'}</div>
 			</div>
 		</div>
-		<div class="bg-card flex items-center border-dashed rounded-[32px]">
+		<div class="flex items-center rounded-[32px] border-dashed bg-card">
 			<PlayerModel {player} variant="big" />
 		</div>
-		<div class="bg-card flex flex-col gap-3 p-4 font-bold border-dashed rounded-[32px]">
+		<div class="flex flex-col gap-3 rounded-[32px] border-dashed bg-card p-4 font-bold">
 			<div class="font-semibold text-muted-foreground">Варианты хода</div>
 			<ToggleButtonGroup bind:selectedOption={selectedDiceOption} options={activeDiceOptions} />
 			<div class="flex w-full gap-2">
