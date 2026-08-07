@@ -255,7 +255,7 @@
 			case 'kick':
 				return { streamLink: player.kick_stream_link, streamText: 'Стримит на Kick' }
 			default:
-				return ''
+				return {streamLink: '', streamText: ''}
 		}
 	})
 </script>
