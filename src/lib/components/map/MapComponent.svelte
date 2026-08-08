@@ -21,7 +21,7 @@
 	const offsetRight = 0
 
 	let mapImg = $state<HTMLImageElement | null>(null)
-	let viewport = $state<HTMLDivElement | null>(null)
+	let viewport = $state<HTMLButtonElement | null>(null)
 
 	let imageLoaded = $state(false)
 	let userZoom = $state(1)
@@ -64,8 +64,12 @@
 		return () => observer.disconnect()
 	})
 
-	function handleClick() {
-		movementStore.selectedPlayer = null
+	function handleClick(evt: MouseEvent) {
+		console.log('on click', mouseUpAfterDrag)
+		if (!mouseUpAfterDrag) {
+			movementStore.selectedPlayer = null
+		}
+		evt.stopPropagation()
 	}
 
 	const options: FireworksOptions = {
@@ -79,14 +83,22 @@
 	let mapY = $state(0)
 
 	let dragging = $state(false)
+	let mouseDown = $state(false)
+	let mouseX = $state(0)
+	let mouseY = $state(0)
 	let lastX = $state(0)
 	let lastY = $state(0)
+
+	let mouseUpAfterDrag = $state(false)
 
 	let transition = $state('transform 0.25s ease-out')
 	let positionInitialized = $state(false)
 
 	function onMouseDown(e: MouseEvent) {
-		dragging = true
+		e.stopPropagation()
+
+		dragging = false
+		mouseDown = true
 
 		lastX = e.clientX
 		lastY = e.clientY
@@ -94,8 +106,48 @@
 		transition = 'none'
 	}
 
-	let mouseX = $state(0)
-	let mouseY = $state(0)
+	function onMouseMove(e: MouseEvent) {
+		e.stopPropagation()
+
+		if (!viewport || !mapImg || !mouseDown) return
+		if (!dragging) {
+			if (Math.hypot(e.clientX - lastX, e.clientY - lastY) < 5) {
+				return
+			}
+			dragging = true
+		}
+
+		mouseX = e.clientX - viewport!.getBoundingClientRect().left
+		mouseY = e.clientY - viewport!.getBoundingClientRect().top
+
+		const dx = e.clientX - lastX
+		const dy = e.clientY - lastY
+
+		mapX += dx
+		mapY += dy
+
+		clampPosition()
+
+		lastX = e.clientX
+		lastY = e.clientY
+	}
+
+	function onMouseUp(evt: MouseEvent) {
+		evt.stopPropagation()
+		mouseDown = false
+		if (dragging) {
+			dragging = false
+			transition = 'transform 0.25s ease-out'
+			mouseUpAfterDrag = true
+		} else {
+			movementStore.selectedPlayer = null
+			mouseUpAfterDrag = false
+		}
+	}
+
+	function onMouseDownViewport(evt: MouseEvent) {
+		mouseUpAfterDrag = false
+	}
 
 	function setInitialPos() {
 		if (!mapImg) return
@@ -113,7 +165,6 @@
 
 		positionInitialized = true
 	}
-
 
 	$effect(() => {
 		if (imageLoaded && viewportHeight > 0) {
@@ -143,7 +194,7 @@
 		if (scaledWidth > viewportWidth) {
 			minX = viewportWidth - scaledWidth - extensionRight
 			maxX = extensionLeft
-		}	
+		}
 
 		let minY = -extensionBottom
 		let maxY = viewportHeight - scaledHeight + extensionBottom
@@ -158,28 +209,6 @@
 			minY,
 			maxY
 		}
-	}
-
-	function onMouseMove(e: MouseEvent) {
-		mouseX = e.clientX - viewport!.getBoundingClientRect().left
-		mouseY = e.clientY - viewport!.getBoundingClientRect().top
-		if (!dragging || !viewport || !mapImg) return
-
-		const dx = e.clientX - lastX
-		const dy = e.clientY - lastY
-
-		mapX += dx
-		mapY += dy
-
-		clampPosition()
-
-		lastX = e.clientX
-		lastY = e.clientY
-	}
-
-	function onMouseUp() {
-		dragging = false
-		transition = 'transform 0.25s ease-out'
 	}
 
 	const zoomMin = 1
@@ -239,11 +268,17 @@
 init arrow 70 270 510 210
 </div> -->
 
-<div class="viewport relative h-screen w-full overflow-visible" bind:this={viewport} bind:clientHeight={viewportHeight}>
+<button
+	class="viewport relative h-screen w-full overflow-visible"
+	bind:this={viewport}
+	bind:clientHeight={viewportHeight}
+	onclick={handleClick}
+	onmousedown={onMouseDownViewport}
+>
 	<div
 		id={MapContainerId}
 		class="map-transform absolute top-0 left-0 origin-top-left overflow-hidden"
-		onclick={handleClick}
+
 		onwheel={onWheel}
 		onmousedown={onMouseDown}
 		onmousemove={onMouseMove}
@@ -324,4 +359,4 @@ init arrow 70 270 510 210
 			<MapCountdown />
 		{/if}
 	</div>
-</div>
+</button>

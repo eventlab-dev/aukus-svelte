@@ -173,8 +173,8 @@ const CellPositions: Record<number, CellPositionNew> = {
 		centerY: 2025,
 	},
 	33: {
-		centerX: 615,
-		centerY: 2035,
+		centerX: 612,
+		centerY: 2037,
 	},
 	34: {
 		centerX: 770,
@@ -241,7 +241,7 @@ const CellPositions: Record<number, CellPositionNew> = {
 		centerY: 690,
 	},
 	50: {
-		centerX: 1780,
+		centerX: 1785,
 		centerY: 690,
 	},
 	51: {
