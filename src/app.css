@@ -266,6 +266,10 @@
 	outline-offset: -2px;
 }
 
+@utility border-dashed-bottom {
+	border-bottom: 4px dashed #bac7f2;
+}
+
 /* fix for rich editor rules lists */
 @layer utilities {
 	.no-prose-markers :where(ol > li)::marker {

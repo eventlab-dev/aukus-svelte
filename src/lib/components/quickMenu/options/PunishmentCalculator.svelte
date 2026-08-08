@@ -29,7 +29,6 @@
 		{ max: 870000, shots: 17, pushups: 510, squats: 850 },
 		{ max: 1000000, shots: 18, pushups: 540, squats: 900 }
 	]
-	const sharedInputStyles = 'border-none bg-muted font-bold h-[44px]'
 
 	let auctionSum: string = $state('')
 	let { shots, pushups, squats } = $derived.by(calculatePunishments)
@@ -90,9 +89,9 @@
 </script>
 
 {#snippet readonlyInput({ title, value }: { title: string; value: number })}
-	<div>
-		<Label for={title}>{title}</Label>
-		<Input id={title} type="number" class={[sharedInputStyles, 'w-[148px]']} {value} readonly />
+	<div class="flex gap-2 flex-col font-extrabold text-center">
+		<div class="uppercase">{title}</div>
+		<div class="w-[148px] bg-secondary p-2 rounded-xl">{value}</div>
 	</div>
 {/snippet}
 
@@ -102,7 +101,7 @@
 
 <PageContainer bottomSpace={false}>
 	<div class="flex flex-col items-center pt-16">
-		<div class="flex flex-col text-5xl leading-[58px]">
+		<div class="flex flex-col text-5xl leading-[58px] font-bold">
 			<span>Наказание за дроп</span>
 			{#if app.myPlayer?.current_game && false}
 				<span> — {app.myPlayer?.current_game}</span>
@@ -111,26 +110,24 @@
 			{/if}
 		</div>
 
-		<div class="mt-8 space-y-5">
-			<div>
-				<Label for="auction-sum">Сумма аукциона</Label>
+		<div class="mt-20 space-y-5 w-[640px]">
+			<div class="w-full">
+				<div class="font-extrabold uppercase text-xl text-center w-full p-2">Сумма аукциона</div>
 				<Input
-					id="auction-sum"
 					type="text"
-					placeholder="Введите сумму аукциона"
-					class={[sharedInputStyles]}
+					class="bg-transparent border-dashed-bottom rounded-none text-xl font-extrabold text-center outline-none focus-visible:ring-0"
 					oninput={handleCursorMove}
 					bind:value={getInputValue, setInputValue}
 				/>
 			</div>
-			<div class="flex items-end justify-between">
+			<div class="flex items-end justify-between font-extrabold">
 				{@render readonlyInput({ title: 'Шоты', value: shots })}
-				<div class="mb-3 font-bold text-muted-foreground">или</div>
+				<div class="mb-3 text-muted-foreground">ИЛИ</div>
 				{@render readonlyInput({ title: 'Отжимания', value: pushups })}
-				<div class="mb-3 font-bold text-muted-foreground">или</div>
+				<div class="mb-3 text-muted-foreground">ИЛИ</div>
 				{@render readonlyInput({ title: 'Приседания', value: squats })}
 			</div>
-			<div>
+			<div class="hidden">
 				<p class="text-sm font-semibold text-muted-foreground">
 					Наказание расчитано персонально для вас исходя из данных полученеых с поинтаука.
 				</p>
