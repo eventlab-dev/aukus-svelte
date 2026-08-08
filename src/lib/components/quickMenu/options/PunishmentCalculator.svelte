@@ -1,18 +1,13 @@
 <script lang="ts">
 	import MathIcon from '$lib/components/icons/MathIcon.svelte'
-	import {
-		Dialog,
-		DialogContent,
-		DialogHeader,
-		DialogTitle,
-		DialogTrigger
-	} from '$lib/components/ui/dialog'
+	import { Button } from '$lib/components/ui/button'
 	import { Input } from '$lib/components/ui/input'
 	import { Label } from '$lib/components/ui/label'
-	
+	import PageContainer from '$lib/components/PageContainer.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	const app = getAppManager()
+	const { navStore } = app
 
 	const ranges = [
 		{ max: 10000, shots: 1, pushups: 30, squats: 50 },
@@ -89,10 +84,8 @@
 		}
 	})
 
-	function onOpenChange(open: boolean) {
-		if (!open) {
-			app.navStore.closePage()
-		}
+	function openCalculator() {
+		navStore.changePage('calculator')
 	}
 </script>
 
@@ -103,26 +96,22 @@
 	</div>
 {/snippet}
 
-<Dialog open {onOpenChange}>
-	<DialogTrigger>
-		<MathIcon /> Калькулятор наказаний
-	</DialogTrigger>
-	<DialogContent>
-		<DialogHeader>
-			<DialogTitle
-				class="flex flex-col text-5xl leading-[58px]"
-				aria-describedby="punishment calculator"
-			>
-				<span>Наказание за дроп</span>
-				{#if app.myPlayer?.current_game && false}
-					<span> — {app.myPlayer?.current_game}</span>
-				{:else if lastDrop}
-					<span> — {lastDrop}</span>
-				{/if}
-			</DialogTitle>
-		</DialogHeader>
+<Button onclick={openCalculator}>
+	<MathIcon /> Калькулятор наказаний
+</Button>
 
-		<div class="space-y-5">
+<PageContainer bottomSpace={false}>
+	<div class="flex flex-col items-center pt-16">
+		<div class="flex flex-col text-5xl leading-[58px]">
+			<span>Наказание за дроп</span>
+			{#if app.myPlayer?.current_game && false}
+				<span> — {app.myPlayer?.current_game}</span>
+			{:else if lastDrop}
+				<span> — {lastDrop}</span>
+			{/if}
+		</div>
+
+		<div class="mt-8 space-y-5">
 			<div>
 				<Label for="auction-sum">Сумма аукциона</Label>
 				<Input
@@ -150,5 +139,5 @@
 				</p>
 			</div>
 		</div>
-	</DialogContent>
-</Dialog>
+	</div>
+</PageContainer>
