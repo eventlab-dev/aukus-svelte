@@ -10,7 +10,7 @@
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
-	import { EventTitles, FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
+	import { EventTitles, FALLBACK_GAME_POSTER, GAME_CARD_BG, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatDateTimeISO, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
@@ -156,6 +156,7 @@
 <div
 	class="group relative flex w-full flex-col rounded-2xl bg-card p-3"
 	id={`game-card-${game.key}`}
+	style="background-image: url('{GAME_CARD_BG}'); background-size: cover;"
 >
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
 		<div class="flex">
