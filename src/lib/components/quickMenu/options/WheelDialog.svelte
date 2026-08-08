@@ -1,13 +1,11 @@
 <script lang="ts">
 	import LifebuoyIcon from '$lib/components/icons/LifebuoyIcon.svelte'
 	import { Button } from '$lib/components/ui/button'
-	import { Dialog, DialogClose, DialogContent, DialogTrigger } from '$lib/components/ui/dialog'
+	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
+	import PageContainer from '$lib/components/PageContainer.svelte'
 	import Wheel, { type WheelEntry } from '$lib/components/wheel/Wheel.svelte'
-	import X from '@lucide/svelte/icons/x'
 	import Volume from '$lib/components/Volume.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-
-	type EntriesType = 'moment' | 'difficulty'
 
 	const difficulty: WheelEntry[] = [
 		{ id: 1, label: 'Легкая', color: '#34C759', weight: 0.5 },
@@ -21,22 +19,17 @@
 	]
 
 	const app = getAppManager()
-	const { soundManager } = app
+	const { soundManager, navStore } = app
 
-	let currentType: EntriesType = $state('difficulty')
+	let currentType = $state('difficulty')
 
-	const isMomentType = $derived((currentType as EntriesType) === 'moment')
-	const currentEntries = $derived(isMomentType ? moment : difficulty)
+	const currentEntries = $derived(currentType === 'moment' ? moment : difficulty)
 
 	$effect(() => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const _ = currentType
 		soundManager.stop()
 	})
-
-	function changeEntries(type: EntriesType) {
-		currentType = type
-	}
 
 	function onSpinStart(delay: number) {
 		setTimeout(() => {
@@ -48,36 +41,28 @@
 		soundManager.stop()
 	}
 
-	function onOpenChange(open: boolean) {
-		if (!open) {
-			soundManager.stop()
-			app.navStore.closePage()
-		}
+	function openWheels() {
+		navStore.changePage('wheels')
 	}
 </script>
 
-<Dialog {onOpenChange} open>
-	<DialogTrigger>
-		<LifebuoyIcon /> Колёса
-	</DialogTrigger>
-	<DialogContent showCloseButton={false} class="bg-unset max-w-[850px]! shadow-none">
+<Button onclick={openWheels}>
+	<LifebuoyIcon /> Колёса
+</Button>
+
+<PageContainer bottomSpace={false}>
+	<div class="flex flex-col items-center pt-16">
 		<div class="top-3 flex justify-center gap-3">
-			<Button
-				variant={!isMomentType ? 'default' : 'secondary'}
-				size="sm"
-				class="h-8 shrink rounded-lg px-[50px] py-2 text-sm font-bold"
-				onclick={() => changeEntries('difficulty')}
-			>
-				Колесо сложности
-			</Button>
-			<Button
-				variant={isMomentType ? 'default' : 'secondary'}
-				size="sm"
-				class="h-8 shrink rounded-lg px-[50px] py-2 text-sm font-bold"
-				onclick={() => changeEntries('moment')}
-			>
-				Колесо шейх-момента
-			</Button>
+			<Tabs value={currentType} onValueChange={(v) => (currentType = v)}>
+				<TabsList class="flex flex-wrap gap-2">
+					<TabsTrigger value="difficulty" class="px-[50px] py-2 text-sm font-bold">
+						Колесо сложности
+					</TabsTrigger>
+					<TabsTrigger value="moment" class="px-[50px] py-2 text-sm font-bold">
+						Колесо шейх-момента
+					</TabsTrigger>
+				</TabsList>
+			</Tabs>
 		</div>
 
 		<div class="relative mt-30">
@@ -89,11 +74,5 @@
 				<Volume />
 			</div>
 		</div>
-
-		<DialogClose
-			class="absolute top-3 right-3 cursor-pointer opacity-70 transition-opacity hover:opacity-100"
-		>
-			<X class="size-8 stroke-4" />
-		</DialogClose>
-	</DialogContent>
-</Dialog>
+	</div>
+</PageContainer>
