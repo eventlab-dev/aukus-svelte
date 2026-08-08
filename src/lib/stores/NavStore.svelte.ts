@@ -52,6 +52,16 @@ export class NavStore {
 		this.changePage(MAIN_PAGE)
 	}
 
+	navigate(url: string) {
+		// Check if it's a static page
+		if (STATIC_PAGES.has(url as AppUrl)) {
+			this.changePage(URL_PAGE_MAP[url as AppUrl])
+		} else {
+			// Handle dynamic pages (like player profiles)
+			this.changeDynamicPage(url.substring(1))
+		}
+	}
+
 	changePage(page: AppPage, params: { changeUrl?: boolean; pageParams?: PageParams } = { changeUrl: true }) {
 		const url = pageToUrl(page)
 		this.appPage = page
@@ -81,18 +91,44 @@ export class NavStore {
 	}
 
 	sync() {
-		const appPage = getAppPageFromUrl()
-		if (appPage) {
-			this.changePage(appPage, {changeUrl: false})
-		} else {
-			this.changeDynamicPage(window.location.pathname.substring(1))
-		}
+		this.navigate(window.location.pathname)
+		// const appPage = getAppPageFromUrl()
+		// if (appPage) {
+		// 	this.changePage(appPage, {changeUrl: false})
+		// } else {
+		// 	this.changeDynamicPage(window.location.pathname.substring(1))
+		// }
 	}
 
 	constructor() {
 		this.sync()
 		window.addEventListener('popstate', () => {
 			this.sync()
+		})
+		
+		// Intercept anchor tag clicks for internal navigation
+		window.addEventListener('click', (e) => {
+			const anchor = (e.target as Element)?.closest?.('a')
+			if (!anchor) return
+			
+			const href = anchor.getAttribute('href')
+			if (!href) return
+			
+			// Check if it's an internal URL
+			if (href.startsWith('/') && !href.startsWith('//')) {
+				// Check if it's a known static page or dynamic page
+				const isInternal = STATIC_PAGES.has(href as AppUrl) || href.startsWith('/')
+				
+				if (isInternal) {
+					// Check if the link has target="_blank" or other special attributes
+					if (anchor.target === '_blank' || anchor.rel === 'noopener noreferrer') {
+						return // Let external links open normally
+					}
+					
+					e.preventDefault()
+					this.navigate(href)
+				}
+			}
 		})
 	}
 }
