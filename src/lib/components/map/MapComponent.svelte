@@ -28,6 +28,7 @@
 
 	let mapImgHeight = $state(0)
 	let viewportHeight = $state(0)
+	let scaleInitialized = $state(false)
 
 	function updateScale() {
 		if (mapImg && mapImg.naturalWidth !== 0) {
@@ -37,6 +38,7 @@
 				const minZoom = (viewport.clientWidth - offsetRight) / viewport.clientWidth
 				userZoom = minZoom
 			}
+			scaleInitialized = true
 		}
 	}
 
@@ -55,7 +57,7 @@
 		if (!viewport) return
 
 		const observer = new ResizeObserver(() => {
-			if (imageLoaded && !positionInitialized) {
+			if (imageLoaded && scaleInitialized && !positionInitialized) {
 				setInitialPos()
 			}
 		})
@@ -167,7 +169,7 @@
 	}
 
 	$effect(() => {
-		if (imageLoaded && viewportHeight > 0) {
+		if (imageLoaded && scaleInitialized && viewportHeight > 0) {
 			untrack(() => setInitialPos())
 		}
 	})
@@ -319,6 +321,7 @@ init arrow 70 270 510 210
 				src={MAP_IMAGE}
 				onload={() => {
 					imageLoaded = true
+					updateScale()
 				}}
 				alt="map"
 				class="h-full w-full min-w-0 cursor-grab select-none active:cursor-grabbing"
