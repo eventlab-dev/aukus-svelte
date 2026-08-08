@@ -52,13 +52,20 @@ export class NavStore {
 		this.changePage(MAIN_PAGE)
 	}
 
-	navigate(url: string) {
+	navigate(url: string, updateUrl: boolean = true) {
 		// Check if it's a static page
 		if (STATIC_PAGES.has(url as AppUrl)) {
-			this.changePage(URL_PAGE_MAP[url as AppUrl])
+			this.changePage(URL_PAGE_MAP[url as AppUrl], { changeUrl: updateUrl })
 		} else {
 			// Handle dynamic pages (like player profiles)
-			this.changeDynamicPage(url.substring(1))
+			if (updateUrl) {
+				this.changeDynamicPage(url.substring(1))
+			} else {
+				// Update state without changing URL
+				this.dynamicPage = url.substring(1)
+				this.appPage = MAIN_PAGE
+				this.appUrl = pageToUrl(MAIN_PAGE)
+			}
 		}
 	}
 
@@ -91,13 +98,7 @@ export class NavStore {
 	}
 
 	sync() {
-		this.navigate(window.location.pathname)
-		// const appPage = getAppPageFromUrl()
-		// if (appPage) {
-		// 	this.changePage(appPage, {changeUrl: false})
-		// } else {
-		// 	this.changeDynamicPage(window.location.pathname.substring(1))
-		// }
+		this.navigate(window.location.pathname, false)
 	}
 
 	constructor() {
@@ -126,7 +127,7 @@ export class NavStore {
 					}
 					
 					e.preventDefault()
-					this.navigate(href)
+					this.navigate(href, true)
 				}
 			}
 		})
