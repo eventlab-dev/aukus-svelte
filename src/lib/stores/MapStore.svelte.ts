@@ -129,8 +129,8 @@ const CellPositions: Record<number, CellPositionNew> = {
 		centerY: 1340,
 	},
 	22: {
-		centerX: 560,
-		centerY: 1340,
+		centerX: 563,
+		centerY: 1338,
 	},
 	23: {
 		centerX: 400,
@@ -149,8 +149,8 @@ const CellPositions: Record<number, CellPositionNew> = {
 		centerY: 1490,
 	},
 	27: {
-		centerX: 135,
-		centerY: 1635,
+		centerX: 130,
+		centerY: 1628,
 	},
 	28: {
 		centerX: 135,
