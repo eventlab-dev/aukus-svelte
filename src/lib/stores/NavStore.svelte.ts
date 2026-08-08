@@ -1,3 +1,5 @@
+import { pushState } from "$app/navigation"
+
 export type AppPage =
 	| 'map'
 	| 'rules'
@@ -24,12 +26,12 @@ const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/calc': 'calculator',
 	'/wheels': 'wheels',
 	'/achievements': 'achievements',
-	'/history': 'history',
+	'/history': 'history'
 }
 
 const STATIC_PAGES = new Set(Object.keys(URL_PAGE_MAP)) as Set<AppUrl>
 
-type AppUrl = keyof typeof URL_PAGE_MAP
+export type AppUrl = keyof typeof URL_PAGE_MAP
 
 type PageParams = {
 	playerSlug?: string
@@ -49,56 +51,50 @@ export class NavStore {
 	pageParams: PageParams = $state({})
 
 	closePage() {
-		this.changePage(MAIN_PAGE)
+		this.navigate('/')
 	}
 
-	navigate(url: string, updateUrl: boolean = true) {
+	navigate(
+		url: string,
+		params: { updateHistory: boolean, pageParams?: PageParams } = { updateHistory: true }
+	) {
+		if (params.pageParams) {
+			this.pageParams = params.pageParams
+		}
+
 		// Check if it's a static page
 		if (STATIC_PAGES.has(url as AppUrl)) {
-			this.changePage(URL_PAGE_MAP[url as AppUrl], { changeUrl: updateUrl })
+			this.changePage(url as AppUrl, params)
 		} else {
 			// Handle dynamic pages (like player profiles)
-			if (updateUrl) {
-				this.changeDynamicPage(url.substring(1))
-			} else {
-				// Update state without changing URL
-				this.dynamicPage = url.substring(1)
-				this.appPage = MAIN_PAGE
-				this.appUrl = pageToUrl(MAIN_PAGE)
-			}
+			this.changeDynamicPage(url.substring(1), params)
 		}
 	}
 
-	changePage(page: AppPage, params: { changeUrl?: boolean; pageParams?: PageParams } = { changeUrl: true }) {
-		const url = pageToUrl(page)
+	changePage(
+		url: AppUrl,
+		params: { updateHistory: boolean } = { updateHistory: true }
+	) {
+		const page = URL_PAGE_MAP[url]
+		this.appUrl = url
 		this.appPage = page
-		this.pageParams = params.pageParams ?? {}
-		if (params.changeUrl) {
-			this.appUrl = url
-			history.pushState({ page, url }, '', url)
+		if (params.updateHistory) {
+			pushState(url, {})
 		}
 		this.dynamicPage = null
 	}
 
-	changeUrl(url: AppUrl) {
-		const newPage = URL_PAGE_MAP[url] || 'not-found'
-		if (newPage === this.appPage) {
-			history.pushState({ url }, '', url)
-			this.appUrl = url
-			return
-		}
-		this.changePage(newPage)
-	}
-
-	changeDynamicPage(page: string) {
+	changeDynamicPage(page: string, params: { updateHistory: boolean } = { updateHistory: true }) {
 		this.dynamicPage = page
 		this.appPage = MAIN_PAGE
 		this.appUrl = pageToUrl(MAIN_PAGE)
-		history.pushState({ page }, '', `/${page}`)
+		if (params.updateHistory) {
+			pushState(`/${page}`, {})
+		}
 	}
 
 	sync() {
-		this.navigate(window.location.pathname, false)
+		this.navigate(window.location.pathname, {updateHistory: false})
 	}
 
 	constructor() {
@@ -106,28 +102,28 @@ export class NavStore {
 		window.addEventListener('popstate', () => {
 			this.sync()
 		})
-		
+
 		// Intercept anchor tag clicks for internal navigation
 		window.addEventListener('click', (e) => {
 			const anchor = (e.target as Element)?.closest?.('a')
 			if (!anchor) return
-			
+
 			const href = anchor.getAttribute('href')
 			if (!href) return
-			
+
 			// Check if it's an internal URL
 			if (href.startsWith('/') && !href.startsWith('//')) {
 				// Check if it's a known static page or dynamic page
 				const isInternal = STATIC_PAGES.has(href as AppUrl) || href.startsWith('/')
-				
+
 				if (isInternal) {
 					// Check if the link has target="_blank" or other special attributes
 					if (anchor.target === '_blank' || anchor.rel === 'noopener noreferrer') {
 						return // Let external links open normally
 					}
-					
+
 					e.preventDefault()
-					this.navigate(href, true)
+					this.navigate(href)
 				}
 			}
 		})

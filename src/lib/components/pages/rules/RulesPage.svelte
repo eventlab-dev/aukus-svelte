@@ -22,15 +22,11 @@
 		usersStore.myUser?.roles.includes('admin') || usersStore.myUser?.roles.includes('rules.edit')
 	)
 
-	let category = $state<RulesCategory>('general')
-
-	$effect(() => {
+	const category: RulesCategory = $derived.by(() => {
 		if (navStore.appUrl === '/donaters') {
-			category = 'donations'
+			return 'donations'
 		}
-		if (navStore.appUrl === '/rules') {
-			category = 'general'
-		}
+		return 'general'
 	})
 
 	const rulesQuery = createQuery(() =>
@@ -74,8 +70,7 @@
 	}
 
 	function setCategory(newCategory: RulesCategory) {
-		navStore.changeUrl(newCategory === 'general' ? '/rules' : '/donaters')
-		category = newCategory
+		navStore.navigate(newCategory === 'general' ? '/rules' : '/donaters')
 	}
 </script>
 

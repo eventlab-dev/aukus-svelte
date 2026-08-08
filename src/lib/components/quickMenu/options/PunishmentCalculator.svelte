@@ -84,7 +84,7 @@
 	})
 
 	function openCalculator() {
-		navStore.changePage('calculator')
+		navStore.navigate('/calc')
 	}
 </script>
 

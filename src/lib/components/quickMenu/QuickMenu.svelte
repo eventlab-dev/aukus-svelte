@@ -75,10 +75,10 @@
 					</Button>
 				{/if}
 				<AchievementsDialog />
-				<Button onclick={() => app.navStore.changePage('history')}>
+				<Button href="/history">
 					<SearchIcon /> История игр
 				</Button>
-				<Button onclick={() => window.open('/streams', '_blank')}>
+				<Button href="/streams">
 					<TwitchIcon /> Мультитрансляция
 				</Button>
 			</CollapsibleGroup>

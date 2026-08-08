@@ -20,29 +20,29 @@
 	import Trophy from '@lucide/svelte/icons/trophy'
 	import History from '@lucide/svelte/icons/history'
 	import { Button } from './ui/button'
-	import type { AppPage } from '$lib/stores/NavStore.svelte'
 	import ProfileIcon from './icons/ProfileIcon.svelte'
 	import SkinEditorDialog from './skinEditor/SkinEditorDialog.svelte'
 	import ShitDialog from './shitKick/ShitDialog.svelte'
+	import type { AppUrl } from '$lib/stores/NavStore.svelte'
 
 	type AppItem = {
 		id: string
 		icon: import('svelte').Component
 		label: string
-		page?: AppPage
+		url?: AppUrl
 	}
 
 	const apps: AppItem[] = [
-		{ id: 'rules', icon: RulesIcon, label: 'Правила', page: 'rules' },
-		{ id: 'stats', icon: StatsIcon, label: 'Статистика', page: 'stats' },
-		{ id: 'achievements', icon: Trophy, label: 'Ачивки', page: 'achievements' },
-		{ id: 'history', icon: History, label: 'История', page: 'history' },
-		{ id: 'streams', icon: TV, label: 'Стримы', page: 'streams' },
+		{ id: 'rules', icon: RulesIcon, label: 'Правила', url: '/rules' },
+		{ id: 'stats', icon: StatsIcon, label: 'Статистика', url: '/stats' },
+		{ id: 'achievements', icon: Trophy, label: 'Ачивки', url: '/achievements' },
+		{ id: 'history', icon: History, label: 'История', url: '/history' },
+		{ id: 'streams', icon: TV, label: 'Стримы', url: '/streams' },
 		{ id: 'shit', icon: ShieldX, label: 'Подсеры' },
 		{ id: 'skins', icon: Shirt, label: 'Скины' },
-		{ id: 'wheels', icon: ShipWheel, label: 'Колеса', page: 'wheels' },
-		{ id: 'calculator', icon: Calculator, label: 'Калькулятор', page: 'calculator' },
-		{ id: 'about', icon: DevelopersIcon, label: 'Создатели', page: 'about' }
+		{ id: 'wheels', icon: ShipWheel, label: 'Колеса', url: '/wheels' },
+		{ id: 'calculator', icon: Calculator, label: 'Калькулятор', url: '/calc' },
+		{ id: 'about', icon: DevelopersIcon, label: 'Создатели', url: '/about' }
 	]
 
 	const loginApp: AppItem = $derived(
@@ -95,8 +95,8 @@
 						<button
 							class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
 							onclick={() => {
-								if (appItem.page) {
-									navStore.changePage(appItem.page)
+								if (appItem.url) {
+									navStore.navigate(appItem.url)
 								}
 								isOpen = false
 							}}
@@ -110,8 +110,8 @@
 					<button
 						class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
 						onclick={() => {
-							if (loginApp.page) {
-								navStore.changePage(loginApp.page)
+							if (loginApp.url) {
+								navStore.navigate(loginApp.url)
 							}
 							isOpen = false
 						}}

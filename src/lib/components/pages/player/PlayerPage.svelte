@@ -151,7 +151,11 @@
 									<TabsTrigger class="uppercase" value={event}>{EventTitles[event]}</TabsTrigger>
 								{/each}
 							</div>
-							<Button onclick={() => navStore.changePage('history', { pageParams: { playerSlug } })}>Поиск игр</Button>
+							<Button
+								onclick={() =>
+									navStore.navigate('/history', { pageParams: { playerSlug }, updateHistory: true })}
+								>Поиск игр</Button
+							>
 						</TabsList>
 						<TabsContent value="aukus5">
 							<GamesList {playerSlug} event="aukus5" {playerMoves} />

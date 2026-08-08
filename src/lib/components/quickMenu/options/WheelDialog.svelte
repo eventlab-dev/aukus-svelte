@@ -42,7 +42,7 @@
 	}
 
 	function openWheels() {
-		navStore.changePage('wheels')
+		navStore.navigate('/wheels')
 	}
 </script>
 
