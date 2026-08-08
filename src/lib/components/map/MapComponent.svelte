@@ -181,10 +181,30 @@
 
 		// const overscroll = 0.15
 
-		const extensionLeft = 100
-		const extensionRight = userZoom === 1.0 ? 100 : 100 + 260
-		const extensionTop = 80
-		const extensionBottom = 80
+		const extensions = {
+			base: {
+				left: 100,
+				right: 100,
+				top: 30,
+				bottom: 30
+			},
+			zoomed: {
+				left: 100,
+				right: 100,
+				top: 100,
+				bottom: 100
+			}
+		}
+
+		const isZoomed = userZoom !== 1.0
+		const ext = isZoomed ? extensions.zoomed : extensions.base
+
+		const zoomUpdated = userZoom * 1.5
+
+		const extensionLeft = ext.left * zoomUpdated
+		const extensionRight = ext.right * zoomUpdated
+		const extensionTop = ext.top * zoomUpdated
+		const extensionBottom = ext.bottom * zoomUpdated
 
 		// const overscrollX = viewportWidth * 0.1
 		// const overscrollY = viewportHeight * 0.2
