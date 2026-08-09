@@ -45,8 +45,8 @@ function pageToUrl(page: AppPage): AppUrl {
 const MAIN_PAGE = URL_PAGE_MAP['/']
 
 export class NavStore {
-	appPage: AppPage = $state(getAppPageFromUrl() ?? MAIN_PAGE)
-	appUrl: AppUrl = $state(getAppUrlFromUrl() ?? pageToUrl(MAIN_PAGE))
+	appPage: AppPage = $state(getAppPageFromUrl())
+	appUrl: AppUrl = $state(getAppUrlFromUrl())
 	dynamicPage: string | null = $state(null)
 	pageParams: PageParams = $state({})
 
@@ -67,7 +67,7 @@ export class NavStore {
 			this.changePage(url as AppUrl, params)
 		} else {
 			// Handle dynamic pages (like player profiles)
-			this.changeDynamicPage(url.substring(1), params)
+			this.changeDynamicPage(url, params)
 		}
 	}
 
@@ -84,12 +84,12 @@ export class NavStore {
 		this.dynamicPage = null
 	}
 
-	changeDynamicPage(page: string, params: { updateHistory: boolean } = { updateHistory: true }) {
-		this.dynamicPage = page
+	changeDynamicPage(url: string, params: { updateHistory: boolean } = { updateHistory: true }) {
+		this.dynamicPage = url.substring(1)
 		this.appPage = MAIN_PAGE
 		this.appUrl = pageToUrl(MAIN_PAGE)
 		if (params.updateHistory) {
-			pushState(`/${page}`, {})
+			pushState(url, {})
 		}
 	}
 
@@ -98,11 +98,6 @@ export class NavStore {
 	}
 
 	constructor() {
-		this.sync()
-		window.addEventListener('popstate', () => {
-			this.sync()
-		})
-
 		// Intercept anchor tag clicks for internal navigation
 		window.addEventListener('click', (e) => {
 			const anchor = (e.target as Element)?.closest?.('a')
@@ -113,33 +108,28 @@ export class NavStore {
 
 			// Check if it's an internal URL
 			if (href.startsWith('/') && !href.startsWith('//')) {
-				// Check if it's a known static page or dynamic page
-				const isInternal = STATIC_PAGES.has(href as AppUrl) || href.startsWith('/')
-
-				if (isInternal) {
-					// Check if the link has target="_blank" or other special attributes
-					if (anchor.target === '_blank' || anchor.rel === 'noopener noreferrer') {
-						return // Let external links open normally
-					}
-
-					e.preventDefault()
-					this.navigate(href)
+				// Check if the link has target="_blank" or other special attributes
+				if (anchor.target === '_blank' || anchor.rel === 'noopener noreferrer') {
+					return // Let external links open normally
 				}
+
+				e.preventDefault()
+				this.navigate(href, {updateHistory: true})
 			}
 		})
 	}
 }
 
-function getAppPageFromUrl(): AppPage | null {
+function getAppPageFromUrl(): AppPage {
 	const path = getAppUrlFromUrl()
-	if (!path) return null
 	return URL_PAGE_MAP[path]
 }
 
-function getAppUrlFromUrl(): AppUrl | null {
+function getAppUrlFromUrl(): AppUrl {
 	const browserPath = window.location.pathname
 	if (STATIC_PAGES.has(browserPath as AppUrl)) {
 		return browserPath as AppUrl
 	}
-	return null
+	// For dynamic URLs, return the main page URL
+	return '/'
 }
