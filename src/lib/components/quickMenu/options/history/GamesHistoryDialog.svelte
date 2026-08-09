@@ -19,20 +19,22 @@
 
 	// Initialize search params on component mount
 	$effect(() => {
-		const playersFilter = app.navStore.pageParams.playerSlug
-			? [app.navStore.pageParams.playerSlug]
-			: app.myPlayer
-				? [app.myPlayer.slug]
-				: []
-		gamesHistoryStore.searchParams = {
-			events: [],
-			players: playersFilter,
-			title_search: null
-		}
-		playersMovesStore.queryParams = {
-			players: playersFilter,
-			search_title: null
-		}
+		requestAnimationFrame(() => {
+			const playersFilter = app.navStore.pageParams.playerSlug
+				? [app.navStore.pageParams.playerSlug]
+				: app.myPlayer
+					? [app.myPlayer.slug]
+					: []
+			gamesHistoryStore.searchParams = {
+				events: [],
+				players: playersFilter,
+				title_search: null
+			}
+			playersMovesStore.queryParams = {
+				players: playersFilter,
+				search_title: null
+			}
+		})
 	})
 
 	let timer: ReturnType<typeof setTimeout>
