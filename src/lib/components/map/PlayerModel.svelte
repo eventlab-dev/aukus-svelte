@@ -9,7 +9,7 @@
 		player: PlayerData
 		showUsername?: boolean
 		selectedSkins?: SkinItem[]
-		variant: 'small' | 'big'
+		variant: 'small' | 'big' | "huge"
 	}
 
 	const { player, showUsername, selectedSkins, variant }: Props = $props()
@@ -23,6 +23,8 @@
 				return 'height: 80px;'
 			case 'big':
 				return 'height: 150px;'
+			case "huge":
+				return 'height: 400px;'
 			default: {
 				const _exhaustiveCheck: never = variant
 				return _exhaustiveCheck
@@ -51,7 +53,7 @@
 	/> -->
 	<div class="player-shadow">
 		<div
-			class="player-model data-[variant=big]:h-[150px] data-[variant=big]:w-[137px] data-[variant=small]:h-[80px] data-[variant=small]:w-[73px]"
+			class="player-model data-[variant=big]:h-[150px] data-[variant=big]:w-[137px] data-[variant=small]:h-[80px] data-[variant=small]:w-[73px] data-[variant=huge]:h-[400px] data-[variant=huge]:w-[365px]"
 			data-variant={variant}
 			style={modelStyle}
 		></div>

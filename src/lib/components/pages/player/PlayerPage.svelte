@@ -14,6 +14,7 @@
 	import GamesList from './components/GamesList.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { EventTitles } from '$lib/constants'
+	import PlayerModel from '$lib/components/map/PlayerModel.svelte'
 
 	type Props = {
 		playerSlug: string
@@ -111,26 +112,28 @@
 				<StaticCanvas {canvasCenter} {contentHeight} />
 			{/if}
 			<div
-				class="relative mx-auto flex w-full flex-col items-center justify-center overflow-auto pt-20"
+				class="relative mx-auto flex w-full flex-col items-center justify-center overflow-auto mt-10"
 				in:fade
 			>
+			<div class="flex gap-2 font-extrabold items-center mt-4">
 				<PlayerAvatar
 					src={player.avatar_link ?? ''}
 					name={player.username}
 					isOnline={Boolean(player.is_online)}
-					size="lg"
-					class="mb-2.5"
+					
 				/>
-
+				<div class="text-4xl">{player.username}</div>
+			</div>
+			<div>
+			<PlayerModel {player} variant="huge" />
+			</div>
 				{#if isLoading}
 					<div class="mt-20">
 						<Loader class="size-20" />
 					</div>
 				{:else}
+				
 					<div class="mb-[30px] flex flex-col items-center gap-5">
-						<div class="text-5xl leading-[58px] font-bold">
-							{player.first_name} «{player.username}»
-						</div>
 						<Socials {player} />
 						<Summary
 							totalScore={player.total_score}

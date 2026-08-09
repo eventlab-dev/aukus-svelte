@@ -136,8 +136,8 @@
 </script>
 
 {#if canEdit}
-	<div class="sticky top-15 left-1/2 z-200 flex w-fit -translate-x-1/2 justify-center gap-3">
-		{#if canvasStore.editMode}
+	{#if canvasStore.editMode}
+		<div class="sticky top-15 left-1/2 z-200 flex w-fit -translate-x-1/2 justify-center gap-3">
 			<Button onclick={handleClose} variant="destructive">Закрыть</Button>
 			<Button
 				onclick={handleSave}
@@ -163,7 +163,9 @@
 			</Button>
 			<Tooltip>
 				<TooltipTrigger>
-					<Button variant="secondary" onclick={handleFlip} disabled={noImageSelected}>Отразить</Button>
+					<Button variant="secondary" onclick={handleFlip} disabled={noImageSelected}
+						>Отразить</Button
+					>
 				</TooltipTrigger>
 				<TooltipContent side="bottom" class="z-200">
 					Отразить выбранное изображение по горизонтали
@@ -182,8 +184,10 @@
 			<Button onclick={handleDelete} disabled={noImageSelected} variant="secondary" class="ml-5">
 				Удалить
 			</Button>
-		{:else}
-			<Button onclick={() => canvasStore.editMode = true}>Редактировать</Button>
-		{/if}
-	</div>
+		</div>
+	{:else}
+		<div class="sticky top-15 z-200 flex w-fit left-50 justify-center gap-3">
+			<Button onclick={() => (canvasStore.editMode = true)}>Редактировать</Button>
+		</div>
+	{/if}
 {/if}
