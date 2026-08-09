@@ -19,7 +19,7 @@
 	]
 
 	const app = getAppManager()
-	const { soundManager, navStore } = app
+	const { soundManager } = app
 
 	let currentType = $state('difficulty')
 
@@ -40,13 +40,9 @@
 	function onSpinEnd() {
 		soundManager.stop()
 	}
-
-	function openWheels() {
-		navStore.navigate('/wheels')
-	}
 </script>
 
-<Button onclick={openWheels}>
+<Button href="/wheels">
 	<LifebuoyIcon /> Колёса
 </Button>
 

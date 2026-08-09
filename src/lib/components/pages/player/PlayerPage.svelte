@@ -58,13 +58,13 @@
 			const left = (canvasStore.canvasWidth - window.innerWidth) / 2
 			document.getElementById('canvas-container')?.scrollTo({ left, behavior: 'instant' })
 
-			console.log({
-				containerWidth: contentContainer.clientWidth,
-				windowWidth: window.innerWidth,
-				canvasWidth: canvasStore.canvasWidth,
-				canvasCenter,
-				left
-			})
+			// console.log({
+			// 	containerWidth: contentContainer.clientWidth,
+			// 	windowWidth: window.innerWidth,
+			// 	canvasWidth: canvasStore.canvasWidth,
+			// 	canvasCenter,
+			// 	left
+			// })
 
 			contentHeight = contentContainer.clientHeight
 		}

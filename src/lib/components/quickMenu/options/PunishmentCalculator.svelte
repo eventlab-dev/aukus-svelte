@@ -82,10 +82,6 @@
 			return app.myPlayer.last_move.item_title
 		}
 	})
-
-	function openCalculator() {
-		navStore.navigate('/calc')
-	}
 </script>
 
 {#snippet readonlyInput({ title, value }: { title: string; value: number })}
@@ -95,7 +91,7 @@
 	</div>
 {/snippet}
 
-<Button onclick={openCalculator}>
+<Button href="/calc">
 	<MathIcon /> Калькулятор наказаний
 </Button>
 

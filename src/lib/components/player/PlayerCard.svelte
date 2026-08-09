@@ -17,7 +17,7 @@
 	const { player }: Props = $props()
 
 	const app = getAppManager()
-	const { movementStore, navStore } = app
+	const { movementStore } = app
 
 	let isHovered = $state(false)
 	let hoverTimeout: ReturnType<typeof setTimeout> | null = null
@@ -51,15 +51,11 @@
 		}
 	}
 
-	function openPlayer() {
-		navStore.changeDynamicPage(player.slug)
-	}
-
 	const cardImgUrl = `${CDN_URL_BASE5}/ui/player-card-bg.png`
 </script>
 
 <Button
-	onclick={openPlayer}
+	href={`/${player.slug}`}
 	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline scale-100 hover:scale-110 transition-transform duration-300 active:scale-90"
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}

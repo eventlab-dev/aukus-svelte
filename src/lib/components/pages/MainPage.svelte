@@ -29,7 +29,7 @@
 	<title>Aukus 5</title>
 </svelte:head>
 
-<div class="absolute top-0 left-1/2 -translate-x-1/2 z-30">
+<div class="absolute top-0 left-1/2 z-30 -translate-x-1/2">
 	<img src={TOP_BANNER} alt="Top banner" class="h-auto w-[116px]" />
 </div>
 
@@ -46,6 +46,24 @@
 	<PageContainer>
 		<PlayerPageWrapper />
 	</PageContainer>
+{:else if navStore.appPage === 'map'}
+	{#if app.turnState === 'filling-form' && !movementStore.selectedPlayer}
+		<div class="sticky bottom-10 left-1/2 z-15 mt-10 flex w-fit -translate-x-1/2 justify-center">
+			<MoveForm />
+		</div>
+	{/if}
+
+	{#if app.turnState === 'dice-animation' || app.turnState === 'dice-results'}
+		<DiceAnimationPanel />
+	{/if}
+
+	{#if app.turnState === 'selecting-dice' || movementStore.selectedPlayer}
+		<div class="pointer-events-none sticky bottom-10 z-49 mt-10 flex justify-center">
+			<div class="pointer-events-auto flex">
+				<DicePanel />
+			</div>
+		</div>
+	{/if}
 {:else if navStore.appPage === 'about'}
 	<PageContainer>
 		<AboutPage />
@@ -76,24 +94,6 @@
 	<PageContainer bottomSpace={false}>
 		<StreamsPage />
 	</PageContainer>
-{/if}
-
-{#if app.turnState === 'filling-form' && !movementStore.selectedPlayer}
-	<div class="sticky bottom-10 left-1/2 z-15 mt-10 flex w-fit -translate-x-1/2 justify-center">
-		<MoveForm />
-	</div>
-{/if}
-
-{#if app.turnState === 'dice-animation' || app.turnState === 'dice-results'}
-	<DiceAnimationPanel />
-{/if}
-
-{#if app.turnState === 'selecting-dice' || movementStore.selectedPlayer}
-	<div class="pointer-events-none sticky bottom-10 z-49 mt-10 flex justify-center">
-		<div class="pointer-events-auto flex">
-			<DicePanel />
-		</div>
-	</div>
 {/if}
 
 {#if app.myPlayer}
