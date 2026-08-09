@@ -10,6 +10,7 @@
 	import GameCard from '$lib/components/gameCard/GameCard.svelte'
 	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
+	import { untrack } from 'svelte'
 
 	const app = getAppManager()
 
@@ -19,21 +20,24 @@
 
 	// Initialize search params on component mount
 	$effect(() => {
-		requestAnimationFrame(() => {
-			const playersFilter = app.navStore.pageParams.playerSlug
-				? [app.navStore.pageParams.playerSlug]
-				: app.myPlayer
-					? [app.myPlayer.slug]
-					: []
-			gamesHistoryStore.searchParams = {
-				events: [],
-				players: playersFilter,
-				title_search: null
-			}
-			playersMovesStore.queryParams = {
-				players: playersFilter,
-				search_title: null
-			}
+		const playersFilter = app.navStore.pageParams.playerSlug
+			? [app.navStore.pageParams.playerSlug]
+			: app.myPlayer
+				? [app.myPlayer.slug]
+				: []
+
+		untrack(() => {
+			setTimeout(() => {
+				gamesHistoryStore.searchParams = {
+					events: [],
+					players: playersFilter,
+					title_search: null
+				}
+				playersMovesStore.queryParams = {
+					players: playersFilter,
+					search_title: null
+				}
+			}, 0)
 		})
 	})
 
@@ -226,7 +230,7 @@
 					{#each historyGames as game, idx (game.id)}
 						{@const eventChanged = game.event_name !== historyGames[idx - 1]?.event_name}
 						{#if eventChanged}
-							<div class="flex justify-center mt-5">
+							<div class="mt-5 flex justify-center">
 								<Button
 									variant="link"
 									class="p-0 text-3xl font-extrabold uppercase"
