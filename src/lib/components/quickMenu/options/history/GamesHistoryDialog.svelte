@@ -21,7 +21,7 @@
 
 	setTimeout(() => {
 		loading = false
-	}, 200)
+	}, 100)
 
 	// Initialize search params on component mount
 	$effect(() => {
