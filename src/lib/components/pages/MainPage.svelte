@@ -47,12 +47,6 @@
 		<PlayerPageWrapper />
 	</PageContainer>
 {:else if navStore.appPage === 'map'}
-	{#if app.turnState === 'filling-form' && !movementStore.selectedPlayer}
-		<div class="sticky bottom-10 left-1/2 z-15 mt-10 flex w-fit -translate-x-1/2 justify-center">
-			<MoveForm />
-		</div>
-	{/if}
-
 	{#if app.turnState === 'dice-animation' || app.turnState === 'dice-results'}
 		<DiceAnimationPanel />
 	{/if}

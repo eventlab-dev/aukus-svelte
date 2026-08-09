@@ -7,7 +7,6 @@
 	import Smartphone from '@lucide/svelte/icons/smartphone'
 	import TV from '@lucide/svelte/icons/tv'
 	import ShieldX from '@lucide/svelte/icons/shield-x'
-	import Shirt from '@lucide/svelte/icons/shirt'
 	import ShipWheel from '@lucide/svelte/icons/ship-wheel'
 	import Calculator from '@lucide/svelte/icons/calculator'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
@@ -20,10 +19,10 @@
 	import Trophy from '@lucide/svelte/icons/trophy'
 	import History from '@lucide/svelte/icons/history'
 	import { Button } from './ui/button'
-	import ProfileIcon from './icons/ProfileIcon.svelte'
 	import SkinEditorDialog from './skinEditor/SkinEditorDialog.svelte'
 	import ShitDialog from './shitKick/ShitDialog.svelte'
 	import type { AppUrl } from '$lib/stores/NavStore.svelte'
+	import MoveForm from './moveForm/MoveForm.svelte'
 
 	type AppItem = {
 		id: string
@@ -35,21 +34,17 @@
 	const apps: AppItem[] = [
 		{ id: 'rules', icon: RulesIcon, label: 'Правила', url: '/rules' },
 		{ id: 'stats', icon: StatsIcon, label: 'Статистика', url: '/stats' },
-		{ id: 'achievements', icon: Trophy, label: 'Ачивки', url: '/achievements' },
+		{ id: 'achievements', icon: Trophy, label: 'Ачивки и скилны', url: '/achievements' },
 		{ id: 'history', icon: History, label: 'История', url: '/history' },
 		{ id: 'streams', icon: TV, label: 'Стримы', url: '/streams' },
 		{ id: 'shit', icon: ShieldX, label: 'Подсеры' },
-		{ id: 'skins', icon: Shirt, label: 'Скины' },
 		{ id: 'wheels', icon: ShipWheel, label: 'Колеса', url: '/wheels' },
 		{ id: 'calculator', icon: Calculator, label: 'Калькулятор', url: '/calc' },
 		{ id: 'about', icon: DevelopersIcon, label: 'Создатели', url: '/about' }
 	]
 
-	const loginApp: AppItem = $derived(
-		app.myUser
-			? { id: 'logout', icon: ProfileIcon, label: 'Выйти' }
-			: { id: 'login', icon: ProfileIcon, label: 'Логин', page: 'login' }
-	)
+
+	const greetingText = $derived(app.myUser ? `Привет ${app.myUser.username}!` : "Привет!")
 
 	function togglePhone() {
 		isOpen = !isOpen
@@ -65,7 +60,7 @@
 			<div class="flex w-full justify-center">
 				<div class="h-[20px] w-[108px] rounded-b-[12px] bg-[#B6E1FF]"></div>
 			</div>
-			<div class="mt-[60px] w-full text-center text-2xl font-bold">Привет!</div>
+			<div class="mt-[40px] w-full text-center text-2xl font-bold">{greetingText}</div>
 			<div class="grid grid-cols-3 gap-3 p-6">
 				{#each apps as appItem (appItem.label)}
 					{@const Icon = appItem.icon}
@@ -106,30 +101,32 @@
 						</button>
 					{/if}
 				{/each}
-				{#if loginApp.id === 'login'}
-					<button
-						class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
-						onclick={() => {
-							if (loginApp.url) {
-								navStore.navigate(loginApp.url)
-							}
-							isOpen = false
-						}}
-					>
-						<loginApp.icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
-						<span class="text-xs">{loginApp.label}</span>
-					</button>
-				{:else}
-					<button
-						class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+			</div>
+			<div class="flex w-full justify-center">
+				{#if app.myUser}
+					{#if app.turnState === 'filling-form'}
+							<MoveForm />
+					{/if}
+					<Button
+						class="flex hidden cursor-pointer flex-col items-center rounded-2xl"
 						onclick={() => {
 							app.usersStore.logout()
 							isOpen = false
 						}}
 					>
-						<loginApp.icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
-						<span class="text-xs">{loginApp.label}</span>
-					</button>
+						<span class="text-xs">Выйти</span>
+					</Button>
+				{:else}
+					<Button
+						class="flex cursor-pointer flex-col items-center rounded-2xl"
+						variant="default"
+						onclick={() => {
+							navStore.navigate('/login')
+							isOpen = false
+						}}
+					>
+						<span class="text uppercase">Логин</span>
+					</Button>
 				{/if}
 			</div>
 		</div>

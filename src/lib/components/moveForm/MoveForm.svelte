@@ -205,7 +205,7 @@
 <Dialog bind:open={isDialogOpen}>
 	<DialogTrigger>
 		{#snippet child({ props })}
-			<Button {...props} class="w-80" disabled={!app.eventActive}>Сделать ход</Button>
+			<Button class="w-80" {...props} disabled={!app.eventActive}>Сделать ход</Button>
 		{/snippet}
 	</DialogTrigger>
 	<DialogContent class="gap-3 overflow-hidden p-3 sm:max-w-[800px]" showCloseButton={false}>
