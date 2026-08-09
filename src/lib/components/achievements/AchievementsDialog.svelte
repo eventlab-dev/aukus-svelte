@@ -4,16 +4,22 @@
 	import AchievementCard from './AchievementCard.svelte'
 	import { sineInOut } from 'svelte/easing'
 	import X from '@lucide/svelte/icons/x'
-	import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 	import CrownIcon from '../icons/CrownIcon.svelte'
-	import ScrollArea from '../ui/scroll-area/scroll-area.svelte'
+	import { Button } from '../ui/button'
+	import PageContainer from '../PageContainer.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	const app = getAppManager()
 	const { eventDataStore } = app
 
-
 	let selectedPlayerSlug: string | null = $state(null)
+
+	// Initialize with current player when component mounts
+	$effect(() => {
+		if (app.myPlayer && !selectedPlayerSlug) {
+			selectedPlayerSlug = app.myPlayer.slug
+		}
+	})
 
 	const filteredAchievements = $derived.by(() => {
 		if (!selectedPlayerSlug) return eventDataStore.achievements
@@ -34,31 +40,17 @@
 	function getPressed(slug: string) {
 		return selectedPlayerSlug === slug
 	}
-
-	function handleOpenChange(open: boolean) {
-		if (open && app.myPlayer) {
-			if (!selectedPlayerSlug) {
-				selectedPlayerSlug = app.myPlayer.slug
-			}
-		}
-		if (!open) {
-			app.navStore.closePage()
-		}
-	}
 </script>
 
-<Dialog onOpenChange={handleOpenChange} open>
-	<DialogTrigger>
-		<CrownIcon /> Достижения
-	</DialogTrigger>
-	<DialogContent
-		class="max-w-[840px]! text-primary-foreground selection:bg-foreground selection:text-background"
-	>
-		<DialogHeader class="gap-3">
-			<DialogTitle class="text-2xl font-bold">Достижения</DialogTitle>
-		</DialogHeader>
+<Button href="/achievements">
+	<CrownIcon /> Достижения
+</Button>
 
-		<div class="space-y-5">
+<PageContainer>
+	<div class="flex flex-col items-center gap-5 pt-16">
+		<div class="w-full max-w-[840px]">
+			<h1 class="mb-5 text-center text-2xl font-bold">Достижения</h1>
+			
 			<div class="flex w-full flex-wrap gap-2">
 				{#each app.players as player (player.slug)}
 					<Toggle
@@ -77,18 +69,16 @@
 				{/each}
 			</div>
 
-			<div class="flex justify-center">
-				<ScrollArea class="h-[70vh] w-fit">
-					<div class="flex flex-wrap items-stretch gap-3">
-						{#each filteredAchievements as achievement (achievement.id)}
-							<div animate:flip={{ duration: 300, easing: sineInOut }} class="flex flex-col">
-								<AchievementCard {achievement} />
-							</div>
-						{/each}
-					</div>
-					<div class="mt-10"></div>
-				</ScrollArea>
+			<div class="mt-5 flex justify-center">
+				<div class="flex flex-wrap items-stretch gap-3">
+					{#each filteredAchievements as achievement (achievement.id)}
+						<div animate:flip={{ duration: 300, easing: sineInOut }} class="flex flex-col">
+							<AchievementCard {achievement} />
+						</div>
+					{/each}
+				</div>
+				<div class="mt-10"></div>
 			</div>
 		</div>
-	</DialogContent>
-</Dialog>
+	</div>
+</PageContainer>

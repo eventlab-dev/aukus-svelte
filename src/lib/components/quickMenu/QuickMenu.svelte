@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { FALLBACK_AVATAR_URL } from '$lib/constants'
-	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
 	import Collapsible from '../collapsible/Collapsible.svelte'
 	import CollapsibleContent from '../collapsible/CollapsibleContent.svelte'
 	import CollapsibleGroup from '../collapsible/CollapsibleGroup.svelte'
@@ -8,6 +7,7 @@
 	import ProfileIcon from '../icons/ProfileIcon.svelte'
 	import WinIcon from '../icons/new/WinIcon.svelte'
 	import TwitchIcon from '../icons/TwitchIcon.svelte'
+	import CrownIcon from '../icons/CrownIcon.svelte'
 	import SkinEditorDialog from '../skinEditor/SkinEditorDialog.svelte'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import { Button } from '../ui/button'
@@ -74,7 +74,9 @@
 						<WinIcon /> Итоги
 					</Button>
 				{/if}
-				<AchievementsDialog />
+				<Button href="/achievements">
+					<CrownIcon /> Достижения
+				</Button>
 				<Button href="/history">
 					<SearchIcon /> История игр
 				</Button>
