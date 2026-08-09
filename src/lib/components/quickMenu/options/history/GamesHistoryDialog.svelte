@@ -10,13 +10,18 @@
 	import GameCard from '$lib/components/gameCard/GameCard.svelte'
 	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
-	import { untrack } from 'svelte'
-
+	
 	const app = getAppManager()
 
 	const { gamesHistoryStore, playersMovesStore, gamesMatchesStore } = app
 
 	const aukus5Games = $derived(playersMovesStore.playerMoves)
+
+	let loading = $state(true)
+
+	setTimeout(() => {
+		loading = false
+	}, 200)
 
 	// Initialize search params on component mount
 	$effect(() => {
@@ -26,19 +31,15 @@
 				? [app.myPlayer.slug]
 				: []
 
-		untrack(() => {
-			setTimeout(() => {
-				gamesHistoryStore.searchParams = {
-					events: [],
-					players: playersFilter,
-					title_search: null
-				}
-				playersMovesStore.queryParams = {
-					players: playersFilter,
-					search_title: null
-				}
-			}, 0)
-		})
+		gamesHistoryStore.searchParams = {
+			events: [],
+			players: playersFilter,
+			title_search: null
+		}
+		playersMovesStore.queryParams = {
+			players: playersFilter,
+			search_title: null
+		}
 	})
 
 	let timer: ReturnType<typeof setTimeout>
@@ -116,7 +117,7 @@
 	})
 
 	const isLoading = $derived(
-		!gamesHistoryStore.searchIdFrom && gamesHistoryStore.historyQuery.isFetching
+		loading || (!gamesHistoryStore.searchIdFrom && gamesHistoryStore.historyQuery.isFetching)
 	)
 
 	// $inspect(isLoading, 'GamesHistoryDialog isLoading')
