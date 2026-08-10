@@ -143,3 +143,4 @@ export const TIERS: Tier[] = [
 
 // 2 mins
 export const DEFAULT_REFETCH = 2 * 60 * 1000
+export const LONG_REFETCH = 5 * 60 * 1000

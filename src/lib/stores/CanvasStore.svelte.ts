@@ -1,4 +1,5 @@
 import { AukusBaseUrl } from '$lib/client'
+import { LONG_REFETCH } from '$lib/constants'
 import {
 	getCanvasFilesApiCanvasPlayerSlugGetOptions,
 	updateCanvasApiCanvasPlayerSlugUpdatePutMutation,
@@ -25,7 +26,8 @@ export class CanvasStore {
 			path: { player_slug: this.playerSlug }
 		}),
 		refetchOnWindowFocus: false,
-		refetchInterval: 60 * 5 * 1000
+		refetchInterval: LONG_REFETCH,
+		enabled: !!this.playerSlug
 	}))
 
 	updateCanvasMutation = createMutation(() =>
