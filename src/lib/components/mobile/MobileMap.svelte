@@ -87,16 +87,9 @@
 </div>
 
 <div class="flex flex-col gap-[5px]">
-	<div class="flex w-full gap-[5px]">
+	<!-- Top 3 winners displayed above the map -->
+	<div class="flex w-full gap-[5px] mb-2">
 		<div class="flex w-full gap-1 font-bold text-[#666666]">
-			<div class="flex w-fit items-center gap-[10px] rounded-md bg-[#222222] px-1 py-2">
-				<div>101</div>
-				{#if players101}
-					{#each players101 as player (player.slug)}
-						{@render playerIcon(player)}
-					{/each}
-				{/if}
-			</div>
 			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
 				<div>1</div>
 				{#if app.winners[0]}
@@ -117,6 +110,26 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- Cell 101 with custom width and same height as grid cells -->
+	<div class="flex w-full gap-[5px]">
+		<div
+			class="relative flex w-fit items-center justify-center overflow-hidden rounded-md bg-[#222222] text-center font-bold text-[#666666] px-2 py-2"
+			style="height: calc((100vw - 45px) / 10);"
+		>
+			<div class="flex flex-col items-center gap-1">
+				<div class="text-sm">101 - Финальный рывок</div>
+				{#if players101}
+					<div class="flex flex-wrap items-center justify-center gap-0.5">
+						{#each players101 as player (player.slug)}
+							{@render playerIcon(player)}
+						{/each}
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+	
 	{#each cells as row, idx (idx)}
 		<div class="flex w-full gap-[5px]">
 			{#each row as cellId (cellId)}
