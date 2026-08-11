@@ -6,27 +6,10 @@ import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-qu
 
 type QueryParams = NonNullable<GetPlayerMovesApiPlayersMovesGetData['query']>
 
-type Params = {
-	getPlayerSlug: () => string | undefined
-}
-
 export class PlayerMovesStore {
 	queryClient = useQueryClient()
 
-	getPlayerSlug: Params['getPlayerSlug'] = () => undefined
-	
-	constructor(params: Params) {
-		this.getPlayerSlug = params.getPlayerSlug
-
-		$effect(() => {
-			const slug = this.getPlayerSlug()
-			if (slug) {
-				this.queryParams.players = [slug]
-			} else {
-				this.queryParams.players = []
-			}
-		})
-	}
+	constructor() {}
 
 	queryParams = $state<QueryParams>({
 		players: [],
@@ -34,14 +17,16 @@ export class PlayerMovesStore {
 		search_title: null
 	})
 
-	movesQuery = createQuery(() => ({
-		...getPlayerMovesApiPlayersMovesGetOptions({
-			baseUrl: AukusBaseUrl,
-			query: this.queryParams
-		}),
-		refetchInterval: DEFAULT_REFETCH,
-		refetchOnWindowFocus: false,
-	}))
+	movesQuery = createQuery(() => {
+		return {
+			...getPlayerMovesApiPlayersMovesGetOptions({
+				baseUrl: AukusBaseUrl,
+				query: this.queryParams
+			}),
+			refetchInterval: DEFAULT_REFETCH,
+			refetchOnWindowFocus: false
+		}
+	})
 
 	playerMoves = $derived(this.movesQuery.data?.moves ?? [])
 

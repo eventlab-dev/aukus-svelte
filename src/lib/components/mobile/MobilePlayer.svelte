@@ -6,7 +6,6 @@
 	import { formatMs, getPlayerCleanScore, playerMoveToCommonGame } from '$lib/utils'
 	import GameCard from '../gameCard/GameCard.svelte'
 	import { GamesMatchesStore } from '$lib/stores/GamesMatchesStore.svelte'
-	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	type Props = {
@@ -15,26 +14,19 @@
 
 	const { playerSlug }: Props = $props()
 	const app = getAppManager()
-	const { eventDataStore, statsStore } = app
+	const { eventDataStore, statsStore, playersMovesStore } = app
 
 	const playerSlugs = $derived(eventDataStore.players.map((p) => p.slug))
-
-	const playerSlugReactive = $derived(playerSlug)
 
 	let gamesMatchesStoreForPlayer = $state(
 		new GamesMatchesStore({
 			getPlayersSlugs: () => playerSlugs
 		})
 	)
-	let playersMovesStoreForPlayer = $state(
-		new PlayerMovesStore({
-			getPlayerSlug: () => playerSlugReactive
-		})
-	)
 
 	const [playerMoves, movesQuery] = $derived([
-		playersMovesStoreForPlayer.playerMoves,
-		playersMovesStoreForPlayer.movesQuery
+		playersMovesStore.playerMoves,
+		playersMovesStore.movesQuery
 	])
 
 	const gamesMatched = $derived(
@@ -45,15 +37,10 @@
 		if (!playerSlug) {
 			return
 		}
-		// gamesMatchesStoreForPlayer = createGamesMatchesStore({ eventDataStore, playerSlug })
-		// playersMovesStoreForPlayer = createPlayerMovesStore({ playerSlug })
-
-	 	playersMovesStoreForPlayer.queryParams = {
+		playersMovesStore.queryParams = {
 			players: [playerSlug],
 			start_ts: null,
-			search_title: null,
-			igdb_ids: [],
-			exclude_ids: undefined
+			search_title: null
 		}
 	})
 

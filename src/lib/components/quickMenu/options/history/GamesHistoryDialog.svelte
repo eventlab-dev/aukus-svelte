@@ -36,8 +36,10 @@
 			players: playersFilter,
 			title_search: null
 		}
+
 		playersMovesStore.queryParams = {
 			players: playersFilter,
+			start_ts: null,
 			search_title: null
 		}
 	})

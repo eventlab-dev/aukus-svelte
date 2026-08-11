@@ -6,7 +6,6 @@
 	import Canvas from './components/Canvas.svelte'
 	import StaticCanvas from './components/StaticCanvas.svelte'
 	import EditPanel from './components/EditPanel.svelte'
-	import { PlayerMovesStore } from '$lib/stores/PlayersMovesStore.svelte'
 	import Footer from '$lib/components/Footer.svelte'
 	import Loader from '$lib/components/Loader.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
@@ -23,13 +22,17 @@
 	let { playerSlug }: Props = $props()
 
 	const app = getAppManager()
-	const { canvasStore, navStore, gamesHistoryStore } = app
+	const { canvasStore, navStore, gamesHistoryStore, playersMovesStore } = app
 
-	const movesStore = new PlayerMovesStore({
-		getPlayerSlug: () => playerSlug
+	$effect(() => {
+		playersMovesStore.queryParams = {
+			players: [playerSlug],
+			start_ts: null,
+			search_title: null
+		}
 	})
 
-	const playerMoves = $derived(movesStore.playerMoves)
+	const playerMoves = $derived(playersMovesStore.playerMoves)
 
 	let activeTab = $state('aukus5')
 
@@ -89,7 +92,7 @@
 
 	const widthStyle = $derived(`width: ${canvasStore.canvasWidth}px`)
 
-	const isLoading = $derived(movesStore.movesQuery.isFetching)
+	const isLoading = $derived(playersMovesStore.movesQuery.isFetching)
 </script>
 
 <svelte:head>

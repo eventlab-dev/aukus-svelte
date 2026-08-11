@@ -40,9 +40,7 @@ export class AppManager {
 
 	playersSlugs = $derived(this.eventDataStore.players.map((p) => p.slug))
 
-	playersMovesStore = new PlayerMovesStore({
-		getPlayerSlug: () => this.myUser?.slug
-	})
+	playersMovesStore = new PlayerMovesStore()
 	gamesHistoryStore = new GameHistoryStore({
 		getPlayersSlugs: () => this.playersSlugs
 	})
