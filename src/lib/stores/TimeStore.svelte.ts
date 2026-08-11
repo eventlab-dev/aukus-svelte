@@ -2,7 +2,7 @@ import 'temporal-polyfill/global'
 
 export class TimeStore {
 	now = $state(Temporal.Now.instant())
-	nowTs = $derived(this.now.epochMilliseconds / 1000)
+	nowSeconds = $derived(this.now.epochMilliseconds / 1000)
 
 	constructor() {
 		setInterval(() => {

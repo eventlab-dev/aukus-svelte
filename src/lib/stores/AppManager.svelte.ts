@@ -157,7 +157,7 @@ export class AppManager {
 
 	eventNotStarted = $derived.by(() => {
 		if (this.eventDataStore.eventSettings?.event_start_time) {
-			return Number(this.eventDataStore.eventSettings.event_start_time) * 1000 > Date.now()
+			return Number(this.eventDataStore.eventSettings.event_start_time) > this.timeStore.nowSeconds
 		}
 		return false
 	})
@@ -167,7 +167,7 @@ export class AppManager {
 			return true
 		}
 		if (this.eventDataStore.eventSettings?.event_end_time) {
-			return Number(this.eventDataStore.eventSettings.event_end_time) <= this.nowStore.nowSeconds
+			return Number(this.eventDataStore.eventSettings.event_end_time) <= this.timeStore.nowSeconds
 		}
 		return false
 	})
