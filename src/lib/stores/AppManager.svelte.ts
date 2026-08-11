@@ -18,8 +18,9 @@ import { GameTimeStore } from './gameTimeStore.svelte'
 import { SnowStore } from './SnowStore.svelte'
 import { MapStore } from './MapStore.svelte'
 import { NavStore } from './NavStore.svelte'
-import { NowStore } from './NowStore.svelte'
 import { SvelteMap, SvelteSet } from 'svelte/reactivity'
+import { TimerStore } from './TimerStore.svelte'
+import { TimeStore } from './TimeStore.svelte'
 
 export class AppManager {
 	usersStore = new UsersStore()
@@ -34,11 +35,13 @@ export class AppManager {
 	errorNotificationStore = new ErrorNotificationStore()
 	shitStore = new ShitStore()
 
-	nowStore = new NowStore()
+	timeStore = new TimeStore()
 	snowStore = new SnowStore()
 	navStore = new NavStore()
 
 	playersSlugs = $derived(this.eventDataStore.players.map((p) => p.slug))
+
+	timerStore = new TimerStore()
 
 	playersMovesStore = new PlayerMovesStore()
 	gamesHistoryStore = new GameHistoryStore({
@@ -68,6 +71,7 @@ export class AppManager {
 	soundManager = new SoundManager()
 
 	constructor() {
+		this.timerStore.start()
 		$effect(() => {
 			if (this.myUser) {
 				untrack(() => this.soundManager.preloadSounds(SOUNDS))

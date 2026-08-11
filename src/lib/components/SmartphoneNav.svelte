@@ -14,7 +14,7 @@
 	let isOpen = $state(false)
 
 	const app = getAppManager()
-	const { navStore } = app
+	const { navStore, timeStore } = app
 
 	import Trophy from '@lucide/svelte/icons/trophy'
 	import History from '@lucide/svelte/icons/history'
@@ -47,6 +47,8 @@
 
 	const greetingText = $derived(app.myUser ? `Привет ${app.myUser.username}!` : "Привет!")
 
+	const time = $derived(timeStore.formatNow({hour12: false, hour: '2-digit', minute: '2-digit'}))
+
 	function togglePhone() {
 		isOpen = !isOpen
 	}
@@ -55,10 +57,11 @@
 <div class="fixed bottom-8 left-4 z-50">
 	{#if isOpen}
 		<div
-			class="mb-2 h-[635px] w-[408px] pt-[100px]"
+			class="mb-2 h-[560px] w-[360px] pt-[66px] relative"
 			style="background-image: url('{PHONE_BG}'); background-size: cover;"
 			transition:fly={{ duration: 300, y: 20 }}
 		>	
+			<div class="absolute top-[27px] right-[48px] font-extrabold">{time} МСК</div>
 			<div class="w-full text-center text-2xl font-bold">{greetingText}</div>
 			<div class="grid grid-cols-3 gap-[12px] pt-3 pb-[36px] px-[48px]">
 				{#each apps as appItem (appItem.label)}
@@ -90,6 +93,7 @@
 							class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20 w-fit"
 							onclick={() => {
 								if (appItem.url) {
+									navStore.pageParams = {}
 									navStore.navigate(appItem.url)
 								}
 								isOpen = false
