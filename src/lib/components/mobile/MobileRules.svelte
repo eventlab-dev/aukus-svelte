@@ -3,10 +3,10 @@
 	import { getCurrentRulesVersionApiRulesCurrentGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 	import type { RulesCategory } from '$lib/heyapi/aukus/types.gen'
 	import { createQuery } from '@tanstack/svelte-query'
-	import { Button } from '../ui/button'
 	import TiptapEditor from '../richEditor/TiptapEditor.svelte'
 	import Loader from '../Loader.svelte'
 	import { Card, CardContent } from '../ui/card'
+	import { Tabs, TabsList, TabsTrigger } from '../ui/tabs'
 
 	let category = $state<RulesCategory>('general')
 
@@ -35,21 +35,23 @@
 <Card class="mx-4 mt-[18px] rounded-3xl p-[42px]">
 	<div class="mb-4 text-center text-4xl font-bold">Правила</div>
 
-	<div class="mb-8 flex gap-2">
-		<Button
-			class="flex-1 rounded-xl data-[active=false]:bg-secondary data-[active=true]:bg-primary"
-			onclick={() => setCategory('general')}
-			data-active={category === 'general'}
+	<div class="mb-8 flex justify-center">
+		<Tabs
+			value={category}
+			class="m-0 bg-none!"
+			onValueChange={(value) => {
+				setCategory(value as RulesCategory)
+			}}
 		>
-			Для участников
-		</Button>
-		<Button
-			class="flex-1 rounded-xl data-[active=false]:bg-secondary data-[active=true]:bg-[#FF881E]"
-			onclick={() => setCategory('donations')}
-			data-active={category === 'donations'}
-		>
-			Для донатеров
-		</Button>
+			<TabsList class="gap-3 bg-transparent">
+				<TabsTrigger value="general" class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold">
+					Для участников
+				</TabsTrigger>
+				<TabsTrigger value="donations" class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold">
+					Для донатеров
+				</TabsTrigger>
+			</TabsList>
+		</Tabs>
 	</div>
 
 	<CardContent class="!p-0">
