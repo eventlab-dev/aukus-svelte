@@ -3,6 +3,7 @@
 	import StatTable from '$lib/components/pages/stats/components/StatTable.svelte'
 	import { getPlayerCleanScore } from '$lib/utils'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import { Tabs, TabsList, TabsTrigger } from '../ui/tabs'
 
 	type Props = {
 		navigateToPlayer: (slug: string) => void
@@ -65,25 +66,23 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	<div class="flex gap-2">
-		<button
-			class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {activeTab ===
-			'leaderboard'
-				? 'bg-primary text-primary-foreground'
-				: 'bg-secondary text-secondary-foreground'}"
-			onclick={() => (activeTab = 'leaderboard')}
+	<div class="flex justify-center">
+		<Tabs
+			value={activeTab}
+			class="m-0 bg-none!"
+			onValueChange={(value) => {
+				activeTab = value as Tab
+			}}
 		>
-			Лидеры
-		</button>
-		<button
-			class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {activeTab ===
-			'moves'
-				? 'bg-primary text-primary-foreground'
-				: 'bg-secondary text-secondary-foreground'}"
-			onclick={() => (activeTab = 'moves')}
-		>
-			Ходы
-		</button>
+			<TabsList class="gap-3 bg-transparent">
+				<TabsTrigger value="leaderboard" class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold">
+					Лидеры
+				</TabsTrigger>
+				<TabsTrigger value="moves" class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold">
+					Ходы
+				</TabsTrigger>
+			</TabsList>
+		</Tabs>
 	</div>
 
 	<div class="overflow-x-auto">
