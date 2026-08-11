@@ -12,6 +12,7 @@ import TableOfContents, {
 } from '@tiptap/extension-table-of-contents'
 import { createSectionPlugin } from './Sections'
 import { PAGE_SCROLL_ID } from '$lib/constants'
+import type { AnyExtension } from '@tiptap/core'
 
 export function initExtensions(
 	props: {
@@ -22,7 +23,7 @@ export function initExtensions(
 		withLinks?: boolean
 	} = {}
 ) {
-	const enabledExtensions = [
+	const enabledExtensions: AnyExtension[] = [
 		StarterKit,
 		CleanPaste,
 		SpoilerMark,
@@ -56,7 +57,7 @@ export function initExtensions(
 				scrollParent: () => {
 					const scroll = document.getElementById(PAGE_SCROLL_ID)?.firstElementChild as HTMLElement | null
 					return scroll ?? window
-				}
+				},
 			})
 		)
 	}
