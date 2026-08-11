@@ -23,6 +23,7 @@
 	import ShitDialog from './shitKick/ShitDialog.svelte'
 	import type { AppUrl } from '$lib/stores/NavStore.svelte'
 	import MoveForm from './moveForm/MoveForm.svelte'
+	import { PHONE_BG } from '$lib/constants'
 
 	type AppItem = {
 		id: string
@@ -51,24 +52,22 @@
 	}
 </script>
 
-<div class="fixed bottom-4 left-4 z-50">
+<div class="fixed bottom-8 left-4 z-50">
 	{#if isOpen}
 		<div
-			class="mb-3 h-[542px] w-[320px] rounded-[52px] border-8 border-[#B6E1FF] bg-[#40A3D8]/40 shadow-2xl backdrop-blur-lg"
+			class="mb-2 h-[635px] w-[408px] pt-[100px]"
+			style="background-image: url('{PHONE_BG}'); background-size: cover;"
 			transition:fly={{ duration: 300, y: 20 }}
-		>
-			<div class="flex w-full justify-center">
-				<div class="h-[20px] w-[108px] rounded-b-[12px] bg-[#B6E1FF]"></div>
-			</div>
-			<div class="mt-[40px] w-full text-center text-2xl font-bold">{greetingText}</div>
-			<div class="grid grid-cols-3 gap-3 p-6">
+		>	
+			<div class="w-full text-center text-2xl font-bold">{greetingText}</div>
+			<div class="grid grid-cols-3 gap-[12px] pt-3 pb-[36px] px-[48px]">
 				{#each apps as appItem (appItem.label)}
 					{@const Icon = appItem.icon}
 					{#if appItem.id === 'skins'}
 						{#if app.myUser}
 							<SkinEditorDialog>
 								<button
-									class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+									class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20 p-0 w-fit"
 								>
 									<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
 									<span class="text-xs">{appItem.label}</span>
@@ -79,7 +78,7 @@
 						{#if app.myUser}
 							<ShitDialog>
 								<button
-									class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+									class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20 w-fit"
 								>
 									<Icon class="mb-[2px] h-[80px] w-[80px] text-blue-400" />
 									<span class="text-xs">{appItem.label}</span>
@@ -88,7 +87,7 @@
 						{/if}
 					{:else}
 						<button
-							class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+							class="flex cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20 w-fit"
 							onclick={() => {
 								if (appItem.url) {
 									navStore.navigate(appItem.url)
