@@ -460,7 +460,7 @@ export function scoreToTier(score: number | null): Tier {
 	if (score === null) {
 		return TIERS[0]
 	}
-	const tier = TIERS.find((t) => score <= t.maxRating)
+	const tier = TIERS.find((t) => score < t.maxRating)
 	return tier || TIERS[0]
 }
 
