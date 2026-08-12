@@ -8,11 +8,13 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { BG_NET } from '$lib/constants'
 	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
+	import SkinEditorDialog from '../skinEditor/SkinEditorDialog.svelte'
 
 	const app = getAppManager()
 	const { eventDataStore } = app
 
 	let selectedPlayerSlug: string = $state('all')
+	let selectedTab: string = $state('achievements')
 
 	// Initialize with current player when component mounts
 	$effect(() => {
@@ -46,35 +48,88 @@
 >
 	<div class="flex flex-col items-center gap-5 pt-16">
 		<div class="w-full max-w-[840px]">
-			<h1 class="mb-5 text-center text-2xl font-bold">Достижения</h1>
+			{#if app.myUser}
+				<Tabs
+					value={selectedTab}
+					class="w-full"
+					onValueChange={(value) => {
+						selectedTab = value
+					}}
+				>
+					<TabsList class="flex w-full flex-wrap gap-2 bg-transparent">
+						<TabsTrigger value="achievements" class="uppercase">Ачивки</TabsTrigger>
+						<TabsTrigger value="skins" class="uppercase">Скины</TabsTrigger>
+					</TabsList>
+				</Tabs>
 
-			<Tabs
-				value={selectedPlayerSlug}
-				class="w-full"
-				onValueChange={(value) => {
-					selectedPlayerSlug = value
-				}}
-			>
-				<TabsList class="flex w-full flex-wrap gap-2 bg-transparent">
-					<TabsTrigger value="all" class="uppercase">Все</TabsTrigger>
-					{#each app.players as player (player.slug)}
-						<TabsTrigger value={player.slug} class="uppercase">
-							{player.username}
-						</TabsTrigger>
-					{/each}
-				</TabsList>
-			</Tabs>
+				{#if selectedTab === 'achievements'}
+					<div class="mt-4">
+						<Tabs
+							value={selectedPlayerSlug}
+							class="w-full"
+							onValueChange={(value) => {
+								selectedPlayerSlug = value
+							}}
+						>
+							<TabsList class="flex w-full flex-wrap gap-2 bg-transparent">
+								<TabsTrigger value="all" class="uppercase">Все</TabsTrigger>
+								{#each app.players as player (player.slug)}
+									<TabsTrigger value={player.slug} class="uppercase">
+										{player.username}
+									</TabsTrigger>
+								{/each}
+							</TabsList>
+						</Tabs>
+					</div>
 
-			<div class="mt-5 flex justify-center">
-				<div class="flex flex-wrap items-stretch gap-3">
-					{#each filteredAchievements as achievement (achievement.id)}
-						<div animate:flip={{ duration: 300, easing: sineInOut }} class="flex flex-col">
-							<AchievementCard {achievement} />
+					<div class="mt-5 flex justify-center">
+						<div class="flex flex-wrap items-stretch gap-3">
+							{#each filteredAchievements as achievement (achievement.id)}
+								<div animate:flip={{ duration: 300, easing: sineInOut }} class="flex flex-col">
+									<AchievementCard {achievement} />
+								</div>
+							{/each}
 						</div>
-					{/each}
+						<div class="mt-10"></div>
+					</div>
+				{:else}
+					<div class="mt-5 flex justify-center">
+						<SkinEditorDialog>
+							<Button variant="default">Открыть редактор скинов</Button>
+						</SkinEditorDialog>
+					</div>
+				{/if}
+			{:else}
+				<h1 class="mb-5 text-center text-2xl font-bold">Достижения</h1>
+
+				<Tabs
+					value={selectedPlayerSlug}
+					class="w-full"
+					onValueChange={(value) => {
+						selectedPlayerSlug = value
+					}}
+				>
+					<TabsList class="flex w-full flex-wrap gap-2 bg-transparent">
+						<TabsTrigger value="all" class="uppercase">Все</TabsTrigger>
+						{#each app.players as player (player.slug)}
+							<TabsTrigger value={player.slug} class="uppercase">
+								{player.username}
+							</TabsTrigger>
+						{/each}
+					</TabsList>
+				</Tabs>
+
+				<div class="mt-5 flex justify-center">
+					<div class="flex flex-wrap items-stretch gap-3">
+						{#each filteredAchievements as achievement (achievement.id)}
+							<div animate:flip={{ duration: 300, easing: sineInOut }} class="flex flex-col">
+								<AchievementCard {achievement} />
+							</div>
+						{/each}
+					</div>
+					<div class="mt-10"></div>
 				</div>
-				<div class="mt-10"></div>
-			</div>
+			{/if}
 		</div>
 	</div>
 </PageContainer>

@@ -30,13 +30,13 @@
 		url?: AppUrl
 	}
 
-	const apps: AppItem[] = [
+	const apps: AppItem = $derived([
 		{ id: 'rules', icon: MENU_RULES_ICON, label: 'Правила', url: '/rules' },
 		{ id: 'stats', icon: MENU_STATS_ICON, label: 'Статистика', url: '/stats' },
 		{
 			id: 'achievements',
 			icon: MENU_ACHIEVEMENTS_ICON,
-			label: 'Ачивки и скины',
+			label: app.myUser ? 'Ачивки и скины' : 'Ачивки',
 			url: '/achievements'
 		},
 		{ id: 'history', icon: MENU_HISTORY_ICON, label: 'История', url: '/history' },
@@ -45,7 +45,7 @@
 		{ id: 'wheels', icon: MENU_WHEELS_ICON, label: 'Колеса', url: '/wheels' },
 		{ id: 'calculator', icon: MENU_CALC_ICON, label: 'Калькулятор', url: '/calc' },
 		{ id: 'about', icon: MENU_ABOUT_ICON, label: 'Создатели', url: '/about' }
-	]
+	])
 
 	const greetingText = $derived(app.myUser ? `Привет ${app.myUser.username}!` : 'Привет!')
 
