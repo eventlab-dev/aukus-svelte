@@ -8,6 +8,7 @@
 	import { Button } from '../ui/button'
 	import PageContainer from '../PageContainer.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import { BG_NET } from '$lib/constants'
 
 	const app = getAppManager()
 	const { eventDataStore } = app
@@ -46,7 +47,7 @@
 	<CrownIcon /> Достижения
 </Button>
 
-<PageContainer>
+<PageContainer class="bg-[#4D66B9]!" style={`background-image: url('${BG_NET}'); background-size: repeat;`}>
 	<div class="flex flex-col items-center gap-5 pt-16">
 		<div class="w-full max-w-[840px]">
 			<h1 class="mb-5 text-center text-2xl font-bold">Достижения</h1>

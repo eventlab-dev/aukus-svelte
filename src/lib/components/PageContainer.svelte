@@ -8,12 +8,19 @@
 	type Props = {
 		bottomSpace?: boolean
 		children?: Snippet
+		class?: string
+		style?: string
 	}
 
-	let { bottomSpace = true, children }: Props = $props()
+	const defaultStyle = `background-image: url('${PAGE_BG}'); background-size: cover;`
+
+	let { bottomSpace = true, children, class: className = "", style = defaultStyle }: Props = $props()
 </script>
 
-<div class="fixed w-full h-screen top-0 z-20 flex items-center justify-center bg-black/90 overflow-auto" style="background-image: url('{PAGE_BG}'); background-size: cover;">
+<div 
+class="fixed w-full h-screen top-0 z-20 flex items-center justify-center bg-black/90 overflow-auto {className}" 
+style={style}
+>
 	<ScrollArea class="h-full w-full" id={PAGE_SCROLL_ID}>
 		{@render children?.()}
 		{#if bottomSpace}

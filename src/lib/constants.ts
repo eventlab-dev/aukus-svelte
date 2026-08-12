@@ -113,6 +113,9 @@ export const LOGO_BG_URL = `${CDN_URL_BASE4}/map/logo-bg.avif`
 export const FALLBACK_AVATAR_URL = 'https://github.com/shadcn.png'
 export const MOVIE_POSTER_URL = `${CDN_URL_BASE4}/utils/movie_poster.png`
 
+export const BG_NET = `${CDN_URL_BASE5}/ui/bg-net.svg`
+
+
 export const PAGE_SCROLL_ID = 'page-scroll'
 
 export type Tier = {
