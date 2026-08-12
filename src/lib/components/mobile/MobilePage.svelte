@@ -64,7 +64,7 @@
 		<MobileMenu bind:page={pageState} />
 	{/if}
 
-	<div class="mb-30 p-2">
+	<div class="mb-30 p-2 pt-10">
 		{#if pageState === 'map'}
 			<div class="mt-6">
 				<MobileMap {navigateToPlayer} />
