@@ -175,7 +175,7 @@
 
 	:global(.tiptap-section) {
 		padding: 0px;
-		background-color: var(--color-card);
+		/* background-color: var(--color-card); */
 		color: var(--color-card-foreground);
 		border-radius: var(--radius-2xl);
 		margin-bottom: 12px;

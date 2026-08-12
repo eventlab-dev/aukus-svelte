@@ -32,7 +32,7 @@
 	}
 </script>
 
-<Card class="mx-4 mt-[18px] rounded-3xl p-[42px]">
+<div class="mx-4 mt-[0px] pt-0 rounded-3xl p-4 bg-secondary">
 	<div class="mb-4 text-center text-4xl font-bold">Правила</div>
 
 	<div class="mb-8 flex justify-center">
@@ -54,7 +54,7 @@
 		</Tabs>
 	</div>
 
-	<CardContent class="!p-0">
+	<CardContent class="!p-0 bg-secondary">
 		{#if rulesQuery.isLoading}
 			<Loader class="inline size-10" />
 		{:else}
@@ -66,4 +66,4 @@
 			/>
 		{/if}
 	</CardContent>
-</Card>
+</div>
