@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition'
-	import Smartphone from '@lucide/svelte/icons/smartphone'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { Button } from './ui/button'
-	import SkinEditorDialog from './skinEditor/SkinEditorDialog.svelte'
-	import ShitDialog from './shitKick/ShitDialog.svelte'
 	import type { AppUrl } from '$lib/stores/NavStore.svelte'
 	import MoveForm from './moveForm/MoveForm.svelte'
 	import {
@@ -57,11 +54,30 @@
 	function togglePhone() {
 		isOpen = !isOpen
 	}
+
+	let popup: HTMLDivElement | null = $state(null)
+
+	function handleOutsidePointerDown(event: PointerEvent) {
+		if (popup && !popup.contains(event.target as Node)) {
+			isOpen = false
+		}
+	}
+
+	$effect(() => {
+		if (!isOpen) return
+
+		document.addEventListener('pointerdown', handleOutsidePointerDown)
+
+		return () => {
+			document.removeEventListener('pointerdown', handleOutsidePointerDown)
+		}
+	})
 </script>
 
 <div class="fixed bottom-8 left-4 z-50">
 	{#if isOpen}
 		<div
+			bind:this={popup}
 			class="relative mb-2 h-[560px] w-[360px] pt-[66px]"
 			style="background-image: url('{PHONE_BG}'); background-size: cover;"
 			transition:fly={{ duration: 300, y: 20 }}
@@ -118,7 +134,7 @@
 	<Button
 		onclick={togglePhone}
 		aria-label="Toggle navigation menu"
-		class="flex h-auto w-[78px] items-center justify-center rounded-full bg-card text-white shadow-lg transition-all hover:scale-105"
+		class="flex h-auto w-[78px] items-center justify-center rounded-full bg-transparent text-white shadow-lg transition-all hover:scale-120 hover:bg-transparent"
 	>
 		<img src={MENU_PHONE_ICON} alt="phone" />
 	</Button>
