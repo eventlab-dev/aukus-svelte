@@ -93,8 +93,8 @@
 <div class="flex flex-col gap-[5px]">
 	<!-- Top 3 winners displayed above the map -->
 	<div class="flex w-full gap-[5px] mb-2">
-		<div class="flex w-full gap-1 font-bold" style="height: calc((100vw - 45px) / 10);">
-			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-card p-2">
+		<div class="flex w-full gap-3 font-bold" style="height: calc((100vw - 45px) / 10);">
+			<div class="flex flex-1 text-xl items-center gap-[20px] rounded-md bg-card p-2">
 				<div>1</div>
 				{#if app.winners[0]}
 					{@render playerIcon(app.winners[0])}
@@ -118,7 +118,7 @@
 	<!-- Cell 101 with custom width and same height as grid cells -->
 	<div class="flex w-full gap-[5px]">
 		<div
-			class="relative flex w-full items-center justify-center overflow-hidden rounded-md bg-card text-center font-bold  px-2 py-2"
+			class="relative flex w-[50%] items-center justify-center overflow-hidden rounded-md bg-card text-center font-bold  px-2 py-2"
 			style="height: calc((100vw - 45px) / 10);"
 		>
 			<div class="flex flex-col items-center gap-1">
