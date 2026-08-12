@@ -56,7 +56,7 @@
 
 <Button
 	href={`/${player.slug}`}
-	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline scale-100 hover:scale-110 transition-transform duration-300 active:scale-90"
+	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline scale-100 hover:scale-110 transition-transform duration-300"
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
 	onauxclick={handleAuxClick}
