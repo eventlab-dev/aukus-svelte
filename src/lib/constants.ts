@@ -30,19 +30,19 @@ export const gameLengthRanges: Record<GameLength, string> = {
 	'40+': '40+ч'
 }
 
-export const CDN_URL_BASE = 'https://storage.yandexcloud.net/eventlab/assets/aukus4'
+export const CDN_URL_BASE4 = 'https://storage.yandexcloud.net/eventlab/assets/aukus4'
 
 export const CDN_URL_BASE5 = 'https://storage.yandexcloud.net/eventlab/assets/aukus5'
 
-export const MapMarkerIce = `${CDN_URL_BASE}/map/marker_ice.png`
-export const MapMarkerFire = `${CDN_URL_BASE}/map/marker_fire.png`
-export const MapMarkerSwamp = `${CDN_URL_BASE}/map/marker_swamp.png`
-export const MapMarkerDungeon = `${CDN_URL_BASE}/map/marker_dungeon.png`
-export const MapMarkerForest = `${CDN_URL_BASE}/map/marker_forest.png`
-export const MapMarkerStart = `${CDN_URL_BASE}/map/marker_start.png`
-export const MapMarkerFinish = `${CDN_URL_BASE}/map/marker_finish.png`
+export const MapMarkerIce = `${CDN_URL_BASE4}/map/marker_ice.png`
+export const MapMarkerFire = `${CDN_URL_BASE4}/map/marker_fire.png`
+export const MapMarkerSwamp = `${CDN_URL_BASE4}/map/marker_swamp.png`
+export const MapMarkerDungeon = `${CDN_URL_BASE4}/map/marker_dungeon.png`
+export const MapMarkerForest = `${CDN_URL_BASE4}/map/marker_forest.png`
+export const MapMarkerStart = `${CDN_URL_BASE4}/map/marker_start.png`
+export const MapMarkerFinish = `${CDN_URL_BASE4}/map/marker_finish.png`
 
-export const PlayerBaseModelUrl = `${CDN_URL_BASE}/map/player_model.png`
+export const PlayerBaseModelUrl = `${CDN_URL_BASE4}/map/player_model.png`
 
 export const MAP_IMAGE = `${CDN_URL_BASE5}/map/map.jpg`
 export const MAP_SIDE_IMAGE = `${CDN_URL_BASE5}/map/map-side.jpg`
@@ -54,11 +54,11 @@ export const PHONE_BG = `${CDN_URL_BASE5}/ui/phone-bg.webp`
 export const DICE_ROLL_ANIMATION_TIME = 2000
 export const DICE_ROLL_IDLE_TIME = 2000
 
-export const AchievementBackgroundUrl = `${CDN_URL_BASE}/utils/achievement_background.png`
+export const AchievementBackgroundUrl = `${CDN_URL_BASE4}/utils/achievement_background.png`
 
-export const DiceModelUrl = `${CDN_URL_BASE}/dice_skins/dice_model.glb`
-export const DefaultDiceTexture = `${CDN_URL_BASE}/dice_skins/default_texture.png`
-export const FINAL_VIDEO_POSTER = `${CDN_URL_BASE}/final_video_poster.png`
+export const DiceModelUrl = `${CDN_URL_BASE4}/dice_skins/dice_model.glb`
+export const DefaultDiceTexture = `${CDN_URL_BASE4}/dice_skins/default_texture.png`
+export const FINAL_VIDEO_POSTER = `${CDN_URL_BASE4}/final_video_poster.png`
 
 const SOUNDS_URL_BASE = `https://storage.yandexcloud.net/eventlab/assets/eventlab/wheel/sounds`
 
@@ -107,11 +107,11 @@ export const DifficultyTitle: { [k in GameDifficulty]: string } = {
 	2: 'Очень сложный'
 }
 
-export const LOGO_URL = `${CDN_URL_BASE}/map/logo.avif`
-export const LOGO_BG_URL = `${CDN_URL_BASE}/map/logo-bg.avif`
+export const LOGO_URL = `${CDN_URL_BASE4}/map/logo.avif`
+export const LOGO_BG_URL = `${CDN_URL_BASE4}/map/logo-bg.avif`
 
 export const FALLBACK_AVATAR_URL = 'https://github.com/shadcn.png'
-export const MOVIE_POSTER_URL = `${CDN_URL_BASE}/utils/movie_poster.png`
+export const MOVIE_POSTER_URL = `${CDN_URL_BASE4}/utils/movie_poster.png`
 
 export const PAGE_SCROLL_ID = 'page-scroll'
 
@@ -145,3 +145,14 @@ export const TIERS: Tier[] = [
 // 2 mins
 export const DEFAULT_REFETCH = 2 * 60 * 1000
 export const LONG_REFETCH = 5 * 60 * 1000
+
+export const MENU_RULES_ICON = `${CDN_URL_BASE5}/ui/menu_rules.png`
+export const MENU_HISTORY_ICON = `${CDN_URL_BASE5}/ui/menu_history.png`
+export const MENU_CALC_ICON = `${CDN_URL_BASE5}/ui/menu_calc.png`
+export const MENU_STATS_ICON = `${CDN_URL_BASE5}/ui/menu_stats.png`
+export const MENU_ABOUT_ICON = `${CDN_URL_BASE5}/ui/menu_about.png`
+export const MENU_ACHIEVEMENTS_ICON = `${CDN_URL_BASE5}/ui/menu_achievements.png`
+export const MENU_SHIT_ICON = `${CDN_URL_BASE5}/ui/menu_shit.png`
+export const MENU_STREAMS_ICON = `${CDN_URL_BASE5}/ui/menu_streams.png`
+export const MENU_WHEELS_ICON = `${CDN_URL_BASE5}/ui/menu_wheels.png`
+export const MENU_PHONE_ICON = `${CDN_URL_BASE5}/ui/menu_phone.png`
