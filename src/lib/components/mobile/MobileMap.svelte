@@ -30,16 +30,16 @@
 	})
 
 	const cells = [
-		[100, 99, 98, 97, 96, 95, 94, 93, 92, 91],
-		[81, 82, 83, 84, 85, 86, 87, 88, 89, 90],
-		[80, 79, 78, 77, 76, 75, 74, 73, 72, 71],
-		[61, 62, 63, 64, 65, 66, 67, 68, 69, 70],
-		[60, 59, 58, 57, 56, 55, 54, 53, 52, 51],
-		[41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
-		[40, 39, 38, 37, 36, 35, 34, 33, 32, 31],
-		[21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-		[20, 19, 18, 17, 16, 15, 14, 13, 12, 11],
-		[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+		Array.from({ length: 10 }, (_, i) => 100 - i),
+		Array.from({ length: 10 }, (_, i) => 81 + i),
+		Array.from({ length: 10 }, (_, i) => 80 - i),
+		Array.from({ length: 10 }, (_, i) => 61 + i),
+		Array.from({ length: 10 }, (_, i) => 60 - i),
+		Array.from({ length: 10 }, (_, i) => 41 + i),
+		Array.from({ length: 10 }, (_, i) => 40 - i),
+		Array.from({ length: 10 }, (_, i) => 21 + i),
+		Array.from({ length: 10 }, (_, i) => 20 - i),
+		Array.from({ length: 10 }, (_, i) => 1 + i),
 		[0]
 	]
 
@@ -63,6 +63,10 @@
 		dialogOpen = false
 		navigateToPlayer(player.slug)
 		selectedPlayers = null
+	}
+
+	function isLastInRow(cellId: number) {
+		return cellId % 10 === 0
 	}
 </script>
 
@@ -89,20 +93,20 @@
 <div class="flex flex-col gap-[5px]">
 	<!-- Top 3 winners displayed above the map -->
 	<div class="flex w-full gap-[5px] mb-2">
-		<div class="flex w-full gap-1 font-bold text-[#666666]">
-			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
+		<div class="flex w-full gap-1 font-bold" style="height: calc((100vw - 45px) / 10);">
+			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-card p-2">
 				<div>1</div>
 				{#if app.winners[0]}
 					{@render playerIcon(app.winners[0])}
 				{/if}
 			</div>
-			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
+			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-card p-2">
 				<div>2</div>
 				{#if app.winners[1]}
 					{@render playerIcon(app.winners[1])}
 				{/if}
 			</div>
-			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-[#222222] p-2">
+			<div class="flex flex-1 items-center gap-[20px] rounded-md bg-card p-2">
 				<div>3</div>
 				{#if app.winners[2]}
 					{@render playerIcon(app.winners[2])}
@@ -114,7 +118,7 @@
 	<!-- Cell 101 with custom width and same height as grid cells -->
 	<div class="flex w-full gap-[5px]">
 		<div
-			class="relative flex w-fit items-center justify-center overflow-hidden rounded-md bg-[#222222] text-center font-bold text-[#666666] px-2 py-2"
+			class="relative flex w-full items-center justify-center overflow-hidden rounded-md bg-card text-center font-bold  px-2 py-2"
 			style="height: calc((100vw - 45px) / 10);"
 		>
 			<div class="flex flex-col items-center gap-1">
@@ -137,9 +141,10 @@
 					{@const playersOnStart = playersByPosition.get(cellId)}
 					<button
 						onclick={() => handleCellClick(playersOnStart)}
-						class="flex w-full items-center gap-1 rounded-md bg-[#222222] p-2"
+						class="flex w-full items-center gap-1 rounded-md bg-card p-2 mt-2"
+						style="height: calc((100vw - 45px) / 10);"
 					>
-						<div class="font-bold text-[#666666]">Старт</div>
+						<div class="font-bold">Старт</div>
 						{#if playersOnStart}
 							<div class="flex flex-wrap items-center justify-center gap-0.5">
 								{#if playersOnStart.length === 1}
@@ -154,25 +159,37 @@
 										/>
 									{/each}
 									{#if playersOnStart.length > 1}
-										<div class="ml-1 text-xs text-[#666666]">({playersOnStart.length})</div>
+										<div class="ml-1 text-xs">({playersOnStart.length})</div>
 									{/if}
 								{/if}
 							</div>
 						{/if}
 					</button>
 				{:else}
+				{@const isLast = isLastInRow(cellId)}
+				{@const isLadder = Boolean(laddersByCell[cellId])}
+				{@const isSnake = Boolean(snakesByCell[cellId])}
+				{@const cellType = isLadder ? 'ladder' : isSnake ? 'snake' : ''}
 					<div
-						class="relative flex aspect-square flex-1 items-center justify-center overflow-hidden rounded-md bg-[#222222] text-center font-bold text-[#666666]"
+						class="relative flex aspect-square flex-1 {isLast ? 'mt-0' : 'mt-8'} items-center justify-center overflow-hidden rounded-md bg-card text-center font-bold data-[celltype=ladder]:bg-green-500 data-[celltype=snake]:bg-red-400"
+						data-celltype={cellType}
 					>
-						{#if cellId % 10 === 0 && !playersByPosition.has(cellId)}
-							{cellId}
-						{/if}
 						{#if laddersByCell[cellId]}
-							<ArrowUp color="green" />
+							<div class="absolute bottom-1 ">
+								<div class="text-sm ">{laddersByCell[cellId].cellTo}</div>
+								<ArrowUp />
+							</div>
+						{:else if snakesByCell[cellId]}
+							<div class="absolute top-1 ">
+								<ArrowDown />
+								<div class="text-sm">{snakesByCell[cellId].cellTo}</div>
+							</div>
+						{:else}
+						<div class="absolute">{cellId}</div>
 						{/if}
-						{#if snakesByCell[cellId]}
-							<ArrowDown color="red" />
-						{/if}
+						<!-- {#if cellId % 10 === 0 && !playersByPosition.has(cellId)} -->
+							<!-- {cellId} -->
+						<!-- {/if} -->
 						{#if playersByPosition.has(cellId)}
 							{@const playersInCell = playersByPosition.get(cellId)}
 							{#if playersInCell && playersInCell.length === 1}
@@ -206,7 +223,7 @@
 {#if selectedPlayers && selectedPlayers.length > 1}
 	<Dialog bind:open={dialogOpen}>
 		<DialogContent>
-			<DialogTitle>Выберите игрока</DialogTitle>
+			<DialogTitle>Выбери игрока</DialogTitle>
 			<div class="flex flex-col gap-2">
 				{#each selectedPlayers as player (player.slug)}
 					<Button

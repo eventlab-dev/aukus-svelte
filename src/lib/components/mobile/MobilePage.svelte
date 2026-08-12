@@ -55,7 +55,7 @@
 	})
 </script>
 
-<ScrollArea class="h-screen" type="always">
+<ScrollArea class="h-screen bg-secondary" type="always">
 	{#if pageState === 'player' && selectedPlayer}
 		<div class="sticky top-2 z-1000 flex gap-2 p-2">
 			<Button class="rounded-xl" variant="secondary" onclick={handleBackToMenu}>← Назад</Button>
