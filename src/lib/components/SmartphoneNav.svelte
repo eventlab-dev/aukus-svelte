@@ -30,7 +30,7 @@
 		url?: AppUrl
 	}
 
-	const apps: AppItem = $derived([
+	const apps: AppItem[] = $derived([
 		{ id: 'rules', icon: MENU_RULES_ICON, label: 'Правила', url: '/rules' },
 		{ id: 'stats', icon: MENU_STATS_ICON, label: 'Статистика', url: '/stats' },
 		{
