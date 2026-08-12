@@ -2,7 +2,7 @@
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { Input } from '$lib/components/ui/input'
-	import { debounce } from '$lib/utils'
+	import { debounce } from 'perfect-debounce'
 	import { onMount } from 'svelte'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import EmojiIcon from '$lib/components/icons/EmojiIcon.svelte'

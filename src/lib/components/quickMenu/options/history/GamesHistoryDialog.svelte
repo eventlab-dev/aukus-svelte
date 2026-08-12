@@ -10,6 +10,7 @@
 	import GameCard from '$lib/components/gameCard/GameCard.svelte'
 	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
+	import { debounce } from 'perfect-debounce'
 	
 	const app = getAppManager()
 
@@ -44,16 +45,12 @@
 		}
 	})
 
-	let timer: ReturnType<typeof setTimeout>
-	const debounceSearch = (v: string) => {
-		clearTimeout(timer)
+	const debounceSearch = debounce((v: string) => {
 		if (v.length >= 3 || v.length === 0) {
-			timer = setTimeout(() => {
-				gamesHistoryStore.searchParams.title_search = v
-				playersMovesStore.queryParams.search_title = v
-			}, 500)
+			gamesHistoryStore.searchParams.title_search = v
+			playersMovesStore.queryParams.search_title = v
 		}
-	}
+	}, 500)
 
 	const playerFilter = $derived(gamesHistoryStore.searchParams?.players?.[0] ?? 'all')
 

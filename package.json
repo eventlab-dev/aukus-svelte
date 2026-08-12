@@ -75,6 +75,7 @@
     "@tiptap/extension-text-align": "^3.6.5",
     "animejs": "^4.1.4",
     "konva": "^10.0.2",
+    "perfect-debounce": "^2.1.0",
     "prosemirror-model": "^1.25.3",
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.41.3",

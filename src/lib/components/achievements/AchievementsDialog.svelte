@@ -14,6 +14,7 @@
 	import PlayerModel from '../map/PlayerModel.svelte'
 	import DicePreview from '../skinEditor/DicePreview.svelte'
 	import SkinPreview from '../skinEditor/SkinPreview.svelte'
+	import { debounce } from 'perfect-debounce'
 
 	const app = getAppManager()
 	const { eventDataStore, usersStore } = app
@@ -113,18 +114,23 @@
 		}
 	})
 
-	// Save skins when switching away from skins tab
+	// Debounced save function
+	const saveSkins = debounce(async () => {
+		const equippedSkinsIds = equippedSkins.map((s) => s.id).sort()
+		if (
+			equippedSkinsIds.length === selectedSkinIds.length &&
+			equippedSkinsIds.every((value, index) => value === selectedSkinIds[index])
+		) {
+			return
+		}
+		await usersStore.setSkins.mutateAsync({ body: { skin_ids: selectedSkinIds } })
+		await eventDataStore.eventDataQuery.refetch()
+	}, 2000)
+
+	// Save skins when selection changes with debounce
 	$effect(() => {
-		if (selectedTab !== 'skins') {
-			const equippedSkinsIds = equippedSkins.map((s) => s.id).sort()
-			if (
-				equippedSkinsIds.length === selectedSkinIds.length &&
-				equippedSkinsIds.every((value, index) => value === selectedSkinIds[index])
-			) {
-				return
-			}
-			usersStore.setSkins.mutateAsync({ body: { skin_ids: selectedSkinIds } })
-			eventDataStore.eventDataQuery.refetch()
+		if (selectedSkinIds.length > 0) {
+			saveSkins()
 		}
 	})
 </script>

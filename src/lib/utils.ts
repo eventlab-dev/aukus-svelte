@@ -147,25 +147,6 @@ export function getMoveTypeStyles(type?: PlayerMoveType): MoveTypeStyles {
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function debounce<T extends (...args: any[]) => any>(
-	callback: T,
-	delayMs: number
-): (...args: Parameters<T>) => void {
-	let timeoutId: number | null = null
-
-	return (...args: Parameters<T>) => {
-		if (timeoutId) {
-			clearTimeout(timeoutId)
-		}
-
-		timeoutId = window.setTimeout(() => {
-			callback(...args)
-			timeoutId = null
-		}, delayMs)
-	}
-}
-
 function safeText(text: string) {
 	return text?.normalize('NFC') ?? ''
 }
