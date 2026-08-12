@@ -56,9 +56,15 @@
 	}
 
 	let popup: HTMLDivElement | null = $state(null)
+	let phoneButton: HTMLButtonElement | null = $state(null)
 
 	function handleOutsidePointerDown(event: PointerEvent) {
-		if (popup && !popup.contains(event.target as Node)) {
+		if (isOpen && popup) {
+			const inPopup = popup.contains(event.target as Node)
+			const inButton = phoneButton?.contains(event.target as Node)
+			if (inPopup || inButton) {
+				return
+			}
 			isOpen = false
 		}
 	}
@@ -132,6 +138,7 @@
 	{/if}
 
 	<Button
+		bind:ref={phoneButton}
 		onclick={togglePhone}
 		aria-label="Toggle navigation menu"
 		class="flex h-auto w-[78px] items-center justify-center rounded-full bg-transparent text-white shadow-lg transition-all hover:scale-120 hover:bg-transparent"

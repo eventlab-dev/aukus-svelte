@@ -232,7 +232,7 @@
 	</div>
 {:else}
 	<div class="h-screen overflow-y-auto bg-[#282828]">
-		<div class="px-4 py-4">
+		<div class="px-4 py-4 mt-14">
 			<div class="mb-4 flex items-center gap-4">
 				<div class="flex flex-1 flex-wrap gap-2">
 					<button
