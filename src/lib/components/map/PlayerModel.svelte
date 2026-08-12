@@ -24,7 +24,7 @@
 			case 'big':
 				return 'height: 150px;'
 			case "huge":
-				return 'height: 400px;'
+				return 'height: 300px;'
 			default: {
 				const _exhaustiveCheck: never = variant
 				return _exhaustiveCheck
@@ -53,7 +53,7 @@
 	/> -->
 	<div class="player-shadow">
 		<div
-			class="player-model data-[variant=big]:h-[150px] data-[variant=big]:w-[137px] data-[variant=small]:h-[80px] data-[variant=small]:w-[73px] data-[variant=huge]:h-[400px] data-[variant=huge]:w-[365px]"
+			class="player-model data-[variant=big]:h-[150px] data-[variant=big]:w-[137px] data-[variant=small]:h-[80px] data-[variant=small]:w-[73px] data-[variant=huge]:h-[300px] data-[variant=huge]:w-[274px]"
 			data-variant={variant}
 			style={modelStyle}
 		></div>

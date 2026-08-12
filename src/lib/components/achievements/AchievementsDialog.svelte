@@ -194,7 +194,7 @@
 						<div class="relative flex w-full justify-center mb-6">
 							<div class="relative w-fit">
 								{#if app.myPlayer}
-									<PlayerModel player={app.myPlayer} selectedSkins={selectedSkinItems} variant="big" />
+									<PlayerModel player={app.myPlayer} selectedSkins={selectedSkinItems} variant="huge" />
 								{/if}
 							</div>
 							<div class="absolute right-30 bottom-5">
