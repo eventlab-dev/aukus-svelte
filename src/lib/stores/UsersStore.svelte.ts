@@ -25,13 +25,16 @@ export class UsersStore {
 	myUserQuery = createQuery(() => ({
 		...fetchCurrentUserApiUsersCurrentGetOptions({
 			baseUrl: EventlabBaseUrl,
-			auth: defaultAuth
+			auth: defaultAuth,
+			credentials: 'include',
 		}),
 		retry: false,
-		enabled: Boolean(this.accessToken),
+		enabled: Boolean(this.accessToken)
 	}))
 
-	loginMutation = createMutation(() => loginApiLoginPostMutation({ baseUrl: EventlabBaseUrl }))
+	loginMutation = createMutation(() =>
+		loginApiLoginPostMutation({ baseUrl: EventlabBaseUrl, credentials: 'include' })
+	)
 
 	myUser = $derived.by(() => {
 		if (this.myUserQuery.isSuccess) {
@@ -87,7 +90,7 @@ export class UsersStore {
 			query: { is_active: 1, events: ['aukus4'] }
 		}),
 		refetchInterval: DEFAULT_REFETCH,
-		refetchOnWindowFocus: false,
+		refetchOnWindowFocus: false
 	}))
 
 	users = $derived(this.usersQuery.data?.users ?? [])
