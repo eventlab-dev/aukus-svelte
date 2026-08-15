@@ -36,7 +36,7 @@
 		{
 			id: 'achievements',
 			icon: MENU_ACHIEVEMENTS_ICON,
-			label: app.myUser ? 'Ачивки и скины' : 'Ачивки',
+			label: 'Ачивки',
 			url: '/achievements'
 		},
 		{ id: 'history', icon: MENU_HISTORY_ICON, label: 'История', url: '/history' },
