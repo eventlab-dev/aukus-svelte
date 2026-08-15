@@ -179,6 +179,7 @@
 		color: var(--color-card-foreground);
 		border-radius: var(--radius-2xl);
 		margin-bottom: 12px;
+		font-size: 20px;
 	}
 
 	:global(.tiptap h1),
