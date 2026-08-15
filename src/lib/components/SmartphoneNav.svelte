@@ -41,7 +41,7 @@
 		},
 		{ id: 'history', icon: MENU_HISTORY_ICON, label: 'История', url: '/history' },
 		{ id: 'streams', icon: MENU_STREAMS_ICON, label: 'Стримы', url: '/streams' },
-		{ id: 'shit', icon: MENU_SHIT_ICON, label: 'Подсеры' },
+		...(app.myUser ? [{ id: 'profile', icon: MENU_SHIT_ICON, label: 'Профиль', url: '/profile' }] : []),
 		{ id: 'wheels', icon: MENU_WHEELS_ICON, label: 'Колеса', url: '/wheels' },
 		{ id: 'calculator', icon: MENU_CALC_ICON, label: 'Калькулятор', url: '/calc' },
 		{ id: 'about', icon: MENU_ABOUT_ICON, label: 'Создатели', url: '/about' }

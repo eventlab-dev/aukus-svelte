@@ -19,6 +19,7 @@
 	import AchievementsDialog from '../achievements/AchievementsDialog.svelte'
 	import GamesHistoryDialog from '../quickMenu/options/history/GamesHistoryDialog.svelte'
 	import StreamsPage from './streams/StreamsPage.svelte'
+	import ProfilePage from './ProfilePage.svelte'
 	import { TOP_BANNER } from '$lib/constants'
 
 	const app = getAppManager()
@@ -87,6 +88,10 @@
 {:else if navStore.appPage === 'streams'}
 	<PageContainer bottomSpace={false}>
 		<StreamsPage />
+	</PageContainer>
+{:else if navStore.appPage === 'profile'}
+	<PageContainer>
+		<ProfilePage />
 	</PageContainer>
 {/if}
 

@@ -13,6 +13,7 @@ export type AppPage =
 	| 'achievements'
 	| 'history'
 	| 'streams'
+	| 'profile'
 
 const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/': 'map',
@@ -26,7 +27,8 @@ const URL_PAGE_MAP: Record<string, AppPage> = {
 	'/calc': 'calculator',
 	'/wheels': 'wheels',
 	'/achievements': 'achievements',
-	'/history': 'history'
+	'/history': 'history',
+	'/profile': 'profile'
 }
 
 const STATIC_PAGES = new Set(Object.keys(URL_PAGE_MAP)) as Set<AppUrl>
