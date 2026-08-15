@@ -28,10 +28,20 @@ export class IntegrationsStore {
 
 	integrations = $derived(this.integrationsQuery.data)
 
-	starteAuthQuery = createMutation(() =>
+	startAuthQuery = createMutation(() =>
 		authorizeOauthApiOauth2AuthorizePostMutation({
 			baseUrl: EventlabBaseUrl,
 			auth: defaultAuth
 		})
 	)
+
+	async startAuth(providerName: string, eventName: string) {
+		const result = await this.startAuthQuery.mutateAsync({
+			body: {
+				provider_name: providerName,
+				event_name: eventName
+			}
+		})
+		return result
+	}
 }

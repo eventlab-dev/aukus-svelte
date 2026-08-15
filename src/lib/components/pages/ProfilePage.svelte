@@ -10,8 +10,22 @@
 
 	const myPlayer = $derived(app.myPlayer)
 	const myUser = $derived(app.myUser)
+	const integrationsStore = $derived(app.integrationsStore)
+	const integrations = $derived(integrationsStore.integrations?.integrations ?? [])
+	const startAuthQuery = $derived(integrationsStore.startAuthQuery)
 
 	let activeTab = $state('skins')
+
+	async function startIntegration(providerName: string) {
+		try {
+			const result = await integrationsStore.startAuth(providerName, 'eventlab')
+			if (result.authorization_url) {
+				window.location.href = result.authorization_url
+			}
+		} catch (error) {
+			console.error('Failed to start integration:', error)
+		}
+	}
 </script>
 
 <div class="flex justify-center">
@@ -45,8 +59,34 @@
 				</TabsContent>
 				
 				<TabsContent value="integrations">
-					<div class="text-center text-gray-400">
-						<p>Интеграции скоро будут доступны</p>
+					<div class="flex flex-col gap-4">
+						{#if integrations.length === 0}
+							<div class="text-center text-gray-400">
+								<p>Нет доступных интеграций</p>
+							</div>
+						{:else}
+							{#each integrations as integration (integration.provider_name)}
+								<div class="flex items-center justify-between p-4 border rounded-lg bg-card dark:bg-gray-800">
+									<div class="flex items-center gap-3">
+										<div class="text-lg font-semibold">
+											{integration.display_name}
+										</div>
+										{#if integration.is_active || true}
+											<div class="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">
+												Активно
+											</div>
+										{/if}
+									</div>
+										<Button
+										    class="bg-secondary"
+											onclick={() => startIntegration(integration.provider_name)}
+											disabled={startAuthQuery.isPending}
+										>
+											{startAuthQuery.isPending ? 'Загрузка...' : 'Подключить'}
+										</Button>
+								</div>
+							{/each}
+						{/if}
 					</div>
 				</TabsContent>
 			</Tabs>
