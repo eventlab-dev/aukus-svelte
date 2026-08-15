@@ -232,7 +232,7 @@
 		</div>
 	</div>
 
-	<div class="mt-3 flex flex-col gap-3 md:flex-row">
+	<div class="mt-3 flex gap-3 flex-row">
 		<ImageLoader
 			src={posterUrl}
 			alt={title}
