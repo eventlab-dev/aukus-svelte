@@ -17,7 +17,7 @@
 
 <Dialog {open} onOpenChange={(state) => (open = state)}>
 	<DialogTrigger class="w-full">
-		<Button class="w-full bg-secondary">Сделать щит</Button>
+		<Button class="w-full bg-secondary rounded-[18px]">+1</Button>
 	</DialogTrigger>
 	{#if app.myPlayer}
 		{#if app.myPlayer.shield_stacks >= 9}

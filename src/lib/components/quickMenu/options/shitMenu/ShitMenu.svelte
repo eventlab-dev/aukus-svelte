@@ -8,22 +8,30 @@
 	const app = getAppManager()
 </script>
 
-<div class="flex flex-col">
-	<div class="flex w-full items-center justify-between gap-1">
-		<div class="flex items-center gap-1">
-			<FireIcon /> Подсёров - {app.myPlayer?.shit_stacks}
+<div class="flex gap-20 font-extrabold">
+<div class="flex">
+	<div class="flex flex-col gap-2">
+		<div class="ml-6 flex items-center gap-1">
+			<FireIcon /> Подсёры
 		</div>
-		<div class="flex items-center gap-1 text-muted-foreground">
-			{app.myPlayer?.shield_stacks}
-			<ShieldIcon />
+		<div class="flex items-center gap-3">
+			<div class="font-bold w-[160px] bg-secondary rounded-[22px] text-4xl text-center p-2">{app.myPlayer?.shit_stacks}</div>
+			<div class="flex items-center gap-2 flex-1">
+				<AddShitDialog />
+			</div>
 		</div>
 	</div>
-	<div class="flex w-full justify-between gap-4">
-		<div class="flex-1">
-			<AddShitDialog />
+	
+</div>
+	<div class="flex flex-col gap-2">
+		<div class="ml-6 flex items-center gap-1">
+			<ShieldIcon /> Щиты
 		</div>
-		<div class="flex-1">
-			<MakeShieldDialog />
+		<div class="flex items-center gap-3">
+			<div class="font-bold w-[160px] bg-secondary rounded-[22px] text-4xl text-center p-2">{app.myPlayer?.shield_stacks}</div>
+			<div class="flex items-center gap-2 flex-1">
+				<MakeShieldDialog />
+			</div>
 		</div>
 	</div>
 </div>
