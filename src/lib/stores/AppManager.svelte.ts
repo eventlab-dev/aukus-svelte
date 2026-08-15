@@ -21,6 +21,7 @@ import { NavStore } from './NavStore.svelte'
 import { SvelteMap, SvelteSet } from 'svelte/reactivity'
 import { TimerStore } from './TimerStore.svelte'
 import { TimeStore } from './TimeStore.svelte'
+import { IntegrationsStore } from './IntegrationsStore.svelte'
 
 export class AppManager {
 	usersStore = new UsersStore()
@@ -34,6 +35,9 @@ export class AppManager {
 	canvasStore = new CanvasStore()
 	errorNotificationStore = new ErrorNotificationStore()
 	shitStore = new ShitStore()
+	integrationsStore = new IntegrationsStore({
+		getPlayerSlug: () => this.myUser?.slug ?? null
+	})
 
 	timeStore = new TimeStore()
 	snowStore = new SnowStore()
