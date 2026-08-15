@@ -28,7 +28,8 @@
 	//  -->
 </script>
 
-<div class="mt-10 flex gap-20 font-extrabold">
+<div class="mt-10">
+<div class="flex gap-20 font-extrabold">
 	<div class="flex items-center gap-2">
 		<div class="relative">
 			<div
@@ -55,4 +56,10 @@
 		</div>
 		<MakeShieldDialog />
 	</div>
+</div>
+
+<div class="border-dashed-bottom w-full mt-10"></div>
+
+<div class="mt-10">
+	<div class="uppercase text-2xl font-extrabold text-center">Кинуть подсер в:</div>
 </div>
