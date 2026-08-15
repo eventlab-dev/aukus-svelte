@@ -24,14 +24,14 @@
 			<DialogContent>
 				<DialogHeader class="text-3xl">Максимум щитов достигнут!</DialogHeader>
 				<div class="mt-10 flex justify-center">
-					<Button class="w-100" onclick={() => (open = false)}>Согласен</Button>
+					<Button class="w-100 bg-seconadry" onclick={() => (open = false)}>Согласен</Button>
 				</div>
 			</DialogContent>
 		{:else if app.myPlayer?.shit_stacks >= 10}
 			<DialogContent>
 				<DialogHeader class="text-3xl">Поменять 10 стаков на 3 стак щита?</DialogHeader>
 				<div class="mt-10 flex justify-center">
-					<Button class="w-100" {onclick} loading={shitStore.makeShieldQuery.isPending}>Да</Button>
+					<Button class="w-100 bg-secondary" {onclick} loading={shitStore.makeShieldQuery.isPending}>Да</Button>
 				</div>
 			</DialogContent>
 		{:else}
@@ -40,7 +40,7 @@
 					<div class="w-full text-center">Не хватает стаков: {app.myPlayer?.shit_stacks}/10</div>
 				</DialogHeader>
 				<div class="mt-10 flex justify-center">
-					<Button class="w-100" onclick={() => (open = false)}>Согласен</Button>
+					<Button class="w-100 bg-secondary" onclick={() => (open = false)}>Согласен</Button>
 				</div>
 			</DialogContent>
 		{/if}

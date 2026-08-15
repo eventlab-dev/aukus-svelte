@@ -27,7 +27,7 @@
 	<DialogContent>
 		<DialogHeader class="text-3xl">Получить стак подсёра за донатгол в 5000₽?</DialogHeader>
 		<div class="mt-10 flex justify-center">
-			<Button class="w-100" {onclick} loading={shitStore.addShitQuery.isPending}>Да</Button>
+			<Button class="w-100 bg-secondary" {onclick} loading={shitStore.addShitQuery.isPending}>Да</Button>
 		</div>
 	</DialogContent>
 </Dialog>
