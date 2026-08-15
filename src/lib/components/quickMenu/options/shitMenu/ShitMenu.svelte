@@ -9,11 +9,32 @@
 	import { Button } from '$lib/components/ui/button'
 
 	const app = getAppManager()
+	const { shitStore, eventDataStore } = app
 
 	let selectedPlayerSlug = $state('')
+	let kickCompleted = $state(false)
 
 	const otherPlayers = $derived(app.players.filter((p) => p.slug !== app.myPlayer?.slug))
 	const selectedPlayer = $derived(otherPlayers.find((p) => p.slug === selectedPlayerSlug))
+
+	$effect(() => {
+		if (selectedPlayerSlug) {
+			kickCompleted = false
+		}
+	})
+
+	async function kickPlayer() {
+		if (!selectedPlayerSlug) return
+		
+		await shitStore.kickPlayerQuery.mutateAsync({
+			body: {
+				target_player_slug: selectedPlayerSlug
+			}
+		})
+		eventDataStore.eventDataQuery.refetch()
+		kickCompleted = true
+		selectedPlayerSlug = ''
+	}
 </script>
 
 <div class="mt-10">
@@ -61,21 +82,29 @@
 								isOnline={Boolean(player.is_online)}
 								size="small"
 							/>
-							<span>{player.username}</span>
+							<span class="uppercase">{player.username}</span>
 						</TabsTrigger>
 					{/each}
 				</TabsList>
 			</Tabs>
 		{/if}
 		<div class="flex justify-center w-full mt-8">
-			<Button class="uppercase" disabled={!selectedPlayer}>
-				{#if selectedPlayer}
-					Кинуть в <PlayerAvatar
-								src={selectedPlayer.avatar_link ?? ''}
-								name={selectedPlayer.username}
-								isOnline={Boolean(selectedPlayer.is_online)}
-								size="small"
-							/>
+			<Button 
+				class="uppercase" 
+				disabled={!selectedPlayer || kickCompleted}
+				onclick={kickPlayer}
+				loading={shitStore.kickPlayerQuery.isPending}
+			>
+				{#if kickCompleted}
+					Готово!
+				{:else if selectedPlayer}
+					Кинуть в — 
+					<PlayerAvatar
+						src={selectedPlayer.avatar_link ?? ''}
+						name={selectedPlayer.username}
+						isOnline={Boolean(selectedPlayer.is_online)}
+						size="small"
+					/>
 							<span>{selectedPlayer.username}</span>
 				{:else}
 					Выбери игрока
