@@ -822,6 +822,10 @@ export type OAuthIntegrationInfo = {
      */
     display_name: string;
     /**
+     * Description
+     */
+    description: string;
+    /**
      * Is Active
      */
     is_active: boolean;
@@ -857,6 +861,10 @@ export type OAuthProviderInfo = {
      * Display Name
      */
     display_name: string;
+    /**
+     * Description
+     */
+    description: string;
     /**
      * Scopes
      */
