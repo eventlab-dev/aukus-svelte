@@ -58,7 +58,7 @@
 	</div>
 	<div class="flex flex-col items-center justify-center gap-1.5">
 		<Button
-			class="w-full rounded-xl"
+			class="w-full rounded-xl bg-secondary"
 			disabled={!isValid}
 			onclick={login}
 			loading={usersStore.loginMutation.isPending}>Войти</Button
