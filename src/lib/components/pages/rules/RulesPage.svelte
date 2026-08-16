@@ -75,7 +75,7 @@
 </script>
 
 <div class="mt-[90px] flex w-full justify-center">
-	<div class="w-[700px]">
+	<div class="w-[750px]">
 		<div class="flex justify-center">
 			<Tabs
 				value={category}
@@ -88,13 +88,16 @@
 					<TabsTrigger value="general" class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold">
 						Для участников
 					</TabsTrigger>
-					<TabsTrigger value="donations" class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold">
+					<TabsTrigger
+						value="donations"
+						class="h-10 w-60 rounded-2xl px-4 text-base font-extrabold"
+					>
 						Для донатеров
 					</TabsTrigger>
 				</TabsList>
 			</Tabs>
 		</div>
-		<Card class="mt-[18px] w-[700px] rounded-[50px] border-dashed p-[42px]">
+		<Card class="mt-[18px] w-[750px] rounded-[50px] border-dashed p-[42px]">
 			<div class="text-5xl font-extrabold">
 				{#if category === 'general'}
 					Правила Аукуса
@@ -110,7 +113,9 @@
 							<Button variant="destructive" onclick={saveRules}>Сохранить</Button>
 						</div>
 					{:else}
-						<Button class="mb-10" variant="secondary" onclick={() => (editorMode = true)}>Редактировать</Button>
+						<Button class="mb-10" variant="secondary" onclick={() => (editorMode = true)}
+							>Редактировать</Button
+						>
 					{/if}
 				{/if}
 			</div>
