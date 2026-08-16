@@ -34,11 +34,9 @@
 			<div class="h-60"></div>
 		{/if}
 	</ScrollArea>
-	{#if onClose}
-		<div class="absolute top-2 left-2">
-			<Button class="h-[34px] w-[178px] rounded-[18px] font-extrabold" onclick={onClose}>
-				<Arrow /> ЗАКРЫТЬ
-			</Button>
-		</div>
-	{/if}
+	<div class="absolute top-2 left-2">
+		<Button class="h-[34px] w-[178px] rounded-[18px] font-extrabold" href="/" onclick={onClose}>
+			<Arrow /> ЗАКРЫТЬ
+		</Button>
+	</div>
 </div>
