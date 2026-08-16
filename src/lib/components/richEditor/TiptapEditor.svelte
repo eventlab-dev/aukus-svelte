@@ -137,6 +137,11 @@
 		overflow: visible;
 	}
 
+	:global(.tiptap.simple-variant) {
+		field-sizing: fixed;
+		overflow-y: auto;
+	}
+
 	:global(.tiptap p.is-editor-empty:first-child::before) {
 		color: var(--color-muted-foreground);
 		font-weight: 500;

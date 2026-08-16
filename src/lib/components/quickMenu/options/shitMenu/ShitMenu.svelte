@@ -25,7 +25,7 @@
 
 	async function kickPlayer() {
 		if (!selectedPlayerSlug) return
-		
+
 		await shitStore.kickPlayerQuery.mutateAsync({
 			body: {
 				target_player_slug: selectedPlayerSlug
@@ -46,7 +46,7 @@
 				>
 					<FireIcon /> Подсёры
 				</div>
-				<div class="w-[160px] rounded-[22px] bg-secondary p-2 text-center text-4xl font-bold">
+				<div class="w-[160px] rounded-[22px] bg-card p-2 text-center text-4xl font-bold">
 					{app.myPlayer?.shit_stacks}
 				</div>
 			</div>
@@ -59,7 +59,7 @@
 				>
 					<ShieldIcon /> Щиты
 				</div>
-				<div class="w-[160px] rounded-[22px] bg-secondary p-2 text-center text-4xl font-bold">
+				<div class="w-[160px] rounded-[22px] bg-card p-2 text-center text-4xl font-bold">
 					{app.myPlayer?.shield_stacks}
 				</div>
 			</div>
@@ -73,7 +73,7 @@
 		<div class="text-center text-2xl font-extrabold uppercase">Кинуть подсер в:</div>
 		{#if otherPlayers.length > 0}
 			<Tabs bind:value={selectedPlayerSlug} class="mt-4">
-				<TabsList class="flex flex-wrap justify-center gap-2 bg-transparent w-full">
+				<TabsList class="flex w-full flex-wrap justify-center gap-2 bg-transparent">
 					{#each otherPlayers as player (player.slug)}
 						<TabsTrigger value={player.slug} class="flex items-center gap-2">
 							<PlayerAvatar
@@ -88,9 +88,9 @@
 				</TabsList>
 			</Tabs>
 		{/if}
-		<div class="flex justify-center w-full mt-8">
-			<Button 
-				class="uppercase" 
+		<div class="mt-8 flex w-full justify-center">
+			<Button
+				class="uppercase"
 				disabled={!selectedPlayer || kickCompleted}
 				onclick={kickPlayer}
 				loading={shitStore.kickPlayerQuery.isPending}
@@ -98,14 +98,14 @@
 				{#if kickCompleted}
 					Готово!
 				{:else if selectedPlayer}
-					Кинуть в — 
+					Кинуть в —
 					<PlayerAvatar
 						src={selectedPlayer.avatar_link ?? ''}
 						name={selectedPlayer.username}
 						isOnline={Boolean(selectedPlayer.is_online)}
 						size="small"
 					/>
-							<span>{selectedPlayer.username}</span>
+					<span>{selectedPlayer.username}</span>
 				{:else}
 					Выбери игрока
 				{/if}

@@ -76,12 +76,12 @@
 
 	const items = $derived.by(() => {
 		const all: ItemType[] = [
-			{ value: '0-4', label: '0 — 4 часов', highlight: false },
-			{ value: '5-10', label: '5 — 10 часов', highlight: false },
-			{ value: '11-16', label: '11 — 16 часов', highlight: false },
-			{ value: '17-24', label: '17 — 24 часов', highlight: false },
-			{ value: '25-40', label: '25 — 39 часов', highlight: false },
-			{ value: '40+', label: '40+ часов', highlight: false }
+			{ value: '0-4', label: '0 — 4 ч', highlight: false },
+			{ value: '5-10', label: '5 — 10 ч', highlight: false },
+			{ value: '11-16', label: '11 — 16 ч', highlight: false },
+			{ value: '17-24', label: '17 — 24 ч', highlight: false },
+			{ value: '25-40', label: '25 — 39 ч', highlight: false },
+			{ value: '40+', label: '40+ ч', highlight: false }
 		]
 		if (recommended) {
 			all.forEach((item) => (item.highlight = item.value !== recommended))
@@ -105,7 +105,7 @@
 				<TabsTrigger
 					value={itemValue}
 					{disabled}
-					class={highlight ? 'data-[highlight=true]:bg-red-900' : ''}
+					class="uppercase {highlight ? 'data-[highlight=true]:bg-red-900' : ''}"
 				>
 					{label}
 				</TabsTrigger>

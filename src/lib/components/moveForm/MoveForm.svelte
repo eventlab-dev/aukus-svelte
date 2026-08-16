@@ -212,8 +212,8 @@
 			<DifficultySelector bind:value={form.difficulty} />
 		</div>
 
-		<div class="mt-5 flex w-full justify-center gap-3">
-			<div class="rounded-lg bg-secondary p-3">
+		<div class="mt-5 flex w-full justify-center gap-3 font-extrabold">
+			<div class="rounded-lg bg-card p-3 uppercase">
 				<div>
 					Мое время:
 					{#if gameTimeStore.categoryDuration}
@@ -223,7 +223,7 @@
 					{/if}
 				</div>
 			</div>
-			<div class="gap-2 rounded-lg bg-secondary p-3">
+			<div class="gap-2 rounded-lg bg-card p-3 uppercase">
 				<Button
 					variant="link"
 					class="h-fit p-0"
@@ -303,7 +303,7 @@
 				<Tooltip>
 					<TooltipTrigger>
 						<Button
-							class="w-full cursor-not-allowed rounded-2xl opacity-50"
+							class="w-full cursor-not-allowed rounded-2xl uppercase opacity-50"
 							onclick={(e) => {
 								e.preventDefault()
 								bypassClickCount++
@@ -323,7 +323,7 @@
 				</Tooltip>
 			{:else}
 				<Button
-					class="w-full rounded-2xl"
+					class="w-full rounded-2xl uppercase"
 					disabled={!isFormFilled}
 					onclick={saveReview}
 					loading={usersStore.saveMoveForm.isPending}

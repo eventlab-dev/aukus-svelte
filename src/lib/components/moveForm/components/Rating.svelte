@@ -16,6 +16,7 @@
 
 	const displayedValue = $derived(isHovered ? hoveredValue : lockedValue)
 	const color = $derived.by(getColor)
+	const zeroFill = $derived(displayedValue === 0 ? 'full' : 'empty')
 
 	function getColor() {
 		const tier = scoreToTier(displayedValue)
@@ -53,9 +54,37 @@
 	function onclick(e: MouseEvent & { currentTarget: HTMLElement }) {
 		lockedValue = valueFromEvent(e, Number(e.currentTarget.dataset.star))
 	}
+
+	function onZeroMouseMove() {
+		hoveredValue = 0
+	}
+
+	function onZeroClick() {
+		lockedValue = 0
+	}
 </script>
 
 <div class="flex items-center gap-1.5">
+	<button
+		type="button"
+		data-star="0"
+		class="relative flex h-9 w-9 cursor-pointer items-center justify-center"
+		{onmouseenter}
+		{onmouseleave}
+		onmousemove={onZeroMouseMove}
+		onclick={onZeroClick}
+	>
+		<StarIcon class="absolute inset-0 h-full w-full text-muted-foreground" />
+		{#if zeroFill === 'full'}
+			<StarIcon class="absolute inset-0 h-full w-full" style="color: {color}" />
+		{/if}
+		<span
+			class="pointer-events-none absolute inset-0 flex items-center justify-center text-xs font-bold"
+			style="color: #1f2937"
+		>
+			0
+		</span>
+	</button>
 	{#each stars as n (n)}
 		{@const fill = getStarFill(n, displayedValue ?? 0)}
 		<button
