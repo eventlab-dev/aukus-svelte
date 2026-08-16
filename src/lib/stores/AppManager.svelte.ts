@@ -72,6 +72,7 @@ export class AppManager {
 	})
 
 	frontendState = $state<TurnState>(null)
+	moveFormOpen = $state(false)
 	soundManager = new SoundManager()
 
 	constructor() {
@@ -119,7 +120,10 @@ export class AppManager {
 	backendState = $derived.by(() => {
 		if (this.myPlayer) {
 			if (this.myPlayer.last_move) {
-				if (this.myPlayer.last_move.type === 'completed' && this.myPlayer.map_position === WinPosition) {
+				if (
+					this.myPlayer.last_move.type === 'completed' &&
+					this.myPlayer.map_position === WinPosition
+				) {
 					return 'event-completed'
 				}
 				if (!this.myPlayer.last_move.dice_roll_id && this.myPlayer.last_move.type !== 'reroll') {
@@ -148,8 +152,8 @@ export class AppManager {
 	)
 
 	playersInOrder = $derived.by(() => {
-		const completedSlugs = new SvelteSet(this.playersCompletedMap.map(p => p.slug))
-		const playersNotCompletedMap = this.players.filter(p => !completedSlugs.has(p.slug))
+		const completedSlugs = new SvelteSet(this.playersCompletedMap.map((p) => p.slug))
+		const playersNotCompletedMap = this.players.filter((p) => !completedSlugs.has(p.slug))
 		playersNotCompletedMap.sort((a, b) => {
 			if (a.total_score === b.total_score) {
 				return b.map_position - a.map_position

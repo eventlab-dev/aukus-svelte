@@ -3,7 +3,6 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { Button } from './ui/button'
 	import type { AppUrl } from '$lib/stores/NavStore.svelte'
-	import MoveForm from './moveForm/MoveForm.svelte'
 	import {
 		MENU_ABOUT_ICON,
 		MENU_ACHIEVEMENTS_ICON,
@@ -41,7 +40,9 @@
 		},
 		{ id: 'history', icon: MENU_HISTORY_ICON, label: 'История', url: '/history' },
 		{ id: 'streams', icon: MENU_STREAMS_ICON, label: 'Стримы', url: '/streams' },
-		...(app.myUser ? [{ id: 'profile', icon: MENU_SHIT_ICON, label: 'Профиль', url: '/profile' }] : []),
+		...(app.myUser
+			? [{ id: 'profile', icon: MENU_SHIT_ICON, label: 'Профиль', url: '/profile' }]
+			: []),
 		{ id: 'wheels', icon: MENU_WHEELS_ICON, label: 'Колеса', url: '/wheels' },
 		{ id: 'calculator', icon: MENU_CALC_ICON, label: 'Калькулятор', url: '/calc' },
 		{ id: 'about', icon: MENU_ABOUT_ICON, label: 'Создатели', url: '/about' }
@@ -103,14 +104,23 @@
 						}}
 					>
 						<img src={appItem.icon} class="mb-[2px] h-[80px] w-[80px]" alt={appItem.label} />
-						<span class="text-sm uppercase wrap-anywhere">{appItem.label}</span>
+						<span class="text-sm wrap-anywhere uppercase">{appItem.label}</span>
 					</button>
 				{/each}
 			</div>
-			<div class="flex w-full justify-center mt-3">
+			<div class="mt-3 flex w-full justify-center">
 				{#if app.myUser}
 					{#if app.turnState === 'filling-form'}
-						<MoveForm />
+						<Button
+							class="flex w-fit cursor-pointer flex-col items-center rounded-2xl uppercase"
+							disabled={!app.eventActive}
+							onclick={() => {
+								app.moveFormOpen = true
+								isOpen = false
+							}}
+						>
+							<span class="uppercase">Сделать ход</span>
+						</Button>
 					{/if}
 					<Button
 						class="flex hidden cursor-pointer flex-col items-center rounded-2xl"

@@ -244,9 +244,7 @@
 		return '1d6'
 	}
 
-	const canKick = $derived(player.slug !== app.myPlayer?.slug)
-
-	const {streamLink, streamText} = $derived.by(() => {
+	const { streamLink, streamText } = $derived.by(() => {
 		switch (player.main_platform) {
 			case 'twitch':
 				return { streamLink: player.twitch_stream_link, streamText: 'Стримит на Twitch' }
@@ -255,7 +253,7 @@
 			case 'kick':
 				return { streamLink: player.kick_stream_link, streamText: 'Стримит на Kick' }
 			default:
-				return {streamLink: '', streamText: ''}
+				return { streamLink: '', streamText: '' }
 		}
 	})
 </script>
@@ -284,7 +282,7 @@
 			</div>
 		</div>
 		<Button
-			class="w-full"
+			class="w-full bg-secondary"
 			onclick={handleThrowDice}
 			loading={usersStore.rollDice.isPending || usersStore.finishMove.isPending}
 		>
@@ -321,7 +319,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="text-sm font-extrabold text-muted-foreground flex justify-between items-center">
+			<div class="flex items-center justify-between text-sm font-extrabold text-muted-foreground">
 				{#if player.is_online}
 					<div>{streamText}</div>
 				{:else}
@@ -353,15 +351,17 @@
 		<div class="flex items-center rounded-[32px] border-dashed bg-card">
 			<PlayerModel {player} variant="big" />
 		</div>
-		<div class="flex flex-col gap-3 justify-center p-3 w-[360px] rounded-[32px] border-dashed bg-card font-bold">
+		<div
+			class="flex w-[360px] flex-col justify-center gap-3 rounded-[32px] border-dashed bg-card p-3 font-bold"
+		>
 			<div class="flex justify-center gap-2">
-				<div class="flex-1 w-fit text-center">
+				<div class="w-fit flex-1 text-center">
 					<p class="mb-1.5 text-sm font-extrabold">Шанс лестницы</p>
 					<p class="text-2xl font-bold">
 						{ladderChance.toFixed(1)}%
 					</p>
 				</div>
-				<div class="flex-1 w-fit text-center">
+				<div class="w-fit flex-1 text-center">
 					<p class="mb-1.5 text-sm font-extrabold">Шанс змейки</p>
 					<p class="text-2xl font-bold">
 						{snakeChance.toFixed(1)}%
@@ -369,7 +369,7 @@
 				</div>
 			</div>
 			<Tabs bind:value={selectedDiceOption}>
-				<TabsList class="flex-wrap gap-2 w-full justify-center">
+				<TabsList class="w-full flex-wrap justify-center gap-2">
 					{#each activeDiceOptions as option (option.value)}
 						<TabsTrigger value={option.value}>{option.label}</TabsTrigger>
 					{/each}
