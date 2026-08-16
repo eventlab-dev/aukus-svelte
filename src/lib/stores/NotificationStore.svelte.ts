@@ -27,11 +27,11 @@ export class NotificationStore {
 			.filter((a) => !!a) as PersonalAchievement[]
 	)
 
-	notify(items: UnlockedAchievementItem[]) {
+	notifyAchievements(items: UnlockedAchievementItem[]) {
 		this.unlockedAchievements = items
 	}
 
-	hideNotification(id: number) {
+	hideAchievementNotification(id: number) {
 		this.unlockedAchievements = this.unlockedAchievements.filter((i) => i.id !== id)
 	}
 }

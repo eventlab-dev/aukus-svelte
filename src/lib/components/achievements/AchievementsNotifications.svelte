@@ -8,18 +8,18 @@
 
 	const app = getAppManager()
 	const { notificationStore, eventDataStore } = app
-	// const { achievements, hideNotification } = notificationStore
-	// const { skinsById } = eventDataStore
 
 	const achievement = $derived(notificationStore.achievements[0])
 
-	const skin = $derived(achievement ? eventDataStore.skinsById.get(achievement.reward_skin_id) : null)
+	const skin = $derived(
+		achievement ? eventDataStore.skinsById.get(achievement.reward_skin_id) : null
+	)
 
 	let buttonText = $state(getConfirmationText())
 
 	const handleOpenChange = (isOpen: boolean) => {
 		if (!isOpen && achievement) {
-			notificationStore.hideNotification(achievement.id)
+			notificationStore.hideAchievementNotification(achievement.id)
 			buttonText = getConfirmationText()
 		}
 	}
@@ -28,7 +28,7 @@
 {#if achievement && skin}
 	{#key achievement.id}
 		<Dialog open onOpenChange={handleOpenChange}>
-			<DialogContent showCloseButton={false} class="w-fit">
+			<DialogContent showCloseButton={false} class="w-fit font-extrabold uppercase">
 				<div class="mb-0 flex justify-center text-3xl">Достижение разблокировано!</div>
 				<div class="relative flex justify-center">
 					<img class="h-63 rounded-2xl" src={AchievementBackgroundUrl} alt="background" />
@@ -47,7 +47,7 @@
 					{/if}
 				</div>
 				<DialogClose>
-					<Button class="w-full">{buttonText}</Button>
+					<Button class="w-full bg-secondary">{buttonText}</Button>
 				</DialogClose>
 			</DialogContent>
 		</Dialog>

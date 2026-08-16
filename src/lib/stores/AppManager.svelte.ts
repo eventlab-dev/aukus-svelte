@@ -68,7 +68,7 @@ export class AppManager {
 	})
 
 	gameTimeStore = new GameTimeStore({
-		getMyUser: () => this.myUser
+		getMyUserSlug: () => this.myUser?.slug ?? null
 	})
 
 	frontendState = $state<TurnState>(null)

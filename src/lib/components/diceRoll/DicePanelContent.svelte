@@ -2,14 +2,11 @@
 	import { Button } from '../ui/button'
 	import type { DiceOption } from '$lib/heyapi/aukus/types.gen'
 	import { laddersByCell, snakesByCell } from '$lib/mapUtils'
-	import ToggleButtonGroup from './ToggleButtonGroup.svelte'
 	import type { PlayerData } from '$lib/types'
-	import { normalizeSteps, calculateDiceProbability, type DiceProbability } from '$lib/utils'
+	import { normalizeSteps, calculateDiceProbability, type DiceProbability, sleep } from '$lib/utils'
 	import PlayerModel from '../map/PlayerModel.svelte'
 	import ImageLoader from '../ImageLoader.svelte'
-	import { FALLBACK_GAME_POSTER, FALLBACK_AVATAR_URL } from '$lib/constants'
-	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-	import KickPlayerDialog from '../quickMenu/options/shitMenu/KickPlayerDialog.svelte'
+	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import FireIcon from '../icons/new/FireIcon.svelte'
 	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
@@ -94,8 +91,8 @@
 			updatePlayerPosition: true
 		})
 		if (moveParams.unlocked_achievements.length > 0) {
-			await new Promise((resolve) => setTimeout(resolve, 500))
-			notificationStore.notify(moveParams.unlocked_achievements)
+			await sleep(500)
+			notificationStore.notifyAchievements(moveParams.unlocked_achievements)
 		}
 		await eventDataStore.eventDataQuery.refetch()
 		await statsStore.statsQuery.refetch()

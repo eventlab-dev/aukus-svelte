@@ -4,20 +4,19 @@ import {
 	searchGamesApiHltbSearchGetOptions
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { createQuery } from '@tanstack/svelte-query'
-import type { UserItem } from '$lib/heyapi/eventlab/types.gen'
 
 const MIN_TITLE_LEN = 3
 
 type Props = {
-	getMyUser: () => UserItem | null
+	getMyUserSlug: () => string | null
 }
 
 export class GameTimeStore {
-	getMyUser: Props['getMyUser'] = () => null
+	getMyUserSlug: Props['getMyUserSlug'] = () => null
 	constructor(props: Props) {
-		this.getMyUser = props.getMyUser
+		this.getMyUserSlug = props.getMyUserSlug
 	}
-	
+
 	gameTitle = $state('')
 
 	hltbQuery = createQuery(() => {
@@ -34,16 +33,16 @@ export class GameTimeStore {
 	})
 
 	hltbMatch = $derived(this.hltbQuery.data?.games?.[0] ?? null)
-	
+
 	categoryDurationQuery = createQuery(() => {
 		const params = getGameDurationApiStreamsGameDurationGetOptions({
 			baseUrl: EventlabBaseUrl,
 			query: {
-				slug: this.getMyUser()?.slug || '',
+				slug: this.getMyUserSlug() || '',
 				game_name: this.gameTitle
 			}
 		})
-		params.enabled = Boolean(this.gameTitle.length >= MIN_TITLE_LEN && this.getMyUser())
+		params.enabled = Boolean(this.gameTitle.length >= MIN_TITLE_LEN && this.getMyUserSlug())
 		params.staleTime = 0
 		// params.gcTime = 0
 		return params
