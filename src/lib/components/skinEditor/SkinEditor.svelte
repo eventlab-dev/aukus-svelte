@@ -17,7 +17,9 @@
 		if (!app.myPlayer) {
 			return []
 		}
-		return app.myPlayer.equipped_skins.map((id) => eventDataStore.skinsById.get(id)).filter((s) => s !== undefined)
+		return app.myPlayer.equipped_skins
+			.map((id) => eventDataStore.skinsById.get(id))
+			.filter((s) => s !== undefined)
 	})
 
 	// Initialize selectedSkins from equippedSkins
@@ -108,7 +110,7 @@
 		const hasChanges =
 			equippedSkinsIds.length !== selectedSkinIds.length ||
 			!equippedSkinsIds.every((value, index) => value === selectedSkinIds[index])
-		
+
 		if (hasChanges) {
 			debouncedSave()
 		}
@@ -116,7 +118,7 @@
 </script>
 
 <div class="flex flex-col items-center">
-	<div class="relative flex w-full justify-center mb-6">
+	<div class="relative mb-6 flex w-full justify-center">
 		<div class="relative w-fit">
 			{#if app.myPlayer}
 				<PlayerModel player={app.myPlayer} selectedSkins={selectedSkinItems} variant="huge" />
@@ -126,8 +128,8 @@
 			<DicePreview textureUrl={selectedDiceSkin?.image_url} />
 		</div>
 	</div>
-	
-	<div class="flex w-full justify-center mb-6">
+
+	<div class="mb-6 flex w-full justify-center">
 		<Tabs bind:value={filter} class="w-full">
 			<TabsList class="flex w-full justify-center gap-2 bg-transparent">
 				<TabsTrigger value="all">Все</TabsTrigger>
@@ -138,7 +140,7 @@
 			</TabsList>
 		</Tabs>
 	</div>
-	
+
 	<div class="flex justify-center">
 		<ScrollArea class="h-[50vh] w-fit" type="always">
 			<div class="flex w-fit flex-wrap justify-center gap-3">
@@ -148,7 +150,7 @@
 						class="flex h-[90px] w-[150px] cursor-pointer items-center justify-center rounded-xl p-4 {selectedSkinIds.includes(
 							skin.id
 						)
-							? 'bg-primary'
+							? 'border-dashed! bg-primary'
 							: 'bg-secondary'}"
 					>
 						<SkinPreview {skin} />
