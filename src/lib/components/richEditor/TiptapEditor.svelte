@@ -32,7 +32,7 @@
 	let editorElement: HTMLDivElement | undefined = $state()
 
 	const editorStyles =
-		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg border-2 border-muted bg-transparent p-2 font-medium transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 prose prose-invert p-0 max-w-full no-prose-markers'
+		'thin-scrollbar field-sizing-content h-[120px] min-h-16 w-full max-w-[632px] resize-none overflow-y-auto rounded-lg bg-transparent p-2 font-extrabold transition-[color,box-shadow] placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 prose prose-invert p-0 max-w-full no-prose-markers text-foreground text-lg'
 
 	const additonalStyles = simple ? 'simple-variant' : ''
 
@@ -77,7 +77,7 @@
 		if (editor) {
 			const newContent = content ? JSON.parse(content) : ''
 			const currentContent = editor.getJSON()
-			
+
 			if (JSON.stringify(newContent) !== JSON.stringify(currentContent)) {
 				editor.commands.setContent(newContent)
 			}

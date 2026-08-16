@@ -212,10 +212,10 @@
 			<DifficultySelector bind:value={form.difficulty} />
 		</div>
 
-		<div class="flex gap-3">
-			<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
-				<div>Мое время</div>
+		<div class="mt-5 flex w-full justify-center gap-3">
+			<div class="rounded-lg bg-secondary p-3">
 				<div>
+					Мое время:
 					{#if gameTimeStore.categoryDuration}
 						{formatMs(gameTimeStore.categoryDuration * 1000, { noDays: true })}
 					{:else}
@@ -223,7 +223,7 @@
 					{/if}
 				</div>
 			</div>
-			<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
+			<div class="gap-2 rounded-lg bg-secondary p-3">
 				<Button
 					variant="link"
 					class="h-fit p-0"
@@ -231,45 +231,47 @@
 					rel="noopener noreferrer"
 					href={gameTimeStore.hltbLink}
 				>
-					Время по HLTB
+					Время по HLTB:
 				</Button>
-				<div>
-					{#if gameTimeStore.hltbMatch?.comp_main}
-						{formatMs(gameTimeStore.hltbMatch.comp_main * 1000, { noDays: true })}
-					{:else}
-						не найдено
-					{/if}
-				</div>
-			</div>
-			<div class="flex flex-1 flex-col gap-2">
-				<div>
-					Итоговое время
-					{#if gameTimeStore.categoryDuration && gameTimeStore.hltbMatch?.comp_main}
-						(само)
-					{:else}
-						(выбери)
-					{/if}
-				</div>
-				<FinalTimeSelector
-					bind:value={form.finalTime}
-					bind:isInvalid={isFinalTimeInvalid}
-					gameDuration={gameTimeStore.categoryDuration}
-					hltbTime={gameTimeStore.hltbMatch?.comp_main}
-					disabled={form.status !== 'completed'}
-				/>
+				{#if gameTimeStore.hltbMatch?.comp_main}
+					{formatMs(gameTimeStore.hltbMatch.comp_main * 1000, { noDays: true })}
+				{:else}
+					не найдено
+				{/if}
 			</div>
 		</div>
 
+		<div class="flex w-full flex-col gap-2">
+			<div class="text-center text-xl font-extrabold uppercase">
+				Итоговое время
+				{#if gameTimeStore.categoryDuration && gameTimeStore.hltbMatch?.comp_main}
+					(само)
+				{:else}
+					(выбери)
+				{/if}
+			</div>
+
+			<FinalTimeSelector
+				bind:value={form.finalTime}
+				bind:isInvalid={isFinalTimeInvalid}
+				gameDuration={gameTimeStore.categoryDuration}
+				hltbTime={gameTimeStore.hltbMatch?.comp_main}
+				disabled={form.status !== 'completed'}
+			/>
+		</div>
+
 		<div class="space-y-2.5">
-			<div class="text-xl font-semibold">
+			<div class="text-center text-xl font-extrabold uppercase">
 				Оценка — {`${form.rating === null ? 'не указана' : form.rating}`}
 			</div>
-			<Rating bind:value={form.rating} />
+			<div class="flex justify-center">
+				<Rating bind:value={form.rating} />
+			</div>
 		</div>
 
 		<div class="relative">
 			<TiptapEditor
-				class="px-3 py-2"
+				class="border-dashed px-3 py-2"
 				content={form.review}
 				bind:editorState
 				bind:value={form.review}
@@ -296,12 +298,12 @@
 			</div>
 		</div>
 
-		<div class="ml-auto w-[264px]">
+		<div class="mt-5 w-full">
 			{#if hasHltbError && bypassClickCount < 5}
 				<Tooltip>
 					<TooltipTrigger>
 						<Button
-							class="w-full cursor-not-allowed opacity-50"
+							class="w-full cursor-not-allowed rounded-2xl opacity-50"
 							onclick={(e) => {
 								e.preventDefault()
 								bypassClickCount++
@@ -321,7 +323,7 @@
 				</Tooltip>
 			{:else}
 				<Button
-					class="w-full"
+					class="w-full rounded-2xl"
 					disabled={!isFormFilled}
 					onclick={saveReview}
 					loading={usersStore.saveMoveForm.isPending}

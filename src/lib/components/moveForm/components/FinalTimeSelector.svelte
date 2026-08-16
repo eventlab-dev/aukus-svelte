@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select'
+	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 	import type { GameLength } from '$lib/heyapi/aukus/types.gen'
 
 	type ItemType = {
@@ -89,26 +89,27 @@
 		return all
 	})
 
-	const triggerContent = $derived(items.find((f) => f.value === value)?.label ?? 'Итоговое время')
-
 	$effect(() => {
 		const selectedItem = items.find((f) => f.value === value)
 		isInvalid = selectedItem?.highlight ?? false
 	})
 </script>
 
-<Select type="single" bind:value {disabled}>
-	<SelectTrigger class="w-full">{triggerContent}</SelectTrigger>
-	<SelectContent>
-		<div class="mb-1 border-b px-2 py-1 text-xs leading-tight text-foreground/90">
-			Если игра пройдена быстрее времени<br />
-			на HLTB/youtube/steam, считается<br />
-			время прохождения стримера.
-		</div>
-		{#each items as { value, label, highlight } (value)}
-			<SelectItem {value} data-highlight={highlight} class="data-[highlight=true]:bg-red-900">
-				{label}
-			</SelectItem>
-		{/each}
-	</SelectContent>
-</Select>
+<div class="space-y-1.5">
+	<div class="text-center leading-tight">
+		Если игра пройдена быстрее времени на HLTB/youtube/steam, считается время прохождения стримера.
+	</div>
+	<Tabs value={value ?? ''} onValueChange={(v) => (value = v as GameLength)}>
+		<TabsList class="flex w-full flex-wrap gap-2">
+			{#each items as { value: itemValue, label, highlight } (itemValue)}
+				<TabsTrigger
+					value={itemValue}
+					{disabled}
+					class={highlight ? 'data-[highlight=true]:bg-red-900' : ''}
+				>
+					{label}
+				</TabsTrigger>
+			{/each}
+		</TabsList>
+	</Tabs>
+</div>
