@@ -90,8 +90,8 @@
 		bind:ref={inputRef}
 		id="game-title"
 		type="text"
-		class="bg-muted"
-		placeholder="Введите название игры"
+		class="rounded-none bg-transparent text-center text-3xl font-extrabold outline-none border-dashed-bottom focus-visible:ring-0"
+		placeholder="название игры"
 		{value}
 		{onfocus}
 		{onblur}

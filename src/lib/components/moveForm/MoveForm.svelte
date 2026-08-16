@@ -193,161 +193,143 @@
 	})
 </script>
 
-<div class="relative mx-auto w-full max-w-[800px] p-3">
-	<div class="mb-3 flex items-start justify-between gap-3">
-		<div class="flex flex-col gap-2">
-			<h2 aria-describedby="move form" class="text-lg leading-none font-bold">
-				Новый ход — {form.title || app.myPlayer?.current_game}
-			</h2>
+<div class="mx-auto w-full max-w-[700px]">
+	<div class="mt-20 flex flex-col gap-5">
+		<div class="flex justify-center">
+			<ImageLoader
+				src={selectedGame?.cover || fallbackPoster}
+				alt="game poster"
+				class="h-[176px] w-[132px]"
+			/>
 		</div>
-		<Button
-			variant="ghost"
-			size="icon"
-			class="cursor-pointer opacity-70 transition-opacity hover:opacity-100"
-			onclick={() => (app.moveFormOpen = false)}
-		>
-			<X class="size-5 stroke-4" />
-		</Button>
-	</div>
 
-	<div class="flex gap-3">
-		<ImageLoader
-			src={selectedGame?.cover || fallbackPoster}
-			alt="game poster"
-			class="h-[176px] w-[132px]"
-		/>
-		<div class="flex w-full flex-col gap-3">
-			<div class="flex gap-3">
-				<GameTitle bind:value={form.title} bind:selectedGame />
+		<GameTitle bind:value={form.title} bind:selectedGame />
+
+		<GameStatusSelector gameDuration={gameTimeStore.categoryDuration} bind:value={form.status} />
+
+		<div class="flex flex-col gap-2">
+			<div class="text-center text-xl font-extrabold uppercase">Сложность</div>
+			<DifficultySelector bind:value={form.difficulty} />
+		</div>
+
+		<div class="flex gap-3">
+			<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
+				<div>Мое время</div>
+				<div>
+					{#if gameTimeStore.categoryDuration}
+						{formatMs(gameTimeStore.categoryDuration * 1000, { noDays: true })}
+					{:else}
+						не найдено
+					{/if}
+				</div>
 			</div>
-
-			<div class="flex gap-3">
-				<GameStatusSelector
+			<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
+				<Button
+					variant="link"
+					class="h-fit p-0"
+					target="_blank"
+					rel="noopener noreferrer"
+					href={gameTimeStore.hltbLink}
+				>
+					Время по HLTB
+				</Button>
+				<div>
+					{#if gameTimeStore.hltbMatch?.comp_main}
+						{formatMs(gameTimeStore.hltbMatch.comp_main * 1000, { noDays: true })}
+					{:else}
+						не найдено
+					{/if}
+				</div>
+			</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<div>
+					Итоговое время
+					{#if gameTimeStore.categoryDuration && gameTimeStore.hltbMatch?.comp_main}
+						(само)
+					{:else}
+						(выбери)
+					{/if}
+				</div>
+				<FinalTimeSelector
+					bind:value={form.finalTime}
+					bind:isInvalid={isFinalTimeInvalid}
 					gameDuration={gameTimeStore.categoryDuration}
-					bind:value={form.status}
+					hltbTime={gameTimeStore.hltbMatch?.comp_main}
+					disabled={form.status !== 'completed'}
 				/>
-				<DifficultySelector bind:value={form.difficulty} />
 			</div>
+		</div>
 
-			<div class="flex gap-3">
-				<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
-					<div>Мое время</div>
-					<div>
-						{#if gameTimeStore.categoryDuration}
-							{formatMs(gameTimeStore.categoryDuration * 1000, { noDays: true })}
-						{:else}
-							не найдено
-						{/if}
-					</div>
-				</div>
-				<div class="flex w-fit flex-col gap-2 rounded-lg bg-secondary p-2">
-					<Button
-						variant="link"
-						class="h-fit p-0"
-						target="_blank"
-						rel="noopener noreferrer"
-						href={gameTimeStore.hltbLink}
-					>
-						Время по HLTB
-					</Button>
-					<div>
-						{#if gameTimeStore.hltbMatch?.comp_main}
-							{formatMs(gameTimeStore.hltbMatch.comp_main * 1000, { noDays: true })}
-						{:else}
-							не найдено
-						{/if}
-					</div>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<div>
-						Итоговое время
-						{#if gameTimeStore.categoryDuration && gameTimeStore.hltbMatch?.comp_main}
-							(само)
-						{:else}
-							(выбери)
-						{/if}
-					</div>
-					<FinalTimeSelector
-						bind:value={form.finalTime}
-						bind:isInvalid={isFinalTimeInvalid}
-						gameDuration={gameTimeStore.categoryDuration}
-						hltbTime={gameTimeStore.hltbMatch?.comp_main}
-						disabled={form.status !== 'completed'}
-					/>
-				</div>
+		<div class="space-y-2.5">
+			<div class="text-xl font-semibold">
+				Оценка — {`${form.rating === null ? 'не указана' : form.rating}`}
 			</div>
+			<Rating bind:value={form.rating} />
+		</div>
 
-			<div class="space-y-2.5">
-				<div class="text-xl font-semibold">
-					Оценка — {`${form.rating === null ? 'не указана' : form.rating}`}
-				</div>
-				<Rating bind:value={form.rating} />
+		<div class="relative">
+			<TiptapEditor
+				class="px-3 py-2"
+				content={form.review}
+				bind:editorState
+				bind:value={form.review}
+				extensions={{
+					placeholderText: 'Отзыв'
+				}}
+				simple
+			/>
+			<div class="absolute right-1.5 bottom-1.5 flex flex-col">
+				<Tooltip>
+					<TooltipTrigger>
+						<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
+							<WandIcon class="size-6" />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent>Спойлер</TooltipContent>
+				</Tooltip>
+				<Tooltip>
+					<TooltipTrigger>
+						<EmotesPopover onEmoteClick={handleEmoteClick} />
+					</TooltipTrigger>
+					<TooltipContent>Смайлы</TooltipContent>
+				</Tooltip>
 			</div>
+		</div>
 
-			<div class="relative">
-				<TiptapEditor
-					class="px-3 py-2"
-					content={form.review}
-					bind:editorState
-					bind:value={form.review}
-					extensions={{
-						placeholderText: 'Отзыв'
-					}}
-					simple
-				/>
-				<div class="absolute right-1.5 bottom-1.5 flex flex-col">
-					<Tooltip>
-						<TooltipTrigger>
-							<Button variant="ghost" size="icon" onclick={toggleSpoiler}>
-								<WandIcon class="size-6" />
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>Спойлер</TooltipContent>
-					</Tooltip>
-					<Tooltip>
-						<TooltipTrigger>
-							<EmotesPopover onEmoteClick={handleEmoteClick} />
-						</TooltipTrigger>
-						<TooltipContent>Смайлы</TooltipContent>
-					</Tooltip>
-				</div>
-			</div>
-
-			<div class="ml-auto w-[264px]">
-				{#if hasHltbError && bypassClickCount < 5}
-					<Tooltip>
-						<TooltipTrigger>
-							<Button
-								class="w-full cursor-not-allowed opacity-50"
-								onclick={(e) => {
-									e.preventDefault()
-									bypassClickCount++
-								}}
-							>
-								<BoxIcon />
-								{buttonText}
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent class="max-w-[400px]">
-							Ваше время прохождения по категории стрима меньше выбранного диапозона HLTB, согласно
-							разделу 2 пункту 5 правил если время прохождения стримером меньше HLTB, то нужно
-							изменить выбранный диапозон HLTB на тот, который включает время, в котором прошёл
-							стример. Если вы уверены, что прошли за время в выбранном диапазоне HLTB, то нажмите
-							на кнопку ({5 - bypassClickCount} нажатий для обхода)
-						</TooltipContent>
-					</Tooltip>
-				{:else}
-					<Button
-						class="w-full"
-						disabled={!isFormFilled}
-						onclick={saveReview}
-						loading={usersStore.saveMoveForm.isPending}
-					>
-						<BoxIcon />
-						{buttonText}
-					</Button>
-				{/if}
-			</div>
+		<div class="ml-auto w-[264px]">
+			{#if hasHltbError && bypassClickCount < 5}
+				<Tooltip>
+					<TooltipTrigger>
+						<Button
+							class="w-full cursor-not-allowed opacity-50"
+							onclick={(e) => {
+								e.preventDefault()
+								bypassClickCount++
+							}}
+						>
+							<BoxIcon />
+							{buttonText}
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent class="max-w-[400px]">
+						Ваше время прохождения по категории стрима меньше выбранного диапозона HLTB, согласно
+						разделу 2 пункту 5 правил если время прохождения стримером меньше HLTB, то нужно
+						изменить выбранный диапозон HLTB на тот, который включает время, в котором прошёл
+						стример. Если вы уверены, что прошли за время в выбранном диапазоне HLTB, то нажмите на
+						кнопку ({5 - bypassClickCount} нажатий для обхода)
+					</TooltipContent>
+				</Tooltip>
+			{:else}
+				<Button
+					class="w-full"
+					disabled={!isFormFilled}
+					onclick={saveReview}
+					loading={usersStore.saveMoveForm.isPending}
+				>
+					<BoxIcon />
+					{buttonText}
+				</Button>
+			{/if}
 		</div>
 	</div>
 </div>

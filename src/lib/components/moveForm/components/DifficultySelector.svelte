@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select'
+	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 	import type { Difficulty } from '$lib/types'
 
 	type Props = {
@@ -20,15 +20,12 @@
 		{ value: 'hard', label: 'Сложная' },
 		{ value: 'very-hard', label: 'Очень сложная' }
 	]
-
-	const trigger = $derived(items.find((f) => f.value === value)?.label ?? 'Сложность')
 </script>
 
-<Select type="single" {disabled} bind:value>
-	<SelectTrigger class="flex-1 overflow-hidden">{trigger}</SelectTrigger>
-	<SelectContent>
+<Tabs value={value ?? ''} onValueChange={(v) => (value = v as Difficulty)}>
+	<TabsList class="flex w-full flex-wrap gap-2">
 		{#each items as item (item.value)}
-			<SelectItem value={item.value}>{item.label}</SelectItem>
+			<TabsTrigger value={item.value} {disabled} class="flex-1 uppercase">{item.label}</TabsTrigger>
 		{/each}
-	</SelectContent>
-</Select>
+	</TabsList>
+</Tabs>
