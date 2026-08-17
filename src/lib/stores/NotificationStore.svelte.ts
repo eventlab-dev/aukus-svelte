@@ -57,6 +57,7 @@ export class NotificationStore {
 			}
 		})
 		params.refetchInterval = 1000 * 60
+		params.refetchOnWindowFocus = false
 		return params
 	})
 
