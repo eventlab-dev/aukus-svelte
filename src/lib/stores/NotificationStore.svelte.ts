@@ -1,7 +1,6 @@
 import { EventlabBaseUrl } from '$lib/client'
 import type { AchievementItem, UnlockedAchievementItem } from '$lib/heyapi/aukus/types.gen'
 import { getNotificationsApiNotificationsGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
-import { getNotificationsApiNotificationsGet } from '$lib/heyapi/eventlab/sdk.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
 
