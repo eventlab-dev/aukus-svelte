@@ -1,3 +1,4 @@
+import { EventlabBaseUrl } from '$lib/client'
 import type { AchievementItem, UnlockedAchievementItem } from '$lib/heyapi/aukus/types.gen'
 import { getNotificationsApiNotificationsGet } from '$lib/heyapi/eventlab/sdk.gen'
 import { createQuery } from '@tanstack/svelte-query'
@@ -42,6 +43,7 @@ export class NotificationStore {
 	notificationsQuery = createQuery(() => ({
 		queryKey: ['notifications'],
 		refetchInterval: 1000 * 60,
+		baseUrl: EventlabBaseUrl,
 		queryFn: async () => {
 			const { data } = await getNotificationsApiNotificationsGet({
 				query: { since_timestamp: this.notificationsTimestamp },
