@@ -52,6 +52,7 @@ export class NotificationStore {
 
 	notificationsQuery = createQuery(() => {
 		const params = getNotificationsApiNotificationsGetOptions({
+			baseUrl: EventlabBaseUrl,
 			query: {
 				since_timestamp: this.notificationsTimestamp
 			}
