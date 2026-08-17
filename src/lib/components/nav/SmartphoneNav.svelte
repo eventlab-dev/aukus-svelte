@@ -17,11 +17,48 @@
 		PHONE_BG
 	} from '$lib/constants'
 	import { Button } from '../ui/button'
+	import NotificationCard from './NotificationCard.svelte'
+	import { SvelteMap, SvelteSet } from 'svelte/reactivity'
+	import { untrack } from 'svelte'
 
 	let isOpen = $state(false)
 
 	const app = getAppManager()
 	const { navStore, timeStore, notificationStore } = app
+
+	const DISMISS_TIMEOUT = 10000
+
+	const dismissedNotifications = new SvelteSet<number>()
+	const seenNotifications = new SvelteSet<number>()
+	const dismissTimers = new SvelteMap<number, ReturnType<typeof setTimeout>>()
+
+	$effect(() => {
+		const notifications = notificationStore.notifications ?? []
+		untrack(() => {
+			for (const notification of notifications) {
+				if (!seenNotifications.has(notification.id)) {
+					seenNotifications.add(notification.id)
+					const timer = setTimeout(() => {
+						dismissedNotifications.add(notification.id)
+					}, DISMISS_TIMEOUT)
+					dismissTimers.set(notification.id, timer)
+				}
+			}
+		})
+	})
+
+	const visibleNotifications = $derived(
+		(notificationStore.notifications ?? []).filter((n) => !dismissedNotifications.has(n.id))
+	)
+
+	$effect(() => {
+		return () => {
+			for (const timer of dismissTimers.values()) {
+				clearTimeout(timer)
+			}
+			dismissTimers.clear()
+		}
+	})
 
 	type AppItem = {
 		id: string
@@ -83,14 +120,20 @@
 </script>
 
 <div class="fixed bottom-8 left-4 z-50">
-	<div>NOTIFICATION</div>
+	<div class="mb-4 flex flex-col gap-3">
+		{#each visibleNotifications as notification (notification.id)}
+			<div transition:fly={{ duration: 500, y: 200 }}>
+				<NotificationCard {notification} />
+			</div>
+		{/each}
+	</div>
 
 	{#if isOpen}
 		<div
 			bind:this={popup}
 			class="relative mb-2 h-[560px] w-[360px] pt-[66px]"
 			style="background-image: url('{PHONE_BG}'); background-size: cover;"
-			transition:fly={{ duration: 300, y: 20 }}
+			transition:fly={{ duration: 500, y: 20 }}
 		>
 			<div class="absolute top-[27px] right-[48px] font-extrabold">{time} МСК</div>
 			<div class="w-full text-center text-2xl font-bold">{greetingText}</div>

@@ -53,7 +53,8 @@ export class NotificationStore {
 		const params = getNotificationsApiNotificationsGetOptions({
 			baseUrl: EventlabBaseUrl,
 			query: {
-				since_timestamp: this.notificationsTimestamp
+				since_timestamp: this.notificationsTimestamp,
+				limit: 10
 			}
 		})
 		params.refetchInterval = 1000 * 60
