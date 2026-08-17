@@ -26,10 +26,11 @@ export class UsersStore {
 		...fetchCurrentUserApiUsersCurrentGetOptions({
 			baseUrl: EventlabBaseUrl,
 			auth: defaultAuth,
-			credentials: 'include',
+			credentials: 'include'
 		}),
 		retry: false,
-		enabled: Boolean(this.accessToken)
+		enabled: Boolean(this.accessToken),
+		refetchOnWindowFocus: false
 	}))
 
 	loginMutation = createMutation(() =>
@@ -129,7 +130,8 @@ export class UsersStore {
 			baseUrl: AukusBaseUrl,
 			auth: defaultAuth
 		}),
-		enabled: () => !!this.myUser
+		enabled: () => !!this.myUser,
+		refetchOnWindowFocus: false
 	}))
 
 	unlockableSkins = $derived(this.unlockableSkinsQuery.data?.skins ?? [])
