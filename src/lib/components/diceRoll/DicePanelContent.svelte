@@ -256,30 +256,30 @@
 </script>
 
 {#if canRollDice}
-	<div class="flex min-w-[500px] flex-col gap-3 rounded-3xl bg-card p-3">
-		<div class="font-semibold text-muted-foreground">Бросок кубика</div>
+	<div class="flex w-[440px] flex-col gap-3 rounded-3xl border-dashed bg-card p-3">
 		<div class="flex gap-3">
-			<div class="flex-1 rounded-2xl bg-secondary p-3">
-				<p class="mb-1.5 text-sm font-semibold">Шанс на лестницу</p>
-				<p class="text-left text-2xl font-bold">
+			<div class="flex-1 rounded-2xl text-center font-extrabold">
+				<p class="mb-1.5">Шанс лестницы</p>
+				<p class="text-[32px]">
 					{ladderChance.toFixed(1)}%
-					{#if ladders.length > 0}
-						<span class="text-muted-foreground">— {ladders.join(', ')}</span>
-					{/if}
 				</p>
 			</div>
-			<div class="flex-1 rounded-2xl bg-secondary p-3">
-				<p class="mb-1.5 text-sm font-semibold">Шанс на змейку</p>
-				<p class="text-left text-2xl font-bold">
+			<div class="flex-1 rounded-2xl text-center font-extrabold">
+				<p class="mb-1.5">Шанс змейки</p>
+				<p class="text-[32px]">
 					{snakeChance.toFixed(1)}%
-					{#if snakes.length > 0}
-						<span class="text-muted-foreground">— {snakes.join(', ')}</span>
-					{/if}
 				</p>
 			</div>
 		</div>
+		<Tabs bind:value={selectedDiceOption}>
+			<TabsList class="w-full flex-wrap justify-center gap-2">
+				{#each activeDiceOptions as option (option.value)}
+					<TabsTrigger value={option.value}>{option.label}</TabsTrigger>
+				{/each}
+			</TabsList>
+		</Tabs>
 		<Button
-			class="w-full bg-secondary"
+			class="w-full rounded-2xl bg-secondary font-extrabold"
 			onclick={handleThrowDice}
 			loading={usersStore.rollDice.isPending || usersStore.finishMove.isPending}
 		>
