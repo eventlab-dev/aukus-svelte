@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button'
 	import AchievementsNotifications from '$lib/components/achievements/AchievementsNotifications.svelte'
 	import DiceAnimationPanel from '$lib/components/diceRoll/DiceAnimationPanel.svelte'
 	import DicePanel from '$lib/components/diceRoll/DicePanel.svelte'

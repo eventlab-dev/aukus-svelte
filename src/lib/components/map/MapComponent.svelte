@@ -300,7 +300,6 @@ init arrow 70 270 510 210
 	<div
 		id={MapContainerId}
 		class="map-transform absolute top-0 left-0 origin-top-left overflow-hidden"
-
 		onwheel={onWheel}
 		onmousedown={onMouseDown}
 		onmousemove={onMouseMove}

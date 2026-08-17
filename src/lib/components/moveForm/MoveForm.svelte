@@ -11,7 +11,6 @@
 	import GameTitle from './components/GameTitle.svelte'
 	import EmotesPopover from './components/EmotesPopover.svelte'
 	import type { EmoteItem } from '$lib/api/emotes'
-	import X from '@lucide/svelte/icons/x'
 	import WandIcon from '../icons/WandIcon.svelte'
 	import type { GameDifficulty, GameLength, PlayerMoveType } from '$lib/heyapi/aukus/types.gen'
 	import type { IgdbGameSummary } from '$lib/heyapi/eventlab/types.gen'

@@ -63,10 +63,6 @@
 
 	let filter = $state<SkinSlot | 'all'>('all')
 
-	function selectFilter(part: SkinSlot | 'all') {
-		filter = part
-	}
-
 	const availableSkins = $derived.by(() => {
 		if (!app.myPlayer) {
 			return []
