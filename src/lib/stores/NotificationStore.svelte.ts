@@ -1,5 +1,6 @@
 import { EventlabBaseUrl } from '$lib/client'
 import type { AchievementItem, UnlockedAchievementItem } from '$lib/heyapi/aukus/types.gen'
+import { getNotificationsApiNotificationsGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { getNotificationsApiNotificationsGet } from '$lib/heyapi/eventlab/sdk.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
@@ -13,6 +14,15 @@ type Params = {
 export class NotificationStore {
 	constructor(params: Params) {
 		this.getAchievementsById = params.getAchievementsById
+
+		$effect(() => {
+			if (this.notifications && this.notifications.length) {
+				const maxTs = Math.max(...this.notifications.map((n) => n.created_at))
+				if (maxTs > this.notificationsTimestamp) {
+					this.notificationsTimestamp = maxTs
+				}
+			}
+		})
 	}
 
 	getAchievementsById: () => SvelteMap<number, AchievementItem>
@@ -40,22 +50,15 @@ export class NotificationStore {
 
 	notificationsTimestamp = Math.floor(Temporal.Now.instant().epochMilliseconds / 1000)
 
-	notificationsQuery = createQuery(() => ({
-		queryKey: ['notifications'],
-		refetchInterval: 1000 * 60,
-		baseUrl: EventlabBaseUrl,
-		queryFn: async () => {
-			const { data } = await getNotificationsApiNotificationsGet({
-				query: { since_timestamp: this.notificationsTimestamp },
-				throwOnError: true
-			})
-			if (data.notifications.length) {
-				const maxTs = Math.max(...data.notifications.map((n) => n.created_at))
-				if (maxTs > this.notificationsTimestamp) {
-					this.notificationsTimestamp = maxTs
-				}
+	notificationsQuery = createQuery(() => {
+		const params = getNotificationsApiNotificationsGetOptions({
+			query: {
+				since_timestamp: this.notificationsTimestamp
 			}
-			return data
-		}
-	}))
+		})
+		params.refetchInterval = 1000 * 60
+		return params
+	})
+
+	notifications = $derived(this.notificationsQuery.data?.notifications)
 }
