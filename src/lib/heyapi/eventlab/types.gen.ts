@@ -1057,7 +1057,65 @@ export type PlayerMoveNotificationItem = {
      * Notification Type
      */
     notification_type: 'player_move';
-    payload: PlayerMoveNotificationRequest;
+    payload: PlayerMoveNotificationPayload;
+};
+
+/**
+ * PlayerMoveNotificationPayload
+ */
+export type PlayerMoveNotificationPayload = {
+    /**
+     * User Slug
+     */
+    user_slug: string;
+    /**
+     * Move Type
+     */
+    move_type: string;
+    /**
+     * Item Title
+     */
+    item_title: string;
+    /**
+     * Item Review
+     */
+    item_review: string;
+    /**
+     * Item Rating
+     */
+    item_rating: number | null;
+    /**
+     * Cell From
+     */
+    cell_from: number;
+    /**
+     * Cell To
+     */
+    cell_to: number;
+    /**
+     * Dice Roll Sum
+     */
+    dice_roll_sum?: number | null;
+    /**
+     * Game Id
+     */
+    game_id?: number | null;
+    /**
+     * Cover Image Url
+     */
+    cover_image_url?: string | null;
+    /**
+     * Item Duration
+     */
+    item_duration?: number;
+    /**
+     * Snake
+     */
+    snake?: number | null;
+    /**
+     * Ladder
+     */
+    ladder?: number | null;
 };
 
 /**

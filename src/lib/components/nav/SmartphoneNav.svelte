@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-	import { Button } from './ui/button'
+
 	import type { AppUrl } from '$lib/stores/NavStore.svelte'
 	import {
 		MENU_ABOUT_ICON,
@@ -16,11 +16,12 @@
 		MENU_WHEELS_ICON,
 		PHONE_BG
 	} from '$lib/constants'
+	import { Button } from '../ui/button'
 
 	let isOpen = $state(false)
 
 	const app = getAppManager()
-	const { navStore, timeStore } = app
+	const { navStore, timeStore, notificationStore } = app
 
 	type AppItem = {
 		id: string
@@ -82,6 +83,8 @@
 </script>
 
 <div class="fixed bottom-8 left-4 z-50">
+	<div>NOTIFICATION</div>
+
 	{#if isOpen}
 		<div
 			bind:this={popup}

@@ -43,7 +43,11 @@
 	</div>
 </div>
 
-{#if navStore.dynamicPage}
+{#if app.moveFormOpen}
+	<PageContainer onClose={() => (app.moveFormOpen = false)}>
+		<MoveForm />
+	</PageContainer>
+{:else if navStore.dynamicPage}
 	<PageContainer>
 		<PlayerPageWrapper />
 	</PageContainer>
@@ -92,12 +96,6 @@
 {:else if navStore.appPage === 'profile'}
 	<PageContainer>
 		<ProfilePage />
-	</PageContainer>
-{/if}
-
-{#if app.moveFormOpen}
-	<PageContainer onClose={() => (app.moveFormOpen = false)}>
-		<MoveForm />
 	</PageContainer>
 {/if}
 

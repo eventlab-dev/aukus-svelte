@@ -8,7 +8,7 @@
 	import FrontVersionInfo from '$lib/components/FrontVersionInfo.svelte'
 	import Metrika from '$lib/components/Metrika.svelte'
 	import SnowEffect from './SnowEffect.svelte'
-	import SmartphoneNav from './SmartphoneNav.svelte'
+	import SmartphoneNav from './nav/SmartphoneNav.svelte'
 
 	let { children } = $props()
 
