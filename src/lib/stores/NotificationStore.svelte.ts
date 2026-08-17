@@ -1,4 +1,6 @@
 import type { AchievementItem, UnlockedAchievementItem } from '$lib/heyapi/aukus/types.gen'
+import { getNotificationsApiNotificationsGet } from '$lib/heyapi/eventlab/sdk.gen'
+import { createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
 
 type PersonalAchievement = AchievementItem & { is_first: boolean }
@@ -34,4 +36,24 @@ export class NotificationStore {
 	hideAchievementNotification(id: number) {
 		this.unlockedAchievements = this.unlockedAchievements.filter((i) => i.id !== id)
 	}
+
+	notificationsTimestamp = Math.floor(Temporal.Now.instant().epochMilliseconds / 1000)
+
+	notificationsQuery = createQuery(() => ({
+		queryKey: ['notifications'],
+		refetchInterval: 1000 * 60,
+		queryFn: async () => {
+			const { data } = await getNotificationsApiNotificationsGet({
+				query: { since_timestamp: this.notificationsTimestamp },
+				throwOnError: true
+			})
+			if (data.notifications.length) {
+				const maxTs = Math.max(...data.notifications.map((n) => n.created_at))
+				if (maxTs > this.notificationsTimestamp) {
+					this.notificationsTimestamp = maxTs
+				}
+			}
+			return data
+		}
+	}))
 }
