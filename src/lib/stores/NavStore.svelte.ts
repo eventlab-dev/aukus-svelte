@@ -33,6 +33,24 @@ const URL_PAGE_MAP: Record<string, AppPage> = {
 
 const STATIC_PAGES = new Set(Object.keys(URL_PAGE_MAP)) as Set<AppUrl>
 
+export type AppSubpage = string
+
+function parseUrl(url: string): { base: AppUrl | null; subpage: AppSubpage | null } {
+	if (STATIC_PAGES.has(url as AppUrl)) {
+		return { base: url as AppUrl, subpage: null }
+	}
+	for (const base of STATIC_PAGES) {
+		if (url.startsWith(base + '/')) {
+			return { base: base as AppUrl, subpage: url.slice(base.length + 1) }
+		}
+	}
+	return { base: null, subpage: null }
+}
+
+function getSubpageFromUrl(): AppSubpage | null {
+	return parseUrl(window.location.pathname).subpage
+}
+
 export type AppUrl = keyof typeof URL_PAGE_MAP
 
 type PageParams = {
@@ -50,6 +68,7 @@ export class NavStore {
 	appPage: AppPage = $state(getAppPageFromUrl())
 	appUrl: AppUrl = $state(getAppUrlFromUrl())
 	dynamicPage: string | null = $state(null)
+	subpage: AppSubpage | null = $state(getSubpageFromUrl())
 	pageParams: PageParams = $state({})
 
 	closePage() {
@@ -64,26 +83,21 @@ export class NavStore {
 			this.pageParams = params.pageParams
 		}
 
-		// Check if it's a static page
-		if (STATIC_PAGES.has(url as AppUrl)) {
-			this.changePage(url as AppUrl, params)
-		} else {
-			// Handle dynamic pages (like player profiles)
-			this.changeDynamicPage(url, params)
+		// Check if it's a static page or a subpage of one (e.g. /profile/integrations)
+		const parsed = parseUrl(url)
+		if (parsed.base) {
+			this.appUrl = parsed.base
+			this.appPage = URL_PAGE_MAP[parsed.base]
+			this.subpage = parsed.subpage
+			this.dynamicPage = null
+			if (params.updateHistory) {
+				pushState(url, {})
+			}
+			return
 		}
-	}
 
-	changePage(
-		url: AppUrl,
-		params: { updateHistory: boolean } = { updateHistory: true }
-	) {
-		const page = URL_PAGE_MAP[url]
-		this.appUrl = url
-		this.appPage = page
-		if (params.updateHistory) {
-			pushState(url, {})
-		}
-		this.dynamicPage = null
+		// Handle dynamic pages (like player profiles)
+		this.changeDynamicPage(url, params)
 	}
 
 	changeDynamicPage(url: string, params: { updateHistory: boolean } = { updateHistory: true }) {
@@ -93,6 +107,7 @@ export class NavStore {
 		if (params.updateHistory) {
 			pushState(url, {})
 		}
+		this.subpage = null
 	}
 
 	sync() {
@@ -129,8 +144,10 @@ function getAppPageFromUrl(): AppPage {
 
 function getAppUrlFromUrl(): AppUrl {
 	const browserPath = window.location.pathname
-	if (STATIC_PAGES.has(browserPath as AppUrl)) {
-		return browserPath as AppUrl
+	// Static pages and their subpages resolve to their base URL
+	const parsed = parseUrl(browserPath)
+	if (parsed.base) {
+		return parsed.base
 	}
 	// For dynamic URLs, return the main page URL
 	return '/'

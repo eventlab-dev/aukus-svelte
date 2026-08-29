@@ -7,6 +7,7 @@
 	import ShitMenu from '$lib/components/quickMenu/options/shitMenu/ShitMenu.svelte'
 
 	const app = getAppManager()
+	const { navStore } = app
 
 	const myPlayer = $derived(app.myPlayer)
 	const myUser = $derived(app.myUser)
@@ -14,7 +15,21 @@
 	const integrations = $derived(integrationsStore.integrations?.integrations ?? [])
 	const startAuthQuery = $derived(integrationsStore.startAuthQuery)
 
-	let activeTab = $state('skins')
+	const VALID_TABS = ['skins', 'shit', 'integrations']
+
+	const activeTab = $derived(
+		navStore.appPage === 'profile' && navStore.subpage && VALID_TABS.includes(navStore.subpage)
+			? navStore.subpage
+			: 'skins'
+	)
+
+	function onTabChange(next: string) {
+		if (next === 'skins') {
+			navStore.navigate('/profile')
+		} else {
+			navStore.navigate(`/profile/${next}`)
+		}
+	}
 
 	async function startIntegration(providerName: string) {
 		try {
@@ -41,7 +56,7 @@
 				<div class="text-4xl">{myPlayer.username}</div>
 			</div>
 
-			<Tabs bind:value={activeTab} class="w-full">
+			<Tabs value={activeTab} onValueChange={(v) => onTabChange(v)} class="w-full">
 				<TabsList class="mb-6 flex w-full justify-center gap-2 bg-transparent">
 					<TabsTrigger value="skins">Персонаж</TabsTrigger>
 					<TabsTrigger value="shit">Подсеры</TabsTrigger>
