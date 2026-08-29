@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { LastMapPosition, MAP_IMAGE, MAP_SIDE_IMAGE, WinPosition } from '$lib/constants'
-	import { ladders, mapCellsSorted, MapContainerId, snakes } from '$lib/mapUtils'
+	import { MAP_IMAGE, MAP_SIDE_IMAGE, WinPosition } from '$lib/constants'
+	import { ladders, MapContainerId, snakes } from '$lib/mapUtils'
 	import { Fireworks, type FireworksOptions } from '@fireworks-js/svelte'
-	import CellNumber from './CellNumber.svelte'
 	import MapArrow from './MapArrow.svelte'
 	import MapArrowMarkers from './MapArrowMarkers.svelte'
 	import MapCountdown from './MapCountdown.svelte'
@@ -289,6 +288,14 @@
 	{/if}29
 init arrow 70 270 510 210
 </div> -->
+
+{#if app.eventFinished}
+	<Fireworks
+		autostart
+		{options}
+		class="fireworks pointer-events-none absolute top-0 left-0 z-9 h-[700px] w-full"
+	/>
+{/if}
 
 <button
 	class="viewport relative h-screen w-full overflow-visible"

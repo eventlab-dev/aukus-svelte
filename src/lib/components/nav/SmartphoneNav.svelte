@@ -155,7 +155,7 @@
 				{/each}
 			</div>
 			<div class="mt-3 flex w-full justify-center">
-				{#if app.myUser}
+				{#if app.myPlayer}
 					{#if app.turnState === 'filling-form'}
 						<Button
 							class="flex w-fit cursor-pointer flex-col items-center rounded-2xl uppercase"
