@@ -58,12 +58,7 @@
     "vite": "^7.0.4",
     "vite-plugin-devtools-json": "^1.0.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
-  },
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@11.24.0",
   "dependencies": {
     "@fireworks-js/svelte": "^2.10.8",
     "@tanstack/svelte-query": "^6.1.34",

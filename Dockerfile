@@ -6,9 +6,9 @@ ARG VITE_EVENTLAB_BASE_URL
 ENV VITE_AUKUS_BASE_URL=${VITE_AUKUS_BASE_URL}
 ENV VITE_EVENTLAB_BASE_URL=${VITE_EVENTLAB_BASE_URL}
 
-RUN npm install -g pnpm
+RUN corepack enable && corepack prepare pnpm@11.24.0 --activate
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN pnpm install --frozen-lockfile
 

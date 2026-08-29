@@ -10,6 +10,7 @@ experimental = true
 # alternatively, you can also install `pnpm` with mise
 postinstall = 'corepack enable pnpm && corepack use pnpm@latest-10'
 
+
 [tasks]
 [tasks.start-dev]
 description = "Start development server"
