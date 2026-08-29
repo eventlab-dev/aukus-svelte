@@ -11,7 +11,7 @@
 	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 
 	const app = getAppManager()
-	const { eventDataStore, usersStore } = app
+	const { eventDataStore, playerStore } = app
 
 	const equippedSkins = $derived.by(() => {
 		if (!app.myPlayer) {
@@ -94,7 +94,7 @@
 		) {
 			return
 		}
-		await usersStore.setSkins.mutateAsync({ body: { skin_ids: selectedSkinIds } })
+		await playerStore.setSkins.mutateAsync({ body: { skin_ids: selectedSkinIds } })
 		await eventDataStore.eventDataQuery.refetch()
 	}
 

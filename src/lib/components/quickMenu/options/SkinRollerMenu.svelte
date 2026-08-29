@@ -9,10 +9,10 @@
 	import Gift from '@lucide/svelte/icons/gift'
 
 	const app = getAppManager()
-	const { usersStore, eventDataStore } = app
+	const { playerStore, eventDataStore } = app
 
 	const rollOptions: WeightedOption<SkinItem>[] = $derived(
-		usersStore.unlockableSkins.map((s) => ({
+		playerStore.unlockableSkins.map((s) => ({
 			label: '',
 			weight: 1,
 			value: s.id.toString(),
@@ -31,12 +31,12 @@
 	function handleClose() {
 		isOpen = false
 		eventDataStore.eventDataQuery.refetch()
-		usersStore.unlockableSkinsQuery.refetch()
+		playerStore.unlockableSkinsQuery.refetch()
 		finishText = getConfirmationText()
 	}
 
 	async function handleRollFinish(winner: WeightedOption<SkinItem>) {
-		await usersStore.unlockSkinQuery.mutateAsync({
+		await playerStore.unlockSkinQuery.mutateAsync({
 			body: {
 				skin_id: Number(winner.value)
 			}

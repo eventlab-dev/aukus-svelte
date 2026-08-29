@@ -31,9 +31,9 @@
 	}
 
 	const app = getAppManager()
-	const { usersStore, eventDataStore, gameTimeStore } = app
+	const { playerStore, eventDataStore, gameTimeStore } = app
 
-	// const { saveMoveForm } = usersStore
+	// const { saveMoveForm } = playerStore
 	// const { eventDataQuery } = eventDataStore
 	// const { hltbMatch, gameTitle: timeSearchTitle, categoryDuration, hltbLink } = gameTimeStore
 
@@ -134,7 +134,7 @@
 			}
 		}
 
-		await usersStore.saveMoveForm.mutateAsync({
+		await playerStore.saveMoveForm.mutateAsync({
 			body: {
 				type: form.status!,
 				item_review: form.review,
@@ -325,7 +325,7 @@
 					class="w-full rounded-2xl uppercase"
 					disabled={!isFormFilled}
 					onclick={saveReview}
-					loading={usersStore.saveMoveForm.isPending}
+					loading={playerStore.saveMoveForm.isPending}
 				>
 					<BoxIcon />
 					{buttonText}

@@ -177,6 +177,17 @@
 					>
 						<span class="text-xs">Выйти</span>
 					</Button>
+				{:else if app.myUser}
+					<Button
+						class="flex cursor-pointer flex-col items-center rounded-2xl"
+						variant="default"
+						onclick={() => {
+							app.usersStore.logout()
+							isOpen = false
+						}}
+					>
+						<span class="text uppercase">Выйти</span>
+					</Button>
 				{:else}
 					<Button
 						class="flex cursor-pointer flex-col items-center rounded-2xl"

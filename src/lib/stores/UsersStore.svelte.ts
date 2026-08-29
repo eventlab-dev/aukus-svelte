@@ -1,17 +1,9 @@
-import { AukusBaseUrl, EventlabBaseUrl } from '$lib/client'
+import { EventlabBaseUrl } from '$lib/client'
 import { DEFAULT_REFETCH } from '$lib/constants'
-import {
-	createPlayerMoveApiPlayersMovePostMutation,
-	finishPlayerMoveApiPlayersMoveFinishPostMutation,
-	getUnlockableSkinsApiPlayersUnlockableSkinsGetOptions,
-	setPlayerSkinsApiPlayersSkinsPostMutation,
-	unlockSkinApiPlayersUnlockSkinPostMutation
-} from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
 	getUsersApiUsersGetOptions,
-	loginApiLoginPostMutation,
-	makeDiceRollApiDiceRollsPostMutation
+	loginApiLoginPostMutation
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
@@ -96,50 +88,4 @@ export class UsersStore {
 
 	users = $derived(this.usersQuery.data?.users ?? [])
 	usersBySlug = $derived(new SvelteMap(this.users.map((user) => [user.slug, user])))
-
-	saveMoveForm = createMutation(() =>
-		createPlayerMoveApiPlayersMovePostMutation({
-			baseUrl: AukusBaseUrl,
-			auth: defaultAuth
-		})
-	)
-
-	finishMove = createMutation(() =>
-		finishPlayerMoveApiPlayersMoveFinishPostMutation({
-			baseUrl: AukusBaseUrl,
-			auth: defaultAuth
-		})
-	)
-
-	rollDice = createMutation(() =>
-		makeDiceRollApiDiceRollsPostMutation({
-			baseUrl: EventlabBaseUrl,
-			auth: defaultAuth
-		})
-	)
-
-	setSkins = createMutation(() =>
-		setPlayerSkinsApiPlayersSkinsPostMutation({
-			baseUrl: AukusBaseUrl,
-			auth: defaultAuth
-		})
-	)
-
-	unlockableSkinsQuery = createQuery(() => ({
-		...getUnlockableSkinsApiPlayersUnlockableSkinsGetOptions({
-			baseUrl: AukusBaseUrl,
-			auth: defaultAuth
-		}),
-		enabled: () => !!this.myUser,
-		refetchOnWindowFocus: false
-	}))
-
-	unlockableSkins = $derived(this.unlockableSkinsQuery.data?.skins ?? [])
-
-	unlockSkinQuery = createMutation(() =>
-		unlockSkinApiPlayersUnlockSkinPostMutation({
-			baseUrl: AukusBaseUrl,
-			auth: defaultAuth
-		})
-	)
 }

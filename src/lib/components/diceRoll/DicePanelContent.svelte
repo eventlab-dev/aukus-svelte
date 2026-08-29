@@ -33,7 +33,7 @@
 
 	const app = getAppManager()
 
-	const { usersStore, eventDataStore, movementStore, notificationStore, statsStore } = app
+	const { playerStore, eventDataStore, movementStore, notificationStore, statsStore } = app
 
 	const activeDiceOptions: Option[] = $derived.by(() => {
 		const allOptions: Option[] = [
@@ -69,14 +69,14 @@
 
 		const myPlayerBeforeRoll = app.myPlayer!
 
-		const rollResult = await usersStore.rollDice.mutateAsync({
+		const rollResult = await playerStore.rollDice.mutateAsync({
 			body: {
 				dice,
 				used: true,
 				test_values: 'diceRoll' in window ? (window.diceRoll as number[]) : []
 			}
 		})
-		const moveParams = await usersStore.finishMove.mutateAsync({
+		const moveParams = await playerStore.finishMove.mutateAsync({
 			body: {
 				dice_roll_id: rollResult.id
 			}
@@ -281,7 +281,7 @@
 		<Button
 			class="w-full rounded-2xl bg-secondary font-extrabold"
 			onclick={handleThrowDice}
-			loading={usersStore.rollDice.isPending || usersStore.finishMove.isPending}
+			loading={playerStore.rollDice.isPending || playerStore.finishMove.isPending}
 		>
 			Бросить кубики — {selectedDiceOption === 'drop' ? dropDiceText() : selectedDiceOption}
 		</Button>

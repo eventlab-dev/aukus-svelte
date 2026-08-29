@@ -5,6 +5,7 @@ import { GameHistoryStore } from './GamesHistoryStore.svelte'
 import { PlayerMovesStore } from './PlayersMovesStore.svelte'
 import SoundManager from './SoundManager.svelte'
 import { UsersStore } from './UsersStore.svelte'
+import { PlayerStore } from './PlayerStore.svelte'
 import { type PlayerData, type TurnState } from '$lib/types'
 import { MovementStore } from './MovementStore.svelte'
 import { StatsStore } from './StatsStore.svelte'
@@ -28,6 +29,10 @@ export class AppManager {
 	users = $derived(this.usersStore.users)
 	myUser = $derived(this.usersStore.myUser)
 
+	playerStore: PlayerStore = new PlayerStore({
+		getIsPlayer: () => this.myPlayer !== null
+	})
+
 	eventDataStore = new EventDataStore()
 	statsStore = new StatsStore()
 
@@ -36,7 +41,7 @@ export class AppManager {
 	errorNotificationStore = new ErrorNotificationStore()
 	shitStore = new ShitStore()
 	integrationsStore = new IntegrationsStore({
-		getPlayerSlug: () => this.myUser?.slug ?? null
+		getPlayerSlug: () => this.myPlayer?.slug ?? null
 	})
 
 	timeStore = new TimeStore()
