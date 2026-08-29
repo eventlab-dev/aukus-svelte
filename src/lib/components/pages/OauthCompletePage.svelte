@@ -8,12 +8,19 @@
 	const app = getAppManager()
 
 	const provider = $derived(page.url.searchParams.get('provider') ?? '')
+	const oauthError = $derived(page.url.searchParams.get('error') ?? '')
+	const oauthErrorDescription = $derived(page.url.searchParams.get('error_description') ?? '')
 	const myUser = $derived(app.myUser)
 	const myUserQuery = app.usersStore.myUserQuery
 
 	let status = $state<'loading' | 'success' | 'error'>('loading')
 
 	$effect(() => {
+		if (oauthError) {
+			status = 'error'
+			return
+		}
+
 		if (myUserQuery.isLoading || myUserQuery.isPending) {
 			return
 		}
@@ -39,8 +46,13 @@
 		</div>
 	{:else if status === 'error'}
 		<div class="text-center text-lg font-semibold text-red-500">
-			Не удалось завершить интеграцию с {provider}
+			{oauthError ? oauthError : `Не удалось завершить интеграцию с ${provider}`}
 		</div>
+		{#if oauthErrorDescription}
+			<div class="max-w-md px-4 text-center text-sm text-red-400">
+				{oauthErrorDescription}
+			</div>
+		{/if}
 		<Button onclick={() => goto('/')}>Назад</Button>
 	{/if}
 </div>
