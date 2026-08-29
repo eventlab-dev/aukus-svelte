@@ -2,6 +2,7 @@
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/state'
+	import { onMount } from 'svelte'
 	import Spinner from '$lib/components/Spinner.svelte'
 	import { Button } from '$lib/components/ui/button'
 
@@ -14,6 +15,10 @@
 	const myUserQuery = app.usersStore.myUserQuery
 
 	let status = $state<'loading' | 'success' | 'error'>('loading')
+
+	onMount(() => {
+		app.usersStore.myUserQuery.refetch()
+	})
 
 	$effect(() => {
 		if (oauthError) {
