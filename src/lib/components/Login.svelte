@@ -1,75 +1,51 @@
 <script lang="ts">
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-	import Profile2Icon from './icons/Profile2Icon.svelte'
 	import TwitchIcon from './icons/TwitchIcon.svelte'
+	import KickIcon from './icons/KickIcon.svelte'
 	import { Button } from './ui/button'
-	import { Input } from './ui/input'
 
 	const app = getAppManager()
-	const { usersStore, navStore } = app
+	const { integrationsStore } = app
 
-	let name = $state('')
-	let password = $state('')
+	let pendingProvider = $state<string | null>(null)
 
-	const isValid = $derived(!!name && !!password)
-
-	async function login() {
-		const success = await usersStore.login(name, password)
-		if (success) {
-			navStore.closePage()
+	async function loginWithProvider(provider: string) {
+		try {
+			pendingProvider = provider
+			const result = await integrationsStore.startAuth(provider, 'aukus5')
+			if (result.authorization_url) {
+				window.location.href = result.authorization_url
+			}
+		} catch (error) {
+			console.error('Failed to start OAuth login:', error)
+		} finally {
+			pendingProvider = null
 		}
-	}
-
-	function clearError() {
-		usersStore.loginError = null
 	}
 </script>
 
 <div class="flex w-full flex-col gap-5 rounded-xl bg-card p-3">
 	<div class="mx-auto w-fit space-y-2">
-		<Profile2Icon class="mx-auto" />
 		<div class="text-xl leading-6 font-bold">Войти в аккаунт</div>
 	</div>
-	<div class="space-y-1.5">
-		<Input
-			id="name"
-			type="text"
-			autocomplete="name"
-			placeholder="Имя"
-			class="rounded-b-[4px] bg-muted"
-			bind:value={name}
-			onkeypress={(e) => e.key === 'Enter' && isValid && login()}
-			oninput={clearError}
-		/>
-		<Input
-			id="password"
-			type="password"
-			placeholder="Пароль"
-			class="rounded-t-[4px] bg-muted"
-			bind:value={password}
-			onkeypress={(e) => e.key === 'Enter' && isValid && login()}
-			oninput={clearError}
-		/>
-		{#if usersStore.loginError}
-			<div class="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
-				{usersStore.loginError}
-			</div>
-		{/if}
-	</div>
-	<div class="flex flex-col items-center justify-center gap-1.5">
+	<div class="flex flex-col gap-3">
 		<Button
-			class="w-full rounded-xl bg-secondary"
-			disabled={!isValid}
-			onclick={login}
-			loading={usersStore.loginMutation.isPending}>Войти</Button
-		>
-		<Button
-			class="hidden w-full rounded-t-[4px] bg-[#9146FF] hover:bg-[#9146FF]/80"
-			onclick={login}
-			loading={usersStore.loginMutation.isPending}
+			class="w-full rounded-xl bg-[#9146FF] text-white hover:bg-[#9146FF]/80"
+			disabled={pendingProvider !== null}
+			loading={pendingProvider === 'twitch'}
+			onclick={() => loginWithProvider('twitch')}
 		>
 			<TwitchIcon />
 			Войти через Twitch
+		</Button>
+		<Button
+			class="w-full rounded-xl bg-[#53fc18] text-black hover:bg-[#53fc18]/80"
+			disabled={pendingProvider !== null}
+			loading={pendingProvider === 'kick'}
+			onclick={() => loginWithProvider('kick')}
+		>
+			<KickIcon />
+			Войти через Kick
 		</Button>
 	</div>
 </div>
