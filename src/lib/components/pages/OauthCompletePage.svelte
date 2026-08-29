@@ -20,7 +20,7 @@
 
 		if (myUser) {
 			status = 'success'
-			goto('/profile', { replaceState: true })
+			goto('/profile/integrations', { replaceState: true })
 		} else {
 			status = 'error'
 		}
