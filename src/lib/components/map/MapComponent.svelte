@@ -146,7 +146,7 @@
 		}
 	}
 
-	function onMouseDownViewport(evt: MouseEvent) {
+	function onMouseDownViewport() {
 		mouseUpAfterDrag = false
 	}
 
