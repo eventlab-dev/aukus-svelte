@@ -30,7 +30,7 @@
 	const onFirstPage = $derived(pageId === 0)
 	const onLastPage = $derived(pageId + 1 === pagesAmount)
 
-	const currentPlayer = $derived(app.playersInOrder[app.playersInOrder.length - pageId] ?? null)
+	const currentPlayer = $derived(app.playersInOrder.at(-pageId) ?? null)
 
 	const color = $derived(currentPlayer?.color ?? 'oklch(0.56 0.23 279.32)')
 

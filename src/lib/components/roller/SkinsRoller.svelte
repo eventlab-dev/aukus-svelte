@@ -43,7 +43,7 @@
 			if (r < opt.weight) return opt
 			r -= opt.weight
 		}
-		return options[options.length - 1]
+		return options.at(-1)!
 	}
 
 	function generateList<X extends WeightedOption<T>>(len: number, options: X[]): X[] {
@@ -166,7 +166,7 @@
 		if (indexNow !== centerIndex) {
 			if (direction < 0) {
 				// shift left: remove first, append random after last
-				const last = cardList[cardList.length - 1]
+				const last = cardList.at(-1)!
 				cardList = [...cardList.slice(1), getRandomExcept(options, last)]
 				offset += CARD_FULL_WIDTH
 			} else {

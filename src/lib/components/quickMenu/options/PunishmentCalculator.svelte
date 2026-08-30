@@ -62,7 +62,7 @@
 			}
 		}
 
-		const last = ranges[ranges.length - 1]
+		const last = ranges.at(-1)!
 		return {
 			shots: last.shots,
 			pushups: last.pushups,
@@ -85,9 +85,9 @@
 </script>
 
 {#snippet readonlyInput({ title, value }: { title: string; value: number })}
-	<div class="flex gap-2 flex-col font-extrabold text-center">
+	<div class="flex flex-col gap-2 text-center font-extrabold">
 		<div class="uppercase">{title}</div>
-		<div class="w-[148px] bg-secondary p-2 rounded-xl">{value}</div>
+		<div class="w-[148px] rounded-xl bg-secondary p-2">{value}</div>
 	</div>
 {/snippet}
 
@@ -106,12 +106,12 @@
 			{/if}
 		</div>
 
-		<div class="mt-20 space-y-5 w-[640px]">
+		<div class="mt-20 w-[640px] space-y-5">
 			<div class="w-full">
-				<div class="font-extrabold uppercase text-xl text-center w-full p-2">Сумма аукциона</div>
+				<div class="w-full p-2 text-center text-xl font-extrabold uppercase">Сумма аукциона</div>
 				<Input
 					type="text"
-					class="bg-transparent border-dashed-bottom rounded-none text-xl font-extrabold text-center outline-none focus-visible:ring-0"
+					class="rounded-none bg-transparent text-center text-xl font-extrabold outline-none border-dashed-bottom focus-visible:ring-0"
 					oninput={handleCursorMove}
 					bind:value={getInputValue, setInputValue}
 				/>
