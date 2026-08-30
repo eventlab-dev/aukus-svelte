@@ -8,6 +8,7 @@
 	import ImageLoader from '../ImageLoader.svelte'
 	import { FALLBACK_GAME_POSTER } from '$lib/constants'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import { untrack } from 'svelte'
 	import FireIcon from '../icons/new/FireIcon.svelte'
 	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
 	import StarIcon from '../icons/new/StarIcon.svelte'
@@ -49,13 +50,12 @@
 		return allOptions.filter((option) => diceOptions.includes(option.value))
 	})
 
-	const defaultOption = $derived(activeDiceOptions[activeDiceOptions.length - 1].value)
+	const defaultOption = $derived(activeDiceOptions.at(-1)!.value)
 
-	let selectedDiceOption = $state<DiceOption | 'drop'>(defaultOption)
+	let selectedDiceOption = $state<DiceOption | 'drop'>(untrack(() => defaultOption))
 
 	$effect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		player
+		void player
 		selectedDiceOption = defaultOption
 	})
 
