@@ -81,34 +81,37 @@
 							</div>
 						{:else}
 							{#each integrations as integration (integration.provider_name)}
-							<div class="rounded-lg border bg-card p-4">
-								<div
-									class="flex items-center justify-between"
-								>
-									<div class="flex items-center gap-3">
-										<div class="text-lg font-semibold">
-											{integration.display_name}
-										</div>
-										{#if integration.is_active || true}
-											<div
-												class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700 dark:bg-green-900 dark:text-green-300"
-											>
-												Активно
+								<div class="rounded-lg border bg-card p-4">
+									<div class="flex items-center justify-between">
+										<div class="flex items-center gap-3">
+											<div class="text-lg font-semibold">
+												{integration.display_name}
 											</div>
-										{/if}
+											{#if integration.is_active || true}
+												<div
+													class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700 dark:bg-green-900 dark:text-green-300"
+												>
+													Активно
+												</div>
+											{/if}
+										</div>
+										<Button
+											class="bg-secondary"
+											onclick={() => startIntegration(integration.provider_name)}
+											disabled={startAuthQuery.isPending}
+										>
+											{startAuthQuery.isPending ? 'Загрузка...' : 'Подключить'}
+										</Button>
 									</div>
-									<Button
-										class="bg-secondary"
-										onclick={() => startIntegration(integration.provider_name)}
-										disabled={startAuthQuery.isPending}
-									>
-										{startAuthQuery.isPending ? 'Загрузка...' : 'Подключить'}
-									</Button>
-								</div>
-								<div>{integration.description}</div>
+									<div>{integration.description}</div>
 								</div>
 							{/each}
 						{/if}
+						<div class="mt-6 flex justify-center">
+							<Button variant="destructive" onclick={async () => await app.usersStore.logout()}>
+								Выйти
+							</Button>
+						</div>
 					</div>
 				</TabsContent>
 			</Tabs>
@@ -117,6 +120,9 @@
 			<div class="text-2xl">
 				<div class="mb-4">Имя пользователя: <span class="font-bold">{myUser.username}</span></div>
 				<div class="text-gray-400">Игровой профиль не найден</div>
+			</div>
+			<div class="mt-6 flex justify-center">
+				<Button variant="destructive" onclick={async () => await app.usersStore.logout()}>Выйти</Button>
 			</div>
 		{:else}
 			<div class="mb-8 text-5xl font-bold">Профиль</div>

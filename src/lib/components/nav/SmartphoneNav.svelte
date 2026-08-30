@@ -155,40 +155,18 @@
 				{/each}
 			</div>
 			<div class="mt-3 flex w-full justify-center">
-				{#if app.myPlayer}
-					{#if app.turnState === 'filling-form'}
-						<Button
-							class="flex w-fit cursor-pointer flex-col items-center rounded-2xl uppercase"
-							disabled={!app.eventActive}
-							onclick={() => {
-								app.moveFormOpen = true
-								isOpen = false
-							}}
-						>
-							<span class="uppercase">Сделать ход</span>
-						</Button>
-					{/if}
+				{#if app.myPlayer && app.turnState === 'filling-form'}
 					<Button
-						class="flex hidden cursor-pointer flex-col items-center rounded-2xl"
-						onclick={async () => {
-							await app.usersStore.logout()
+						class="flex w-fit cursor-pointer flex-col items-center rounded-2xl uppercase"
+						disabled={!app.eventActive}
+						onclick={() => {
+							app.moveFormOpen = true
 							isOpen = false
 						}}
 					>
-						<span class="text-xs">Выйти</span>
+						<span class="uppercase">Сделать ход</span>
 					</Button>
-				{:else if app.myUser}
-					<Button
-						class="flex cursor-pointer flex-col items-center rounded-2xl"
-						variant="default"
-						onclick={async () => {
-							await app.usersStore.logout()
-							isOpen = false
-						}}
-					>
-						<span class="text uppercase">Выйти</span>
-					</Button>
-				{:else}
+				{:else if !app.myUser}
 					<Button
 						class="flex cursor-pointer flex-col items-center rounded-2xl"
 						variant="default"
