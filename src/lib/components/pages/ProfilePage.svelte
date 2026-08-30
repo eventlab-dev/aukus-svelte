@@ -122,7 +122,7 @@
 			<div class="mb-8 text-5xl font-bold">Профиль пользователя</div>
 			<div class="text-2xl">
 				<div class="mb-4">Имя пользователя: <span class="font-bold">{myUser.username}</span></div>
-				<div class="text-gray-400">Игровой профиль не найден</div>
+				<div>Игровой профиль не найден</div>
 			</div>
 			<div class="mt-6 flex justify-center">
 				<Button variant="destructive" onclick={handleLogout}>Выйти</Button>
@@ -130,7 +130,7 @@
 		{:else}
 			<div class="mb-8 text-5xl font-bold">Профиль</div>
 			<div class="text-2xl text-gray-400">
-				Сначала авторизуйтесь, чтобы просмотреть свой профиль
+				Сначала авторизируйся, чтобы просмотреть свой профиль
 			</div>
 			<Button class="mt-4" onclick={() => app.navStore.navigate('/login')}>Войти</Button>
 		{/if}
