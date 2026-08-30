@@ -1,10 +1,11 @@
-import { EventlabBaseUrl } from '$lib/client'
+import { EventlabBaseUrl, queryClient } from '$lib/client'
 import { DEFAULT_REFETCH } from '$lib/constants'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
 	getUsersApiUsersGetOptions,
 	loginApiLoginPostMutation
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
+import { logoutApiLogoutPost } from '$lib/heyapi/eventlab/sdk.gen'
 import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
@@ -70,11 +71,31 @@ export class UsersStore {
 		}
 	}
 
-	logout() {
-		localStorage.removeItem('auth_token')
-		this.accessToken = null
+	async logout() {
+		try {
+			await logoutApiLogoutPost({
+				baseUrl: EventlabBaseUrl,
+				auth: defaultAuth,
+				credentials: 'include'
+			})
+		} catch {
+			// ignore network/401 errors - we still clear local state
+		} finally {
+			if (typeof localStorage !== 'undefined') {
+				localStorage.removeItem('auth_token')
+			}
+			this.accessToken = null
 
-		this.myUserQuery.refetch()
+			// Clear cached user query so `myUser` derived becomes null immediately
+			// (`enabled: false` alone would keep stale success data)
+			const key = fetchCurrentUserApiUsersCurrentGetOptions({
+				baseUrl: EventlabBaseUrl,
+				auth: defaultAuth,
+				credentials: 'include'
+			}).queryKey
+
+			queryClient.removeQueries({ queryKey: key })
+		}
 	}
 
 	usersQuery = createQuery(() => ({

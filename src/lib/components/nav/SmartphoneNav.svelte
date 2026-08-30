@@ -170,8 +170,8 @@
 					{/if}
 					<Button
 						class="flex hidden cursor-pointer flex-col items-center rounded-2xl"
-						onclick={() => {
-							app.usersStore.logout()
+						onclick={async () => {
+							await app.usersStore.logout()
 							isOpen = false
 						}}
 					>
@@ -181,8 +181,8 @@
 					<Button
 						class="flex cursor-pointer flex-col items-center rounded-2xl"
 						variant="default"
-						onclick={() => {
-							app.usersStore.logout()
+						onclick={async () => {
+							await app.usersStore.logout()
 							isOpen = false
 						}}
 					>

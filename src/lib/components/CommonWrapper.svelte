@@ -2,8 +2,11 @@
 	import { AppManager, setAppManager } from '$lib/stores/AppManager.svelte'
 	import MobilePage from './mobile/MobilePage.svelte'
 	import ErrorNotifications from './ErrorNotifications.svelte'
-	import { setErrorCallback } from '$lib/client'
-	import { initializeClientInterceptors } from '$lib/clientInterceptors'
+	import { queryClient, setErrorCallback } from '$lib/client'
+	import {
+		initializeClientInterceptors,
+		setTokenInvalidatedCallback
+	} from '$lib/clientInterceptors'
 	import { page } from '$app/state'
 	import FrontVersionInfo from '$lib/components/FrontVersionInfo.svelte'
 	import Metrika from '$lib/components/Metrika.svelte'
@@ -16,6 +19,14 @@
 	setAppManager(appManager)
 
 	initializeClientInterceptors()
+
+	setTokenInvalidatedCallback(() => {
+		if (typeof localStorage !== 'undefined') {
+			localStorage.removeItem('auth_token')
+		}
+		appManager.usersStore.accessToken = null
+		queryClient.clear()
+	})
 
 	setErrorCallback((path, statusCode, message) => {
 		appManager.errorNotificationStore.addError(path, statusCode, message)

@@ -1,10 +1,12 @@
 <script lang="ts">
 	import './streams.css'
 	import { QueryClientProvider } from '@tanstack/svelte-query'
-	import { queryClient } from '$lib/client'
+	import { queryClient, setErrorCallback } from '$lib/client'
 	import { setAppManager, AppManager } from '$lib/stores/AppManager.svelte'
-	import { setErrorCallback } from '$lib/client'
-	import { initializeClientInterceptors } from '$lib/clientInterceptors'
+	import {
+		initializeClientInterceptors,
+		setTokenInvalidatedCallback
+	} from '$lib/clientInterceptors'
 
 	let { children } = $props()
 
@@ -12,6 +14,14 @@
 	setAppManager(appManager)
 
 	initializeClientInterceptors()
+
+	setTokenInvalidatedCallback(() => {
+		if (typeof localStorage !== 'undefined') {
+			localStorage.removeItem('auth_token')
+		}
+		appManager.usersStore.accessToken = null
+		queryClient.clear()
+	})
 
 	setErrorCallback((path, statusCode, message) => {
 		appManager.errorNotificationStore.addError(path, statusCode, message)
