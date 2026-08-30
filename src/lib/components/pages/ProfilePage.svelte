@@ -41,6 +41,11 @@
 			console.error('Failed to start integration:', error)
 		}
 	}
+
+	async function handleLogout() {
+		await app.usersStore.logout()
+		navStore.navigate('/')
+	}
 </script>
 
 <div class="flex justify-center">
@@ -108,9 +113,7 @@
 							{/each}
 						{/if}
 						<div class="mt-6 flex justify-center">
-							<Button variant="destructive" onclick={async () => await app.usersStore.logout()}>
-								Выйти
-							</Button>
+							<Button variant="destructive" onclick={handleLogout}>Выйти</Button>
 						</div>
 					</div>
 				</TabsContent>
@@ -122,7 +125,7 @@
 				<div class="text-gray-400">Игровой профиль не найден</div>
 			</div>
 			<div class="mt-6 flex justify-center">
-				<Button variant="destructive" onclick={async () => await app.usersStore.logout()}>Выйти</Button>
+				<Button variant="destructive" onclick={handleLogout}>Выйти</Button>
 			</div>
 		{:else}
 			<div class="mb-8 text-5xl font-bold">Профиль</div>
