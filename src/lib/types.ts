@@ -76,3 +76,9 @@ export type StatItem = PlayerStatsItem & {
 }
 
 export type Difficulty = 'easy' | 'normal' | 'hard' | 'very-hard'
+
+/** ReactiveGetter — closure over a Svelte 5 reactive value.
+ * MUST be called inside $derived / $effect / createQuery(() => ...) so the compiler
+ * can trace through to the captured field. Calling it in a plain method / constructor
+ * is untracked and will be stale. */
+export type ReactiveGetter<T> = () => T

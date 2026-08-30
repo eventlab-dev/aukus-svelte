@@ -9,13 +9,15 @@ import {
 import { makeDiceRollApiDiceRollsPostMutation } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
+import type { ReactiveGetter } from '$lib/types'
 
 type Props = {
-	getIsPlayer: () => boolean
+	/** ReactiveGetter — must be called inside $derived/$effect/createQuery */
+	getIsPlayer: ReactiveGetter<boolean>
 }
 
 export class PlayerStore {
-	getIsPlayer: () => boolean = () => true
+	getIsPlayer: ReactiveGetter<boolean> = () => true
 
 	constructor(props?: Props) {
 		if (props?.getIsPlayer) {

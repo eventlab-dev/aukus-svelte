@@ -3,13 +3,15 @@ import { LONG_REFETCH } from '$lib/constants'
 import { authorizeOauthApiOauth2AuthorizePostMutation, listUserIntegrationsApiOauth2IntegrationsGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { defaultAuth } from '$lib/utils'
 import { createMutation, createQuery } from '@tanstack/svelte-query'
+import type { ReactiveGetter } from '$lib/types'
 
 type Props = {
-	getPlayerSlug: () => string | null
+	/** ReactiveGetter — must be called inside $derived/$effect/createQuery */
+	getPlayerSlug: ReactiveGetter<string | null>
 }
 
 export class IntegrationsStore {
-	getPlayerSlug: Props['getPlayerSlug'] = () => null
+	getPlayerSlug: ReactiveGetter<string | null> = () => null
 
 	constructor(props: Props) {
 		this.getPlayerSlug = props.getPlayerSlug

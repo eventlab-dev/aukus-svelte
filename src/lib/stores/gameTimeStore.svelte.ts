@@ -4,15 +4,17 @@ import {
 	searchGamesApiHltbSearchGetOptions
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { createQuery } from '@tanstack/svelte-query'
+import type { ReactiveGetter } from '$lib/types'
 
 const MIN_TITLE_LEN = 3
 
 type Props = {
-	getMyUserSlug: () => string | null
+	/** ReactiveGetter — must be called inside $derived/$effect/createQuery */
+	getMyUserSlug: ReactiveGetter<string | null>
 }
 
 export class GameTimeStore {
-	getMyUserSlug: Props['getMyUserSlug'] = () => null
+	getMyUserSlug: ReactiveGetter<string | null> = () => null
 	constructor(props: Props) {
 		this.getMyUserSlug = props.getMyUserSlug
 	}

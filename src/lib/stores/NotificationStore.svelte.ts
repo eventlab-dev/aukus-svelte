@@ -3,11 +3,13 @@ import type { AchievementItem, UnlockedAchievementItem } from '$lib/heyapi/aukus
 import { getNotificationsApiNotificationsGetOptions } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
 import { createQuery } from '@tanstack/svelte-query'
 import { SvelteMap } from 'svelte/reactivity'
+import type { ReactiveGetter } from '$lib/types'
 
 type PersonalAchievement = AchievementItem & { is_first: boolean }
 
 type Params = {
-	getAchievementsById: () => SvelteMap<number, AchievementItem>
+	/** ReactiveGetter — must be called inside $derived/$effect/createQuery */
+	getAchievementsById: ReactiveGetter<SvelteMap<number, AchievementItem>>
 }
 
 export class NotificationStore {
@@ -24,7 +26,7 @@ export class NotificationStore {
 		})
 	}
 
-	getAchievementsById: () => SvelteMap<number, AchievementItem>
+	getAchievementsById: ReactiveGetter<SvelteMap<number, AchievementItem>>
 
 	unlockedAchievements = $state<UnlockedAchievementItem[]>([])
 	achievements = $derived(

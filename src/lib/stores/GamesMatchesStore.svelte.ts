@@ -3,6 +3,7 @@ import { getGamesApiGamesHistoryGetOptions } from '$lib/heyapi/eventlab/@tanstac
 import { createQuery } from '@tanstack/svelte-query'
 import { getPlayerMovesApiPlayersMovesGetOptions } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import { historyGameToCommonGame, playerMoveToCommonGame } from '$lib/utils'
+import type { ReactiveGetter } from '$lib/types'
 
 type MatchParams = {
 	exclude_ids_history?: number[]
@@ -12,11 +13,12 @@ type MatchParams = {
 }
 
 type Props = {
-	getPlayersSlugs: () => string[]
+	/** ReactiveGetter — must be called inside $derived/$effect/createQuery */
+	getPlayersSlugs: ReactiveGetter<string[]>
 }
 
 export class GamesMatchesStore {
-	getPlayersSlugs: Props['getPlayersSlugs'] = () => []
+	getPlayersSlugs: ReactiveGetter<string[]> = () => []
 
 	constructor(params: Props) {
 		this.getPlayersSlugs = params.getPlayersSlugs

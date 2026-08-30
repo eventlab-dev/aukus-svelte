@@ -2,24 +2,27 @@ import { createTimeline } from 'animejs'
 import { getMapCellById, getWinnerPosition, type MapCell } from '$lib/mapUtils'
 import { SvelteMap } from 'svelte/reactivity'
 import type { EventDataStore } from './EventDataStore.svelte'
-import { type PlayerData, type PlayerMovementState, type TurnState } from '$lib/types'
+import { type PlayerData, type PlayerMovementState, type ReactiveGetter, type TurnState } from '$lib/types'
 import { DICE_ROLL_ANIMATION_TIME, DICE_ROLL_IDLE_TIME, LastMapPosition } from '$lib/constants'
 import type { FinishPlayerMoveResponse, PlayerItem } from '$lib/heyapi/aukus/types.gen'
 import type { MapStore } from './MapStore.svelte'
 import { untrack } from 'svelte'
 
 type Props = {
-	getEventDataStore: () => EventDataStore
-	getMapStore: () => MapStore
+	/** ReactiveGetter — must be called inside $derived/$effect/createQuery. Store ref — stable identity. */
+	getEventDataStore: ReactiveGetter<EventDataStore>
+	/** ReactiveGetter — store ref — stable identity. */
+	getMapStore: ReactiveGetter<MapStore>
 	updateFrontendTurnState: (state: TurnState) => void
-	getPlayerSlug: () => string | null
+	/** ReactiveGetter — must be called inside $derived/$effect/createQuery */
+	getPlayerSlug: ReactiveGetter<string | null>
 }
 
 export class MovementStore {
-	getPlayerSlug: () => string | null
-	getEventDataStore: () => EventDataStore
+	getPlayerSlug: ReactiveGetter<string | null>
+	getEventDataStore: ReactiveGetter<EventDataStore>
 	updateFrontendTurnState: (state: TurnState) => void
-	getMapStore: () => MapStore
+	getMapStore: ReactiveGetter<MapStore>
 
 	constructor(props: Props) {
 		this.getEventDataStore = props.getEventDataStore
