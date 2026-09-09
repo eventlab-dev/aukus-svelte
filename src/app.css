@@ -279,3 +279,9 @@
 		color: inherit;
 	}
 }
+
+/* Прячем ползунок корневого ScrollArea только на чистой карте (см. MainPage).
+   Вне слоёв и с !important — иначе проигрывает utilities-классу .flex */
+#main-scroll-area[data-hide-scrollbar] [data-slot='scroll-area-scrollbar'] {
+	display: none !important;
+}

@@ -69,7 +69,7 @@
 
 	const apps: AppItem[] = $derived([
 		{ id: 'rules', icon: MENU_RULES_ICON, label: 'Правила', url: '/rules' },
-		{ id: 'stats', icon: MENU_STATS_ICON, label: 'Статистика', url: '/stats' },
+		{ id: 'stats', icon: MENU_STATS_ICON, label: 'Прогресс', url: '/stats' },
 		{
 			id: 'achievements',
 			icon: MENU_ACHIEVEMENTS_ICON,
@@ -131,16 +131,17 @@
 	{#if isOpen}
 		<div
 			bind:this={popup}
-			class="relative mb-2 h-[560px] w-[360px] pt-[66px]"
+			class="absolute bottom-0 left-0 z-10 flex h-[560px] w-[360px] flex-col pt-[66px]"
 			style="background-image: url('{PHONE_BG}'); background-size: cover;"
-			transition:fly={{ duration: 500, y: 20 }}
+			in:fly={{ y: 580, duration: 220, opacity: 0 }}
+			out:fly={{ y: 420, duration: 180, opacity: 0 }}
 		>
 			<div class="absolute top-[27px] right-[48px] font-extrabold">{time} МСК</div>
 			<div class="w-full text-center text-2xl font-bold">{greetingText}</div>
 			<div class="grid grid-cols-3 gap-[12px] px-[48px] pt-3 font-extrabold">
 				{#each apps as appItem (appItem.label)}
 					<button
-						class="flex w-fit cursor-pointer flex-col items-center rounded-2xl transition-colors hover:bg-blue-500/20"
+						class="flex w-fit cursor-pointer flex-col items-center rounded-2xl transition-transform duration-150 hover:scale-110"
 						onclick={() => {
 							if (appItem.url) {
 								navStore.pageParams = {}
@@ -149,15 +150,15 @@
 							isOpen = false
 						}}
 					>
-						<img src={appItem.icon} class="mb-[2px] h-[80px] w-[80px]" alt={appItem.label} />
-						<span class="text-sm wrap-anywhere uppercase">{appItem.label}</span>
+						<img src={appItem.icon} class="mb-1 h-[80px] w-[80px]" alt={appItem.label} />
+						<span class="max-w-[80px] text-center text-sm leading-tight font-extrabold font-['Shantell_Sans'] break-words hyphens-auto uppercase">{appItem.label}</span>
 					</button>
 				{/each}
 			</div>
-			<div class="mt-3 flex w-full justify-center">
+			<div class="mt-auto mb-6 flex w-full justify-center">
 				{#if app.myPlayer && app.turnState === 'filling-form'}
 					<Button
-						class="flex w-fit cursor-pointer flex-col items-center rounded-2xl uppercase"
+						class="flex h-[32px] w-[160px] cursor-pointer items-center justify-center rounded-[18px] bg-primary/60 px-0 py-0 text-base font-extrabold uppercase transition-transform hover:scale-110 hover:bg-primary/60"
 						disabled={!app.eventActive}
 						onclick={() => {
 							app.moveFormOpen = true
@@ -168,7 +169,7 @@
 					</Button>
 				{:else if !app.myUser}
 					<Button
-						class="flex cursor-pointer flex-col items-center rounded-2xl"
+						class="flex h-[32px] w-[160px] cursor-pointer items-center justify-center rounded-[18px] bg-primary/60 px-0 py-0 text-base font-extrabold uppercase transition-transform hover:scale-110 hover:bg-primary/60"
 						variant="default"
 						onclick={() => {
 							navStore.navigate('/login')
@@ -186,7 +187,7 @@
 		bind:ref={phoneButton}
 		onclick={togglePhone}
 		aria-label="Toggle navigation menu"
-		class="flex h-auto w-[78px] items-center justify-center rounded-full bg-transparent text-white shadow-lg transition-all hover:scale-120 hover:bg-transparent"
+		class="relative z-0 flex h-auto w-[78px] items-center justify-center rounded-full bg-transparent text-white shadow-none transition-all hover:scale-120 hover:bg-transparent"
 	>
 		<img src={MENU_PHONE_ICON} alt="phone" />
 	</Button>

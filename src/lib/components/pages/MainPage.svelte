@@ -24,6 +24,16 @@
 
 	const app = getAppManager()
 	const { movementStore, navStore } = app
+
+	// На чистой карте скроллить нечего — прячем ползунок корневого ScrollArea
+	// только в этом виде, на остальных страницах скроллбар остаётся
+	$effect(() => {
+		const isMapView =
+			navStore.appPage === 'map' && !navStore.dynamicPage && !app.moveFormOpen
+		document
+			.getElementById('main-scroll-area')
+			?.toggleAttribute('data-hide-scrollbar', isMapView)
+	})
 </script>
 
 <svelte:head>

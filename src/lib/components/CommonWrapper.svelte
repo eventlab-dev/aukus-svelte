@@ -20,6 +20,12 @@
 
 	initializeClientInterceptors()
 
+	$effect(() => {
+		const blockContextMenu = (e: MouseEvent) => e.preventDefault()
+		document.addEventListener('contextmenu', blockContextMenu)
+		return () => document.removeEventListener('contextmenu', blockContextMenu)
+	})
+
 	setTokenInvalidatedCallback(() => {
 		if (typeof localStorage !== 'undefined') {
 			localStorage.removeItem('auth_token')

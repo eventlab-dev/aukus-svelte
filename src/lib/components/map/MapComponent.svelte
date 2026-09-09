@@ -94,6 +94,7 @@
 
 	let transition = $state('transform 0.25s ease-out')
 	let positionInitialized = $state(false)
+	let bounceTimer: ReturnType<typeof setTimeout> | null = null
 
 	function onMouseDown(e: MouseEvent) {
 		e.stopPropagation()
@@ -247,6 +248,33 @@
 
 		const oldScale = userZoom
 
+		// Bounce из эскиза: уже в минимуме и крутим дальше от себя.
+		// Нырок — к ЦЕНТРУ экрана (математика зума в точку, как обычный зум),
+		// возврат — пружинкой ровно в сток, как pos=0 в эскизе
+		if (e.deltaY > 0 && oldScale <= zoomMin) {
+			if (bounceTimer) clearTimeout(bounceTimer)
+			const dipScale = zoomMin * 0.95
+			const ratio = dipScale / oldScale
+			const cx = rect.width / 2
+			const cy = rect.height / 2
+			transition = 'transform .12s ease-out'
+			userZoom = dipScale
+			mapX = cx - (cx - mapX) * ratio
+			mapY = cy - (cy - mapY) * ratio
+			bounceTimer = setTimeout(() => {
+				transition = 'transform .28s cubic-bezier(.17,.89,.32,1.35)'
+				userZoom = zoomMin
+				setInitialPos()
+				bounceTimer = null
+			}, 120)
+			return
+		}
+
+		if (bounceTimer) {
+			clearTimeout(bounceTimer)
+			bounceTimer = null
+		}
+
 		const factor = e.deltaY < 0 ? 1.1 : 0.9
 
 		userZoom *= factor
@@ -256,6 +284,15 @@
 
 		mapX = mouseX - (mouseX - mapX) * scaleRatio
 		mapY = mouseY - (mouseY - mapY) * scaleRatio
+
+		// Доскроллили до минимума сверху — как в эскизе (scale===1 → pos=0):
+		// встаём ровно в сток, кусок карты не остаётся
+		if (userZoom <= zoomMin) {
+			userZoom = zoomMin
+			transition = 'transform .15s ease-out'
+			setInitialPos()
+			return
+		}
 
 		transition = 'transform 0.15s ease-out'
 
@@ -333,7 +370,7 @@ init arrow 70 270 510 210
 				class="h-full w-full min-w-0 cursor-grab select-none active:cursor-grabbing"
 				draggable="false"
 			/>
-			<div class="w-[260px] shrink-0">
+			<div class="-ml-px w-[260px] shrink-0">
 				<img
 					src={MAP_SIDE_IMAGE}
 					alt="map-side"
