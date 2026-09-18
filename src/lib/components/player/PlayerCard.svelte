@@ -1,20 +1,23 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition'
+	import { fade, fly } from 'svelte/transition'
 	import { Button } from '../ui/button'
-	import PlayerAvatar from './PlayerAvatar.svelte'
+	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 	import type { PlayerData } from '$lib/types'
-	import ShieldIcon from '../icons/new/ShieldIcon.svelte'
-	import FireIcon from '../icons/new/FireIcon.svelte'
-	import StarIcon from '../icons/new/StarIcon.svelte'
 	import { getDirectStreamUrl } from '$lib/utils/streamUtils'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import { CDN_URL_BASE5 } from '$lib/constants'
 
 	type Props = {
 		player: PlayerData
+		// 0 — обычная, 2 — наведённая
+		magnify?: number
+		onHoverChange?: (hovered: boolean) => void
 	}
 
-	const { player }: Props = $props()
+	const { player, magnify = 0, onHoverChange }: Props = $props()
+
+	// Классы целиком строками, чтобы Tailwind их сгенерировал
+	const scaleCls = $derived(magnify === 2 ? 'scale-110' : 'scale-100')
 
 	const app = getAppManager()
 	const { movementStore } = app
@@ -24,6 +27,7 @@
 
 	function handleMouseEnter() {
 		isHovered = true
+		onHoverChange?.(true)
 
 		hoverTimeout = setTimeout(() => {
 			movementStore.hoveredPlayer = player.slug
@@ -32,6 +36,7 @@
 
 	function handleMouseLeave() {
 		isHovered = false
+		onHoverChange?.(false)
 
 		if (hoverTimeout) {
 			clearTimeout(hoverTimeout)
@@ -52,42 +57,43 @@
 	}
 
 	const cardImgUrl = `${CDN_URL_BASE5}/ui/player-card-bg.png`
+	const cardBorderUrl = `${CDN_URL_BASE5}/ui/border.svg`
 </script>
 
 <Button
 	href={`/${player.slug}`}
-	class="group hover:bg-unset relative z-10 h-auto w-[260px] overflow-hidden rounded-[18px]! p-0! select-none hover:no-underline scale-100 hover:scale-110 transition-transform duration-300"
+	class={`group hover:bg-unset relative z-10 h-auto w-[260px] origin-right overflow-visible rounded-[18px]! p-0! transition-transform duration-300 select-none hover:no-underline ${scaleCls}`}
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
 	onauxclick={handleAuxClick}
 >
 	<div
-		class="relative flex h-full w-full flex-col gap-[5px] rounded-[18px]! p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 hover:after:opacity-100"
+		class="relative flex h-full w-full flex-col gap-0 overflow-hidden rounded-[18px]! p-2 after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-gradient-to-r after:to-primary/20 after:opacity-0 after:transition-all after:duration-500 hover:after:opacity-100"
 		style="background-image: url('{cardImgUrl}'); background-size: cover;"
 	>
-		<div class="flex w-full justify-between gap-[5px]">
-			<div class="flex items-center gap-2">
-				<PlayerAvatar
-					src={player.avatar_link ?? ''}
-					name={player.username}
-					isOnline={Boolean(player.is_online)}
-				/>
-				<div class="font-extrabold">{player.username}</div>
+		<div class="flex w-full items-center justify-between gap-[5px]">
+			<div class="flex min-w-0 items-center">
+				<div class="relative w-fit shrink-0">
+					<Avatar class="size-8">
+						<AvatarImage src={player.avatar_link ?? ''} />
+						<AvatarFallback class="text-[10px] uppercase">
+							{player.username.slice(0, 2)}
+						</AvatarFallback>
+					</Avatar>
+					{#if player.is_online}
+						<span class="absolute right-0 bottom-0 size-[14px] rounded-full bg-[#52AD94]"
+						></span>
+					{/if}
+				</div>
+				<div class="ml-[6px] truncate font-['Shantell_Sans'] text-xl font-extrabold">
+					{player.username}
+				</div>
 			</div>
-			<div class="flex gap-[8px]">
-				<div class="flex h-fit items-center gap-[2px] font-semibold">
-					{player.shit_stacks}<FireIcon />
-				</div>
-				<div class="flex h-fit items-center gap-[2px] font-semibold">
-					{player.shield_stacks}<ShieldIcon />
-				</div>
-				<div class="flex h-fit items-center gap-[2px] text-sm font-semibold ">
-					{Math.round(player.total_score)}
-					<StarIcon />
-				</div>
+			<div class="shrink-0 font-['Shantell_Sans'] text-xl font-extrabold italic">
+				{Math.round(player.total_score)}
 			</div>
 		</div>
-		<div class="grid w-full font-extrabold text-foreground/80">
+		<div class="grid w-full text-base leading-[21px] font-extrabold text-foreground/80 italic">
 			{#if isHovered}
 				<span class="col-start-1 row-start-1" transition:fly={{ x: -50 }}>Открыть</span>
 			{:else}
@@ -97,4 +103,12 @@
 			{/if}
 		</div>
 	</div>
+	{#if isHovered}
+		<!-- Обводка из фигмовского экспорта через background-image -->
+		<div
+			class="pointer-events-none absolute -inset-[2px] z-20"
+			style="background-image: url('{cardBorderUrl}'); background-size: 100% 100%; background-repeat: no-repeat;"
+			transition:fade={{ duration: 150 }}
+		></div>
+	{/if}
 </Button>

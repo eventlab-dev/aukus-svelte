@@ -178,6 +178,11 @@
 		const scaledWidth = mapImg!.naturalWidth * userZoom * mapScale
 		const scaledHeight = mapImg!.naturalHeight * userZoom * mapScale
 
+		// Правая часть карты (260px в вёрстке) в экранных пикселях —
+		// раньше границы считались только по основной карте и она не давала
+		// досдвинуть вид вправо; коэффициент 0.6 чтобы не болталась слишком
+		const sideWidth = 260 * userZoom * 0.6
+
 		const viewportWidth = viewport!.clientWidth
 		const viewportHeight = viewport!.clientHeight
 
@@ -211,10 +216,10 @@
 		// const overscrollX = viewportWidth * 0.1
 		// const overscrollY = viewportHeight * 0.2
 
-		let minX = -extensionRight
+		let minX = -extensionRight - sideWidth
 		let maxX = extensionLeft
 		if (scaledWidth > viewportWidth) {
-			minX = viewportWidth - scaledWidth - extensionRight
+			minX = viewportWidth - scaledWidth - sideWidth - extensionRight
 			maxX = extensionLeft
 		}
 
@@ -338,11 +343,20 @@ init arrow 70 270 510 210
 	class="viewport relative h-screen w-full overflow-visible"
 	bind:this={viewport}
 	bind:clientHeight={viewportHeight}
-	onclick={handleClick}
-	onmousedown={onMouseDownViewport}
->
-	<div
-		id={MapContainerId}
+		onclick={handleClick}
+		onmousedown={onMouseDownViewport}
+	>
+		<!-- Подложка из той же карты на случай нестандартного соотношения:
+			заливает чёрные поля по краям, блюр 100 как в макете -->
+		<img
+			src={MAP_IMAGE}
+			alt=""
+			aria-hidden="true"
+			draggable="false"
+			class="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover blur-[50px] select-none"
+		/>
+		<div
+			id={MapContainerId}
 		class="map-transform absolute top-0 left-0 origin-top-left overflow-hidden"
 		onwheel={onWheel}
 		onmousedown={onMouseDown}

@@ -112,12 +112,6 @@
 		}
 	})
 
-	$effect(() => {
-		if (element && movementStore.hoveredPlayer === player.slug) {
-			element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
-		}
-	})
-
 	const isHighlighted = $derived(movementStore.hoveredPlayer === player.slug)
 
 	const onCharacterClick = (e: MouseEvent) => {
@@ -171,7 +165,7 @@
 	<button
 		onclick={onCharacterClick}
 		class="relative isolate cursor-pointer
-        rounded-full transition data-[active=false]:hover:bg-yellow-200/80 data-[active=true]:bg-yellow-200/80 data-[highlighted=true]:bg-yellow-200/90 data-[highlighted=true]:ring-4 data-[highlighted=true]:ring-yellow-400"
+        rounded-full transition data-[active=true]:bg-yellow-200/80 data-[highlighted=true]:scale-200"
 		data-active={movementStore.selectedPlayer?.slug === player.slug}
 		data-highlighted={isHighlighted}
 	>

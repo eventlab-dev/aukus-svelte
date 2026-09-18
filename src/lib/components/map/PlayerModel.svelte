@@ -84,7 +84,7 @@
 	{/each}
 	{#if showUsername}
 		<div class="relative flex h-[10px] w-full justify-center">
-			<div class="absolute top-[-8px] z-50 rounded-md bg-card p-1 text-2xl flex gap-2 items-center">
+			<div class="absolute top-[-8px] z-50 rounded-md bg-card p-1 text-2xl font-semibold flex gap-2 items-center">
 				<PlayerAvatar src={player.avatar_link || ''} name={player.username} size="small" />
 				{player.username}
 			</div>

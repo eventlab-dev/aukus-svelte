@@ -16,6 +16,14 @@
 
 	let currentTime = $state(currentMskTime())
 
+	// Индекс наведённой карточки для dock-магнификации соседей
+	let hoveredIndex = $state<number | null>(null)
+
+	function magnifyFor(i: number): number {
+		if (hoveredIndex === null) return 0
+		return i === hoveredIndex ? 2 : 0
+	}
+
 	$effect(() => {
 		const interval = setInterval(() => {
 			currentTime = currentMskTime()
@@ -27,8 +35,14 @@
 
 {#key app.playersInOrder.length}
 	<div class="flex flex-col gap-[6px]">
-		{#each app.playersInOrder as player (player.slug)}
-			<PlayerCard {player} />
+		{#each app.playersInOrder as player, i (player.slug)}
+			<PlayerCard
+				{player}
+				magnify={magnifyFor(i)}
+				onHoverChange={(hovered) => {
+					hoveredIndex = hovered ? i : hoveredIndex === i ? null : hoveredIndex
+				}}
+			/>
 		{/each}
 	</div>
 {/key}
