@@ -1,18 +1,20 @@
 <script lang="ts">
-	import PageContainer from '$lib/components/PageContainer.svelte'
-	import { Input } from '$lib/components/ui/input'
-	import { EventTitles } from '$lib/constants'
+import PageContainer from '$lib/components/PageContainer.svelte'
+import { CDN_URL_BASE5, EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
 	import { playerMoveToCommonGame, uniqBy } from '$lib/utils'
 	import Loader from '$lib/components/Loader.svelte'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import GameCard from '$lib/components/gameCard/GameCard.svelte'
-	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs'
 	import PlayerAvatar from '$lib/components/player/PlayerAvatar.svelte'
+	import HistoryTagButton from './HistoryTagButton.svelte'
 	import { debounce } from 'perfect-debounce'
 	
 	const app = getAppManager()
+
+	const searchLupaUrl = `${CDN_URL_BASE5}/ui/searchLupa.svg`
+	const searchDividerUrl = `${CDN_URL_BASE5}/ui/searchDivider.svg`
 
 	const { gamesHistoryStore, playersMovesStore, gamesMatchesStore } = app
 
@@ -159,44 +161,56 @@
 
 <PageContainer bottomSpace={false}>
 	<div class="flex flex-col items-center gap-5 pt-16">
+		<div class="flex w-full max-w-[1300px] justify-center">
+			<div class="flex flex-wrap justify-center gap-2">
+				<HistoryTagButton active={playerFilter === 'all'} onclick={() => setPlayerFilter('all')}>
+					<span class="uppercase">Все</span>
+				</HistoryTagButton>
+				{#each app.players as player (player.slug)}
+					<HistoryTagButton
+						active={playerFilter === player.slug}
+						onclick={() => setPlayerFilter(player.slug)}
+					>
+						<PlayerAvatar
+							src={player.avatar_link ?? ''}
+							name={player.username}
+							isOnline={Boolean(player.is_online)}
+							size="small"
+						/>
+						<p class="uppercase">{player.username}</p>
+					</HistoryTagButton>
+				{/each}
+			</div>
+		</div>
 		<div class="flex w-full max-w-[800px] flex-col gap-5">
 			<div class="flex justify-center">
-				<Tabs value={playerFilter} onValueChange={(v) => setPlayerFilter(v)}>
-					<TabsList class="flex flex-wrap gap-2">
-						<TabsTrigger value="all" class="uppercase">Все</TabsTrigger>
-						{#each app.players as player (player.slug)}
-							<TabsTrigger value={player.slug}>
-								<PlayerAvatar
-									src={player.avatar_link ?? ''}
-									name={player.username}
-									isOnline={Boolean(player.is_online)}
-									size="small"
-								/>
-								<p class="uppercase">{player.username}</p>
-							</TabsTrigger>
-						{/each}
-					</TabsList>
-				</Tabs>
+				<div class="flex flex-wrap justify-center gap-2">
+					<HistoryTagButton active={eventFilter === 'all'} onclick={() => setEventFilter('all')}>
+						<span class="uppercase">Все</span>
+					</HistoryTagButton>
+					{#each eventsList as eventName (eventName)}
+						<HistoryTagButton
+							active={eventFilter === eventName}
+							onclick={() => setEventFilter(eventName)}
+						>
+							<span class="uppercase">{EventTitles[eventName]}</span>
+						</HistoryTagButton>
+					{/each}
+				</div>
 			</div>
-			<div class="flex justify-center">
-				<Tabs value={eventFilter} onValueChange={(v) => setEventFilter(v)}>
-					<TabsList class="flex flex-wrap gap-2">
-						<TabsTrigger value="all" class="uppercase">Все</TabsTrigger>
-						{#each eventsList as eventName (eventName)}
-							<TabsTrigger value={eventName} class="uppercase">
-								{EventTitles[eventName]}
-							</TabsTrigger>
-						{/each}
-					</TabsList>
-				</Tabs>
+			<div
+				class="mb-4 flex h-[37px] w-full max-w-[800px] items-center gap-2 rounded-2xl bg-primary px-3"
+			>
+				<img src={searchLupaUrl} alt="" class="size-[18px] shrink-0" draggable="false" />
+				<img src={searchDividerUrl} alt="" class="h-[20px] w-auto shrink-0" draggable="false" />
+				<input
+					type="text"
+					placeholder="Поиск среди всех игр"
+					class="w-full min-w-0 bg-transparent font-['Shantell_Sans'] text-sm font-bold text-[#F1F5FF] outline-none placeholder:text-[#F1F5FF] focus:placeholder:text-[#F1F5FF]/40"
+					value={gamesHistoryStore.searchParams?.title_search ?? ''}
+					oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
+				/>
 			</div>
-			<Input
-				type="text"
-				placeholder="Поиск по названию (3+ символов)"
-				class="mb-4 w-full rounded-xl bg-primary"
-				value={gamesHistoryStore.searchParams?.title_search ?? ''}
-				oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
-			/>
 		</div>
 		<div class="mt-5 mb-80 w-full max-w-[800px]">
 			{#if isLoading}

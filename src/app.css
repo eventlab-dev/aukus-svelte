@@ -121,7 +121,7 @@
 	}
 
 	::selection {
-		@apply bg-primary text-primary-foreground;
+		@apply bg-secondary text-white;
 	}
 
 	input[type='number']::-webkit-outer-spin-button,
@@ -284,4 +284,28 @@
    Вне слоёв и с !important — иначе проигрывает utilities-классу .flex */
 #main-scroll-area[data-hide-scrollbar] [data-slot='scroll-area-scrollbar'] {
 	display: none !important;
+}
+
+/* Кастомные курсоры (вне слоёв чтобы перебить cursor-* утилиты).
+   Хотспот 0 0 — если клик чувствуется не из той точки, скажи, поправлю */
+body {
+	cursor:
+		url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/1.png') 0 0,
+		auto;
+}
+
+a,
+button,
+[role='button'] {
+	cursor:
+		url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/2.png') 0 0,
+		pointer;
+}
+
+/* На карте отключаем grab/grabbing — везде обычный курсор, и при таскании тоже */
+.viewport,
+.viewport * {
+	cursor:
+		url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/1.png') 0 0,
+		auto;
 }

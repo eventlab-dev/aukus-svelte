@@ -2,14 +2,14 @@
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { CommonGameItem } from '$lib/types'
-	import PlayerAvatar from '../player/PlayerAvatar.svelte'
 	import GamePopupContent from './GamePopupContent.svelte'
 
 	type Props = {
 		game: CommonGameItem
+		onHoverChange?: (hovered: boolean) => void
 	}
 
-	const { game }: Props = $props()
+	const { game, onHoverChange }: Props = $props()
 
 	const app = getAppManager()
 	const { usersStore } = app
@@ -25,13 +25,15 @@
 	function handleMouseEnter() {
 		clearTimeout(closeTimeout)
 		open = true
+		onHoverChange?.(true)
 	}
 
 	function handleMouseLeave() {
 		clearTimeout(closeTimeout)
 		closeTimeout = setTimeout(() => {
 			open = false
-		}, 300)
+			onHoverChange?.(false)
+		}, 150)
 	}
 </script>
 
@@ -41,7 +43,18 @@
 		onmouseleave={handleMouseLeave}
 	>
 		{#if playerIcon}
-			<PlayerAvatar src={playerIcon} name={playerName} size="small" />
+			<span
+				class="relative block h-[26px] w-[26px] overflow-hidden rounded-full ring-2 ring-[#BAC7F2] transition-transform duration-200 {open
+					? 'scale-[1.31]'
+					: 'scale-100'}"
+			>
+				<img
+					src={playerIcon}
+					alt={playerName}
+					class="h-full w-full object-cover"
+					draggable="false"
+				/>
+			</span>
 		{:else}
 			<div class="bg-secondary px-2 py-1 rounded-lg">
 				{playerName}
@@ -49,10 +62,10 @@
 		{/if}
 	</PopoverTrigger>
 	<PopoverContent
-		class="max-w-[500px] w-fit space-y-5"
+		class="w-[340px] max-w-[calc(100vw-2rem)] rounded-[18px] border-0 bg-[#7F97E7] p-0 shadow-none"
 		onmouseenter={handleMouseEnter}
 		onmouseleave={handleMouseLeave}
 	>
-		<GamePopupContent {game} />
+		<GamePopupContent {game} {playerName} {playerIcon} />
 	</PopoverContent>
 </Popover>

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import EditIcon from '$lib/components/icons/EditIcon.svelte'
 	import TickCircleIcon from '$lib/components/icons/TickCircleIcon.svelte'
-	import InfoIcon from '$lib/components/icons/InfoIcon.svelte'
 	import WandIcon from '$lib/components/icons/WandIcon.svelte'
 	import ImageLoader from '$lib/components/ImageLoader.svelte'
 	import { Badge } from '$lib/components/ui/badge'
@@ -10,7 +9,7 @@
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
-	import { EventTitles, FALLBACK_GAME_POSTER, GAME_CARD_BG, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
+	import { CDN_URL_BASE5, FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatDateTimeISO, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
@@ -23,6 +22,7 @@
 	import type { Editor } from '@tiptap/core'
 	import type { CommonGameItem } from '$lib/types'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
+	import DashedBorder from '$lib/components/DashedBorder.svelte'
 
 	type Props = {
 		game: CommonGameItem
@@ -151,19 +151,43 @@
 	const showRating = $derived(move || game.rating)
 
 	const player = $derived(playersBySlug.get(game.player_nickname))
+
+	let diceBox: HTMLElement | null = $state(null)
+	let tipBox: HTMLElement | null = $state(null)
+	let diceOpen = $state(false)
+	let diceCloseTimeout: ReturnType<typeof setTimeout> | undefined = undefined
+
+	function handleDiceEnter() {
+		clearTimeout(diceCloseTimeout)
+		diceOpen = true
+	}
+
+	function handleDiceLeave() {
+		clearTimeout(diceCloseTimeout)
+		diceCloseTimeout = setTimeout(() => {
+			diceOpen = false
+		}, 200)
+	}
+
+	// Ключ подсвеченного аватара в ряду «также играли» — ряд разъезжается
+	let hoveredKey: string | number | null = $state(null)
+
+	// Фон карточки из хранилища
+	const cardIceUrl = `${CDN_URL_BASE5}/ui/cardIce.png`
 </script>
 
 <div
-	class="group relative flex w-full flex-col rounded-2xl bg-card p-3"
+	class="group relative flex w-full flex-col rounded-[18px] bg-card p-3"
 	id={`game-card-${game.key}`}
-	style="background-image: url('{GAME_CARD_BG}'); background-size: cover;"
+	style="background-image: url('{cardIceUrl}'); background-size: 100% auto; background-position: center bottom; background-repeat: no-repeat;"
 >
 	<div class="flex flex-col gap-2 md:flex-row md:justify-between">
 		<div class="flex">
 			<div class="flex flex-wrap gap-1.5 max-w-[620px]">
-			    {#if showEvent}
+				<!-- Тег ивента скрыт: название дублируется в разделителях (потом вернуть) -->
+				<!-- {#if showEvent}
 					<Badge variant="blue">{EventTitles[game.event_name]}</Badge>
-				{/if}
+				{/if} -->
 
 				{#if showPlayer && player}
 					<Badge style="background-color: {player.color};">{player.username}</Badge>
@@ -174,18 +198,31 @@
 				</Badge>
 				{#if move}
 					{#if move.dice_roll_id}
-						<Popover>
-							<PopoverTrigger>
+						<Popover
+							open={diceOpen}
+							onOpenChange={(value) => (diceOpen = value)}
+						>
+							<PopoverTrigger
+								onmouseenter={handleDiceEnter}
+								onmouseleave={handleDiceLeave}
+							>
 								<Badge
 									variant="blue"
 									class="flex cursor-pointer items-center gap-1 hover:bg-secondary/80"
 								>
 									Кубик: {move.dice_roll}
-									<InfoIcon class="h-3 w-3" />
+									<span class="ml-1 font-extrabold italic">?</span>
 								</Badge>
 							</PopoverTrigger>
-							<PopoverContent>
-								<DiceRollInfo diceRollId={move.dice_roll_id} />
+							<PopoverContent
+								class="w-72 max-w-[calc(100vw-2rem)] rounded-[18px] bg-[#7F97E7] p-0 shadow-none"
+								onmouseenter={handleDiceEnter}
+								onmouseleave={handleDiceLeave}
+							>
+								<div bind:this={diceBox} class="relative w-full p-3">
+									<DashedBorder anchor={diceBox} radius={18} />
+									<DiceRollInfo diceRollId={move.dice_roll_id} />
+								</div>
 							</PopoverContent>
 						</Popover>
 					{:else}
@@ -195,7 +232,7 @@
 					{/if}
 					<Badge variant="blue">
 						Ход {move.cell_from}
-						->
+						—<span class="-ml-[0.9em]">{'>'}</span>
 						{move.cell_to}
 					</Badge>
 				{/if}
@@ -206,7 +243,14 @@
 								{durationText}
 							</Badge>
 						</TooltipTrigger>
-						<TooltipContent>Примерное время по категории стрима</TooltipContent>
+						<TooltipContent
+							class="rounded-[18px] border-0 bg-[#7F97E7] p-0 font-['Shantell_Sans'] text-sm font-bold text-[#F1F5FF] shadow-none"
+						>
+							<div bind:this={tipBox} class="relative p-3">
+								<DashedBorder anchor={tipBox} radius={18} />
+								Примерное время по категории стрима
+							</div>
+						</TooltipContent>
 					</Tooltip>
 				{/if}
 				{#if move?.item_length}
@@ -238,13 +282,13 @@
 			alt={title}
 			class="h-[100px] w-[75px] flex-shrink-0 md:h-[140px] md:w-[105px]"
 		/>
-		<div class="w-full min-w-0 space-y-3">
+		<div class="flex w-full min-w-0 flex-col">
 			<div class="text-lg leading-tight font-extrabold md:text-2xl md:leading-[29px]">
 				{title}
 			</div>
 
 			{#if isEditMode}
-				<div class="space-y-3" in:fade>
+				<div class="mt-3 space-y-3" in:fade>
 					<div class="space-y-2.5">
 						<div class="text-xl font-semibold">
 							Оценка — {`${rating === null ? 'не указана' : rating}`}
@@ -287,12 +331,12 @@
 					</div>
 				</div>
 			{:else if isVodsShown}
-				<div class="mt-5 space-y-3" in:fade>
+				<div class="mt-3 space-y-3" in:fade>
 					<div class="font-medium">Ссылки на записи</div>
 					<Textarea id="vod-links" class="w-full resize-none" readonly={true} value={vodLinks} />
 				</div>
 			{:else}
-				<div class="font-bold text-muted-foreground [&>*]:inline" in:fade>
+				<div class="mt-3 text-base font-bold uppercase text-muted-foreground [&>*]:inline" in:fade>
 					{#if showRating}
 						<span>{rating}/10 — </span>
 					{/if}
@@ -300,9 +344,30 @@
 					{@html parsedReview}
 				</div>
 			{/if}
+			<div class="flex-1"></div>
+			{#if matchedGames.length > 0}
+				<div class="mt-2 flex justify-end">
+					<div class="flex flex-wrap items-center">
+						{#each matchedGames as game, i (game.key)}
+							<div
+								class="transition-[margin-left] duration-200"
+								style="margin-left: {i === 0 ? 0 : hoveredKey !== null ? 4 : -4}px;"
+							>
+								<PopoverGameCard
+									{game}
+									onHoverChange={(hovered) => {
+										hoveredKey = hovered ? game.key : hoveredKey === game.key ? null : hoveredKey
+									}}
+								/>
+							</div>
+						{/each}
+					</div>
+				</div>
+			{/if}
 		</div>
 	</div>
 
+	{#if vodLinks.trim().length > 0 || canEdit}
 	<div class="mt-3 flex flex-wrap justify-between gap-2" transition:slide>
 		{#if vodLinks.trim().length > 0}
 			<Toggle
@@ -337,15 +402,6 @@
 				{/if}
 			</Toggle>
 		{/if}
-		{#if matchedGames.length > 0}
-			<div class="mt-3 flex w-full flex-wrap items-center justify-end gap-3" transition:slide>
-				<span class="text-sm font-bold">Также играли:</span>
-				<div class="flex flex-wrap gap-2">
-					{#each matchedGames as game (game.key)}
-						<PopoverGameCard {game} />
-					{/each}
-				</div>
-			</div>
-		{/if}
 	</div>
+	{/if}
 </div>

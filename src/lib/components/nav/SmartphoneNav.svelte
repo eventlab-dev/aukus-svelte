@@ -14,7 +14,8 @@
 		MENU_STATS_ICON,
 		MENU_STREAMS_ICON,
 		MENU_WHEELS_ICON,
-		PHONE_BG
+		PHONE_BG,
+		CDN_URL_BASE5
 	} from '$lib/constants'
 	import { Button } from '../ui/button'
 	import NotificationCard from './NotificationCard.svelte'
@@ -92,6 +93,65 @@
 
 	function togglePhone() {
 		isOpen = !isOpen
+		if (isOpen) phoneOpenedAt = Date.now()
+		playPhoneSound(isOpen)
+	}
+
+	let openAudio: HTMLAudioElement | null = null
+	let closeAudio: HTMLAudioElement | null = null
+	let selectAudio: HTMLAudioElement | null = null
+
+	function playPhoneSound(open: boolean) {
+		try {
+			if (open) {
+				openAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneOpen.wav`)
+				openAudio.volume = 0.4
+				openAudio.currentTime = 0
+				openAudio.play().catch(() => {})
+			} else {
+				closeAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneClose.wav`)
+				closeAudio.volume = 0.4
+				closeAudio.currentTime = 0
+				closeAudio.play().catch(() => {})
+			}
+		} catch {
+			// без звука тоже живём
+		}
+	}
+
+	function closePhone() {
+		if (!isOpen) return
+		isOpen = false
+		playPhoneSound(false)
+	}
+
+	function playSelectSound() {
+		try {
+			selectAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneSelect.wav`)
+			selectAudio.volume = 0.4
+			selectAudio.currentTime = 0
+			selectAudio.play().catch(() => {})
+		} catch {
+			// без звука тоже живём
+		}
+	}
+
+	// Локальный тестовый звук наведения (потом переедет в s3)
+	let hoverAudio: HTMLAudioElement | null = null
+	let phoneOpenedAt = 0
+
+	function playHoverSound() {
+		// Пока телефон выезжает (220мс), курсор цепляет иконки мимоходом —
+		// эти пролёты не озвучиваем
+		if (Date.now() - phoneOpenedAt < 200) return
+		try {
+			hoverAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneHover.ogg`)
+			hoverAudio.volume = 0.1
+			hoverAudio.currentTime = 0
+			hoverAudio.play().catch(() => {})
+		} catch {
+			// без звука тоже живём
+		}
 	}
 
 	let popup: HTMLDivElement | null = $state(null)
@@ -104,7 +164,7 @@
 			if (inPopup || inButton) {
 				return
 			}
-			isOpen = false
+			closePhone()
 		}
 	}
 
@@ -142,12 +202,14 @@
 				{#each apps as appItem (appItem.label)}
 					<button
 						class="flex w-fit cursor-pointer flex-col items-center rounded-2xl transition-transform duration-150 hover:scale-110"
+						onmouseenter={playHoverSound}
 						onclick={() => {
 							if (appItem.url) {
 								navStore.pageParams = {}
 								navStore.navigate(appItem.url)
 							}
 							isOpen = false
+							playSelectSound()
 						}}
 					>
 						<img src={appItem.icon} class="mb-1 h-[80px] w-[80px]" alt={appItem.label} />
@@ -160,9 +222,10 @@
 					<Button
 						class="flex h-[32px] w-[160px] cursor-pointer items-center justify-center rounded-[18px] bg-primary/60 px-0 py-0 text-base font-extrabold uppercase transition-transform hover:scale-110 hover:bg-primary/60"
 						disabled={!app.eventActive}
+						onmouseenter={playHoverSound}
 						onclick={() => {
 							app.moveFormOpen = true
-							isOpen = false
+							closePhone()
 						}}
 					>
 						<span class="uppercase">Сделать ход</span>
@@ -171,9 +234,10 @@
 					<Button
 						class="flex h-[32px] w-[160px] cursor-pointer items-center justify-center rounded-[18px] bg-primary/60 px-0 py-0 text-base font-extrabold uppercase transition-transform hover:scale-110 hover:bg-primary/60"
 						variant="default"
+						onmouseenter={playHoverSound}
 						onclick={() => {
 							navStore.navigate('/login')
-							isOpen = false
+							closePhone()
 						}}
 					>
 						<span class="text uppercase">Логин</span>
