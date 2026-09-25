@@ -15,11 +15,18 @@ type Settings = {
 	lastPlayedSoundKey: string
 }
 
+type UiSoundConfig = {
+	volume?: number
+	playbackRate?: number
+}
+
 class SoundManager {
 	private _sounds = new SvelteMap<string, AudioBuffer>()
 	private _audioContext: AudioContext
 	private _gainNode: GainNode
+	private _uiGainNode: GainNode
 	private _currentSource: AudioBufferSourceNode | null = null
+	private _uiSources = new Set<AudioBufferSourceNode>()
 	private _settings = new LocalStore<Settings>('soundSettings', {
 		isMuted: false,
 		volume: 0.3,
@@ -35,6 +42,12 @@ class SoundManager {
 		this._audioContext = new AudioContext()
 		this._gainNode = this._audioContext.createGain()
 		this._gainNode.connect(this._audioContext.destination)
+		// Dedicated gain for short UI blips. It is never driven by
+		// mute/global volume, so muting music does not mute UI sounds.
+		this._uiGainNode = this._audioContext.createGain()
+		this._uiGainNode.gain.value = 1
+		this._uiGainNode.connect(this._audioContext.destination)
+		this._updateVolume()
 	}
 
 	async preloadSounds(soundArray: { key: string; url: string }[]): Promise<void> {
@@ -127,6 +140,43 @@ class SoundManager {
 		this._currentSource = null
 	}
 
+	public playUi(key: string, config: UiSoundConfig = {}) {
+		// Polyphonic one-shot for short UI blips (open/close/select/hover).
+		// Unlike play(), it never stops music and ignores mute/global volume.
+		try {
+			if (this._audioContext.state === 'suspended') {
+				void this._audioContext.resume().catch(() => {})
+			}
+
+			const audioBuffer = this._sounds.get(key)
+			if (!audioBuffer) {
+				console.warn(`UI sound not found: ${key}`)
+				return
+			}
+
+			const source = this._audioContext.createBufferSource()
+			source.buffer = audioBuffer
+			source.playbackRate.value = config.playbackRate || 1.0
+
+			const gain = this._audioContext.createGain()
+			gain.gain.value = config.volume ?? 1.0
+
+			source.connect(gain)
+			gain.connect(this._uiGainNode)
+
+			this._uiSources.add(source)
+			source.addEventListener('ended', () => {
+				source.disconnect()
+				gain.disconnect()
+				this._uiSources.delete(source)
+			})
+
+			source.start()
+		} catch {
+			// без звука тоже живём
+		}
+	}
+
 	public setGlobalVolume(volume: number) {
 		this._settings.value = {
 			...this._settings.value,
@@ -171,6 +221,15 @@ class SoundManager {
 
 	public destroy() {
 		this.stop()
+		for (const source of this._uiSources) {
+			try {
+				source.stop()
+			} catch {
+				// already stopped
+			}
+			source.disconnect()
+		}
+		this._uiSources.clear()
 		this._sounds.clear()
 
 		if (this._audioContext.state !== 'closed') {

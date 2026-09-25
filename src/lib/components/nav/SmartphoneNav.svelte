@@ -14,8 +14,7 @@
 		MENU_STATS_ICON,
 		MENU_STREAMS_ICON,
 		MENU_WHEELS_ICON,
-		PHONE_BG,
-		CDN_URL_BASE5
+		PHONE_BG
 	} from '$lib/constants'
 	import { Button } from '../ui/button'
 	import NotificationCard from './NotificationCard.svelte'
@@ -25,7 +24,7 @@
 	let isOpen = $state(false)
 
 	const app = getAppManager()
-	const { navStore, timeStore, notificationStore } = app
+	const { navStore, timeStore, notificationStore, soundManager } = app
 
 	const DISMISS_TIMEOUT = 10000
 
@@ -94,64 +93,26 @@
 	function togglePhone() {
 		isOpen = !isOpen
 		if (isOpen) phoneOpenedAt = Date.now()
-		playPhoneSound(isOpen)
-	}
-
-	let openAudio: HTMLAudioElement | null = null
-	let closeAudio: HTMLAudioElement | null = null
-	let selectAudio: HTMLAudioElement | null = null
-
-	function playPhoneSound(open: boolean) {
-		try {
-			if (open) {
-				openAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneOpen.wav`)
-				openAudio.volume = 0.4
-				openAudio.currentTime = 0
-				openAudio.play().catch(() => {})
-			} else {
-				closeAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneClose.wav`)
-				closeAudio.volume = 0.4
-				closeAudio.currentTime = 0
-				closeAudio.play().catch(() => {})
-			}
-		} catch {
-			// без звука тоже живём
-		}
+		soundManager.playUi(isOpen ? 'ui-open' : 'ui-close', { volume: 0.4 })
 	}
 
 	function closePhone() {
 		if (!isOpen) return
 		isOpen = false
-		playPhoneSound(false)
+		soundManager.playUi('ui-close', { volume: 0.4 })
 	}
 
 	function playSelectSound() {
-		try {
-			selectAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneSelect.wav`)
-			selectAudio.volume = 0.4
-			selectAudio.currentTime = 0
-			selectAudio.play().catch(() => {})
-		} catch {
-			// без звука тоже живём
-		}
+		soundManager.playUi('ui-select', { volume: 0.4 })
 	}
 
-	// Локальный тестовый звук наведения (потом переедет в s3)
-	let hoverAudio: HTMLAudioElement | null = null
 	let phoneOpenedAt = 0
 
 	function playHoverSound() {
 		// Пока телефон выезжает (220мс), курсор цепляет иконки мимоходом —
 		// эти пролёты не озвучиваем
 		if (Date.now() - phoneOpenedAt < 200) return
-		try {
-			hoverAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneHover.ogg`)
-			hoverAudio.volume = 0.1
-			hoverAudio.currentTime = 0
-			hoverAudio.play().catch(() => {})
-		} catch {
-			// без звука тоже живём
-		}
+		soundManager.playUi('ui-hover', { volume: 0.1 })
 	}
 
 	let popup: HTMLDivElement | null = $state(null)

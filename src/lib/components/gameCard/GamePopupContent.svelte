@@ -8,8 +8,8 @@
 
 	type Props = {
 		game: CommonGameItem
-		playerName: string
-		playerIcon: string
+		playerName?: string
+		playerIcon?: string
 	}
 
 	let { game, playerName, playerIcon }: Props = $props()
@@ -22,19 +22,21 @@
 
 <div bind:this={box} class="relative w-full p-3">
 	<DashedBorder anchor={box} radius={18} />
-	<div class="flex min-w-0 items-center">
-		<Avatar class="size-8 shrink-0">
-			<AvatarImage src={playerIcon} />
-			<AvatarFallback class="text-[10px] uppercase">
-				{playerName.slice(0, 2)}
-			</AvatarFallback>
-		</Avatar>
-		<div
-			class="ml-[6px] truncate font-['Shantell_Sans'] text-xl font-extrabold text-[#F1F5FF]"
-		>
-			{playerName}
+	{#if playerName}
+		<div class="flex min-w-0 items-center">
+			<Avatar class="size-8 shrink-0">
+				<AvatarImage src={playerIcon ?? ''} />
+				<AvatarFallback class="text-[10px] uppercase">
+					{playerName.slice(0, 2)}
+				</AvatarFallback>
+			</Avatar>
+			<div
+				class="ml-[6px] truncate font-['Shantell_Sans'] text-xl font-extrabold text-[#F1F5FF]"
+			>
+				{playerName}
+			</div>
 		</div>
-	</div>
+	{/if}
 	<div class="mt-3 flex flex-wrap gap-1.5">
 		<Badge variant={moveTypeStyles.variant} class="text-sm uppercase">
 			{moveTypeStyles.text}

@@ -78,6 +78,20 @@ export const SOUNDS = [
 	{ key: 'dvar', url: DVAR_SOUND_URL }
 ]
 
+export const PHONE_OPEN_SOUND_URL = `${CDN_URL_BASE5}/ui/phoneOpen.wav`
+export const PHONE_CLOSE_SOUND_URL = `${CDN_URL_BASE5}/ui/phoneClose.wav`
+export const PHONE_SELECT_SOUND_URL = `${CDN_URL_BASE5}/ui/phoneSelect.wav`
+export const PHONE_HOVER_SOUND_URL = `${CDN_URL_BASE5}/ui/phoneHover.ogg`
+
+export type UiSoundKey = 'ui-open' | 'ui-close' | 'ui-select' | 'ui-hover'
+
+export const UI_SOUNDS: { key: UiSoundKey; url: string }[] = [
+	{ key: 'ui-open', url: PHONE_OPEN_SOUND_URL },
+	{ key: 'ui-close', url: PHONE_CLOSE_SOUND_URL },
+	{ key: 'ui-select', url: PHONE_SELECT_SOUND_URL },
+	{ key: 'ui-hover', url: PHONE_HOVER_SOUND_URL }
+]
+
 export const LastMapPosition = 101
 export const WinPosition = 102
 

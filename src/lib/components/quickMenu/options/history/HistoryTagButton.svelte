@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte'
 	import { cn } from '$lib/utils.js'
 	import DashedBorder from '$lib/components/DashedBorder.svelte'
-	import { CDN_URL_BASE5 } from '$lib/constants'
+	import { getAppManager } from '$lib/stores/AppManager.svelte'
 
 	// Кнопка-тег для истории: вид как у TabsTrigger, активный подсвечен
 	// круглым пунктиром через мерный DashedBorder
@@ -15,18 +15,12 @@
 
 	const { active = false, onclick, class: className = '', children }: Props = $props()
 
+	const app = getAppManager()
+
 	let btn: HTMLElement | null = $state(null)
-	let selectAudio: HTMLAudioElement | null = null
 
 	function handleClick(e: MouseEvent) {
-		try {
-			selectAudio ??= new Audio(`${CDN_URL_BASE5}/ui/phoneSelect.wav`)
-			selectAudio.volume = 0.4
-			selectAudio.currentTime = 0
-			selectAudio.play().catch(() => {})
-		} catch {
-			// без звука тоже живём
-		}
+		app.soundManager.playUi('ui-select', { volume: 0.4 })
 		onclick?.(e)
 	}
 </script>

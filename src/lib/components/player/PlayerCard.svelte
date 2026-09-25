@@ -14,7 +14,7 @@
 	const { player }: Props = $props()
 
 	const app = getAppManager()
-	const { movementStore } = app
+	const { movementStore, soundManager } = app
 
 	let isHovered = $state(false)
 	let hoverTimeout: ReturnType<typeof setTimeout> | null = null
@@ -53,19 +53,9 @@
 	const cardShieldUrl = `${CDN_URL_BASE5}/ui/cardShield.svg`
 	const cardFireUrl = `${CDN_URL_BASE5}/ui/cardFire.svg`
 	const cardStarUrl = `${CDN_URL_BASE5}/ui/cardStar.svg`
-	const cardSelectUrl = `${CDN_URL_BASE5}/ui/phoneSelect.wav`
-
-	let selectAudio: HTMLAudioElement | null = null
 
 	function playSelectSound() {
-		try {
-			selectAudio ??= new Audio(cardSelectUrl)
-			selectAudio.volume = 0.4
-			selectAudio.currentTime = 0
-			selectAudio.play().catch(() => {})
-		} catch {
-			// без звука тоже живём
-		}
+		soundManager.playUi('ui-select', { volume: 0.4 })
 	}
 </script>
 

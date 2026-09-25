@@ -1,4 +1,4 @@
-import { SOUNDS, WinPosition } from '$lib/constants'
+import { SOUNDS, UI_SOUNDS, WinPosition } from '$lib/constants'
 import { createContext, untrack } from 'svelte'
 import { EventDataStore } from './EventDataStore.svelte'
 import { GameHistoryStore } from './GamesHistoryStore.svelte'
@@ -82,6 +82,8 @@ export class AppManager {
 
 	constructor() {
 		this.timerStore.start()
+		// UI blips are needed even for guests (phone menu), so preload eagerly.
+		untrack(() => this.soundManager.preloadSounds(UI_SOUNDS))
 		$effect(() => {
 			if (this.myUser) {
 				untrack(() => this.soundManager.preloadSounds(SOUNDS))
