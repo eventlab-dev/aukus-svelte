@@ -16,7 +16,7 @@
 
 	const {
 		anchor = null,
-		color = '#BAC7F2',
+		color = 'var(--color-ice-border)',
 		strokeWidth = 4,
 		dash = 8,
 		gap = 8,

@@ -31,7 +31,7 @@
 				</AvatarFallback>
 			</Avatar>
 			<div
-				class="ml-[6px] truncate font-['Shantell_Sans'] text-xl font-extrabold text-[#F1F5FF]"
+				class="ml-[6px] truncate font-display text-xl font-extrabold text-ice"
 			>
 				{playerName}
 			</div>
@@ -49,10 +49,10 @@
 			</Badge>
 		{/if}
 	</div>
-	<div class="mt-3 font-['Shantell_Sans'] text-xl font-extrabold text-[#F1F5FF]">
+	<div class="mt-3 font-display text-xl font-extrabold text-ice">
 		{game.game_title}
 	</div>
-	<div class="review mt-2 font-['Shantell_Sans'] text-base font-bold uppercase italic text-[#F1F5FF]">
+	<div class="review mt-2 font-display text-base font-bold uppercase italic text-ice">
 		{#if game.rating.length > 0}{game.rating} — {/if}<!-- eslint-disable-next-line svelte/no-at-html-tags -->{@html parsedReview}
 	</div>
 </div>

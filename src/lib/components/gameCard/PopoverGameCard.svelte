@@ -44,7 +44,7 @@
 	>
 		{#if playerIcon}
 			<span
-				class="relative block h-[26px] w-[26px] overflow-hidden rounded-full ring-2 ring-[#BAC7F2] transition-transform duration-200 {open
+				class="relative block h-[26px] w-[26px] overflow-hidden rounded-full ring-2 ring-ice-border transition-transform duration-200 {open
 					? 'scale-[1.31]'
 					: 'scale-100'}"
 			>
@@ -62,7 +62,7 @@
 		{/if}
 	</PopoverTrigger>
 	<PopoverContent
-		class="w-[340px] max-w-[calc(100vw-2rem)] rounded-[18px] border-0 bg-[#7F97E7] p-0 shadow-none"
+		class="popup-box w-[340px] max-w-[calc(100vw-2rem)]"
 		onmouseenter={handleMouseEnter}
 		onmouseleave={handleMouseLeave}
 	>

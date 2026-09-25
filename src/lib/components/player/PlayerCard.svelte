@@ -78,9 +78,9 @@
 				<div class="col-start-1 row-start-1" transition:fly={{ y: -8, duration: 250 }}>
 					<div class="flex h-8 w-full items-center">
 						<div
-							class="flex w-full items-center justify-between font-['Shantell_Sans'] text-xl font-extrabold text-[#F3FAFE]"
+							class="flex w-full items-center justify-between font-display text-xl font-extrabold text-ice-soft"
 						>
-							<span class="text-2xl font-extrabold text-[#F1F5FF]/80">{'>'}</span>
+							<span class="text-2xl font-extrabold text-ice/80">{'>'}</span>
 							<div class="flex items-center">
 								{player.shield_stacks}<img
 									src={cardShieldUrl}
@@ -105,7 +105,7 @@
 									draggable="false"
 								/>
 							</div>
-							<span class="text-2xl font-extrabold text-[#F1F5FF]/80">{'<'}</span>
+							<span class="text-2xl font-extrabold text-ice/80">{'<'}</span>
 						</div>
 					</div>
 					<div class="flex h-[21px] w-full items-center overflow-hidden leading-[21px]">
@@ -116,7 +116,7 @@
 							</AvatarFallback>
 						</Avatar>
 						<div
-							class="ml-[6px] truncate font-['Shantell_Sans'] text-base font-extrabold text-[#F1F5FF]/80 italic"
+							class="ml-[6px] truncate font-display text-base font-extrabold text-ice/80 italic"
 						>
 							{player.username}
 						</div>
@@ -139,16 +139,16 @@
 									></span>
 								{/if}
 							</div>
-							<div class="ml-[6px] truncate font-['Shantell_Sans'] text-xl font-extrabold text-[#F1F5FF]">
+							<div class="ml-[6px] truncate font-display text-xl font-extrabold text-ice">
 								{player.username}
 							</div>
 						</div>
-						<div class="shrink-0 font-['Shantell_Sans'] text-xl font-extrabold italic">
+						<div class="shrink-0 font-display text-xl font-extrabold italic">
 							{Math.round(player.total_score)}
 						</div>
 					</div>
 					<div
-						class="grid h-[21px] w-full overflow-hidden text-base leading-[21px] font-extrabold text-[#F1F5FF]/80 italic"
+						class="grid h-[21px] w-full overflow-hidden text-base leading-[21px] font-extrabold text-ice/80 italic"
 					>
 						<span class="col-start-1 row-start-1 truncate">
 							{player.current_game || 'Выбирает игру...'}

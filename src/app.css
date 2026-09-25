@@ -40,7 +40,7 @@
 
 	--muted: oklch(0.38 0 0);
 	/* --muted-foreground: oklch(0.7 0 0); */
-	--muted-foreground: var(--color-primary)
+	--muted-foreground: var(--color-primary);
 
 	
 	--accent: oklch(0.38 0 0);
@@ -55,6 +55,12 @@
 	--orange: oklch(0.74 0.18 54.54);
 	--violet: #5E60B4;
 	--purple: oklch(0.61 0.21 312.42);
+
+	/* Игровые popup-цвета: были разбросаны как text-[#F1F5FF] / bg-[#7F97E7] */
+	--ice: #f1f5ff;
+	--ice-soft: #f3fafe;
+	--ice-border: #bac7f2;
+	--popup: #7f97e7;
 }
 
 @theme inline {
@@ -94,6 +100,13 @@
 	--color-input: var(--input);
 	--color-ring: var(--ring);
 
+	--color-ice: var(--ice);
+	--color-ice-soft: var(--ice-soft);
+	--color-ice-border: var(--ice-border);
+	--color-popup: var(--popup);
+
+	--font-display: 'Shantell Sans', 'Segoe UI', system-ui, sans-serif;
+
 	--animate-spin-alt: spin-alt 1.5s cubic-bezier(0.83, 0, 0.17, 1) infinite alternate;
 
 	@keyframes spin-alt {
@@ -109,7 +122,7 @@
 
 @layer base {
 	* {
-		@apply border-border font-['Shantell_Sans'] outline-ring/50;
+		@apply border-border font-display outline-ring/50;
 	}
 
 	html {
@@ -262,12 +275,22 @@
 } */
 
 @utility border-dashed {
-	outline: 4px dashed #bac7f2;
+	outline: 4px dashed var(--color-ice-border);
 	outline-offset: -2px;
 }
 
 @utility border-dashed-bottom {
-	border-bottom: 4px dashed #bac7f2;
+	border-bottom: 4px dashed var(--color-ice-border);
+}
+
+/* Общий контейнер игровых попапов: раньше в трёх местах
+   дублировалось rounded-[18px] border-0 bg-[#7F97E7] p-0 shadow-none */
+@utility popup-box {
+	border-radius: 18px;
+	border-width: 0;
+	background-color: var(--color-popup);
+	padding: 0;
+	box-shadow: none;
 }
 
 /* fix for rich editor rules lists */

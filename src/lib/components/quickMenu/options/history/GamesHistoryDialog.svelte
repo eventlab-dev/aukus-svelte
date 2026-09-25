@@ -206,7 +206,7 @@ import { CDN_URL_BASE5, EventTitles } from '$lib/constants'
 				<input
 					type="text"
 					placeholder="Поиск среди всех игр"
-					class="w-full min-w-0 bg-transparent font-['Shantell_Sans'] text-sm font-bold text-[#F1F5FF] outline-none placeholder:text-[#F1F5FF] focus:placeholder:text-[#F1F5FF]/40"
+					class="w-full min-w-0 bg-transparent font-display text-sm font-bold text-ice outline-none placeholder:text-ice focus:placeholder:text-ice/40"
 					value={gamesHistoryStore.searchParams?.title_search ?? ''}
 					oninput={(e) => debounceSearch((e.target as HTMLInputElement).value)}
 				/>

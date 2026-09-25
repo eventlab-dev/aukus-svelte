@@ -31,7 +31,7 @@
 	data-active={active}
 	onclick={handleClick}
 	class={cn(
-		'relative inline-flex h-[43px] max-w-fit flex-1 cursor-pointer items-center justify-center gap-1 rounded-[18px] bg-secondary px-4 py-1 font-extrabold whitespace-nowrap text-foreground transition-[color,box-shadow] data-[active=true]:bg-primary data-[active=true]:shadow-none data-[active=false]:text-[#BAC7F2] [&_svg]:pointer-events-none [&_svg]:shrink-0',
+		'relative inline-flex h-[43px] max-w-fit flex-1 cursor-pointer items-center justify-center gap-1 rounded-[18px] bg-secondary px-4 py-1 font-extrabold whitespace-nowrap text-foreground transition-[color,box-shadow] data-[active=true]:bg-primary data-[active=true]:shadow-none data-[active=false]:text-ice-border [&_svg]:pointer-events-none [&_svg]:shrink-0',
 		className
 	)}
 >

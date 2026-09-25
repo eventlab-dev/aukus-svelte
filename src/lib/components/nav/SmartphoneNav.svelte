@@ -174,7 +174,7 @@
 						}}
 					>
 						<img src={appItem.icon} class="mb-1 h-[80px] w-[80px]" alt={appItem.label} />
-						<span class="max-w-[80px] text-center text-sm leading-tight font-extrabold font-['Shantell_Sans'] break-words hyphens-auto uppercase">{appItem.label}</span>
+						<span class="max-w-[80px] text-center text-sm leading-tight font-extrabold font-display break-words hyphens-auto uppercase">{appItem.label}</span>
 					</button>
 				{/each}
 			</div>

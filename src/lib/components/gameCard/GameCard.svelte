@@ -215,7 +215,7 @@
 								</Badge>
 							</PopoverTrigger>
 							<PopoverContent
-								class="w-72 max-w-[calc(100vw-2rem)] rounded-[18px] bg-[#7F97E7] p-0 shadow-none"
+								class="popup-box w-72 max-w-[calc(100vw-2rem)]"
 								onmouseenter={handleDiceEnter}
 								onmouseleave={handleDiceLeave}
 							>
@@ -244,7 +244,7 @@
 							</Badge>
 						</TooltipTrigger>
 						<TooltipContent
-							class="rounded-[18px] border-0 bg-[#7F97E7] p-0 font-['Shantell_Sans'] text-sm font-bold text-[#F1F5FF] shadow-none"
+							class="popup-box font-display text-sm font-bold text-ice"
 						>
 							<div bind:this={tipBox} class="relative p-3">
 								<DashedBorder anchor={tipBox} radius={18} />
