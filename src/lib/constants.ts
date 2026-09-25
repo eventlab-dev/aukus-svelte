@@ -34,6 +34,10 @@ export const CDN_URL_BASE4 = 'https://storage.yandexcloud.net/eventlab/assets/au
 
 export const CDN_URL_BASE5 = 'https://storage.yandexcloud.net/eventlab/assets/aukus5'
 
+export function cdn5(path: string): string {
+	return `${CDN_URL_BASE5}/${path.replace(/^\/+/, '')}`
+}
+
 export const MapMarkerIce = `${CDN_URL_BASE4}/map/marker_ice.png`
 export const MapMarkerFire = `${CDN_URL_BASE4}/map/marker_fire.png`
 export const MapMarkerSwamp = `${CDN_URL_BASE4}/map/marker_swamp.png`
@@ -50,6 +54,17 @@ export const TOP_BANNER = `${CDN_URL_BASE5}/ui/top-banner.png`
 export const PAGE_BG = `${CDN_URL_BASE5}/ui/page-bg.jpg`
 export const GAME_CARD_BG = `${CDN_URL_BASE5}/ui/game-card-bg.png`
 export const PHONE_BG = `${CDN_URL_BASE5}/ui/phone-bg.webp`
+
+export const CARD_ICE_URL = cdn5('/ui/cardIce.png')
+export const PLAYER_CARD_BG_URL = cdn5('/ui/player-card-bg.png')
+export const CARD_BORDER_URL = cdn5('/ui/border.svg')
+export const CARD_SHIELD_URL = cdn5('/ui/cardShield.svg')
+export const CARD_FIRE_URL = cdn5('/ui/cardFire.svg')
+export const CARD_STAR_URL = cdn5('/ui/cardStar.svg')
+export const SEARCH_LUPA_URL = cdn5('/ui/searchLupa.svg')
+export const SEARCH_DIVIDER_URL = cdn5('/ui/searchDivider.svg')
+export const CURSOR_DEFAULT_URL = cdn5('/ui/1.png')
+export const CURSOR_POINTER_URL = cdn5('/ui/2.png')
 
 export const DICE_ROLL_ANIMATION_TIME = 2000
 export const DICE_ROLL_IDLE_TIME = 2000

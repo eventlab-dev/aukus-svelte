@@ -5,7 +5,7 @@
 	import type { PlayerData } from '$lib/types'
 	import { getDirectStreamUrl } from '$lib/utils/streamUtils'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-	import { CDN_URL_BASE5 } from '$lib/constants'
+	import { CARD_BORDER_URL, CARD_FIRE_URL, CARD_SHIELD_URL, CARD_STAR_URL, PLAYER_CARD_BG_URL } from '$lib/constants'
 
 	type Props = {
 		player: PlayerData
@@ -48,11 +48,11 @@
 		}
 	}
 
-	const cardImgUrl = `${CDN_URL_BASE5}/ui/player-card-bg.png`
-	const cardBorderUrl = `${CDN_URL_BASE5}/ui/border.svg`
-	const cardShieldUrl = `${CDN_URL_BASE5}/ui/cardShield.svg`
-	const cardFireUrl = `${CDN_URL_BASE5}/ui/cardFire.svg`
-	const cardStarUrl = `${CDN_URL_BASE5}/ui/cardStar.svg`
+	const cardImgUrl = PLAYER_CARD_BG_URL
+	const cardBorderUrl = CARD_BORDER_URL
+	const cardShieldUrl = CARD_SHIELD_URL
+	const cardFireUrl = CARD_FIRE_URL
+	const cardStarUrl = CARD_STAR_URL
 
 	function playSelectSound() {
 		soundManager.playUi('ui-select', { volume: 0.4 })

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/utils.js'
 
-	// ТЕСТОВЫЙ компонент пунктирной обводки (потом удалить).
 	// Меряет anchor через ResizeObserver и чертит прямоугольник
 	// точными числами (без calc), поэтому дэши не плывут.
 	type Props = {

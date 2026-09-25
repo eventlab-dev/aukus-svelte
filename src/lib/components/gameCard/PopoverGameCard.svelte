@@ -2,6 +2,7 @@
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
 	import type { CommonGameItem } from '$lib/types'
+	import { useHoverOpen } from '$lib/utils/hoverOpen.svelte'
 	import GamePopupContent from './GamePopupContent.svelte'
 
 	type Props = {
@@ -18,33 +19,17 @@
 
 	const playerIcon = $derived(usersStore.usersBySlug.get(game.player_nickname)?.avatar_link ?? '')
 	
-	let open = $state(false)
-
-	let closeTimeout: ReturnType<typeof setTimeout> | undefined = undefined
-
-	function handleMouseEnter() {
-		clearTimeout(closeTimeout)
-		open = true
-		onHoverChange?.(true)
-	}
-
-	function handleMouseLeave() {
-		clearTimeout(closeTimeout)
-		closeTimeout = setTimeout(() => {
-			open = false
-			onHoverChange?.(false)
-		}, 150)
-	}
+	const hover = useHoverOpen(150, (value) => onHoverChange?.(value))
 </script>
 
-<Popover {open} onOpenChange={(value) => (open = value)}>
+<Popover open={hover.open} onOpenChange={(value) => hover.setOpen(value)}>
 	<PopoverTrigger
-		onmouseenter={handleMouseEnter}
-		onmouseleave={handleMouseLeave}
+		onmouseenter={hover.handleEnter}
+		onmouseleave={hover.handleLeave}
 	>
 		{#if playerIcon}
 			<span
-				class="relative block h-[26px] w-[26px] overflow-hidden rounded-full ring-2 ring-ice-border transition-transform duration-200 {open
+				class="relative block h-[26px] w-[26px] overflow-hidden rounded-full ring-2 ring-ice-border transition-transform duration-200 {hover.open
 					? 'scale-[1.31]'
 					: 'scale-100'}"
 			>
@@ -63,8 +48,8 @@
 	</PopoverTrigger>
 	<PopoverContent
 		class="popup-box w-[340px] max-w-[calc(100vw-2rem)]"
-		onmouseenter={handleMouseEnter}
-		onmouseleave={handleMouseLeave}
+		onmouseenter={hover.handleEnter}
+		onmouseleave={hover.handleLeave}
 	>
 		<GamePopupContent {game} {playerName} {playerIcon} />
 	</PopoverContent>

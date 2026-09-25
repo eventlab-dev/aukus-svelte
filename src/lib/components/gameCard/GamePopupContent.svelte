@@ -4,7 +4,7 @@
 	import { formatDuration, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { Badge } from '../ui/badge'
 	import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-	import DashedBorder from '../DashedBorder.svelte'
+	import BorderedBox from '../BorderedBox.svelte'
 
 	type Props = {
 		game: CommonGameItem
@@ -16,12 +16,9 @@
 
 	const parsedReview = $derived(renderToHTML(game.review || ''))
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
-
-	let box: HTMLElement | null = $state(null)
 </script>
 
-<div bind:this={box} class="relative w-full p-3">
-	<DashedBorder anchor={box} radius={18} />
+<BorderedBox class="w-full p-3">
 	{#if playerName}
 		<div class="flex min-w-0 items-center">
 			<Avatar class="size-8 shrink-0">
@@ -55,7 +52,7 @@
 	<div class="review mt-2 font-display text-base font-bold uppercase italic text-ice">
 		{#if game.rating.length > 0}{game.rating} — {/if}<!-- eslint-disable-next-line svelte/no-at-html-tags -->{@html parsedReview}
 	</div>
-</div>
+</BorderedBox>
 
 <style>
 	:global(.review) :global(p) {

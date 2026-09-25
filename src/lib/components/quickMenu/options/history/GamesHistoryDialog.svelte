@@ -1,6 +1,6 @@
 <script lang="ts">
 import PageContainer from '$lib/components/PageContainer.svelte'
-import { CDN_URL_BASE5, EventTitles } from '$lib/constants'
+import { EventTitles, SEARCH_DIVIDER_URL, SEARCH_LUPA_URL } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
 	import { playerMoveToCommonGame, uniqBy } from '$lib/utils'
 	import Loader from '$lib/components/Loader.svelte'
@@ -13,8 +13,8 @@ import { CDN_URL_BASE5, EventTitles } from '$lib/constants'
 	
 	const app = getAppManager()
 
-	const searchLupaUrl = `${CDN_URL_BASE5}/ui/searchLupa.svg`
-	const searchDividerUrl = `${CDN_URL_BASE5}/ui/searchDivider.svg`
+	const searchLupaUrl = SEARCH_LUPA_URL
+	const searchDividerUrl = SEARCH_DIVIDER_URL
 
 	const { gamesHistoryStore, playersMovesStore, gamesMatchesStore } = app
 

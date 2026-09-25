@@ -61,6 +61,11 @@
 	--ice-soft: #f3fafe;
 	--ice-border: #bac7f2;
 	--popup: #7f97e7;
+
+	/* Кастомные курсоры (URL в одном месте; сами картинки лежат в constants.ts
+	   как CURSOR_DEFAULT_URL / CURSOR_POINTER_URL — при смене обновить и там) */
+	--cursor-default: url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/1.png');
+	--cursor-pointer: url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/2.png');
 }
 
 @theme inline {
@@ -313,7 +318,7 @@
    Хотспот 0 0 — если клик чувствуется не из той точки, скажи, поправлю */
 body {
 	cursor:
-		url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/1.png') 0 0,
+		var(--cursor-default) 0 0,
 		auto;
 }
 
@@ -321,7 +326,7 @@ a,
 button,
 [role='button'] {
 	cursor:
-		url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/2.png') 0 0,
+		var(--cursor-pointer) 0 0,
 		pointer;
 }
 
@@ -329,6 +334,6 @@ button,
 .viewport,
 .viewport * {
 	cursor:
-		url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/1.png') 0 0,
+		var(--cursor-default) 0 0,
 		auto;
 }

@@ -9,7 +9,7 @@
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
-	import { CDN_URL_BASE5, DifficultyMap, DifficultyPrepositional, FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
+	import { CARD_ICE_URL, DifficultyMap, DifficultyPrepositional, FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatDateTimeISO, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
@@ -22,7 +22,8 @@
 	import type { Editor } from '@tiptap/core'
 	import type { CommonGameItem } from '$lib/types'
 	import { getAppManager } from '$lib/stores/AppManager.svelte'
-	import DashedBorder from '$lib/components/DashedBorder.svelte'
+	import BorderedBox from '$lib/components/BorderedBox.svelte'
+	import { useHoverOpen } from '$lib/utils/hoverOpen.svelte'
 
 	type Props = {
 		game: CommonGameItem
@@ -134,28 +135,13 @@
 
 	const player = $derived(playersBySlug.get(game.player_nickname))
 
-	let diceBox: HTMLElement | null = $state(null)
-	let tipBox: HTMLElement | null = $state(null)
-	let diceOpen = $state(false)
-	let diceCloseTimeout: ReturnType<typeof setTimeout> | undefined = undefined
-
-	function handleDiceEnter() {
-		clearTimeout(diceCloseTimeout)
-		diceOpen = true
-	}
-
-	function handleDiceLeave() {
-		clearTimeout(diceCloseTimeout)
-		diceCloseTimeout = setTimeout(() => {
-			diceOpen = false
-		}, 200)
-	}
+	const diceHover = useHoverOpen(200)
 
 	// Ключ подсвеченного аватара в ряду «также играли» — ряд разъезжается
 	let hoveredKey: string | number | null = $state(null)
 
 	// Фон карточки из хранилища
-	const cardIceUrl = `${CDN_URL_BASE5}/ui/cardIce.png`
+	const cardIceUrl = CARD_ICE_URL
 </script>
 
 <div
@@ -181,12 +167,12 @@
 				{#if move}
 					{#if move.dice_roll_id}
 						<Popover
-							open={diceOpen}
-							onOpenChange={(value) => (diceOpen = value)}
+							open={diceHover.open}
+							onOpenChange={(value) => diceHover.setOpen(value)}
 						>
 							<PopoverTrigger
-								onmouseenter={handleDiceEnter}
-								onmouseleave={handleDiceLeave}
+								onmouseenter={diceHover.handleEnter}
+								onmouseleave={diceHover.handleLeave}
 							>
 								<Badge
 									variant="blue"
@@ -198,13 +184,12 @@
 							</PopoverTrigger>
 							<PopoverContent
 								class="popup-box w-72 max-w-[calc(100vw-2rem)]"
-								onmouseenter={handleDiceEnter}
-								onmouseleave={handleDiceLeave}
+								onmouseenter={diceHover.handleEnter}
+								onmouseleave={diceHover.handleLeave}
 							>
-								<div bind:this={diceBox} class="relative w-full p-3">
-									<DashedBorder anchor={diceBox} radius={18} />
+								<BorderedBox class="w-full p-3">
 									<DiceRollInfo diceRollId={move.dice_roll_id} />
-								</div>
+								</BorderedBox>
 							</PopoverContent>
 						</Popover>
 					{:else}
@@ -228,10 +213,9 @@
 						<TooltipContent
 							class="popup-box font-display text-sm font-bold text-ice"
 						>
-							<div bind:this={tipBox} class="relative p-3">
-								<DashedBorder anchor={tipBox} radius={18} />
+							<BorderedBox class="p-3">
 								Примерное время по категории стрима
-							</div>
+							</BorderedBox>
 						</TooltipContent>
 					</Tooltip>
 				{/if}
