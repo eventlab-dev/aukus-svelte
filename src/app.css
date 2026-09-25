@@ -64,8 +64,8 @@
 
 	/* Кастомные курсоры (URL в одном месте; сами картинки лежат в constants.ts
 	   как CURSOR_DEFAULT_URL / CURSOR_POINTER_URL — при смене обновить и там) */
-	--cursor-default: url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/1.png');
-	--cursor-pointer: url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/2.png');
+	--cursor-default: url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/cursor/1.png');
+	--cursor-pointer: url('https://storage.yandexcloud.net/eventlab/assets/aukus5/ui/cursor/2.png');
 }
 
 @theme inline {

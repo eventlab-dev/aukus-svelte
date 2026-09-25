@@ -63,8 +63,8 @@ export const CARD_FIRE_URL = cdn5('/ui/cardFire.svg')
 export const CARD_STAR_URL = cdn5('/ui/cardStar.svg')
 export const SEARCH_LUPA_URL = cdn5('/ui/searchLupa.svg')
 export const SEARCH_DIVIDER_URL = cdn5('/ui/searchDivider.svg')
-export const CURSOR_DEFAULT_URL = cdn5('/ui/1.png')
-export const CURSOR_POINTER_URL = cdn5('/ui/2.png')
+export const CURSOR_DEFAULT_URL = cdn5('/ui/cursor/1.png')
+export const CURSOR_POINTER_URL = cdn5('/ui/cursor/2.png')
 
 export const DICE_ROLL_ANIMATION_TIME = 2000
 export const DICE_ROLL_IDLE_TIME = 2000
@@ -93,10 +93,10 @@ export const SOUNDS = [
 	{ key: 'dvar', url: DVAR_SOUND_URL }
 ]
 
-export const PHONE_OPEN_SOUND_URL = `${CDN_URL_BASE5}/ui/phoneOpen.wav`
-export const PHONE_CLOSE_SOUND_URL = `${CDN_URL_BASE5}/ui/phoneClose.wav`
-export const PHONE_SELECT_SOUND_URL = `${CDN_URL_BASE5}/ui/phoneSelect.wav`
-export const PHONE_HOVER_SOUND_URL = `${CDN_URL_BASE5}/ui/phoneHover.ogg`
+export const PHONE_OPEN_SOUND_URL = cdn5('/sounds/phoneOpen.wav')
+export const PHONE_CLOSE_SOUND_URL = cdn5('/sounds/phoneClose.wav')
+export const PHONE_SELECT_SOUND_URL = cdn5('/sounds/phoneSelect.wav')
+export const PHONE_HOVER_SOUND_URL = cdn5('/sounds/phoneHover.ogg')
 
 export type UiSoundKey = 'ui-open' | 'ui-close' | 'ui-select' | 'ui-hover'
 
