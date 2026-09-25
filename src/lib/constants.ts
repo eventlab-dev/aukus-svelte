@@ -121,6 +121,14 @@ export const DifficultyTitle: { [k in GameDifficulty]: string } = {
 	2: 'Очень сложный'
 }
 
+// Предложные формы для бейджей вида «На сложном»
+export const DifficultyPrepositional: Record<Difficulty, string> = {
+	easy: 'На легком',
+	normal: 'На нормальном',
+	hard: 'На сложном',
+	'very-hard': 'На очень сложном'
+}
+
 export const LOGO_URL = `${CDN_URL_BASE4}/map/logo.avif`
 export const LOGO_BG_URL = `${CDN_URL_BASE4}/map/logo-bg.avif`
 

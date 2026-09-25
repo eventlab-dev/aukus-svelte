@@ -31,51 +31,51 @@
 			<Skeleton class="h-4 w-24" />
 		</div>
 	{:else if isError || !diceRoll}
-		<div class="text-sm text-ice/70">Failed to load dice roll information</div>
+		<div class="text-sm text-ice/70">Не удалось загрузить информацию о броске</div>
 	{:else}
 		<div class="space-y-2">
-			<div class="text-sm font-medium">Dice Roll Information</div>
+			<div class="text-sm font-medium">Информация о броске</div>
 
 			<div class="space-y-1 text-sm">
 				<div>
-					<span class="text-ice/70">Values:</span>
+					<span class="text-ice/70">Значения:</span>
 					<span class="ml-2 font-medium">{diceRoll.roll_values.join(', ')}</span>
 				</div>
 
 				<div>
-					<span class="text-ice/70">Type:</span>
+					<span class="text-ice/70">Тип:</span>
 					<span class="ml-2">{diceRoll.dice_type}</span>
 				</div>
 
 				<div>
-					<span class="text-ice/70">Sum:</span>
+					<span class="text-ice/70">Сумма:</span>
 					<span class="ml-2 font-medium">{diceRoll.roll_values.reduce((a, b) => a + b, 0)}</span>
 				</div>
 
 				<div>
 					<span class="text-ice/70">Random.org:</span>
 					<span class="ml-2">
-						{diceRoll.is_random_org_result ? 'Yes' : 'No'}
+						{diceRoll.is_random_org_result ? 'Да' : 'Нет'}
 					</span>
 				</div>
 
 				{#if diceRoll.random_org_check_url}
 					<div>
-						<span class="text-ice/70">Verification:</span>
+						<span class="text-ice/70">Проверка:</span>
 						<a
 							href={diceRoll.random_org_check_url}
 							target="_blank"
 							rel="noopener noreferrer"
 							class="ml-2 text-ice underline hover:text-ice/80"
 						>
-							Check result
+							Проверить результат
 						</a>
 					</div>
 				{/if}
 
 				{#if diceRoll.random_org_fail_reason}
 					<div>
-						<span class="text-ice/70">Random.org failed:</span>
+						<span class="text-ice/70">Ошибка Random.org:</span>
 						<span class="ml-2 text-xs">{diceRoll.random_org_fail_reason}</span>
 					</div>
 				{/if}

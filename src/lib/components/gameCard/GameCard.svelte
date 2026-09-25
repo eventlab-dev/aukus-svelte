@@ -9,7 +9,7 @@
 	import { Toggle } from '$lib/components/ui/toggle'
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip'
 	import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover'
-	import { CDN_URL_BASE5, FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
+	import { CDN_URL_BASE5, DifficultyMap, DifficultyPrepositional, FALLBACK_GAME_POSTER, gameLengthRanges, MOVIE_POSTER_URL } from '$lib/constants'
 	import type { PlayerMoveItem } from '$lib/heyapi/aukus/types.gen'
 	import { formatDateTime, formatDateTimeISO, formatMs, getMoveTypeStyles, renderToHTML } from '$lib/utils'
 	import { fade, slide } from 'svelte/transition'
@@ -115,29 +115,11 @@
 	}
 
 	const difficultyText = $derived.by(() => {
-		if (move) {
-			switch (move.difficulty_level) {
-				case -1:
-					return 'На легком'
-				case 1:
-					return 'На сложном'
-				case 2:
-					return 'На очень сложном'
-				default:
-					return ''
-			}
+		const difficulty = move ? DifficultyMap[move.difficulty_level] : game.difficulty
+		if (!difficulty) {
+			return ''
 		}
-		if (game) {
-			switch (game.difficulty) {
-				case 'normal':
-					return 'На сложном'
-				case 'hard':
-					return 'На очень сложном'
-				default:
-					return ''
-			}
-		}
-		return ''
+		return DifficultyPrepositional[difficulty]
 	})
 
 	const posterUrl = $derived.by(() => {
