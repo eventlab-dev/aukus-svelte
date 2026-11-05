@@ -10,7 +10,7 @@ import {
 } from '$lib/heyapi/aukus/@tanstack/svelte-query.gen'
 import {
 	fetchCurrentUserApiUsersCurrentGetOptions,
-	getUsersApiUsersGetOptions,
+	getEventsApiEventsGetOptions,
 	loginApiLoginPostMutation,
 	makeDiceRollApiDiceRollsPostMutation
 } from '$lib/heyapi/eventlab/@tanstack/svelte-query.gen'
@@ -92,27 +92,29 @@ export function createUsersStore() {
 		accessToken.set(null)
 	}
 
-	const usersQuery = createQuery({
-		...getUsersApiUsersGetOptions({
-			baseUrl: EventlabBaseUrl,
-			query: { is_active: 1, events: ['aukus4'] }
-		}),
+	const eventsQuery = createQuery({
+		...getEventsApiEventsGetOptions({ baseUrl: EventlabBaseUrl, query: { slug: 'aukus4' } }),
 		refetchInterval: 2 * 60 * 1000
+	})
+
+	const participantsQuery = derived([eventsQuery], ([$query]) => {
+		if (!$query.isSuccess || !$query.data) return []
+		return $query.data.events[0]?.participants ?? []
 	})
 
 	const cachedUsers = writable<UserItem[]>([])
 
-	usersQuery.subscribe(($query) => {
+	eventsQuery.subscribe(($query) => {
 		if ($query.isSuccess) {
-			cachedUsers.set($query.data.users)
+			cachedUsers.set($query.data.events[0]?.participants ?? [])
 		}
 	})
 
-	const users = derived([usersQuery, cachedUsers], ([$query, $cachedUsers]) => {
-		if ($query.isSuccess) {
-			return $query.data.users
+	const users = derived([participantsQuery, cachedUsers], ([$derived, $cached]) => {
+		if ($derived.length > 0) {
+			return $derived
 		}
-		return $cachedUsers
+		return $cached
 	})
 
 	const usersBySlug = derived(users, ($users) => {
@@ -176,7 +178,7 @@ export function createUsersStore() {
 		loginError,
 		logout,
 		users,
-		usersQuery,
+		eventsQuery,
 		usersBySlug,
 		saveMoveForm,
 		finishMove,
