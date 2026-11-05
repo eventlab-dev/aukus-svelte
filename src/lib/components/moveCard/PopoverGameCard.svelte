@@ -17,12 +17,14 @@
 	const { usersBySlug } = usersStore
 
 	const parsedReview = $derived(renderToHTML(game.review || ''))
-	const playerName = $derived($usersBySlug.get(game.player_name)?.username ?? game.player_name)
+	const playerName = $derived(
+		$usersBySlug.get(game.player_nickname)?.username ?? game.player_nickname
+	)
 	const moveTypeStyles = $derived(getMoveTypeStyles(game.completion_status))
 
 	let open = $state(false)
 
-	let closeTimeout: number | undefined = undefined
+	let closeTimeout: ReturnType<typeof setTimeout>
 
 	function handleMouseEnter() {
 		clearTimeout(closeTimeout)

@@ -13,7 +13,6 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area'
 	import { Toggle } from '$lib/components/ui/toggle'
 	import X from '@lucide/svelte/icons/x'
-	import { type EventName } from '$lib/heyapi/eventlab/types.gen'
 	import { EventTitles } from '$lib/constants'
 	import { Button } from '$lib/components/ui/button'
 	import type { CommonGameItem } from '$lib/types'
@@ -49,7 +48,7 @@
 		}
 	})
 
-	let timer: number = 0
+	let timer: ReturnType<typeof setTimeout>
 	const debounceSearch = (v: string) => {
 		clearTimeout(timer)
 		if (v.length >= 3 || v.length === 0) {
@@ -79,9 +78,9 @@
 		return null
 	})
 
-	const eventsList: EventName[] = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
+	const eventsList = ['aukus1', 'aukus2', 'aukus3', 'aukus4']
 
-	function selectEvent(_: boolean, event: EventName) {
+	function selectEvent(_: boolean, event: string) {
 		if (selectedEvent === event) {
 			searchParams.update((p) => ({ ...p, events: ['aukus1', 'aukus2', 'aukus3'] }))
 		} else {
@@ -222,9 +221,10 @@
 						{#if aukus4GamesDisplay.length !== 0}
 							<div class="p-0 text-center text-3xl">Аукус 4</div>
 							{#each aukus4GamesDisplay as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
+								{#if $playersBySlug[game.player_nickname] !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -238,9 +238,10 @@
 								</Button>
 							</div>
 							{#each aukus3Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
+								{#if $playersBySlug[game.player_nickname] !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -254,9 +255,10 @@
 								</Button>
 							</div>
 							{#each aukus2Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
+								{#if $playersBySlug[game.player_nickname] !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}
@@ -270,9 +272,10 @@
 								</Button>
 							</div>
 							{#each aukus1Games as game (game.id)}
-								{#if $playersBySlug[game.player_name] !== undefined}
+								{#if $playersBySlug[game.player_nickname] !== undefined}
 									{@const matches = gameMatchedMergedWithOthers.filter(
-										(g) => g.game_title === game.game_title && g.player_name !== game.player_name
+										(g) =>
+											g.game_title === game.game_title && g.player_nickname !== game.player_nickname
 									)}
 									<GameCard {game} matchedGames={matches} />
 								{/if}

@@ -1,41 +1,41 @@
 <script lang="ts">
-	import { getAppManagerContext } from '$lib/contexts/appManagerContext';
-	import Volume1 from '@lucide/svelte/icons/volume-1';
-	import VolumeX from '@lucide/svelte/icons/volume-x';
-	import { Slider } from './ui/slider';
-	import { fade } from 'svelte/transition';
-	import { Toggle } from './ui/toggle';
+	import { getAppManagerContext } from '$lib/contexts/appManagerContext'
+	import Volume1 from '@lucide/svelte/icons/volume-1'
+	import VolumeX from '@lucide/svelte/icons/volume-x'
+	import { Slider } from './ui/slider'
+	import { fade } from 'svelte/transition'
+	import { Toggle } from './ui/toggle'
 
 	type Props = {
-		class?: string;
-	};
+		class?: string
+	}
 
-	const { class: className }: Props = $props();
+	const { class: className }: Props = $props()
 
-	const { soundManager } = getAppManagerContext();
+	const { soundManager } = getAppManagerContext()
 
-	let isVisible = $state(false);
+	let isVisible = $state(false)
 
-	let timeoutId: number;
+	let timeoutId: ReturnType<typeof setTimeout>
 
 	function hide() {
-		clearTimeout(timeoutId);
+		clearTimeout(timeoutId)
 		timeoutId = setTimeout(() => {
-			isVisible = false;
-		}, 300);
+			isVisible = false
+		}, 300)
 	}
 
 	function show() {
-		clearTimeout(timeoutId);
-		isVisible = true;
+		clearTimeout(timeoutId)
+		isVisible = true
 	}
 
 	function setVolume(value: number) {
-		soundManager.setGlobalVolume(value);
+		soundManager.setGlobalVolume(value)
 	}
 
 	function getVolume() {
-		return soundManager.volume;
+		return soundManager.volume
 	}
 </script>
 
