@@ -43,3 +43,23 @@ principle behind them, not just the listed cases.
 - `npm run check` must report 0 errors, 0 warnings.
 - After theme/CSS changes, run `npm run build` and confirm the new classes
   are present in the compiled client CSS.
+
+## 5. The fishing minigame
+
+`src/lib/minigames/fishing` is a self-contained PixiJS 8 engine, not Svelte UI: it
+paints itself.
+
+- Layout: `engine/` with the public API in `engine/index.ts` and `art/`;
+  `src/lib/components/FishingGame.svelte` is the Svelte 5 wrapper (lazy engine
+  import; canvas rules in its `<style>`); the page is `src/routes/minigames/fishing`,
+  and its `.fishing-shell` styles live in the page's `<style>` — the minigame ships
+  no global CSS. Architecture, gameplay rules, host wiring and asset credits live in
+  [`docs/fishing/`](docs/fishing/README.md).
+- The game draws in a fixed 480×270 virtual frame: layout numbers are those units,
+  not CSS pixels.
+- Area ids `cove` / `deep` / `rapids` are saved-progress keys — never rename them.
+- Art, fonts and sounds come from the CDN (`FISHING_ASSETS_CDN` in
+  `src/lib/constants.ts`); only the Vite-bundled `art/` is committed.
+- Dev panels are tune-only: `F2` audio, `F3` sky and water, `F8` fight zones. They
+  write to the running game and are lost on reload; tuned numbers are copied into
+  `audioMix.ts` / `zoneTuning.ts` by hand.
