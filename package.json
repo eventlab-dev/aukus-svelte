@@ -14,6 +14,7 @@
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "gen-api": "tsc --project tsconfig.scripts.json && node dist/scripts/gen-api-clients.js",
+    "balance": "node scripts/balance.mjs",
     "bump-version": "node bump-version.js"
   },
   "devDependencies": {
@@ -71,6 +72,7 @@
     "animejs": "^4.1.4",
     "konva": "^10.0.2",
     "perfect-debounce": "^2.1.0",
+    "pixi.js": "^8.23.0",
     "prosemirror-model": "^1.25.3",
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.41.3",

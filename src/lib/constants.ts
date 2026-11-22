@@ -186,6 +186,8 @@ export const TIERS: Tier[] = [
 export const DEFAULT_REFETCH = 2 * 60 * 1000
 export const LONG_REFETCH = 5 * 60 * 1000
 
+export const FISHING_ASSETS_CDN = `${CDN_URL_BASE5}/minigames/fishing`
+
 export const MENU_RULES_ICON = `${CDN_URL_BASE5}/ui/menu_rules.png`
 export const MENU_HISTORY_ICON = `${CDN_URL_BASE5}/ui/menu_history.png`
 export const MENU_CALC_ICON = `${CDN_URL_BASE5}/ui/menu_calc.png`
@@ -196,3 +198,4 @@ export const MENU_SHIT_ICON = `${CDN_URL_BASE5}/ui/menu_shit.png`
 export const MENU_STREAMS_ICON = `${CDN_URL_BASE5}/ui/menu_streams.png`
 export const MENU_WHEELS_ICON = `${CDN_URL_BASE5}/ui/menu_wheels.png`
 export const MENU_PHONE_ICON = `${CDN_URL_BASE5}/ui/menu_phone.png`
+export const MENU_FISHING_ICON = `${CDN_URL_BASE5}/ui/menu_fishing.png`

@@ -1,0 +1,152 @@
+import { FISH_TEXT } from '../texts'
+import type { FishSpecies } from './species'
+import { win } from './windows'
+
+/** The 16 lake species: still forest water, warm shallow cover. */
+export const LAKE_FISH: readonly FishSpecies[] = [
+	{
+		id: 'bluegill',
+		name: FISH_TEXT.bluegill.name,
+		weightKg: [0.1, 0.4],
+		speed: 0.3,
+		resistance: 0.18,
+		tint: 0x63ab3f,
+		tier: 'common',
+		area: 'deep',
+		behavior: 'bluegill',
+		weather: ['clear', 'overcast']
+	},
+	{
+		id: 'tilapia',
+		name: FISH_TEXT.tilapia.name,
+		weightKg: [0.4, 1.6],
+		speed: 0.42,
+		resistance: 0.2,
+		tint: 0xff5277,
+		tier: 'common',
+		area: 'deep',
+		behavior: 'tilapia',
+		weather: ['clear', 'overcast']
+	},
+	{
+		id: 'carp',
+		name: FISH_TEXT.carp.name,
+		weightKg: [1.5, 6],
+		speed: 0.54,
+		resistance: 0.3,
+		tint: 0xf0b541,
+		tier: 'common',
+		area: 'deep',
+		behavior: 'carp'
+	},
+	{
+		id: 'perch',
+		name: FISH_TEXT.perch.name,
+		weightKg: [0.2, 1.2],
+		speed: 0.48,
+		resistance: 0.21,
+		tint: 0xd6a24a,
+		tier: 'common',
+		area: 'deep',
+		behavior: 'perch',
+		windows: [win(5, 8), win(17, 20)]
+	},
+	{
+		id: 'largemouthbass',
+		name: FISH_TEXT.largemouthbass.name,
+		weightKg: [0.8, 3.5],
+		speed: 0.54,
+		resistance: 0.22,
+		tint: 0x3b7d4f,
+		tier: 'uncommon',
+		area: 'deep',
+		behavior: 'largemouthbass'
+	},
+	{
+		id: 'smallmouthbass',
+		name: FISH_TEXT.smallmouthbass.name,
+		weightKg: [0.6, 2.8],
+		speed: 0.6,
+		resistance: 0.23,
+		tint: 0x7d6a3f,
+		tier: 'uncommon',
+		area: 'deep',
+		behavior: 'smallmouthbass',
+		weather: ['fog']
+	},
+	{
+		id: 'pike',
+		name: FISH_TEXT.pike.name,
+		weightKg: [1.5, 7],
+		speed: 0.7,
+		resistance: 0.25,
+		tint: 0x5f7f4a,
+		tier: 'uncommon',
+		area: 'deep',
+		behavior: 'pike',
+		windows: [win(18, 23)],
+		weather: ['overcast', 'snow']
+	},
+	{
+		id: 'walleye',
+		name: FISH_TEXT.walleye.name,
+		weightKg: [1.5, 6],
+		speed: 0.68,
+		resistance: 0.245,
+		tint: 0xd6b04a,
+		tier: 'common',
+		area: 'deep',
+		behavior: 'walleye',
+		windows: [win(17, 23)]
+	},
+	{
+		id: 'cod',
+		name: FISH_TEXT.cod.name,
+		weightKg: [2, 9],
+		speed: 0.65,
+		resistance: 0.24,
+		tint: 0xab5130,
+		tier: 'uncommon',
+		area: 'deep',
+		behavior: 'cod',
+		weather: ['snow', 'blizzard']
+	},
+	{
+		id: 'angelfish',
+		name: FISH_TEXT.angelfish.name,
+		weightKg: [0.3, 1.2],
+		speed: 0.56,
+		resistance: 0.28,
+		tint: 0xdfe0e8,
+		tier: 'rare',
+		area: 'deep',
+		behavior: 'angelfish',
+		weather: ['fog', 'aurora']
+	},
+	{
+		id: 'catfish',
+		name: FISH_TEXT.catfish.name,
+		weightKg: [4, 18],
+		speed: 0.74,
+		resistance: 0.255,
+		tint: 0x8f4d57,
+		tier: 'rare',
+		area: 'deep',
+		behavior: 'catfish',
+		windows: [win(20, 4)],
+		weather: ['snow', 'blizzard']
+	},
+	{
+		id: 'koi',
+		name: FISH_TEXT.koi.name,
+		weightKg: [1, 5],
+		speed: 0.62,
+		resistance: 0.29,
+		tint: 0xff8933,
+		tier: 'mythic',
+		area: 'deep',
+		behavior: 'koi',
+		windows: [win(6, 12)],
+		weather: ['clear', 'overcast', 'aurora']
+	}
+]

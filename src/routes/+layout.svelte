@@ -1,56 +1,11 @@
 <script lang="ts">
 	import '../app.css'
 
-	import { TooltipProvider } from '$lib/components/ui/tooltip'
-	import { QueryClientProvider } from '@tanstack/svelte-query'
-	import CommonWrapper from '$lib/components/CommonWrapper.svelte'
-	import { queryClient } from '$lib/client'
-	import { onMount } from 'svelte'
-	import { fetchFrontVersion } from '$lib/api/version'
-	import { createUserActivityStore } from '$lib/stores/UserActivityStore.svelte'
-	import { ScrollArea } from '$lib/components/ui/scroll-area'
-
+	// Корневой layout намеренно пустой: он даёт приложению только глобальные стили.
+	// Оболочка (навигация, ScrollArea, снег, версия фронта) живёт в `(app)`, поэтому
+	// маршруты вне группы — мини-игры и `streams_old` — получают голый viewport,
+	// не выключая её проверками пути.
 	let { children } = $props()
-
-	const userActivityStore = createUserActivityStore()
-
-	onMount(() => {
-		const checkVersion = async () => {
-			try {
-				const data = await fetchFrontVersion()
-				const currentVersion = import.meta.env.PACKAGE_VERSION
-				const isStreamsPage = window.location.pathname === '/streams'
-				if (
-					data.version &&
-					data.version !== currentVersion &&
-					userActivityStore.isInactive &&
-					!isStreamsPage
-				) {
-					console.log(
-						`Version mismatch: current ${currentVersion}, server ${data.version}. User is inactive, reloading...`
-					)
-					window.location.href = window.location.pathname + '?reload=' + new Date().getTime()
-				}
-			} catch (error) {
-				console.error('Failed to fetch version:', error)
-			}
-		}
-
-		const interval = setInterval(checkVersion, 60000)
-
-		return () => {
-			clearInterval(interval)
-			userActivityStore.cleanup()
-		}
-	})
 </script>
 
-<QueryClientProvider client={queryClient}>
-	<TooltipProvider disableHoverableContent delayDuration={300}>
-		<CommonWrapper>
-			<ScrollArea class="h-screen" type="auto" id="main-scroll-area">
-				{@render children?.()}
-			</ScrollArea>
-		</CommonWrapper>
-	</TooltipProvider>
-</QueryClientProvider>
+{@render children?.()}
