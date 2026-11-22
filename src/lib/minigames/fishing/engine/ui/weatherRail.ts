@@ -1,6 +1,6 @@
 import { Container, Graphics, Text } from 'pixi.js'
 import type { WeatherId } from '../types'
-import { easeOutCubic, lerp } from '../utils'
+import { clamp, easeOutCubic, lerp } from '../utils'
 import type { ForecastStep } from '../world'
 import { makeRailCard, promoteRailCard, retimeRailCard, type RailCard } from './railCard'
 import { RAIL, RAIL_SLOTS, railWidth } from './weatherRailLayout'
@@ -9,6 +9,8 @@ import { RAIL, RAIL_SLOTS, railWidth } from './weatherRailLayout'
 const FADE = 0.2
 /** How long one slot of the leftward slide takes, in seconds. */
 const SLIDE_TIME = 0.34
+/** How long a chevron scroll takes, in seconds. */
+const SCROLL_TIME = 0.2
 /** Distance between two neighbouring card slots. */
 const SLOT = RAIL.cardWidth + RAIL.gap
 
@@ -42,14 +44,18 @@ interface Slide {
  * two-line caption — clock over the name of the sky — centred as one group on
  * the card, clipped to the panel's inner face.
  *
- * The row is always {@link RAIL_SLOTS} cards wide, one card per upcoming front:
- * the panel never changes width, and each sky keeps its own slot even when it
- * repeats the one before it.
+ * The row holds the whole forecast horizon, not just the visible four: the panel
+ * is a window onto a strip, and dragging the strip is what shows the fronts
+ * behind it. The clip never moves — only the cards under it do ({@link setScroll}
+ * and {@link scrollTo}) — so the window keeps its frame while the row slides
+ * through it. That is also why the mask is a sibling of the cards and not their
+ * parent: a mask that travelled with the row would hide the very fronts the
+ * drag is meant to reveal.
  *
  * When a front expires the row does not blink: every card slides one place to
  * the left, the card that becomes «now» crossfades its clock time into the live
- * caption, and the front that just entered the forecast slides in from the
- * right edge.
+ * caption, and the front that just entered the forecast slides in from the right
+ * edge, still behind the clip.
  */
 export class WeatherRail extends Container {
 	/** Card nodes, all in rail coordinates, clipped to the panel's inner face. */
@@ -63,6 +69,13 @@ export class WeatherRail extends Container {
 	private appear = 1
 	/** Slide in flight, if any. */
 	private slide: Slide | null = null
+	/** Scroll position of the strip, in pixels from the live end. */
+	private scrollPx = 0
+	/** Animated scroll in flight, if any. */
+	private scrollFrom = 0
+	private scrollToPx = 0
+	private scrollElapsed = 0
+	private scrollTime = 0
 
 	constructor() {
 		super()
@@ -75,6 +88,41 @@ export class WeatherRail extends Container {
 	/** The sky of each card, left to right; what a slide is matched against. */
 	weathers(): WeatherId[] {
 		return this.cards.map((card) => card.weather)
+	}
+
+	/** How far the strip is scrolled from the live end, in pixels. */
+	get scroll(): number {
+		return this.scrollPx
+	}
+
+	/** How many pixels the strip can travel, for the given number of cards. */
+	maxScroll(): number {
+		return Math.max(0, this.cards.length - RAIL_SLOTS) * SLOT
+	}
+
+	/** Puts the strip at a scroll position without animating. */
+	setScroll(px: number): void {
+		this.scrollTime = 0
+		this.scrollPx = clamp(px, 0, this.maxScroll())
+		this.art.x = -this.scrollPx
+	}
+
+	/** Glides the strip to a scroll position; the drag uses this on release. */
+	scrollTo(px: number, time = SCROLL_TIME): void {
+		const target = clamp(px, 0, this.maxScroll())
+		if (Math.abs(target - this.scrollPx) < 0.01) {
+			this.setScroll(target)
+			return
+		}
+		this.scrollFrom = this.scrollPx
+		this.scrollToPx = target
+		this.scrollElapsed = 0
+		this.scrollTime = time
+	}
+
+	/** Drops an animated scroll, so a drag can take the strip over mid-flight. */
+	stopScroll(): void {
+		this.scrollTime = 0
 	}
 
 	/**
@@ -90,6 +138,7 @@ export class WeatherRail extends Container {
 
 	update(dt: number): void {
 		if (this.slide) this.step(dt)
+		if (this.scrollTime > 0) this.stepScroll(dt)
 		if (this.appear >= 1) return
 		this.appear = Math.min(1, this.appear + dt / FADE)
 		this.art.alpha = this.appear
@@ -105,6 +154,7 @@ export class WeatherRail extends Container {
 			this.addCard(step, this.slotX(index), minutes, index === 0)
 		)
 		this.paintClip()
+		this.setScroll(this.scrollPx)
 
 		this.appear = animate ? 0 : 1
 		this.art.alpha = this.appear
@@ -146,16 +196,16 @@ export class WeatherRail extends Container {
 		const promotion = this.promote(kept[0])
 
 		// The fronts that just appeared in the forecast enter from the right edge,
-		// behind the panel's clip, so the row reads as one strip moving through a
-		// window rather than as a card popping into place.
+		// one slot past their own place: the clip hides them until the slide brings
+		// them in, so the row reads as one strip moving through a window.
 		const entries: RailCard[] = []
 		for (let index = 0; index < removed; index += 1) {
 			const slot = count - removed + index
-			const card = this.addCard(steps[slot], this.slotX(slot), minutes, false)
+			const card = this.addCard(steps[slot], this.slotX(slot) + SLOT, minutes, false)
 			card.node.alpha = 0
 			motions.push({
 				card,
-				fromX: this.span,
+				fromX: this.slotX(slot) + SLOT,
 				toX: this.slotX(slot),
 				fromAlpha: 0,
 				toAlpha: 1
@@ -200,6 +250,19 @@ export class WeatherRail extends Container {
 		this.finish(slide)
 	}
 
+	/** Advances the animated scroll and lands it exactly on the target. */
+	private stepScroll(dt: number): void {
+		this.scrollElapsed = Math.min(this.scrollTime, this.scrollElapsed + dt)
+		const t = this.scrollElapsed / this.scrollTime
+		this.scrollPx = lerp(this.scrollFrom, this.scrollToPx, easeOutCubic(t))
+		this.art.x = -this.scrollPx
+		if (t >= 1) {
+			this.scrollPx = this.scrollToPx
+			this.art.x = -this.scrollPx
+			this.scrollTime = 0
+		}
+	}
+
 	/** Drops a slide immediately, so a re-layout cannot fight a running one. */
 	private settle(): void {
 		if (this.slide) this.finish(this.slide)
@@ -228,7 +291,7 @@ export class WeatherRail extends Container {
 		return card
 	}
 
-	/** Fits the clip to the panel's inner face. */
+	/** Fits the clip to the panel's inner face. It never moves with the row. */
 	private paintClip(): void {
 		this.clip
 			.clear()

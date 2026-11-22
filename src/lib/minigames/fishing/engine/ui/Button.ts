@@ -272,9 +272,13 @@ export class Button extends Container implements Focusable {
 		if (this.iconSprite) {
 			// A tile fills its 16 px canvas, unlike the painted marks that live in
 			// a 10 px box, so the button's own step would overrun the frame. The
-			// sprite steps down until the whole canvas — transparent border
-			// included — clears the frame.
-			const fit = Math.max(1, Math.floor((Math.min(this.widthValue, this.heightValue) - 2) / 16))
+			// sprite steps down until the canvas clears the frame — but the step is
+			// rounded, not floored: every tile carries a 1–2 px transparent margin
+			// around its drawn plate, so a whole step that passes the canvas edge
+			// still leaves the plate inside the frame. Flooring it cost a touch
+			// screen the whole second step: the HUD's painted marks grew to 2× while
+			// the close and fullscreen tiles stayed at 1× and read as half-size.
+			const fit = Math.max(1, Math.round((Math.min(this.widthValue, this.heightValue) - 2) / 16))
 			const scale = Math.min(this.iconScale, fit)
 			const box = 16 * scale
 			this.iconSprite.scale.set(scale)

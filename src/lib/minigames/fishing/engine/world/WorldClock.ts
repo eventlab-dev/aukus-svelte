@@ -8,7 +8,7 @@ import {
 	WEATHER,
 	WEATHER_MAX,
 	WEATHER_MIN,
-	pickWeather,
+	nextWeather,
 	type ForecastStep,
 	type WeatherDef
 } from './weather'
@@ -190,8 +190,12 @@ export class WorldClock {
 
 	/** A fresh front that takes over at `at` and runs its own random length. */
 	private roll(after: WeatherId, at: number): Front {
+		// The aurora is a night sky: `nextWeather` drops one that would start in
+		// daylight. The hour is taken at the future front's own start, because the
+		// queue reaches two hours ahead.
+		const minutesAt = (this.minutes + (at - nowSeconds()) / 60 + 1440) % 1440
 		const length = randRange(WEATHER_MIN, WEATHER_MAX)
-		return { id: pickWeather(after), startsAt: at, endsAt: at + length }
+		return { id: nextWeather(after, minutesAt), startsAt: at, endsAt: at + length }
 	}
 
 	/** Appends fronts to the promise until it covers the forecast rail. */

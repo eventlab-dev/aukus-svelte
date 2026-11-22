@@ -2,7 +2,7 @@ import { Container, Graphics, Sprite, type Texture } from 'pixi.js'
 import type { FishSpecies } from '../../config'
 import { FIGHT_RADIUS } from '../fight'
 import { FightModel, type MinigameOptions, type MinigameResult } from '../fight'
-import { FISH_SCALE, GAUGE, SILHOUETTE } from './setup'
+import { ESCAPE_GAUGE, FISH_SCALE, GAUGE, SILHOUETTE } from './setup'
 
 export abstract class MinigameCore extends Container {
 	protected readonly model: FightModel
@@ -33,6 +33,8 @@ export abstract class MinigameCore extends Container {
 	protected readonly cueG = new Graphics()
 	protected readonly lockG = new Graphics()
 	protected readonly barG = new Graphics()
+	/** The срыв bar under the grip gauge; see `ESCAPE_GAUGE`. */
+	protected readonly escapeG = new Graphics()
 	protected readonly warnG = new Graphics()
 	/** 0..1 progress of the closing landing ring; 0 while it is not landable. */
 	protected landCue = 0
@@ -82,6 +84,8 @@ export abstract class MinigameCore extends Container {
 		this.addChild(this.counterG)
 
 		this.bars.addChild(this.barG)
+		this.bars.addChild(this.escapeG)
+		this.escapeG.eventMode = 'none'
 		this.bars.eventMode = 'none'
 
 		// The landing ring rides above the float with the pointers, so neither the
@@ -132,9 +136,17 @@ export abstract class MinigameCore extends Container {
 		return this.model.canLand
 	}
 
-	/** 0..1 escape pressure; shown by the sinking float and taut line. */
+	/** 0..1 escape pressure; shown by the срыв bar and the sinking float. */
 	get escapeMeter(): number {
 		return this.model.escapeMeter
+	}
+
+	/**
+	 * 0..1 total escape pressure, poured plus the share a miss still owes. The
+	 * bar draws `escapeMeter` solid and the rest as the incoming segment.
+	 */
+	get escapeRisk(): number {
+		return this.model.escapeRisk
 	}
 
 	/** 0..1 fish endurance; shown by the half-ring under the float. */
@@ -147,9 +159,16 @@ export abstract class MinigameCore extends Container {
 		return this.model.gripValue
 	}
 
-	/** Top of the two-row stamina stack, just above the ring. */
+	/**
+	 * Top of the two-row stamina stack, just above the ring.
+	 *
+	 * The срыв bar is drawn under the grip gauge, so the stack grew a row when it
+	 * arrived; both rows are lifted by that row's own drawn height — its liquid
+	 * plus the one-pixel case above and below — so the pair keeps the room the
+	 * single gauge always had above the circle instead of growing down into it.
+	 */
 	protected get staminaY(): number {
-		return this.model.centerY - FIGHT_RADIUS - 26
+		return this.model.centerY - FIGHT_RADIUS - 26 - (ESCAPE_GAUGE.height + 2)
 	}
 
 	/**
@@ -177,9 +196,12 @@ export abstract class MinigameCore extends Container {
 		this.model.setHold(held)
 	}
 
-	/** The round returned from a pause; a dash frozen by it is not forgiven. */
-	resumeAfterPause(): void {
-		this.model.resumeFromPause()
+	/**
+	 * The round returned from a pause. A dash frozen by it is charged as a miss —
+	 * unless the pause was a lesson of the manual, which hands the window back.
+	 */
+	resumeAfterPause(recharge = false): void {
+		this.model.resumeFromPause(recharge)
 	}
 
 	/** Separate final pull: RMB/F, or a tap on the fish. */

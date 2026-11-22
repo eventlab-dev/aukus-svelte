@@ -271,6 +271,11 @@ export class PixelWater extends Container {
 		)
 	}
 
+	/** The body's current, read by the aurora reflection. */
+	get current(): SurfaceDrift {
+		return this.look.nearDrift
+	}
+
 	/** Releases the baked tiles with the layer: nothing else references them. */
 	override destroy(options?: DestroyOptions): void {
 		if (liveLayer === this) setLiveLayer(null)

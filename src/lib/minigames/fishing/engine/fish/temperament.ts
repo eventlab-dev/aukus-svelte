@@ -7,6 +7,8 @@ import type { FishSpecies } from './species'
  * authored next to the roster so a species always fights the same way.
  */
 export const FISH_TEMPERAMENT: Record<string, Temperament> = {
+	// The shell is not in the roster, but its fight reads the same table.
+	shell: 'stubborn',
 	bluegill: 'calm',
 	tilapia: 'calm',
 	carp: 'stubborn',

@@ -38,12 +38,20 @@ export abstract class CastFlowCore {
 	protected catchShown = false
 	protected pressed = false
 	protected paused = false
+	/** The rod waits for the round's first note; see `setCastLocked`. */
+	protected castLocked = false
 	protected chargeSoundTimer = 0
 	protected nibblePlayed = false
 	protected nibbleLead: number = TIMING.nibbleLeadMax
 
 	protected fish: FishSpecies | null = null
 	protected fishWeightKg = 0
+	/**
+	 * The current fish wears the shiny colourway. Rolled once, at the bite, with
+	 * the weight: the reveal, the record and the catch event all read one flag,
+	 * so the picture can never disagree with what was written down.
+	 */
+	protected fishShiny = false
 	protected pointerX = VIEW.width / 2
 	protected pointerY = VIEW.height / 2
 	/** Re-rolled every cast; landing inside it boosts rare fish. */
@@ -136,6 +144,30 @@ export abstract class CastFlowCore {
 	}
 
 	/**
+	 * Centre of the live fight ring in scene pixels, or `null` when nothing is
+	 * hooked. The lesson note is placed around the fight, so it needs to know
+	 * where the fight stands on the frozen frame.
+	 */
+	get fightCentre(): { x: number; y: number } | null {
+		if (this.phaseValue !== 'fighting') return null
+		return this.fight.ringCentre
+	}
+
+	/**
+	 * Holds the rod back until the round has taught its own cast.
+	 *
+	 * The «ЗАБРОС» note lands half a second into the round, once the grid wipe has
+	 * finished; a player who pressed inside that half-second started a charge, the
+	 * round left `idle`, and the lesson never opened — the first cast of the
+	 * session went by unexplained. The owner drops the lock the moment the note
+	 * takes the round (see `GameOverlays.openLesson`), so the press that closes
+	 * the note is also the press that casts.
+	 */
+	setCastLocked(locked: boolean): void {
+		this.castLocked = locked
+	}
+
+	/**
 	 * The bite waits to be struck: the float is under and the window has not been
 	 * answered yet. On touch the stick itself lights up — its press is the strike.
 	 */
@@ -189,12 +221,19 @@ export abstract class CastFlowCore {
 		return clamp(1 - this.resolveTimer / TIMING.catchCrossfade, 0, 1)
 	}
 
-	setPaused(paused: boolean): void {
+	/**
+	 * Freezes the round under a dialog.
+	 *
+	 * `recharge` marks the manual's own pause — the lesson stops the fight to
+	 * teach the dash it is standing on, so that dash keeps its counter window for
+	 * the way back instead of being charged as a miss.
+	 */
+	setPaused(paused: boolean, recharge = false): void {
 		this.paused = paused
 		// The fight keeps its state across the pause, but a dash that was live when
 		// the player paused is settled on the way back instead of waiting frozen in
 		// the menu (see `FightStage.setPaused`).
-		this.fight.setPaused(paused)
+		this.fight.setPaused(paused, recharge)
 		if (!paused) return
 		this.game.audio.stopReel()
 		this.game.audio.stopCharge()
@@ -233,6 +272,7 @@ export abstract class CastFlowCore {
 		this.catchShown = false
 		this.fish = null
 		this.fishWeightKg = 0
+		this.fishShiny = false
 		this.pullKeys.clear()
 		this.scene.setPulling(false)
 		this.scene.resetCast()

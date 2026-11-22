@@ -10,7 +10,7 @@
 src/lib/components/
   FishingGame.svelte            Svelte 5-обёртка (лениво импортирует движок; правила канваса)
 src/lib/minigames/fishing/
-  art/                          арт, который собирает Vite (логотип, иконки, скриншоты помощи)
+  art/                          единственный ассет в бандле: логотип загрузочного экрана
   engine/
     index.ts                    публичный API (createFishingGame)
     Game.ts                     Game + destroy + create
@@ -24,6 +24,7 @@ src/lib/minigames/fishing/
     assets.ts  fonts.ts  cursors.ts  fullscreen.ts
     inputProfile.ts  renderScale.ts  fishWeight.ts
     fish/                       species, rosters by area, tiers, activity, labels, validate
+                                pearls (12 сортов) и shell (ракушка-носитель)
     world/                      weather, colors, WorldClock
     audio/                      catalog, core, cues, loops, ambience, AudioKit
     audioMix.ts                 таблица громкостей и каналов микса
@@ -40,19 +41,25 @@ src/lib/minigames/fishing/
         logs/  river/  cove/  pool/   рендереры водоёмов
       Atmosphere.ts             фасад
       AtmosphereBase/Sky/Snow.ts
+      auroraTex.ts              два бесшовных полотна сияния
       behaviors.ts  castAim.ts  castPick.ts  castSafety.ts  fog.ts
       FightStage.ts  FightFocus.ts  fightRing.ts  JuiceFx.ts  Minigame.ts
+      shinyShader.ts  platinumShader.ts   окрас шайни и платина слота
+      pearl/                     art.ts (ракушка), PearlView (шейдер), PearlReveal
     screens/
       GameScreen.ts             фасад
       game/                     GameScreenCore + GameOverlays
       MenuScreen.ts  HelpScreen.ts  CodexScreen.ts
     ui/
       theme.ts  Button.ts  palette.ts  tier.ts  Screen.ts  ScreenManager.ts  metrics.ts
+      rect.ts                         прямоугольники: пересечение и зазор
       weatherRail.ts  railCard.ts     полоса погоды: строка и её карточки
       CastHint.ts  holdIcon.ts        подсказка заброса и значок «зажми ЛКМ»
+      HelpCard.ts  richCopy.ts        справка: попап и подсветка копии
+      TutorialHint.ts                 записка обучения: раскладка вокруг боя
       fight/                    FightControls, grabGesture (тач)
       mix/                      AudioMixPanel + MixRow + layout
-      codex/                    CodexView + реестр + карточка записи
+      codex/                    CodexView + реестр + карточка записи + devPreview
       остальные HUD/панели/курсор/фон
 ```
 
@@ -64,6 +71,7 @@ src/lib/minigames/fishing/
 | Задача                      | Куда                                                                        |
 | --------------------------- | --------------------------------------------------------------------------- |
 | Новый вид рыбы              | `fish/roster-<area>.ts`, `FISH_TEXT`, `FISH_TEMPERAMENT`, `behaviors.ts`    |
+| Новый сорт жемчуга          | `fish/pearls.ts`, `PEARL_TEXT`, ячейка 16×16 в `art/pearls-sheet.png`       |
 | Новый водоём                | `areas.ts`, `game/scenes/<id>/`, `game/scenes/index.ts`, `audio/catalog.ts` |
 | Новый звук                  | `audio/catalog.ts` + заливка файла на CDN (`assets-and-audio.md`)           |
 | Новый экран                 | `screens/`, регистрация в `GameScreensLayer`                                |

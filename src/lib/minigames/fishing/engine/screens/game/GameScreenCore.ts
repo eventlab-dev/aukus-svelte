@@ -12,6 +12,7 @@ import { CodexOverlay } from '../../ui/CodexOverlay'
 import { FloaterLayer } from '../../ui/FloaterLayer'
 import { GameHud } from '../../ui/GameHud'
 import { PauseMenu } from '../../ui/PauseMenu'
+import { TutorialHint } from '../../ui/TutorialHint'
 import { FightControls } from '../../ui/fight/FightControls'
 import type { WipePoint } from '../../ui/GridWipe'
 import { WeatherForecast } from '../../ui/WeatherForecast'
@@ -25,6 +26,11 @@ import type { FishingScene } from '../../game/scenes/FishingScene'
 export abstract class GameScreenCore extends Screen {
 	protected abstract trackPointer(event: FederatedPointerEvent): void
 	protected abstract closePause(silent?: boolean): void
+	/**
+	 * A lesson in the corner took the input, or gave it back. Implemented by the
+	 * overlay layer, which owns the note and the frozen round under it.
+	 */
+	protected abstract dismissLessonForInput(): boolean
 	protected readonly game: GameContext
 	protected readonly area: AreaDef
 	protected readonly scene: FishingScene
@@ -70,6 +76,8 @@ export abstract class GameScreenCore extends Screen {
 
 	protected paused = false
 	protected codex: CodexOverlay | null = null
+	/** The lesson in the corner, if the manual is open over the round. */
+	protected tutorial: TutorialHint | null = null
 
 	constructor(game: GameContext, area: AreaDef) {
 		super()
@@ -158,20 +166,29 @@ export abstract class GameScreenCore extends Screen {
 			this.activePointerId === null || event.pointerId === this.activePointerId
 
 		this.inputCatcher.on('pointerdown', (event) => {
+			// The press point is the gesture's anchor — the counter is a drag *from
+			// where the press landed* — so it is recorded before anything can unfreeze
+			// the round. A lesson dismissed by this very press used to leave the anchor
+			// on the click that opened it, and the drag from the sector was then read
+			// as a drag from somewhere else.
+			this.trackPointer(event)
+			// A lesson in the corner owns the first press: while it holds the round
+			// the press is swallowed, and after that the press ends the lesson and
+			// goes through as the action it was. On a finger it is the round's own
+			// controls that close the note — the chip and the stick ask for it in
+			// their handlers — because the water is not a control there: a thumb
+			// resting on the glass must not talk over a rule the player is reading.
+			if (!this.game.touch && this.dismissLessonForInput()) return
 			// On a touch screen a round is played with the chip and the stick: the
 			// water is not a control, so a stray thumb can neither cast nor spook the
 			// fish. The one exception is the catch display, which a tap still skips.
 			if (this.game.touch && this.flow.phase !== 'resolve') return
 			if (this.activePointerId === null) {
 				this.activePointerId = event.pointerId
-				this.trackPointer(event)
 				this.flow.pointerDown(event.button, event.pointerType, event.pointerId)
 				return
 			}
-			if (event.pointerId === this.activePointerId) {
-				this.trackPointer(event)
-				return
-			}
+			if (event.pointerId === this.activePointerId) return
 			// The one thing a second finger may do is tap the tired fish: landing is
 			// a tap in a thumb-sized circle, and a player holding the line with one
 			// hand should not have to let go to finish the catch.
@@ -218,11 +235,26 @@ export abstract class GameScreenCore extends Screen {
 		this.fightControls = game.touch
 			? new FightControls(
 					{
-						onHold: (held) => this.flow.setStickHold(held),
+						// A lesson owns the first press on the touch controls exactly as it
+						// owns one on the water: `dismissLessonForInput` reports whether the
+						// press has to be swallowed or may go through.
+						onHold: (held) => {
+							if (held && this.dismissLessonForInput()) return
+							this.flow.setStickHold(held)
+						},
 						onDirection: (x, y) => this.flow.setStickDirection(x, y),
-						onGrab: (angle) => this.flow.stickGrab(angle),
-						onCastHold: (held) => this.flow.castHold(held),
-						onLand: () => this.flow.finalPull()
+						onGrab: (angle) => {
+							if (this.dismissLessonForInput()) return
+							this.flow.stickGrab(angle)
+						},
+						onCastHold: (held) => {
+							if (held && this.dismissLessonForInput()) return
+							this.flow.castHold(held)
+						},
+						onLand: () => {
+							if (this.dismissLessonForInput()) return
+							this.flow.finalPull()
+						}
 					},
 					// The chip's two marks — the rod and the hook — are the project's own
 					// 16 px sheets, cut by the asset bag.
@@ -252,6 +284,12 @@ export abstract class GameScreenCore extends Screen {
 			onResume: () => this.closePause(true)
 		})
 		this.addChild(this.pauseMenu)
+
+		// The round opens with the rod held back until its first note has been read
+		// (see `CastFlowCore.setCastLocked`): the note needs the grid wipe to finish,
+		// and a press inside that half-second used to start a cast the lesson then
+		// never interrupted. A lesson in the saved document needs no such wait.
+		this.flow.setCastLocked(!game.progress.lessonSeen('cast'))
 
 		this.game.app.canvas.addEventListener('contextmenu', this.handleContextMenu)
 	}

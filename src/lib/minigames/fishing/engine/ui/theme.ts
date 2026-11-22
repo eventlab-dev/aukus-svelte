@@ -352,7 +352,9 @@ export const WEATHER_TINT: Record<WeatherId, number> = {
 	overcast: UI.textMuted,
 	snow: UI.ice,
 	blizzard: UI.ice,
-	fog: UI.periwinkle
+	fog: UI.periwinkle,
+	// The aurora owns mint: it is the one sky whose light is green.
+	aurora: UI.mint
 }
 
 /**
@@ -442,6 +444,23 @@ export function drawWeatherIcon(
 			cloud(0)
 			g.rect(1, 9, 6, 1).fill({ color: tint, alpha: 0.85 })
 			g.rect(6, 11, 5, 1).fill({ color: tint, alpha: 0.6 })
+			break
+		case 'aurora':
+			// The only glyph that stands up: three hanging curtains that thin
+			// towards the bottom, over a row of stars. It carries no cloud, so the
+			// rail card cannot confuse it with fog at a glance.
+			g.rect(2, 1, 1, 4).fill(tint)
+			g.rect(3, 2, 1, 6).fill({ color: tint, alpha: 0.9 })
+			g.rect(4, 4, 1, 5).fill({ color: tint, alpha: 0.65 })
+			g.rect(6, 0, 1, 5).fill(tint)
+			g.rect(7, 2, 1, 6).fill({ color: tint, alpha: 0.85 })
+			g.rect(8, 4, 1, 4).fill({ color: tint, alpha: 0.55 })
+			g.rect(10, 1, 1, 4).fill({ color: tint, alpha: 0.8 })
+			g.rect(10, 6, 1, 3).fill({ color: tint, alpha: 0.45 })
+			g.rect(1, 9, 1, 1).fill(UI.text)
+			g.rect(4, 10, 1, 1).fill({ color: UI.text, alpha: 0.8 })
+			g.rect(7, 9, 1, 1).fill({ color: UI.text, alpha: 0.7 })
+			g.rect(9, 10, 1, 1).fill({ color: UI.text, alpha: 0.6 })
 			break
 	}
 }

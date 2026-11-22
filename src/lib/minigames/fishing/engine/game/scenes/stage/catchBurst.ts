@@ -8,8 +8,9 @@ import type { FishTier } from '../../../types'
  * came up under the same star. Rarity is the one thing the round keeps telling
  * the player — through the ring, the codex and the weight — and the payoff shot
  * should say it too, so each tier gets its own light: a common catch is a small
- * cream star, a rare one a denser ice star with a crown of fine spears, a
- * legendary one a big gold burst with a deeper glow and a second ring of light.
+ * cream star, an uncommon one a mint star with a few spears, a rare one a denser
+ * ice star with a crown of fine spears, a mythic one a big gold burst with a
+ * deeper glow and a second ring of light.
  *
  * Everything here is baked once per tier and then only spun and faded by
  * {@link CatchLayer}, so the extra shapes cost nothing per frame.
@@ -65,10 +66,10 @@ interface RayLook {
 }
 
 /**
- * Common keeps the warm cream of the reference effect, rare turns it to ice,
- * legendary to gold — the same three colours the codex uses for the tiers. What
- * grows with the tier is the shape, not only the hue: beams, reach, a crown of
- * spears, a wash under the star and a deeper core.
+ * Common keeps the warm cream of the reference effect, uncommon turns it mint,
+ * rare ice and mythic gold — the same colours the codex uses for the tiers.
+ * What grows with the tier is the shape, not only the hue: beams, reach, a crown
+ * of spears, a wash under the star and a deeper core.
  */
 const RAY_LOOK: Record<FishTier, RayLook> = {
 	common: {
@@ -92,6 +93,27 @@ const RAY_LOOK: Record<FishTier, RayLook> = {
 		],
 		spin: 1
 	},
+	uncommon: {
+		long: 0xe6fff0,
+		short: 0x8fe0b8,
+		spear: 0xd8fff0,
+		core: 0xf6fffa,
+		intensity: 0.73,
+		beams: 28,
+		longReach: 22,
+		shortReach: 13.8,
+		longEdge: 1.35,
+		shortEdge: 0.95,
+		spears: 4,
+		spearReach: 23.5,
+		glow: [],
+		discs: [
+			[9, 0.12],
+			[6, 0.2],
+			[3, 0.32]
+		],
+		spin: 1.12
+	},
 	rare: {
 		long: 0xe4f4ff,
 		short: 0x8fc8ee,
@@ -114,7 +136,7 @@ const RAY_LOOK: Record<FishTier, RayLook> = {
 		],
 		spin: 1.25
 	},
-	legendary: {
+	mythic: {
 		long: 0xfff1bd,
 		short: 0xffc45c,
 		spear: 0xffe9a8,
@@ -143,7 +165,7 @@ const RAY_LOOK: Record<FishTier, RayLook> = {
  * How far a tier's light reaches from the centre of the fish, rim included.
  *
  * The catch is laid out from this: the name tag hangs above it and the fish
- * floats high enough for its bottom to clear the angler. A legendary burst is
+ * floats high enough for its bottom to clear the angler. A mythic burst is
  * half again as wide as a common one, so both of those gaps have to be measured
  * against the tier that is actually being shown.
  */

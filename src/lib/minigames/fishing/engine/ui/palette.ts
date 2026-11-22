@@ -43,7 +43,7 @@ export const UI = {
 	textOnBright: 0x1c2554,
 	/** Success, the luck band and the rare-fish glyph. */
 	mint: 0x6fd6b0,
-	/** Information, rare tier and the escape meter. */
+	/** Information, rare tier, the grip liquid and the counter's cue ring. */
 	ice: 0x8fd8ff,
 	/** Warning, the landing cue and clear weather. */
 	amber: 0xffc46b,
@@ -51,11 +51,11 @@ export const UI = {
 	danger: 0xc04358,
 	dangerHover: 0xc94d61,
 	dangerPressed: 0xa9364a,
-	/** Thin danger strokes over dark water. */
+	/** Thin danger strokes over dark water, and the срыв bar's fill. */
 	rose: 0xff6f80,
 	/** Feint telegraph; must never read as red. */
 	violet: 0xc08cf0,
-	/** Legendary rarity and a first catch. */
+	/** Mythic rarity, a first catch and the platinum frame. */
 	legendary: 0xffd98a,
 	/** Ambience channel in the audio mixer. */
 	teal: 0x7fd6c0

@@ -13,7 +13,7 @@
 ```
 src/lib/minigames/fishing/
   engine/      движок на PixiJS: данные, сцены, бой, экраны, UI, звук
-  art/         арт, который собирает Vite
+  art/         единственный ассет в бандле: логотип загрузочного экрана
 src/lib/components/FishingGame.svelte   Svelte 5-обёртка (лениво импортирует движок;
                                         правила канваса)
 src/routes/minigames/fishing/   страница-хост (стили .fishing-shell в её <style>)

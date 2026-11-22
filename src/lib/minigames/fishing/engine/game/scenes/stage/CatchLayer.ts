@@ -1,7 +1,10 @@
 import { Container, Graphics, Sprite, Texture } from 'pixi.js'
-import { TIMING } from '../../../config'
+import { TIMING, VIEW } from '../../../config'
+import type { PearlCatch } from '../../../fish/pearls'
 import type { FishTier } from '../../../types'
 import { clamp, easeOutCubic, lerp, randRange } from '../../../utils'
+import { ShinyShader } from '../../shinyShader'
+import { PearlReveal } from '../../pearl/PearlReveal'
 import { burstReach, burstSpin, paintBurst } from './catchBurst'
 import { FxLayer } from './FxLayer'
 import { CATCH_CLEARANCE } from './setup'
@@ -52,11 +55,47 @@ export class CatchLayer extends FxLayer {
 	/** 0..1 of the opening animation, from the moment the fish has landed. */
 	private rayOpen = 0
 
-	catchFish(texture: Texture, scale = 1.15, tier: FishTier = 'common'): number {
+	/** Pearl carried by the current shell catch, or null for an ordinary fish. */
+	private pendingPearl: PearlCatch | null = null
+	/**
+	 * Rainbow coat of the catch. One instance per layer, re-used across shiny
+	 * catches: the coat lives on the sprite, not on the fish, so the filter only
+	 * has to be created once and its clock restarted per catch.
+	 */
+	private shiny: ShinyShader | null = null
+	/** The catch sprite wearing the coat; detached before that sprite is destroyed. */
+	private shinySprite: Sprite | null = null
+	/** The opening sequence once the shell has landed. */
+	private pearlReveal: PearlReveal | null = null
+	/** True after the catch has settled in the angler's hands. */
+	private catchLanded = false
+	/** One-shot screen flash at the moment the shell opens, 0..1. */
+	private screenFlash = 0
+	private flashG: Graphics | null = null
+	/**
+	 * Fired when the pearl becomes visible. The round uses it for the landing
+	 * chime and the bloom, so the payoff is heard as well as seen.
+	 */
+	onPearlReveal?: (pearl: PearlCatch) => void
+
+	/**
+	 * @param pearl When set, the texture is the shell and the catch is presented
+	 * as a pearl: charge, split and pearl entrance before the tag.
+	 * @param shiny The landed fish wears the rainbow coat. Ignored for a shell,
+	 * whose payoff is the pearl rather than the carrier.
+	 */
+	catchFish(
+		texture: Texture,
+		scale = 1.15,
+		tier: FishTier = 'common',
+		pearl: PearlCatch | null = null,
+		shiny = false
+	): number {
 		this.phase = 'result'
 		this.pulling = false
 		this.biteMark.visible = false
 		this.clearHeldFish()
+		this.pendingPearl = pearl
 		const fromX = this.bobber.x
 		const fromY = this.bobber.y
 		this.spawnSplash(fromX, fromY, 18, 1.1)
@@ -64,7 +103,7 @@ export class CatchLayer extends FxLayer {
 		const half = (texture.height * scale) / 2
 		/*
 		 * Everything below is measured from the reach of the catch — the light
-		 * included, and the light of *this* tier, because a legendary burst is half
+		 * included, and the light of *this* tier, because a mythic burst is half
 		 * again as wide as a common one — rather than from the sprite:
 		 *
 		 * - the angler gets its gap to the bottom of the light, because with the
@@ -95,6 +134,7 @@ export class CatchLayer extends FxLayer {
 		sprite.scale.set(scale)
 		sprite.position.set(fromX, fromY)
 		this.addChild(sprite)
+		if (shiny && !pearl) this.applyShinyCoat(sprite)
 		this.jumps.push({
 			sprite,
 			t: 0,
@@ -111,6 +151,21 @@ export class CatchLayer extends FxLayer {
 		return this.catchSpot.top
 	}
 
+	/**
+	 * Puts the rainbow coat on the catch sprite.
+	 *
+	 * The filter is created on the first shiny only, and the sprite it is attached
+	 * to is remembered: `clearHeldFish` has to take it off before the sprite is
+	 * destroyed, because a filter outliving its display object keeps its framebuffer
+	 * alive in the renderer for the rest of the session.
+	 */
+	private applyShinyCoat(sprite: Sprite): void {
+		if (!this.shiny) this.shiny = new ShinyShader()
+		this.shiny.reset()
+		this.shinySprite = sprite
+		sprite.filters = [this.shiny.filter]
+	}
+
 	escapeFish(): void {
 		this.phase = 'result'
 		this.pulling = false
@@ -118,6 +173,72 @@ export class CatchLayer extends FxLayer {
 		this.spawnSplash(this.bobber.x, this.bobber.y, 10, 0.9)
 		this.bobber.visible = false
 		this.setAngler(this.frames.idle, 8)
+	}
+
+	/**
+	 * True once the catch may be skipped. The flight is never skippable; for a
+	 * shell the whole reveal is the payoff, so it counts as part of the flight
+	 * and only unlocks when the pearl is whole.
+	 */
+	get catchSkipReady(): boolean {
+		if (!this.catchLanded) return false
+		return this.pearlReveal === null || this.pearlReveal.ready
+	}
+
+	/**
+	 * Hands the landed shell over to the opening sequence. The shell sprite that
+	 * just landed is hidden in the same frame, and the reveal draws its own copy
+	 * at the same point, so the swap is invisible.
+	 */
+	private startPearlReveal(): void {
+		const pearl = this.pendingPearl
+		if (!pearl) return
+		const shell = this.assets.fish.shell
+		const face = this.assets.pearls[pearl.id]
+		if (!shell || !face) return
+		const reveal = new PearlReveal(shell, face, pearl, 1.15)
+		reveal.position.set(this.catchSpot.x, this.catchSpot.y)
+		reveal.onSplit = () => {
+			this.flareRays()
+			this.startScreenFlash()
+		}
+		reveal.onReveal = () => this.onPearlReveal?.(pearl)
+		this.addChild(reveal)
+		this.pearlReveal = reveal
+		if (this.heldFish) this.heldFish.visible = false
+		reveal.begin()
+	}
+
+	/** Re-opens the sunburst on the split, so the light peaks with the pearl. */
+	private flareRays(): void {
+		this.lightCatch()
+	}
+
+	/**
+	 * A very short warm flash over the playfield at the split. It is the one
+	 * moment the whole frame answers the shell, and it hides the swap from the
+	 * closed shell to the two halves.
+	 */
+	private startScreenFlash(): void {
+		if (!this.flashG) {
+			const flash = new Graphics()
+			flash.rect(0, 0, VIEW.width, VIEW.height).fill({ color: 0xfff6d8, alpha: 1 })
+			flash.blendMode = 'add'
+			flash.eventMode = 'none'
+			this.flashG = flash
+			this.addChild(flash)
+		}
+		// Re-add on every split so the flash sits over the current toy, not under
+		// a reveal that was created after the previous one.
+		this.addChild(this.flashG)
+		this.screenFlash = 0.42
+		this.flashG.alpha = this.screenFlash
+	}
+
+	private updateScreenFlash(dt: number): void {
+		if (!this.flashG || this.screenFlash <= 0) return
+		this.screenFlash = Math.max(0, this.screenFlash - dt * 2.6)
+		this.flashG.alpha = this.screenFlash
 	}
 
 	resetCast(): void {
@@ -142,10 +263,12 @@ export class CatchLayer extends FxLayer {
 
 	/** Fade the held catch while the idle cast prompt returns. */
 	setHeldFishAlpha(alpha: number): void {
+		const value = clamp(alpha, 0, 1)
 		if (this.heldFish) {
-			this.heldFish.alpha = clamp(alpha, 0, 1)
+			this.heldFish.alpha = value
 		}
-		this.rayDim = clamp(alpha, 0, 1)
+		this.pearlReveal?.setAlpha(value)
+		this.rayDim = value
 		this.applyRayAlpha()
 	}
 
@@ -153,8 +276,8 @@ export class CatchLayer extends FxLayer {
 	 * Re-bakes the burst when the rarity changes.
 	 *
 	 * The shape itself is drawn by {@link paintBurst}, which owns what a common,
-	 * a rare and a legendary catch look like; this layer only decides when the
-	 * light is on screen and how it moves.
+	 * an uncommon, a rare and a mythic catch look like; this layer only decides
+	 * when the light is on screen and how it moves.
 	 */
 	private buildRays(tier: FishTier): void {
 		if (this.rayTier === tier) return
@@ -212,10 +335,24 @@ export class CatchLayer extends FxLayer {
 	}
 
 	protected clearHeldFish(): void {
+		// The coat comes off before its sprite goes: the filter is kept for the next
+		// shiny, but it must not be left pointing at a destroyed display object.
+		if (this.shinySprite) {
+			this.shinySprite.filters = []
+			this.shinySprite = null
+		}
+		if (this.pearlReveal) {
+			this.pearlReveal.destroy({ children: true })
+			this.pearlReveal = null
+		}
 		if (this.heldFish) {
 			this.heldFish.destroy()
 			this.heldFish = null
 		}
+		this.pendingPearl = null
+		this.catchLanded = false
+		this.screenFlash = 0
+		if (this.flashG) this.flashG.alpha = 0
 		this.heldFishTime = 0
 		this.rayFade = 0
 		this.rayOpen = 0
@@ -238,8 +375,10 @@ export class CatchLayer extends FxLayer {
 					jump.sprite.alpha = 1
 					this.heldFish = jump.sprite
 					this.heldFishTime = 0
+					this.catchLanded = true
 					this.lightCatch()
 					this.spawnSplash(this.layout.angler.x, this.layout.angler.y - 30, 4, 0.35)
+					if (this.pendingPearl) this.startPearlReveal()
 				} else {
 					jump.sprite.destroy()
 				}
@@ -258,6 +397,18 @@ export class CatchLayer extends FxLayer {
 	}
 
 	protected updateHeldFish(dt: number): void {
+		this.updateScreenFlash(dt)
+		// The coat runs from the moment the fish leaves the water, not from the
+		// landing: the arc already glows, which is what makes the catch readable as
+		// shiny during the one second it is moving.
+		if (this.shinySprite) this.shiny?.advance(dt)
+		if (this.pearlReveal) {
+			this.pearlReveal.advance(dt)
+			// The reveal draws its own shell/pearl at the catch point; the rays stay
+			// with it instead of following the hidden shell sprite.
+			this.updateRays(dt, this.catchSpot.x, this.catchSpot.y)
+			return
+		}
 		if (!this.heldFish) return
 		this.heldFishTime += dt
 		this.heldFish.x = this.catchSpot.x + Math.sin(this.heldFishTime * 1.7) * 1.2

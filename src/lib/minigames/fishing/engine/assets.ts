@@ -1,26 +1,11 @@
 import { Assets, Rectangle, Texture } from 'pixi.js'
 import { FISH } from './config'
+import { PEARLS } from './fish/pearls'
 import { FONT_OPTIONS, currentFont } from './fonts'
 import { HELP_PAGES } from './texts'
 import type { HelpPageId } from './texts'
 import type { CursorTextures } from './cursors'
-import treeAUrl from '../art/tree-a.png'
-import treeBUrl from '../art/tree-b.png'
-import treeCUrl from '../art/tree-c.png'
-import bushAUrl from '../art/bush-a.png'
-import mouseLmbUrl from '../art/mouse-lmb.png'
-import closeTileUrl from '../art/tile_0016.png'
-import fullscreenTileUrl from '../art/tile_0023.png'
-import rodSheetUrl from '../art/rod-sheet.png'
-import baitsSheetUrl from '../art/baits-sheet.png'
-import helpCastUrl from '../art/cast.webp'
-import helpFightUrl from '../art/fight.webp'
-import helpCounterUrl from '../art/counter.webp'
-import helpLandUrl from '../art/land.webp'
-import helpCastTouchUrl from '../art/touch/cast.webp'
-import helpFightTouchUrl from '../art/touch/fight.webp'
-import helpCounterTouchUrl from '../art/touch/counter.webp'
-import helpLandTouchUrl from '../art/touch/land.webp'
+import { shellTexture } from './game/pearl/art'
 
 export interface AssetBag {
 	/** 4x4 character sheet, row-major, 32px frames. */
@@ -49,6 +34,8 @@ export interface AssetBag {
 	rod: Texture
 	hook: Texture
 	fish: Record<string, Texture>
+	/** 16×16 sprites of the twelve pearl varieties. */
+	pearls: Record<string, Texture>
 	cursors: CursorTextures
 }
 
@@ -62,30 +49,27 @@ export interface AssetBag {
  * same four lessons shot on a phone frame — the cast chip in the corner, the
  * stick under the left thumb, the dash sector on the pad — so a manual opened
  * on a phone never shows a mouse or a control that is not there.
+ *
+ * Both sets live on the CDN like the rest of the art: `<base>/cast.webp` for the
+ * mouse and `<base>/touch/cast.webp` for a finger, named after the lesson.
  */
-const HELP_URLS: Record<HelpPageId, string> = {
-	cast: helpCastUrl,
-	fight: helpFightUrl,
-	counter: helpCounterUrl,
-	land: helpLandUrl
-}
-
-const HELP_TOUCH_URLS: Record<HelpPageId, string> = {
-	cast: helpCastTouchUrl,
-	fight: helpFightTouchUrl,
-	counter: helpCounterTouchUrl,
-	land: helpLandTouchUrl
+function helpUrl(base: string, page: HelpPageId, touch: boolean): string {
+	return `${base}/${touch ? 'touch/' : ''}${page}.webp`
 }
 
 const helpTextures = new Map<string, Texture>()
 
 /** Loads one help page, cached for the session. */
-export async function loadHelpTexture(page: HelpPageId, touch = false): Promise<Texture> {
+export async function loadHelpTexture(
+	base: string,
+	page: HelpPageId,
+	touch = false
+): Promise<Texture> {
 	const key = `${touch ? 'touch:' : 'mouse:'}${page}`
 	const cached = helpTextures.get(key)
 	if (cached) return cached
 	try {
-		const texture = await Assets.load<Texture>(touch ? HELP_TOUCH_URLS[page] : HELP_URLS[page])
+		const texture = await Assets.load<Texture>(helpUrl(base, page, touch))
 		helpTextures.set(key, texture)
 		return texture
 	} catch (error) {
@@ -95,8 +79,8 @@ export async function loadHelpTexture(page: HelpPageId, touch = false): Promise<
 }
 
 /** Warms the whole help set during idle time, never on the boot path. */
-export function prefetchHelpPages(touch = false): Promise<Texture[]> {
-	return Promise.all(HELP_PAGES.map((page) => loadHelpTexture(page.id, touch)))
+export function prefetchHelpPages(base: string, touch = false): Promise<Texture[]> {
+	return Promise.all(HELP_PAGES.map((page) => loadHelpTexture(base, page.id, touch)))
 }
 
 async function loadFonts(base: string): Promise<boolean> {
@@ -220,28 +204,28 @@ export async function loadGameAssets(
 		},
 		{
 			key: 'tree-a',
-			url: treeAUrl,
+			url: `${base}/tree-a.png`,
 			fallback: () => fallbackTexture(0x63ab3f, 48, 'plant')
 		},
 		{
 			key: 'tree-b',
-			url: treeBUrl,
+			url: `${base}/tree-b.png`,
 			fallback: () => fallbackTexture(0x63ab3f, 48, 'plant')
 		},
 		{
 			key: 'tree-c',
-			url: treeCUrl,
+			url: `${base}/tree-c.png`,
 			fallback: () => fallbackTexture(0x63ab3f, 48, 'plant')
 		},
 		{
 			key: 'bush-a',
-			url: bushAUrl,
+			url: `${base}/bush-a.png`,
 			fallback: () => fallbackTexture(0x3b7d4f, 16, 'plant')
 		},
 		{
 			// CC0 art from Kenney's «Input Prompts Pixel»; see CREDITS.md.
 			key: 'mouse',
-			url: mouseLmbUrl,
+			url: `${base}/mouse-lmb.png`,
 			fallback: () => Texture.WHITE
 		},
 		{
@@ -253,25 +237,33 @@ export async function loadGameAssets(
 			// pixels of air inside the 16 px box; the fullscreen tile keeps its own
 			// 1 px margin.
 			key: 'ui-close',
-			url: closeTileUrl,
+			url: `${base}/tile_0016.png`,
 			fallback: () => Texture.WHITE
 		},
 		{
 			key: 'ui-fullscreen',
-			url: fullscreenTileUrl,
+			url: `${base}/tile_0023.png`,
 			fallback: () => Texture.WHITE
 		},
 		{
 			// The project's own chip marks: a three-frame rod sheet and a bait sheet
 			// of hooks. Only one 16 px frame of each is used (see `iconFrame`).
 			key: 'rod',
-			url: rodSheetUrl,
+			url: `${base}/rod-sheet.png`,
 			fallback: () => Texture.WHITE
 		},
 		{
 			key: 'baits',
-			url: baitsSheetUrl,
+			url: `${base}/baits-sheet.png`,
 			fallback: () => Texture.WHITE
+		},
+		{
+			// Pearl set 1: twelve hand-drawn 16 px sprites on a 4×3 sheet, in
+			// `PEARLS` order. The set is one 16 px cell per variety, so the sheet is
+			// exactly the twelve varieties and nothing else.
+			key: 'pearls-sheet',
+			url: `${base}/pearls-sheet.png`,
+			fallback: () => fallbackTexture(0xf3e6cf, 16, 'rock')
 		},
 		{
 			key: 'sign',
@@ -338,6 +330,30 @@ export async function loadGameAssets(
 	for (const fishItem of fishList) {
 		fish[fishItem.id] = loaded.get(`fish:${fishItem.id}`) ?? Texture.WHITE
 	}
+	// The shell is not a roster species, but the fight, the flight and the
+	// reveal all look it up through `assets.fish` like any other catch.
+	fish.shell = shellTexture()
+
+	// The pearl sheet is cut in the same order as `PEARLS`, four cells per row,
+	// so a rebalance or rename never has to touch the art mapping.
+	const pearlSheet = loaded.get('pearls-sheet') ?? Texture.WHITE
+	const pearls: Record<string, Texture> = {}
+	const pearlCell = 16
+	if (pearlSheet.width >= pearlCell * 4 && pearlSheet.height >= pearlCell * 3) {
+		PEARLS.forEach((pearl, index) => {
+			const column = index % 4
+			const row = Math.floor(index / 4)
+			pearls[pearl.id] = frame(
+				pearlSheet,
+				column * pearlCell,
+				row * pearlCell,
+				pearlCell,
+				pearlCell
+			)
+		})
+	} else {
+		for (const pearl of PEARLS) pearls[pearl.id] = pearlSheet
+	}
 
 	const boatSheet = loaded.get('boat') ?? Texture.WHITE
 	const boat: Texture[] = []
@@ -374,6 +390,7 @@ export async function loadGameAssets(
 		rod: iconFrame(loaded.get('rod'), 1, 0),
 		hook: iconFrame(loaded.get('baits'), 1, 1),
 		fish,
+		pearls,
 		cursors: cursorTextures
 	}
 }

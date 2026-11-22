@@ -27,15 +27,14 @@
 ## Input Prompts Pixel
 
 - Author: **Kenney** (<https://www.kenney.nl>), pack «Input Prompts Pixel» (1.0).
-- Used for: the mouse-with-pressed-left-button pictogram beside the cast prompt (`src/lib/minigames/fishing/art/mouse-lmb.png`, taken from `Tiles/tile_0077.png` of the pack; only the outline pixels are recoloured to the interface ink `UI.ink`, so the badge sits in the UI's own 1 px line), and the close and fullscreen marks of the HUD (`art/tile_0016.png` and `art/tile_0023.png`, recoloured to the interface's `UI.ink`, `UI.primary` and `UI.periwinklePale`).
+- Used for: the mouse-with-pressed-left-button pictogram beside the cast prompt (`mouse-lmb.png` on the CDN, taken from `Tiles/tile_0077.png` of the pack; only the outline pixels are recoloured to the interface ink `UI.ink`, so the badge sits in the UI's own 1 px line), and the close and fullscreen marks of the HUD (`tile_0016.png` and `tile_0023.png` on the CDN, recoloured to the interface's `UI.ink`, `UI.primary` and `UI.periwinklePale`).
 - License: Creative Commons Zero (CC0) — <http://creativecommons.org/publicdomain/zero/1.0/>.
 - The original pack is **not** included in this repository.
 
 ## Chip icons (rod and hook)
 
 - Source: two 16 px sheets supplied by the project owner (`fishing_rod_16x16.png`,
-  `baits_16x16.png`), copied into `src/lib/minigames/fishing/art/` as
-  `rod-sheet.png` and `baits-sheet.png`.
+  `baits_16x16.png`), served from the CDN as `rod-sheet.png` and `baits-sheet.png`.
 - Used for: the two marks of the touch cast/land chip (`ui/fight/FightControls.ts`)
   — the rod with its line and float for the cast, the bare hook for the catch.
 - Rights remain with their author; the files are included only because the
@@ -51,5 +50,5 @@
 
 - All game code, UI layout, procedural Web Audio effects and Russian copy were written for this project.
 - The frost veil ships as `<CDN_URL_BASE5>/minigames/fishing/ice-480.webp` (99 KB), baked from the original 2560×1440 cut-out by a one-off script that stays outside the repository; the Canvas downscale keeps the alpha silhouette bit-for-bit, and `src/lib/minigames/fishing/engine/ui/IceVeil.ts` only re-shapes the alpha at runtime.
-- The winter trees and bush in `src/lib/minigames/fishing/art/` are procedurally generated pixel art, produced by one-off generation scripts that stay outside the repository. Shore stones are painted at runtime (`drawShoreStone`), so they have no sprite files.
+- The winter trees and bush (`tree-a/b/c.png`, `bush-a.png` on the CDN) are procedurally generated pixel art, produced by one-off generation scripts that stay outside the repository. Shore stones are painted at runtime (`drawShoreStone`), so they have no sprite files.
 - The DTF article “13 базовых принципов геймдизайна” was used as a design reference; no text from the article is reproduced.

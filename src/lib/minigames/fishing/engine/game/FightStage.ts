@@ -54,6 +54,11 @@ export class FightStage {
 	private readonly focus: FightFocus
 
 	private minigame: Minigame | null = null
+	/**
+	 * Set while the round is stopped by a lesson: the dash frozen at that moment
+	 * gets its counter window back on the way out instead of a charged miss.
+	 */
+	private rechargeOnResume = false
 
 	onFinish?: (result: MinigameResult) => void
 
@@ -209,12 +214,32 @@ export class FightStage {
 	}
 
 	/**
-	 * The round was frozen under the pause menu. On the way back, a dash that was
-	 * live when the player paused is not forgiven: the pause must not bank a
-	 * counter window (see `FightModel.resumeFromPause`).
+	 * The cursor in scene pixels.
+	 *
+	 * The model only learns the cursor from a running tick, so a frame that was
+	 * frozen — a pause, a lesson — leaves it holding the last live position. A
+	 * press must push the cursor first: the counter's drag is measured from where
+	 * the press landed, and an anchor left behind by the previous frame sends the
+	 * gesture to the wrong place.
 	 */
-	setPaused(paused: boolean): void {
-		if (!paused) this.minigame?.resumeAfterPause()
+	setPointer(x: number, y: number): void {
+		this.minigame?.setPointer(x, y)
+	}
+
+	/**
+	 * The round was frozen under a dialog. On the way back, a dash that was live
+	 * when the round stopped is not forgiven: the pause must not bank a counter
+	 * window (see `FightModel.resumeFromPause`). A lesson of the manual passes
+	 * `recharge` on the way in, and the window it froze is handed back instead.
+	 */
+	setPaused(paused: boolean, recharge = false): void {
+		if (paused) {
+			this.rechargeOnResume = recharge
+			return
+		}
+		const rechargeWindow = this.rechargeOnResume
+		this.rechargeOnResume = false
+		this.minigame?.resumeAfterPause(rechargeWindow)
 	}
 
 	/** The round is decided: hide the fight view but keep it until the reset. */

@@ -137,6 +137,17 @@ export class FightModel {
 		return clamp(this.state.outsideTimer / this.state.escapeHold, 0, 1)
 	}
 
+	/**
+	 * 0..1 total escape pressure: the clock that has been poured in plus the
+	 * share a missed dash still owes it (`escapeFill`). The срыв bar draws the
+	 * difference between the two as the incoming part, so a miss reads as a
+	 * segment arriving instead of the whole bar jumping.
+	 */
+	get escapeRisk(): number {
+		const s = this.state
+		return clamp((s.outsideTimer + s.escapeFill) / s.escapeHold, 0, 1)
+	}
+
 	/** Seconds of escape clock still to pour in from missed dashes. */
 	get escapePending(): number {
 		return this.state.escapeFill
@@ -274,9 +285,15 @@ export class FightModel {
 		})
 	}
 
-	/** A pause does not bank a dash: see `resumeFightAfterPause`. */
-	resumeFromPause(): void {
-		resumeFightAfterPause(this.state, this.motion, this.counter)
+	/**
+	 * A pause does not bank a dash: see `resumeFightAfterPause`.
+	 *
+	 * `recharge` is the manual's pause: the dash still resolves, but its counter
+	 * window is opened again from the resume instead of being charged as a miss —
+	 * the lesson stopped the fight to teach exactly that dash.
+	 */
+	resumeFromPause(recharge = false): void {
+		resumeFightAfterPause(this.state, this.motion, this.counter, recharge)
 	}
 
 	private tick(step: number): void {

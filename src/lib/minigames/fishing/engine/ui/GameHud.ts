@@ -7,6 +7,7 @@ import { SCREEN_INSET, drawFishGlyph, drawPauseIcon } from './theme'
 import { drawCodexMark } from './codexMark'
 import { FullscreenToggle } from './FullscreenToggle'
 import { ICON_CONTROL, MAIN_TARGET, iconSteps, type UiMetrics } from './metrics'
+import type { UiRect } from './rect'
 
 /** Live values of the cast power meter; `null` hides the meter. */
 export interface PowerMeterState {
@@ -63,6 +64,8 @@ export class GameHud extends Container {
 	private readonly rareIcon = new Graphics()
 	/** Fullscreen toggle, top-left; null when the browser has no API. */
 	private readonly fullscreen: FullscreenToggle | null
+	/** Rects of the corner controls, in scene pixels; see `reservedRects`. */
+	private readonly occupied: UiRect[] = []
 	/** Left edge of the power bar, centred over the angler. */
 	private readonly powerX: number
 	/** Top edge of the power bar, a little above the angler's hat. */
@@ -96,6 +99,7 @@ export class GameHud extends Container {
 		if (this.fullscreen) {
 			this.fullscreen.position.set(inset, inset)
 			this.addChild(this.fullscreen)
+			this.occupied.push({ x: inset, y: inset, width: size, height: size })
 		}
 
 		const pauseButton = new Button({
@@ -109,6 +113,7 @@ export class GameHud extends Container {
 		})
 		pauseButton.position.set(right - size, inset)
 		this.addChild(pauseButton)
+		this.occupied.push({ x: right - size, y: inset, width: size, height: size })
 
 		// The codex sits to the left of the pause, at the same size and in the same
 		// frame: the reference used to be an entry inside the pause dialog, which
@@ -125,6 +130,12 @@ export class GameHud extends Container {
 		})
 		codexButton.position.set(right - size * 2 - gap, inset)
 		this.addChild(codexButton)
+		this.occupied.push({
+			x: right - size * 2 - gap,
+			y: inset,
+			width: size,
+			height: size
+		})
 
 		this.powerBar.position.set(this.powerX, this.powerY)
 		this.powerBar.eventMode = 'none'
@@ -150,6 +161,17 @@ export class GameHud extends Container {
 			y >= this.powerY - 1 &&
 			y <= this.powerY + POWER_BAR.height + 1
 		)
+	}
+
+	/**
+	 * Rects of the corner controls, in scene pixels.
+	 *
+	 * The lesson note is laid out around the interface, and this is the HUD's
+	 * share of it: a note that covers the pause or the codex hides the two ways
+	 * out of the round it is explaining.
+	 */
+	reservedRects(): UiRect[] {
+		return this.occupied
 	}
 
 	private drawPower(state: PowerMeterState | null): void {

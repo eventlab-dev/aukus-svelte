@@ -6,6 +6,7 @@ import { easeOutCubic, lerp } from '../../utils'
 import { TRAVEL_CARD, TRAVEL_MARGIN } from '../AreaShortcuts'
 import { GrabGesture } from './grabGesture'
 import { UI } from '../palette'
+import type { UiRect } from '../rect'
 import { anchorInk } from '../textInk'
 import { drawPanel, drawPanelFrame, makeText } from '../theme'
 
@@ -414,6 +415,30 @@ export class FightControls extends Container {
 	cancel(): void {
 		if (this.pointerId === null) return
 		this.releaseStick()
+	}
+
+	/**
+	 * Rects the controls occupy, in scene pixels.
+	 *
+	 * The lesson note is laid out around the interface, and on a phone that
+	 * interface is these two: a note over the pad hides the one gesture that
+	 * answers the dash it is explaining, and a note over the chip hides the way
+	 * out of the note itself.
+	 */
+	reservedRects(): UiRect[] {
+		const rects: UiRect[] = []
+		if (this.stick.visible) {
+			rects.push({
+				x: STICK.x - STICK.base,
+				y: STICK.y - STICK.base,
+				width: STICK.base * 2,
+				height: STICK.base * 2
+			})
+		}
+		if (this.chip.visible) {
+			rects.push({ x: this.chip.x, y: this.chip.y, width: CHIP.width, height: CHIP.height })
+		}
+		return rects
 	}
 
 	// ------------------------------------------------------------------- paint

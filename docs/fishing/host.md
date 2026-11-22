@@ -15,13 +15,18 @@
   `resume`, `showMenu`, `setMuted`, `setLocations`, `flushProgress`. В её
   `<style>` — рамка `.fishing-game` и правила канваса (пиксельный курсор,
   `image-rendering`).
-- `art/` — мелкий арт, который собирает Vite (деревья, куст, пиктограмма мыши,
-  скриншоты помощи, логотип `aukus-logo.png` для загрузочного экрана). Логотип лежит
-  в бандле, а не тянется с CDN: текстура для WebGL должна быть same-origin, иначе
-  `texImage2D` падает с `SecurityError`. Остальная статика лежит на CDN.
+- `art/` — единственное, что собирает Vite: логотип `aukus-logo.png` для
+  загрузочного экрана. Он лежит в бандле, а не тянется с CDN: текстура для WebGL
+  должна быть same-origin, иначе `texImage2D` падает с `SecurityError`, и экран
+  загрузки не должен ждать сеть вообще. Вся остальная статика — на CDN, включая
+  деревья, куст, пиктограмму мыши, иконки-тайлы, листы удочки/крючка, лист жемчуга
+  и скриншоты помощи.
   Скриншоты «Как играть» — два набора: десктопный (`cast/fight/counter/land.webp`)
-  с мышью и тач (`art/touch/`) с кнопкой заброса и стиком; движок выбирает набор
+  с мышью и тач (`touch/`) с кнопкой заброса и стиком; движок выбирает набор
   по профилю ввода (`assets.ts`), поэтому телефон в руководстве не видит мышь.
+  Десктопный набор снят на живом билде кадром 200×113 в районе поплавка и увеличен
+  вдвое (400×226, nearest), чтобы круг боя и шкалы читались в окошке 190×107;
+  тач-набор пока старее — снимать его нужно на телефоне (см. `mobile.md`).
 - `src/routes/minigames/fishing/+page.svelte` — страница-хост: оболочка маршрута
   `.fishing-shell` живёт в её `<style>`, глобального CSS у мини-игры нет.
 - [`credits.md`](credits.md) — лицензии и авторы ассетов. Обязателен при
@@ -29,16 +34,24 @@
 
 ## Статика
 
-Ассетов в репозитории нет: арт, шрифты и звуки (77 файлов, 4.89 МБ) лежат на
+Ассетов в репозитории нет: арт, шрифты и звуки (95 файлов, ~5.0 МБ) лежат на
 CDN, корень — `FISHING_ASSETS_CDN` в `src/lib/constants.ts`
 (`${CDN_URL_BASE5}/minigames/fishing`). На бакете та же раскладка, что у движка в
 `publicBase`, иначе пришлось бы знать про второй базовый путь:
 
 ```
 <CDN_URL_BASE5>/minigames/fishing/fishing/{angler.png,boat.png,sign.png,fish/,fonts/,sounds/}
+<CDN_URL_BASE5>/minigames/fishing/fishing/{tree-a.png,tree-b.png,tree-c.png,bush-a.png}
+<CDN_URL_BASE5>/minigames/fishing/fishing/{mouse-lmb.png,tile_0016.png,tile_0023.png}
+<CDN_URL_BASE5>/minigames/fishing/fishing/{rod-sheet.png,baits-sheet.png,pearls-sheet.png}
+<CDN_URL_BASE5>/minigames/fishing/fishing/{cast.webp,fight.webp,counter.webp,land.webp}
+<CDN_URL_BASE5>/minigames/fishing/fishing/touch/{cast.webp,fight.webp,counter.webp,land.webp}
 <CDN_URL_BASE5>/minigames/fishing/cursors/*
 <CDN_URL_BASE5>/minigames/fishing/ice-480.webp
 ```
+
+Готовая к заливке копия этой ветки лежит в `cdn-upload/` в корне репозитория
+(в `.gitignore`): её содержимое копируется в корень бакета как есть.
 
 Движок строит все пути от одного корня `publicBase` — маршрут передаёт его в
 `FishingGame`: от него считаются `assetBase` (`${publicBase}/fishing`), курсоры
@@ -114,8 +127,8 @@ SvelteKit-сборка отдаёт `import.meta.env.BASE_URL` относите�
   рыбе и допуск отпускания.
 - **Заброс на таче — тоже кнопка**: справа снизу один чип с двумя ролями — удочка
   между забросами (держишь, как раньше держали ЛКМ) и крючок в бою. Иконки без
-  подписей: на 64 px подпись была бы самой мелкой вещью на кадре. Знаки — спрайты из
-  `art/rod-sheet.png` (3 кадра 16×16) и `art/baits-sheet.png` (12 кадров 16×16): удочка
+  подписей: на 64 px подпись была бы самой мелкой вещью на кадре. Знаки — спрайты с
+  CDN: `rod-sheet.png` (3 кадра 16×16) и `baits-sheet.png` (12 кадров 16×16): удочка
   с леской и поплавком для заброса и поплавок с крючком для поимки (голые крючки из
   верхнего ряда листа на 40 px читаются как червяк, поэтому взят кадр с крючком);
   состояние (живой/погашенный чип) несут плашка и альфа, а не перекраска, поэтому арт

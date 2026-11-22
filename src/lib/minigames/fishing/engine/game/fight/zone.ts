@@ -7,6 +7,10 @@ import type { FightState } from './state'
  * pushing it in one step; {@link updateZone} pours it in over `missFillTime`.
  * The deposit is capped at a full meter, so overlapping misses cannot bank
  * more than one tear-off.
+ *
+ * The deposit is what makes the срыв bar's incoming segment: the bar draws
+ * `escapeMeter` solid and the deposit ahead of it, so the player sees the miss
+ * arriving instead of the scale jumping.
  */
 export function depositMissShare(state: FightState, amount: number): void {
 	const s = state
@@ -29,8 +33,8 @@ export function relieveEscape(state: FightState, amount: number): void {
 export function updateZone(state: FightState, dt: number): boolean {
 	const s = state
 
-	// A missed dash pays in at a steady rate over `missFillTime`, so the float
-	// sinks through the mistake instead of snapping to half of the meter.
+	// A missed dash pays in at a steady rate over `missFillTime`, so the срыв
+	// bar climbs through the mistake instead of snapping to half of the scale.
 	if (s.escapeFill > 0) {
 		const rate = (FIGHT.uncounteredBurst * s.escapeHold) / FIGHT.missFillTime
 		const pour = Math.min(s.escapeFill, rate * dt)

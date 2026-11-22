@@ -162,6 +162,8 @@ export abstract class CastFlowInput extends CastFlowCore {
 	protected pressStart(): void {
 		if (this.paused) return
 		if (this.phaseValue === 'idle') {
+			// The round opens with the rod held back until its own note has been read.
+			if (this.castLocked) return
 			this.phaseValue = 'charging'
 			this.scene.setPulling(true)
 			this.chargeValue = 0
@@ -190,6 +192,11 @@ export abstract class CastFlowInput extends CastFlowCore {
 		} else if (this.phaseValue === 'fighting') {
 			this.pressed = true
 			this.scene.setPulling(true)
+			// The press is the gesture's anchor (the counter is a drag from where the
+			// button went down), and the model only reads the cursor on a running
+			// tick: a press on the first frame after a frozen one would anchor on the
+			// cursor of the last live frame. Push it before the hold is latched.
+			this.fight.setPointer(this.pointerX, this.pointerY)
 			this.fight.setHold(true)
 		} else if (this.phaseValue === 'resolve') {
 			// The catch display ends on the same press that would have cast: once the

@@ -74,6 +74,9 @@ export class CodexOverlay extends Container {
 	 * Returns true once the closing animation has finished.
 	 */
 	update(dt: number): boolean {
+		// The pearl portrait keeps shining while the codex is open over a paused
+		// round; the view needs a tick even after the intro has finished.
+		this.view.update(dt)
 		if (this.closing) {
 			this.outro = Math.min(1, this.outro + dt / CODEX_FLY_OUT_TIME)
 			const eased = easeOutCubic(this.outro)

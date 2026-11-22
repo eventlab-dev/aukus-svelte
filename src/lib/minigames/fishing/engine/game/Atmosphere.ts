@@ -27,6 +27,7 @@ export class Atmosphere extends AtmosphereSnow {
 	 */
 	setWaterTest(test: ((x: number, y: number) => boolean) | null): void {
 		this.isWater = test
+		this.buildWaterCoverage()
 	}
 
 	setWorld(palette: WorldPalette, weather: WeatherDef): void {
@@ -43,6 +44,7 @@ export class Atmosphere extends AtmosphereSnow {
 			this.visual.fog = weather.fog
 			this.visual.dark = weather.dark
 			this.visual.cloud = weather.cloud
+			this.visual.aurora = weather.aurora
 			this.weatherReady = true
 		}
 	}
@@ -61,11 +63,13 @@ export class Atmosphere extends AtmosphereSnow {
 		this.visual.fog = weather.fog
 		this.visual.dark = weather.dark
 		this.visual.cloud = weather.cloud
+		this.visual.aurora = weather.aurora
 	}
 
 	update(dt: number): void {
 		this.time += dt
 		this.smoothWeather(dt)
+		this.updateAurora()
 		this.drawWash()
 		this.drawGlow()
 		this.updateFog(dt)

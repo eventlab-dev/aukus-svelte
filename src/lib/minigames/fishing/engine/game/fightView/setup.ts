@@ -33,6 +33,19 @@ export const INTRO_DURATION = 0.42
  */
 export const GAUGE = { width: 74, height: 9 } as const
 /**
+ * Geometry of the срыв bar, the escape clock that appears under the grip gauge.
+ *
+ * A hairline, not a second gauge: two pixels of liquid in a one-pixel case,
+ * sitting a little narrower than the grip's 74×9 so the main scale stays the
+ * thing the eye lands on. The length is short on purpose — the bar is a race to
+ * two missed dashes, and a scale as long as the grip's made the halfway mark
+ * look like a late warning instead of the price of one mistake. It is only
+ * painted once the risk is non-zero — the bar exists to explain a missed dash,
+ * and an empty one under the grip gauge would be one more thing to decode on an
+ * ordinary cast.
+ */
+export const ESCAPE_GAUGE = { width: 64, height: 2, gap: 2 } as const
+/**
  * The landing window is announced by a ring that closes onto the tired fish.
  *
  * It used to be a gold "!" over the float, then a blinking fish, then nothing

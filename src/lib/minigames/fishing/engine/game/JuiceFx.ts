@@ -210,7 +210,7 @@ export class JuiceFx {
 	/**
 	 * @param power Scales the camera bump. The take of the bait is the reference
 	 * knock (1); the strike that sets the hook passes the fish's own weight, so a
-	 * legendary fish rattles the frame harder than a minnow.
+	 * mythic fish rattles the frame harder than a minnow.
 	 */
 	trigger(kind: JuiceKind, x = VIEW.width / 2, y = VIEW.height / 2, power = 1): void {
 		this.runtime.uRippleCenter[0] = x / VIEW.width

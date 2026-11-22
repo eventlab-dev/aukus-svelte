@@ -58,7 +58,7 @@ export class FloaterLayer extends Container {
 		// playfield; keep it fully visible.
 		const safeX = anchorX === 0 ? x : clamp(x, text.width / 2 + 4, VIEW.width - text.width / 2 - 4)
 		// The same for the top edge, which the catch tag reaches for: it hangs off
-		// the top of the light, and a legendary burst on the high pier lifts a
+		// the top of the light, and a mythic burst on the high pier lifts a
 		// three-line tag most of the way to the frame.
 		const safeY = Math.max(y, text.height + 2)
 		text.position.set(safeX, safeY)

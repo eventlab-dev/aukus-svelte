@@ -49,7 +49,8 @@ principle behind them, not just the listed cases.
 `src/lib/minigames/fishing` is a self-contained PixiJS 8 engine, not Svelte UI: it
 paints itself.
 
-- Layout: `engine/` with the public API in `engine/index.ts` and `art/`;
+- Layout: `engine/` with the public API in `engine/index.ts` and `art/` (the boot
+  logo is the only asset in the bundle);
   `src/lib/components/FishingGame.svelte` is the Svelte 5 wrapper (lazy engine
   import; canvas rules in its `<style>`); the page is `src/routes/minigames/fishing`,
   and its `.fishing-shell` styles live in the page's `<style>` — the minigame ships
@@ -59,7 +60,7 @@ paints itself.
   not CSS pixels.
 - Area ids `cove` / `deep` / `rapids` are saved-progress keys — never rename them.
 - Art, fonts and sounds come from the CDN (`FISHING_ASSETS_CDN` in
-  `src/lib/constants.ts`); only the Vite-bundled `art/` is committed.
+  `src/lib/constants.ts`); the boot logo in `art/` is the only asset in the bundle.
 - Dev panels are tune-only: `F2` audio, `F3` sky and water, `F8` fight zones. They
   write to the running game and are lost on reload; tuned numbers are copied into
   `audioMix.ts` / `zoneTuning.ts` by hand.

@@ -1,6 +1,5 @@
 import { C, TIMING } from '../../../config'
 import { clamp, easeOutCubic, lerp } from '../../../utils'
-import { mixColor } from '../../../world'
 import { castAway, castBand, safeCastSpot } from '../../castSafety'
 import { aimCast } from '../../castAim'
 import { AnglerLayer } from './AnglerLayer'
@@ -255,8 +254,9 @@ export abstract class CastLayer extends AnglerLayer {
 				this.fightBobberY + Math.sin(this.time * 8) * 1.2 + jerk
 			)
 			// Struck fish: the float pops back to the surface and only dips again as
-			// the fish tears the line away. The sink is the whole escape cue now, so
-			// it goes deeper than the old four pixels.
+			// the fish tears the line away. The sink goes deeper than the old four
+			// pixels because the float is the physical half of the escape cue — the
+			// number itself is on the срыв bar in the HUD.
 			this.sinkTarget = tension * 6 - jerk * 0.8
 			this.bobberBody.rotation = Math.sin(this.time * 6) * 0.16
 			if (Math.random() < dt * 2) {
@@ -316,15 +316,17 @@ export abstract class CastLayer extends AnglerLayer {
 			const surface = 0.72
 			const pulse = (Math.sin(this.time * 2.4) + 1) / 2
 			// The waterline of a float being dragged down: the deeper the body sits
-			// under the surface, the wider the ring it pushes out and the warmer it
-			// runs — ice at rest, red when the float is close to drowning. The shape
-			// is the same water it always was; only the water's answer to the float
-			// changes, so the escape cue lives on the float instead of in a gauge.
+			// under the surface, the wider the ring it pushes out. The shape is the
+			// same water it always was. It no longer warms towards red as the line
+			// nears its end: a colour spreading over the float read as decoration,
+			// so the escape clock is a scale on the HUD now (`BarsView.drawEscape`)
+			// and the float only tells what is physically happening to it — it is
+			// being pulled under.
 			const sink = this.phase === 'fight' ? clamp(this.bobberBody.y / 6) : 0
 			const resting = 4.6 + pulse * 1.4 + sink * 3.2
 			this.bobberRipple.ellipse(0, 0, resting, resting * surface).stroke({
 				width: 1,
-				color: mixColor(this.palette.ice, C.red, sink),
+				color: this.palette.ice,
 				alpha: 0.42 + pulse * 0.18 + sink * 0.22
 			})
 			// A tug on the bait also pushes the surface: the ellipse spreads with the

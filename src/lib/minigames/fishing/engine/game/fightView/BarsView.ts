@@ -3,7 +3,7 @@ import { UI } from '../../ui/palette'
 import { drawLockMark } from '../../ui/lockMark'
 import { mixColor } from '../../world'
 import { clamp } from '../../utils'
-import { GAUGE } from './setup'
+import { ESCAPE_GAUGE, GAUGE } from './setup'
 import { zoneTuning } from '../fight/zoneTuning'
 import { WarningView } from './WarningView'
 
@@ -23,6 +23,13 @@ import { WarningView } from './WarningView'
  * with a hard edge, and state carried by the colour of the liquid and the rim.
  * The low-reserve threshold left the fill entirely — it is now a quiet tick
  * standing outside the left end of the gauge, the scale's own base mark.
+ *
+ * Under that gauge lives the срыв bar ({@link drawEscape}): the same recipe as
+ * a hairline — two pixels of liquid, a one-pixel case, no halo — a little
+ * narrower than the gauge and hidden until the escape clock carries any
+ * pressure. The grip answers "can I pull", the срыв scale answers "how close is
+ * the hook to tearing out", and the two are read as one stack: the thin bar is
+ * the second reading of the same instrument, never a rival gauge.
  */
 
 /** Inset of the liquid from the gauge's wall. */
@@ -33,8 +40,37 @@ const MARK_GAP = 4
 const MARK_OVERHANG = 1
 /** Width of the padlock glyph, so it can be centred on the gauge. */
 const LOCK_WIDTH = 7
+/** Where the срыв bar's one-miss mark sits on the scale. */
+const ESCAPE_HALF = 0.5
+/** Risk at which the срыв bar starts pulsing instead of just filling. */
+const ESCAPE_DANGER = 0.75
+/** Breakdown of the срыв bar's fill: what is poured, and what is still coming. */
+const ESCAPE_GHOST = 0.35
 
 export abstract class BarsView extends WarningView {
+	/**
+	 * 0..1 fade of the срыв bar.
+	 *
+	 * The bar appears the moment the escape clock gains any pressure, and leaves
+	 * the same way. A bar that popped in with a missed dash would read as a
+	 * receipt for that one frame; fading it in makes it a scale that settles into
+	 * the stack, and fading it out lets the player watch the risk drain away
+	 * (which takes a while: the clock recovers slowly on purpose).
+	 */
+	private escapeFade = 0
+
+	/**
+	 * Advances the срыв bar's appearance. Separate from the paint because the
+	 * value has to survive frames: the bar shows while the clock carries pressure,
+	 * not while one frame happened to have some.
+	 */
+	protected updateEscape(dt: number): void {
+		const target = this.model.escapeRisk > 0.004 ? 1 : 0
+		const rate = target > this.escapeFade ? 14 : 8
+		this.escapeFade += (target - this.escapeFade) * Math.min(1, dt * rate)
+		if (this.escapeFade < 0.004) this.escapeFade = 0
+	}
+
 	/**
 	 * The counter's receipt: one ice ring, on the float, expanding and fading.
 	 *
@@ -133,5 +169,71 @@ export abstract class BarsView extends WarningView {
 			const lockX = Math.round(x + width / 2 - (LOCK_WIDTH - 1) / 2)
 			drawLockMark(g, lockX, Math.round(y), 1, UI.primary, UI.ink, UI.ink)
 		}
+	}
+
+	/**
+	 * The срыв bar: the escape clock as a red scale under the grip gauge.
+	 *
+	 * It replaces the reddening waterline of the float, which was the only cue for
+	 * a rule the whole fight rests on: a dash nobody answered pours half of this
+	 * bar in, and a second miss in a row tears the hook out. A colour spreading
+	 * across the float read as decoration — the float was already sinking, and a
+	 * warmer ring around it said nothing about two misses. A scale under the gauge
+	 * the player is watching reads as a number: it fills from the left, marks the
+	 * halfway point of one miss, and turns from periwinkle to a pulsing rose when
+	 * the next one would be fatal.
+	 *
+	 * The share that a miss has deposited but not yet paid in is drawn as the
+	 * dimmer segment ahead of the solid block, so the arrival of a miss is
+	 * visible as a segment coming in rather than as the bar jumping.
+	 */
+	protected drawEscape(): void {
+		const g = this.escapeG
+		g.clear()
+		g.alpha = this.escapeFade
+		if (this.escapeFade <= 0) return
+
+		const risk = clamp(this.model.escapeRisk)
+		const meter = clamp(this.model.escapeMeter)
+		const { width, height } = ESCAPE_GAUGE
+		const x = this.model.centerX - width / 2
+		const y = this.staminaY + GAUGE.height + ESCAPE_GAUGE.gap
+		const pulse = (Math.sin(this.model.time * 8) + 1) / 2
+		const near = risk >= ESCAPE_DANGER
+
+		// The same ink case as the grip gauge, but without its two-pixel halo: the
+		// срыв bar is a hairline, and a soft shadow two pixels wide on a two-pixel
+		// scale would weigh more than the bar itself. The case keeps it readable
+		// over bright water without turning it back into a second gauge.
+		g.rect(x - 1, y - 1, width + 2, height + 2).fill(UI.ink)
+		g.rect(x, y, width, height).fill({
+			color: mixColor(UI.ink, UI.periwinkle, 0.16),
+			alpha: 0.92
+		})
+
+		// The one-miss mark, under the fill: two missed dashes always fill the
+		// scale, so its halfway point is what "one miss" actually costs.
+		g.rect(Math.round(x + width * ESCAPE_HALF), y, 1, height).fill({
+			color: UI.periwinkle,
+			alpha: 0.4
+		})
+
+		const poured = Math.round(width * meter)
+		const total = Math.round(width * risk)
+		if (total > poured) {
+			g.rect(x + poured, y, total - poured, height).fill({
+				color: UI.rose,
+				alpha: ESCAPE_GHOST
+			})
+		}
+		if (poured > 0) g.rect(x, y, poured, height).fill({ color: UI.rose, alpha: 0.95 })
+
+		// The rim carries the state: periwinkle while the clock is survivable, rose
+		// and pulsing once the next miss would end the round.
+		g.rect(x - 1, y - 1, width + 2, height + 2).stroke({
+			width: 1,
+			color: near ? UI.rose : UI.periwinkle,
+			alpha: near ? 0.5 + pulse * 0.5 : 0.55
+		})
 	}
 }

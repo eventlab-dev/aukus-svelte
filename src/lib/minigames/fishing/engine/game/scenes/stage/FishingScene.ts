@@ -1,4 +1,5 @@
 import type { Container } from 'pixi.js'
+import { liveWaterLayer } from '../pixelWater'
 import { CatchLayer } from './CatchLayer'
 
 export class FishingScene extends CatchLayer {
@@ -24,6 +25,12 @@ export class FishingScene extends CatchLayer {
 	/** True when a virtual-screen point is open water, not shore or pier. */
 	isWaterAt(x: number, y: number): boolean {
 		return this.renderer.isWater(x, y)
+	}
+
+	/** The body's current direction and speed, for the aurora reflection. */
+	get current(): { x: number; y: number } {
+		const flow = liveWaterLayer()?.current
+		return flow ? { x: flow.x, y: flow.y } : { x: 0, y: 0 }
 	}
 
 	update(dt: number): void {

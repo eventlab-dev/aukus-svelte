@@ -99,7 +99,7 @@ export abstract class GameBootLayer extends GameBase {
 
 	/** Help screenshots are lazy: the screen paints first, the shot follows. */
 	helpTexture(page: HelpPageId): Promise<Texture> {
-		return loadHelpTexture(page, this.touch)
+		return loadHelpTexture(this.options.assetBase, page, this.touch)
 	}
 
 	protected async boot(): Promise<void> {
@@ -214,7 +214,7 @@ export abstract class GameBootLayer extends GameBase {
 		const run = (): void => {
 			if (this.destroyed) return
 			for (const area of AREAS) this.buildAreaPreview(area)
-			void prefetchHelpPages(this.touch)
+			void prefetchHelpPages(this.options.assetBase, this.touch)
 		}
 		if (typeof window.requestIdleCallback === 'function') {
 			window.requestIdleCallback(run, { timeout: 1500 })

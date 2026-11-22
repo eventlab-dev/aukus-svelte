@@ -61,7 +61,7 @@ const zigzag = (count: number, dur: number, amplitude = 0.28): Move => ({
  * Every cycle gives the player at least one clear recovery beat: dashing
  * without a pause is what used to make some fish impossible.
  *
- * `strong` is the telegraphed, counterable beat. Every rare and legendary fish
+ * `strong` is the telegraphed, counterable beat. Every rare and mythic fish
  * carries at least one, and so do the big predatory commons; schooling, tiny
  * and slow/round fish stay quiet on purpose — their fight is the tug, not the
  * read. `validateFishData` enforces the tier half of that rule, and the area
@@ -160,7 +160,16 @@ const SCRIPTS: Record<string, () => Move[]> = {
 	// Сельдяной король — длинная змеистая лента.
 	oarfish: () => [wave(1.8, 0.42, 1.5), dash('away', 0.8, true), pause(1)],
 	// Меч-рыба: резкий боковой удар и мощный уход.
-	swordfish: () => [dash('flip', 0.5, true), pause(0.35), dash('away', 0.7, true), pause(0.7)]
+	swordfish: () => [dash('flip', 0.5, true), pause(0.35), dash('away', 0.7, true), pause(0.7)],
+	// Ракушка: тяжело оседает на месте и отвечает двумя сильными рывками.
+	shell: () => [
+		pause(1),
+		dash('toward', 0.5, true),
+		pause(1.1),
+		wave(1.2, 0.2, 1),
+		dash('away', 0.5, true),
+		pause(1)
+	]
 }
 
 /** True when a fish's `behavior` key has a dedicated movement script. */

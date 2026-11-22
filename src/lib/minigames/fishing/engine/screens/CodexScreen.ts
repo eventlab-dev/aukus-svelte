@@ -40,6 +40,9 @@ export class CodexScreen extends Screen {
 	}
 
 	override update(dt: number): void {
+		// The pearl portrait keeps shining after the fly-in, so the view is ticked
+		// on every frame, not only while the panel is arriving.
+		this.view.update(dt)
 		if (this.intro >= 1) return
 		this.intro = Math.min(1, this.intro + dt / CODEX_FLY_TIME)
 		const eased = easeOutCubic(this.intro)

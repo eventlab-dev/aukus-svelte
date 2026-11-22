@@ -38,14 +38,15 @@ export const CATCH_LABEL_GAP = 4
  *
  * The take of the bait is the reference knock (1). The strike that sets the
  * hook is the moment the weight on the other end answers, so it scales with
- * what was hooked: a common fish barely moves the frame, a legendary one
- * rattles it, and the player can feel what they are fighting before the fight
- * screen has drawn anything.
+ * what was hooked: a common fish barely moves the frame, a mythic one rattles
+ * it, and the player can feel what they are fighting before the fight screen
+ * has drawn anything.
  */
 export const HOOK_SHAKE: Record<FishSpecies['tier'], number> = {
 	common: 0.7,
+	uncommon: 0.9,
 	rare: 1.15,
-	legendary: 1.8
+	mythic: 1.8
 }
 
 export interface CastFlowDeps {

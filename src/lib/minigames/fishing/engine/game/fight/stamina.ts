@@ -1,7 +1,19 @@
 import { FIGHT } from '../../config'
+import type { FishTier } from '../../types'
 import { clamp } from '../../utils'
 import { FIGHT_RADIUS } from './constants'
 import type { FightState } from './state'
+
+/**
+ * Extra last-run pressure by rarity class: a spent trophy makes one more dash
+ * than a spent roach, and the player has to read it before the landing.
+ */
+const LAST_RUN_BY_TIER: Record<FishTier, number> = {
+	common: 0,
+	uncommon: 0.03,
+	rare: 0.07,
+	mythic: 0.15
+}
 
 /** Grip and endurance: the two resources the ring fight is actually about. */
 export class FightStamina {
@@ -74,7 +86,7 @@ export class FightStamina {
 		const chance =
 			FIGHT.lastRunChance +
 			(s.temperament === 'aggressive' ? 0.2 : s.temperament === 'stubborn' ? 0.15 : 0) +
-			(s.fish.tier === 'legendary' ? 0.15 : s.fish.tier === 'rare' ? 0.07 : 0)
+			LAST_RUN_BY_TIER[s.fish.tier]
 		if (Math.random() < chance) s.lastRunPending = true
 	}
 

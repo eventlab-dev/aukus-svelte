@@ -9,6 +9,7 @@ import type { WipePoint } from './GridWipe'
 import { easeOutCubic, lerp } from '../utils'
 import { UI } from './palette'
 import { drawLockMark } from './lockMark'
+import type { UiRect } from './rect'
 import { drawPanel, drawWeatherIcon, makeText } from './theme'
 import { anchorInk } from './textInk'
 import { TapGuard } from './tapSlop'
@@ -113,6 +114,22 @@ export class AreaShortcuts extends Container {
 	/** True when the point is on one of the cards, for the cast cursor. */
 	hitTest(x: number, y: number): boolean {
 		return this.cards.some((card) => card.hitTest(x, y))
+	}
+
+	/**
+	 * Rects of the two cards, in scene pixels.
+	 *
+	 * The lesson note is laid out around the interface, and the corners are the
+	 * cards' own: a note over one hides the door to the next water body while it
+	 * explains the water the player is standing on.
+	 */
+	reservedRects(): UiRect[] {
+		return this.cards.map((card) => ({
+			x: card.x,
+			y: card.y,
+			width: TRAVEL_CARD.width,
+			height: TRAVEL_CARD.height
+		}))
 	}
 
 	/**

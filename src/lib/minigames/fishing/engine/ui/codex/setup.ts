@@ -1,5 +1,5 @@
 import type { AreaDef } from '../../areas'
-import type { FishSpecies } from '../../fish'
+import type { FishSpecies, PearlSpecies } from '../../fish'
 import { VIEW } from '../../config'
 import { Button } from '../Button'
 import { ICON_CONTROL, MAIN_TARGET, SECONDARY_TARGET, uiMetrics, type UiMetrics } from '../metrics'
@@ -46,13 +46,29 @@ export interface CodexLayout {
 		width: number
 		height: number
 		pad: number
-		portrait: { y: number; width: number; height: number }
-		nameY: number
-		typeY: number
+		/** Left column of the header: the well the sprite stands in. */
+		portrait: { x: number; y: number; width: number; height: number }
+		/** Right column of the header: the name over the rarity. */
+		name: { x: number; y: number }
+		type: { x: number; y: number }
 		ruleY: number
 		bodyGap: number
 		bodyLineHeight: number
-		footer: number
+		/**
+		 * The stat block under the blurb: a boxed list, one fact per row. Its
+		 * height is not fixed — the box hugs the rows it holds, so a pearl with
+		 * three rows gets a shorter block than a fish with four.
+		 */
+		footer: {
+			/** Air between the box and the card's bottom edge. */
+			margin: number
+			/** Padding inside the box: the same on all four sides. */
+			pad: number
+			/** Line pitch of the rows. */
+			rowGap: number
+			/** Font size of a row. */
+			text: number
+		}
 	}
 }
 
@@ -60,7 +76,12 @@ export interface CodexLayout {
 const COLUMNS = 4
 const ROWS = 4
 const GUTTER = 10
-const ROSTER_SHARE = 0.6
+/**
+ * Share of the body the roster takes. The entry card has to hold a two-column
+ * header, so it keeps enough width for the longest species name
+ * («БОЛЬШЕРОТЫЙ ОКУНЬ») at the finger's font — the roster cells can spare it.
+ */
+const ROSTER_SHARE = 0.56
 /** Air between the header row and the first block under it. */
 const HEADER_GAP = 8
 
@@ -123,16 +144,27 @@ function build(ui: UiMetrics): CodexLayout {
 			width: CONTENT.width - GUTTER - GRID.width,
 			height: bodyBottom - tabsY,
 			pad: 8,
-			portrait: { y: 8, width: 44, height: 40 },
-			nameY: 58,
-			typeY: 71,
-			ruleY: 82,
+			// The header is two columns: the sprite's well on the left, the name and
+			// the rarity stacked beside it on the right.
+			portrait: { x: 8, y: 8, width: 42, height: 40 },
+			name: { x: 56, y: 22 },
+			type: { x: 56, y: 34 },
+			ruleY: 56,
 			bodyGap: 6,
 			// One step looser on a finger: the blurb is 10 px there (see
 			// `CodexBase`), and a 10 px line box would set the lines on top of each
 			// other. The desktop keeps the line it shipped with.
 			bodyLineHeight: ui.pick(ui.font(9), 13),
-			footer: 20
+			// The rows grow with the description — a finger reads the card at arm's
+			// length, and 6 px rows next to a 10 px blurb looked like another window —
+			// and the box around them is sized by the rows, so nothing hangs empty
+			// under a shorter list.
+			footer: {
+				margin: 8,
+				pad: ui.pick(6, 8),
+				rowGap: ui.pick(10, 13),
+				text: ui.pick(7, 9)
+			}
 		}
 	}
 }
@@ -149,11 +181,22 @@ export function codexLayout(): CodexLayout {
 	return cached
 }
 
-export interface Cell {
+interface BaseCell {
 	button: Button
-	fish: FishSpecies
-	area: AreaDef
 	/** Cell frame in scene pixels: what the selection ring has to trace. */
 	w: number
 	h: number
 }
+
+export interface FishCell extends BaseCell {
+	kind: 'fish'
+	fish: FishSpecies
+	area: AreaDef
+}
+
+export interface PearlCell extends BaseCell {
+	kind: 'pearl'
+	pearl: PearlSpecies
+}
+
+export type Cell = FishCell | PearlCell

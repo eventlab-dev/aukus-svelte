@@ -17,6 +17,10 @@ await game.flushProgress()
 game.destroy()
 ```
 
+`onCatch` получает `kind: 'fish' | 'shell'`; у ракушки `fishId: 'shell'` и
+дополнительный `pearl` (`pearlId`, `float`, `seed`, `sizeMm`, `grade`,
+`firstFind`), у рыбы поле `pearl` отсутствует.
+
 Опции: `container` (обязательно), `publicBase` (корень CDN, от него считаются
 `fishing/`, `cursors/` и `ice-480.webp`), `assetBase` (по умолчанию
 `${publicBase}/fishing`), `storagePrefix`, `muted`, `startScreen` (`menu` | `game`),

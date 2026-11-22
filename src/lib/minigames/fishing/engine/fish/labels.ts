@@ -21,7 +21,7 @@ export function fullWeatherLabel(fish: FishSpecies): string {
 function windowPhrase(windows: readonly TimeWindow[]): string {
 	if (windows.length === 1) {
 		const window = windows[0]
-		return `только между ${formatClock(window.from)} и ${formatClock(window.to)}`
+		return `между ${formatClock(window.from)} и ${formatClock(window.to)}`
 	}
 	return windows
 		.map((window) => `${formatClock(window.from)}–${formatClock(window.to)}`)
@@ -37,17 +37,23 @@ function weatherPhrase(weather: readonly WeatherId[]): string {
 	return `в ${weather.map((id) => WEATHER_CASE[id]).join(' и ')}`
 }
 
-/** `ловится всегда`, `клюет только между 19:00 и 23:00`, `… в туман`. */
+/**
+ * `ловится всегда`, `активнее между 19:00 и 23:00`, `… в туман`.
+ *
+ * A window is a multiplier, not a lock (`isFishInWindow`), so the sentence
+ * promises more bites, never exclusive ones: a species outside its window still
+ * bites at its base weight.
+ */
 export function whenPhrase(fish: FishSpecies): string {
 	const windows = fish.windows?.length ? fish.windows : null
 	const weather = fish.weather?.length ? fish.weather : null
 	if (!windows && !weather) return 'ловится всегда'
-	if (windows && !weather) return `клюет ${windowPhrase(windows)}`
+	if (windows && !weather) return `активнее ${windowPhrase(windows)}`
 	if (!windows && weather) {
-		return `выходит на кормежку только ${weatherPhrase(weather)}`
+		return `выходит на кормежку ${weatherPhrase(weather)}`
 	}
 	if (windows && weather) {
-		return `клюет ${windowPhrase(windows)} ${weatherPhrase(weather)}`
+		return `активнее ${windowPhrase(windows)} ${weatherPhrase(weather)}`
 	}
 	return 'ловится всегда'
 }
@@ -56,8 +62,7 @@ export function whenPhrase(fish: FishSpecies): string {
  * One-sentence codex blurb. The name and the water type are already printed
  * above the tooltip line, so the blurb starts with the habits instead of
  * repeating «Осетр — речная рыба»:
- * «Клюет только между 00:00 и 03:00 в метель и туман, древняя, тяжелая и
- * упорная.»
+ * «Активнее между 00:00 и 03:00 в метель и туман, древняя, тяжелая и упорная.»
  */
 export function fishDescription(fish: FishSpecies): string {
 	const temper = fishText(fish.id)?.temper ?? 'с характером'

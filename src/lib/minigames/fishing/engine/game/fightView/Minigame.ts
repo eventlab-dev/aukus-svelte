@@ -35,6 +35,7 @@ export class Minigame extends BarsView {
 		if (!this.model.isRunning) return
 		this.updateJerkZone(dt)
 		this.updateLandRing(dt)
+		this.updateEscape(dt)
 		this.draw()
 		this.syncFishVisual()
 	}
@@ -63,6 +64,7 @@ export class Minigame extends BarsView {
 		this.drawRing()
 		this.drawCounterFlash()
 		this.drawStamina()
+		this.drawEscape()
 		this.drawDirection()
 		this.drawCue()
 		this.drawWarning()

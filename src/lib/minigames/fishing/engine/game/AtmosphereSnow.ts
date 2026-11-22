@@ -14,6 +14,7 @@ export class AtmosphereSnow extends AtmosphereSky {
 		this.visual.fog += (target.fog - this.visual.fog) * k
 		this.visual.dark += (target.dark - this.visual.dark) * k
 		this.visual.cloud += (target.cloud - this.visual.cloud) * k
+		this.visual.aurora += (target.aurora - this.visual.aurora) * k
 	}
 
 	/**

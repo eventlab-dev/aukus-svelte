@@ -1,4 +1,4 @@
-import type { Temperament, WeatherId } from './types'
+import type { FishTier, Temperament, WeatherId } from './types'
 
 /** Virtual resolution — every screen is laid out in these units. */
 export const VIEW = { width: 480, height: 270 } as const
@@ -102,8 +102,9 @@ export const FIGHT = {
 	/**
 	 * How long a missed dash's share of the meter takes to pour in. The miss is
 	 * paid in full, but the clock climbs over this window instead of jumping:
-	 * the sinking float is the only meter the player has, so an instant
-	 * half-metre jump read as a bug.
+	 * the срыв bar paints the unpaid share as a dimmer segment ahead of the
+	 * solid block, so an instant half-bar jump would read as a bug instead of
+	 * a mistake being paid for.
 	 */
 	missFillTime: 1.5,
 	/**
@@ -249,8 +250,8 @@ export {
 	fishInArea,
 	fullWeatherLabel,
 	fullWindowLabel,
-	isFishActive,
-	isRareFish,
+	isAboveCommon,
+	isFishInWindow,
 	validateFishData
 } from './fish'
 
@@ -265,6 +266,13 @@ export const LUCK_BAND = { min: 0.5, max: 0.92, width: 0.11 } as const
  * nudge, not a jackpot: the zone is one of several small inputs into the roll.
  */
 export const LUCK_ZONE_MULT = 1.4
+
+/**
+ * The luck zone on the shiny roll. The colourway is a per-catch lottery whose
+ * base odds are set by the rarity class (`TIER_SHINY`), so a cast inside the
+ * zone doubles them instead of nudging them.
+ */
+export const LUCK_ZONE_SHINY = 2
 
 /**
  * A release this soon after leaving the zone still counts. It absorbs input
@@ -293,6 +301,59 @@ export const TOUCH_TAP_REACH = { radius: 30, release: 32 } as const
 
 /** Short beat after spooking a fish, before the next cast is allowed. */
 export const SPOOK_HOLD = 0.95
+
+/**
+ * The shell catch. The shell can bite on every water body; the reveal is the
+ * payoff, so it gets its own, longer hold: charge, split, pearl entrance.
+ */
+export const PEARL = {
+	/**
+	 * Share of bites that offer a shell, on every water body. Rare on purpose:
+	 * the shell is the whole pearl set's only door, so one bite in a hundred is
+	 * the rate the set is tuned around.
+	 */
+	shellChance: 0.01,
+	/** Shell trembles and gathers light. */
+	chargeTime: 0.85,
+	/** Flash, shell halves fly apart, pearl starts to grow. */
+	splitTime: 0.5,
+	/** Pearl scales from nothing to its resting size. */
+	pearlInTime: 0.45,
+	/** Seconds after the landing when the name tag may appear. */
+	revealLead: 1,
+	/** Longer than a fish hold: the reveal is the content, not a transition. */
+	resultHold: 4.8
+} as const
+
+/**
+ * The shiny colourway: a rare variant of any fish, rendered by a rainbow shade
+ * rather than an extra sprite (`game/shinyShader.ts`).
+ *
+ * It is a per-catch roll, not a per-species trait, so two catches of the same
+ * species can be a plain and a shiny one. The chance belongs to the rarity
+ * class (`TIER_SHINY` in `fish/tiers.ts`), and the luck zone doubles the roll
+ * — the cast's one skill window is the only thing that tilts the table.
+ */
+
+/**
+ * The platinum frame of a codex species: the completion mark of one entry.
+ *
+ * Two conditions, both about the species itself: a tally of catches and both
+ * ends of its weight (a heaviest and a lightest specimen, not the same fish
+ * twice). The tally is per class because the classes differ by two orders of
+ * magnitude in bite rate — a flat hundred is a couple of hours on a roach and a
+ * lifetime on a koi. Nothing about the frame changes the catch; it only changes
+ * how the well is framed.
+ */
+export const PLATINUM: { readonly catches: Readonly<Record<FishTier, number>> } = {
+	/** Catches of one species needed for its platinum frame, by class. */
+	catches: {
+		common: 100,
+		uncommon: 30,
+		rare: 10,
+		mythic: 2
+	}
+}
 
 export const TIMING = {
 	chargeCycle: 0.85,
